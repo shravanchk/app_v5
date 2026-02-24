@@ -1,0 +1,78 @@
+# Robots.txt for Upaman Financial Tools
+
+User-agent: *
+Allow: /
+Allow: /ads.txt
+
+# Keep crawler access open for JS/CSS so SPA pages can render.
+Allow: /static/
+
+# Main calculator routes
+Allow: /irctc-calculator
+Allow: /uk-rail-calculator
+Allow: /credit-card-analyzer
+Allow: /credit-card-trap-calculator
+Allow: /loan-calculator
+Allow: /sip-calculator
+Allow: /ppf-calculator
+Allow: /gst-calculator
+Allow: /income-tax-calculator
+Allow: /salary-calculator
+Allow: /india-calculators
+Allow: /job-offer-workflow
+Allow: /home-loan-readiness-workflow
+Allow: /age-calculator
+Allow: /uk-income-tax-calculator
+Allow: /eu-vat-calculator
+Allow: /european-salary-calculator
+Allow: /germany-salary-calculator
+Allow: /france-salary-calculator
+Allow: /netherlands-salary-calculator
+Allow: /eu-calculators
+Allow: /json-tools
+Allow: /us-calculators
+Allow: /us-mortgage-calculator
+Allow: /us-refinance-calculator
+Allow: /us-auto-loan-calculator
+Allow: /us-401k-calculator
+Allow: /us-savings-cd-calculator
+Allow: /us-credit-card-payoff-calculator
+Allow: /about.html
+Allow: /privacy-policy.html
+Allow: /terms-of-service.html
+Allow: /methodology.html
+Allow: /editorial-policy.html
+Allow: /guide-emi-prepayment-strategy.html
+Allow: /guide-income-tax-regime-choice.html
+Allow: /guide-sip-step-up-planning.html
+Allow: /guide-credit-card-minimum-due-trap.html
+Allow: /guide-ctc-inhand-breakdown.html
+Allow: /guide-ppf-vs-sip-choice.html
+
+# Known non-content or legacy areas
+Disallow: /build/
+Disallow: /node_modules/
+Disallow: /admin/
+Disallow: /wp-admin/
+Disallow: /wp-content/
+Disallow: /wp-includes/
+Disallow: /cgi-bin/
+
+# Legacy URLs retained for redirect handling
+Disallow: /animalinfo
+Disallow: /old-*
+Disallow: /legacy-*
+Disallow: /v1/
+Disallow: /v2/
+Disallow: /test/
+Disallow: /demo/
+Disallow: /*.php$
+Disallow: /*.asp$
+Disallow: /*.jsp$
+Disallow: /index.html
+Disallow: /seo-status
+Disallow: /seo-status.html
+Disallow: /font-preview
+Disallow: /font-preview.html
+
+Sitemap: https://upaman.com/sitemap.xml

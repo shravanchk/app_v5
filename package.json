@@ -1,0 +1,24 @@
+{
+  "name": "upaman-app-v5",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Upaman Next.js migration scaffold with preserved v4 look and feel",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "lucide-react": "^0.542.0",
+    "next": "^14.2.33",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19"
+  }
+}

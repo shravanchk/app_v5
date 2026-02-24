@@ -1,0 +1,38 @@
+{
+  "short_name": "Upaman Tools",
+  "name": "Upaman - IRCTC & EMI Calculator Tools",
+  "description": "Free online calculator tools for IRCTC train booking dates and comprehensive loan EMI calculations",
+  "icons": [
+    {
+      "src": "upaman-elephant-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "categories": ["finance", "travel", "utilities"],
+  "lang": "en-US",
+  "scope": "/",
+  "orientation": "portrait-primary"
+}
