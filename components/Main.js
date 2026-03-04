@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Train, Clock, Shield, Target, Zap, Calendar, CreditCard, Briefcase, Home, Search, X } from 'lucide-react';
+import { Train, Clock, Shield, Target, Zap, Calendar, CreditCard, Briefcase, Home, Search, X, Sigma, BarChart3, Ruler } from 'lucide-react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -249,6 +249,39 @@ const MainLandingPage = () => {
       path: '/age-calculator'
     },
     {
+      title: 'Scientific Calculator',
+      description: 'Solve trigonometry, logarithms, roots, powers, and factorial expressions in one calculator',
+      icon: Sigma,
+      ...themedCard('primary'),
+      features: ['Trig + log', 'Powers and roots', 'DEG/RAD modes'],
+      path: '/scientific-calculator',
+      badge: 'New',
+      badgeBg: isDarkMode ? 'rgba(30, 64, 175, 0.25)' : '#dbeafe',
+      badgeColor: isDarkMode ? '#bfdbfe' : '#1e40af'
+    },
+    {
+      title: 'Statistics Calculator',
+      description: 'Compute mean, median, mode, variance, standard deviation, confidence intervals, and percentile rank',
+      icon: BarChart3,
+      ...themedCard('secondary'),
+      features: ['Descriptive stats', 'Z-score + percentile', 'Confidence intervals'],
+      path: '/statistics-calculator',
+      badge: 'New',
+      badgeBg: isDarkMode ? 'rgba(15, 118, 110, 0.22)' : '#d7f2ee',
+      badgeColor: isDarkMode ? '#99f6e4' : '#0f766e'
+    },
+    {
+      title: 'Engineering Unit Converter',
+      description: 'Convert length, area, volume, mass, temperature, speed, pressure, energy, power, and data units',
+      icon: Ruler,
+      ...themedCard('accent'),
+      features: ['10 categories', 'Formula visibility', 'Temperature equations'],
+      path: '/unit-converter',
+      badge: 'New',
+      badgeBg: isDarkMode ? 'rgba(180, 83, 9, 0.25)' : '#ffedd5',
+      badgeColor: isDarkMode ? '#fdba74' : '#9a3412'
+    },
+    {
       title: 'India Calculators Hub',
       description: 'Access India-focused calculators for tax, investing, loans, salary, and IRCTC booking planning',
       icon: Target,
@@ -310,7 +343,16 @@ const MainLandingPage = () => {
       key: 'specialty-tools',
       title: 'Specialty Tools',
       description: 'Cross-region utilities and specialty calculators.',
-      paths: ['/irctc-calculator', '/uk-rail-calculator', '/credit-card-analyzer', '/age-calculator', '/json-tools']
+      paths: [
+        '/irctc-calculator',
+        '/uk-rail-calculator',
+        '/credit-card-analyzer',
+        '/age-calculator',
+        '/scientific-calculator',
+        '/statistics-calculator',
+        '/unit-converter',
+        '/json-tools'
+      ]
     },
   ];
 
@@ -645,23 +687,23 @@ const MainLandingPage = () => {
         <title>Free Financial Calculators 2026 US, Europe & India | Mortgage, VAT, Salary, Tax, SIP, EMI | Upaman</title>
         <meta
           name="description"
-          content="Free calculators and data tools for US, Europe and India. Mortgage, refinance, auto loan, 401(k), savings, VAT, salary, GST, Income Tax, SIP, EMI, and JSON tools."
+          content="Free calculators and data tools for US, Europe and India, plus math and science utilities. Mortgage, refinance, VAT, salary, GST, Income Tax, SIP, EMI, scientific, statistics, and unit conversion tools."
         />
         <meta
           name="keywords"
-          content="financial calculators US Europe India, India calculators hub, US calculators hub, EU calculators hub, US mortgage calculator, US refinance calculator, US auto loan calculator, US 401k calculator, US savings cd calculator, US credit card payoff calculator, European VAT calculator, EU salary calculator, UK income tax calculator 2025-26, Germany salary calculator, France salary calculator, Netherlands salary calculator, GST calculator, income tax calculator India 2025-26, SIP calculator, EMI calculator, salary calculator, json formatter"
+          content="financial calculators US Europe India, scientific calculator, statistics calculator, unit converter, India calculators hub, US calculators hub, EU calculators hub, US mortgage calculator, US refinance calculator, US auto loan calculator, US 401k calculator, US savings cd calculator, US credit card payoff calculator, European VAT calculator, EU salary calculator, UK income tax calculator 2025-26, Germany salary calculator, France salary calculator, Netherlands salary calculator, GST calculator, income tax calculator India 2025-26, SIP calculator, EMI calculator, salary calculator, json formatter"
         />
         <link rel="canonical" href="https://upaman.com/" />
         <meta property="og:title" content="Free Financial Calculators US, Europe & India | Complete Suite | Upaman" />
         <meta
           property="og:description"
-          content="Complete suite of free calculators and data utilities for US, Europe and India, including mortgage, refinance, auto loan, 401(k), VAT and JSON tools."
+          content="Complete suite of free calculators and data utilities for US, Europe and India, including mortgage, refinance, auto loan, VAT, scientific, statistics, and unit conversion tools."
         />
         <meta property="og:url" content="https://upaman.com/" />
         <meta name="twitter:title" content="Free Financial Calculators US, Europe & India | Essential Tools | Upaman" />
         <meta
           name="twitter:description"
-          content="Complete suite of free calculators for US, Europe and India, including mortgage, refinance, auto loan, 401(k), VAT and JSON tools."
+          content="Complete suite of free calculators for US, Europe and India with finance, scientific, statistics, and unit conversion tools."
         />
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
@@ -878,6 +920,42 @@ const MainLandingPage = () => {
                   "@type": "Offer",
                   "price": "0",
                   "priceCurrency": "INR"
+                }
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Scientific Calculator",
+                "url": "https://upaman.com/scientific-calculator",
+                "description": "Evaluate trigonometry, logarithms, powers, roots, and factorial expressions with degree and radian modes.",
+                "applicationCategory": "EducationalApplication",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD"
+                }
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Statistics Calculator",
+                "url": "https://upaman.com/statistics-calculator",
+                "description": "Compute mean, median, mode, variance, standard deviation, z-score, percentile rank, and confidence intervals.",
+                "applicationCategory": "EducationalApplication",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD"
+                }
+              },
+              {
+                "@type": "SoftwareApplication",
+                "name": "Engineering Unit Converter",
+                "url": "https://upaman.com/unit-converter",
+                "description": "Convert practical units across length, area, volume, mass, temperature, speed, pressure, energy, power, and data size.",
+                "applicationCategory": "UtilitiesApplication",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD"
                 }
               },
               {

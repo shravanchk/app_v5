@@ -6,6 +6,7 @@ import '../styles/common.css';
 import '../styles/adsense.css';
 
 const AD_ELIGIBLE_ROUTES = new Set([
+  '/',
   '/age-calculator',
   '/credit-card-analyzer',
   '/credit-card-trap-calculator',
@@ -21,7 +22,10 @@ const AD_ELIGIBLE_ROUTES = new Set([
   '/netherlands-salary-calculator',
   '/ppf-calculator',
   '/salary-calculator',
+  '/scientific-calculator',
   '/sip-calculator',
+  '/statistics-calculator',
+  '/unit-converter',
   '/uk-income-tax-calculator',
   '/uk-rail-calculator',
   '/us-401k-calculator',

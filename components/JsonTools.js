@@ -971,8 +971,6 @@ const JsonTools = () => {
         }
       `}</style>
 
-      <HomeButton />
-
       <div style={{ maxWidth: '1260px', margin: '0 auto', padding: isCompactLayout ? '0 0.55rem 1.7rem' : isTabletLayout ? '0 0.7rem 2rem' : '0 0.8rem 2.4rem' }}>
         <div
           style={{
@@ -994,6 +992,20 @@ const JsonTools = () => {
               color: '#f8fafc'
             }}
           >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.55rem' }}>
+              <HomeButton
+                style={{
+                  position: 'static',
+                  top: 'auto',
+                  left: 'auto',
+                  zIndex: 'auto',
+                  width: '42px',
+                  height: '42px',
+                  padding: '10px'
+                }}
+              />
+              <div />
+            </div>
             <h1 style={{ margin: 0, fontSize: 'clamp(1.4rem, 3.2vw, 2rem)', letterSpacing: '0.01em' }}>
               JSON Tools Studio
             </h1>

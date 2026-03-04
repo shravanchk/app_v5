@@ -35,15 +35,15 @@ const HomeButton = ({ className = '', style = {} }) => {
   };
 
   const handleMouseEnter = (e) => {
-    e.target.style.backgroundColor = '#2563eb';
-    e.target.style.transform = 'translateY(-2px)';
-    e.target.style.boxShadow = '0 6px 20px rgba(59, 130, 246, 0.4)';
+    e.currentTarget.style.backgroundColor = '#2563eb';
+    e.currentTarget.style.transform = 'translateY(-2px)';
+    e.currentTarget.style.boxShadow = '0 6px 20px rgba(59, 130, 246, 0.4)';
   };
 
   const handleMouseLeave = (e) => {
-    e.target.style.backgroundColor = '#3b82f6';
-    e.target.style.transform = 'translateY(0)';
-    e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+    e.currentTarget.style.backgroundColor = '#3b82f6';
+    e.currentTarget.style.transform = 'translateY(0)';
+    e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
   };
 
   return (

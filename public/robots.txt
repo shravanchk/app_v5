@@ -22,6 +22,9 @@ Allow: /india-calculators
 Allow: /job-offer-workflow
 Allow: /home-loan-readiness-workflow
 Allow: /age-calculator
+Allow: /scientific-calculator
+Allow: /statistics-calculator
+Allow: /unit-converter
 Allow: /uk-income-tax-calculator
 Allow: /eu-vat-calculator
 Allow: /european-salary-calculator

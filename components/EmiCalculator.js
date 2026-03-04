@@ -2,8 +2,10 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
 import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
+import CalculatorArticleLayout from './calculator/CalculatorArticleLayout';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { buildFaqSchema } from '../utils/faqSchema';
 import { formatINR } from '../utils/calculations';
 
 const ComprehensiveLoanCalculator = React.memo(() => {
@@ -168,6 +170,33 @@ const ComprehensiveLoanCalculator = React.memo(() => {
     `Tenure: ${emiResult.displayTenure}`
   ] : [];
 
+  const faqItems = [
+    {
+      question: 'How is EMI calculated in this tool?',
+      answer: 'EMI uses the standard reducing-balance formula with principal, monthly rate, and total tenure in months. The same method is used for amortization and prepayment estimates.'
+    },
+    {
+      question: 'What is the difference between EMI mode and prepayment mode?',
+      answer: 'EMI mode calculates loan payment from fresh inputs. Prepayment mode starts from existing outstanding principal and estimates savings after a part-prepayment.'
+    },
+    {
+      question: 'Should I reduce EMI or tenure after prepayment?',
+      answer: 'Both are possible in real banking products. This tool primarily estimates impact in a fixed-tenure style for fast comparison and planning.'
+    },
+    {
+      question: 'Why can lender schedules differ slightly?',
+      answer: 'Differences can occur due to processing conventions, reset clauses, floating-rate changes, and lender-specific rounding rules.'
+    }
+  ];
+
+  const faqSchema = buildFaqSchema(faqItems);
+
+  const relatedGuides = [
+    { label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' },
+    { label: 'CTC to in-hand breakdown guide', href: '/guide-ctc-inhand-breakdown.html' },
+    { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' }
+  ];
+
   return (
     <div className="calculator-container emi-container">
       <Head>
@@ -202,16 +231,137 @@ const ComprehensiveLoanCalculator = React.memo(() => {
             "featureList": ["EMI Calculator", "Prepayment Calculator", "Amortization Schedule", "Interest Savings Calculator", "Loan Comparison Tool"]
           })
         }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqSchema)
+          }}
+        />
       </Head>
+
+      <CalculatorArticleLayout
+        title="EMI and Loan Calculator India: EMI, Interest Split, and Prepayment Impact"
+        intro={(
+          <>
+            <p>
+              Loan decisions are rarely just about whether a bank approves your application. The real question is
+              whether the EMI structure fits your long-term cash flow without creating pressure on emergency savings and
+              essential spending. A practical calculator should therefore explain how EMI is formed, how much of each
+              payment goes to interest, and how early prepayment can reduce total cost. This page is built for that
+              planning workflow, not just a one-line EMI output.
+            </p>
+            <p>
+              Many borrowers focus only on monthly EMI and ignore total interest over the full tenure. Two loans can
+              show similar EMIs but very different total outflow depending on tenure and rate. Extending tenure often
+              lowers monthly burden but increases total interest materially. Shortening tenure raises EMI but may reduce
+              lifetime cost. This calculator surfaces both views so you can balance affordability and efficiency.
+            </p>
+            <p>
+              The second major decision is prepayment. If you receive bonus income, sale proceeds, or annual surplus,
+              a partial prepayment may produce meaningful savings. However, impact depends on outstanding principal,
+              remaining tenure, and current rate. Random guesses are risky because a prepayment that looks large may
+              still deliver limited savings if done late in tenure. The built-in prepayment scenarios here help you test
+              alternatives quickly before you commit funds.
+            </p>
+          </>
+        )}
+        explanation={(
+          <>
+            <p>
+              EMI calculation follows the reducing-balance formula. Principal (P), monthly interest rate (r), and total
+              installments (n) are used to derive a constant monthly payment. Although EMI amount stays constant in a
+              standard schedule, the composition changes: early payments carry higher interest share because outstanding
+              principal is highest at the start. As principal reduces, interest portion declines and principal repayment
+              increases.
+            </p>
+            <p>
+              That changing composition is why amortization view is critical. Without it, borrowers often underestimate
+              how much interest is front-loaded in initial years. The schedule table in this page provides month-level
+              visibility for payment amount, principal component, interest component, and remaining balance. This helps
+              in refinance timing, cash-flow forecasting, and discipline around annual prepayment opportunities.
+            </p>
+            <p>
+              Prepayment analysis in this calculator starts from outstanding principal and remaining tenure. For each
+              scenario, prepayment amount is deducted first, then a revised EMI is estimated for remaining months at the
+              chosen rate. Monthly and total savings are shown so you can compare options instead of acting on intuition.
+              A custom prepayment field allows testing your exact surplus amount beyond predefined percentages.
+            </p>
+            <p>
+              This model is designed for planning. Real loans may include floating rates, reset clauses, processing
+              charges, foreclosure conditions, and lender-specific rules around EMI-versus-tenure adjustment after
+              prepayment. Use this page to shortlist decisions quickly, then confirm execution details with your lender
+              schedule before final action.
+            </p>
+          </>
+        )}
+        example={(
+          <>
+            <p>
+              Consider a home loan of ₹25,00,000 at 8.5% annual interest for 20 years. EMI mode estimates monthly EMI,
+              total payment, and total interest over full tenure. Suppose the result shows EMI around ₹21,700 (illustrative)
+              with substantial cumulative interest over 240 months. Now assume after a few years your outstanding
+              principal is ₹25,77,227 and you can prepay 20% once.
+            </p>
+            <p>
+              In prepayment mode, enter outstanding amount, current EMI, remaining tenure, and rate. The scenario card
+              then shows revised EMI and savings. If monthly savings and total projected savings are strong relative to
+              your liquidity needs, prepayment may be worth it. If savings are modest and emergency reserves are tight,
+              retaining cash can be more prudent. This structured comparison is the reason prepayment should be modeled,
+              not guessed.
+            </p>
+          </>
+        )}
+        tips={(
+          <>
+            <ul style={{ margin: 0, paddingLeft: '1rem' }}>
+              <li>Do not evaluate loans on EMI alone; always compare total interest outflow.</li>
+              <li>Use realistic tenure assumptions; very long tenures can mask high total borrowing cost.</li>
+              <li>Run prepayment scenarios before using bonus cash on discretionary spending.</li>
+              <li>Keep an emergency buffer before large prepayment actions.</li>
+              <li>Recalculate after rate changes, refinance events, or significant income shifts.</li>
+            </ul>
+          </>
+        )}
+        faq={(
+          <>
+            {faqItems.map((item) => (
+              <div key={item.question} style={{ marginBottom: '0.65rem' }}>
+                <h3 style={{ margin: '0 0 0.15rem', fontSize: '0.95rem', color: '#0f2a43' }}>{item.question}</h3>
+                <p style={{ margin: 0 }}>{item.answer}</p>
+              </div>
+            ))}
+          </>
+        )}
+        relatedGuides={relatedGuides}
+        methodology={(
+          <>
+            <p>
+              Methodology uses standard reducing-balance EMI mathematics and month-level amortization expansion.
+              Prepayment scenarios recompute payment effect after principal reduction while holding remaining months and
+              rate assumptions constant in this model.
+            </p>
+            <p>
+              Assumptions: fixed-rate behavior for projection, no processing-fee effects, and no dynamic reset modeling.
+              Real lender outcomes can vary because of contractual clauses and floating benchmarks. Validate major
+              financial decisions with lender amortization statements.
+            </p>
+          </>
+        )}
+      >
+        <p style={{ margin: 0, color: '#475569', fontSize: '0.9rem' }}>
+          Use the calculator below for fresh EMI planning or switch to prepayment mode for savings analysis.
+        </p>
+      </CalculatorArticleLayout>
+
       <div className="calculator-card">
         <div className="calculator-header emi-header">
           <div className="header-nav">
             <HomeButton />
             <div className="flex-spacer"></div>
           </div>
-          <h1 className="header-title">
+          <h2 className="header-title">
             Comprehensive Loan Calculator
-          </h1>
+          </h2>
           <div className="mobile-tabs">
             <button
               className={`mobile-tab-button ${activeTab === 'emi' ? 'active' : ''}`}

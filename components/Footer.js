@@ -98,7 +98,9 @@ const Footer = () => {
               <a href="/sip-calculator" style={linkStyle}>SIP Calculator</a> • <a href="/loan-calculator" style={linkStyle}>Loan EMI Calculator</a><br/>
               <a href="/ppf-calculator" style={linkStyle}>PPF Calculator</a> • <a href="/credit-card-trap-calculator" style={linkStyle}>Credit Card Trap Calculator</a><br/>
               <a href="/salary-calculator" style={linkStyle}>Salary Calculator</a> • <a href="/irctc-calculator" style={linkStyle}>IRCTC Calculator</a><br/>
-              <a href="/age-calculator" style={linkStyle}>Age Calculator</a> • <a href="/json-tools" style={linkStyle}>JSON Tools</a>
+              <a href="/age-calculator" style={linkStyle}>Age Calculator</a> • <a href="/json-tools" style={linkStyle}>JSON Tools</a><br/>
+              <a href="/scientific-calculator" style={linkStyle}>Scientific Calculator</a> • <a href="/statistics-calculator" style={linkStyle}>Statistics Calculator</a><br/>
+              <a href="/unit-converter" style={linkStyle}>Engineering Unit Converter</a>
             </div>
           </div>
           

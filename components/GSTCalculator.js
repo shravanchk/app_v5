@@ -3,8 +3,10 @@ import Head from 'next/head';
 import { Plus, Minus, RotateCcw, Info } from 'lucide-react';
 import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
+import CalculatorArticleLayout from './calculator/CalculatorArticleLayout';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { buildFaqSchema } from '../utils/faqSchema';
 import { formatINR } from '../utils/calculations';
 
 const GSTCalculator = () => {
@@ -135,6 +137,33 @@ const GSTCalculator = () => {
     `Base amount: ${formatINR(reverseGSTResult.baseAmount)}`
   ] : [];
 
+  const faqItems = [
+    {
+      question: 'What is the difference between add GST and remove GST?',
+      answer: 'Add GST computes total invoice value from base amount. Remove GST starts from inclusive invoice and extracts tax portion to find base value.'
+    },
+    {
+      question: 'Does this tool show CGST, SGST, and IGST?',
+      answer: 'Yes. The output provides split for CGST/SGST (intra-state concept) and references IGST amount for inter-state interpretation.'
+    },
+    {
+      question: 'Can I use this for invoice drafting?',
+      answer: 'Yes for quick estimation. Final invoices should still follow classification, place-of-supply, and compliance details in your accounting workflow.'
+    },
+    {
+      question: 'Why can final GST differ from business books?',
+      answer: 'Differences usually come from product classification, discounts, composite treatment, rounding policy, or mixed-rate invoices.'
+    }
+  ];
+
+  const faqSchema = buildFaqSchema(faqItems);
+
+  const relatedGuides = [
+    { label: 'GST calculation decisions in context', href: '/guide-income-tax-regime-choice.html' },
+    { label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' },
+    { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' }
+  ];
+
   return (
     <div className="calculator-container gst-container">
       <Head>
@@ -169,7 +198,124 @@ const GSTCalculator = () => {
             "featureList": ["Add GST Calculator", "Remove GST Calculator", "Reverse GST Calculator", "GST Breakdown", "All GST Rates"]
           })
         }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqSchema)
+          }}
+        />
       </Head>
+      <CalculatorArticleLayout
+        title="GST Calculator India: Add, Remove, and Reverse GST With Practical Breakdown"
+        intro={(
+          <>
+            <p>
+              GST calculation is one of the most repeated tasks for Indian businesses, freelancers, and billing teams.
+              Yet confusion still appears in day-to-day operations because people switch between base-price quoting,
+              inclusive pricing, and reverse extraction from customer-paid totals. A reliable GST page should therefore
+              support all three flows: adding GST to a net amount, removing GST from an inclusive value, and reverse
+              extraction for reconciliation checks. This page is designed to support those practical scenarios.
+            </p>
+            <p>
+              The biggest source of errors is mixing pricing context. If a vendor quote is tax-exclusive, you add GST.
+              If a marketplace payout is already GST-inclusive, you remove GST to know the base component. If you only
+              know final billed total and tax rate, reverse calculation helps reconstruct taxable amount. Using the wrong
+              mode can lead to under-collection or over-reporting. That is why this calculator separates each operation
+              clearly and shows tax split outputs instead of only one final number.
+            </p>
+            <p>
+              Another common pain point is communication across teams. Sales may think in final price, operations in
+              taxable value, and finance in ledger tax buckets. By showing base, GST, and total in one place, this page
+              becomes a shared reference during invoice drafting, quotation validation, and sanity checks before return
+              preparation. It is not a filing engine, but it reduces routine arithmetic errors that create compliance
+              friction later.
+            </p>
+          </>
+        )}
+        explanation={(
+          <>
+            <p>
+              Core formulas are simple but must be applied in the right order. For add-GST mode, GST amount equals
+              base amount multiplied by rate divided by 100. Total invoice value is base plus GST. For remove-GST mode,
+              you cannot subtract percentage directly from inclusive total. Instead, first derive base as:
+              inclusive × 100 / (100 + rate). Then GST equals inclusive minus base.
+            </p>
+            <p>
+              Reverse mode follows the same extraction logic as remove mode, but the interface emphasizes reconciliation:
+              you enter a final amount and recover original taxable value. This helps when reviewing payment messages,
+              gross receipts, settlement files, or manually shared totals without detailed invoice lines. The page then
+              displays both tax component and original amount to support bookkeeping decisions.
+            </p>
+            <p>
+              CGST and SGST are shown as equal halves of GST amount for the common intra-state interpretation. IGST is
+              shown as full GST reference for inter-state context. This representation is intentionally transparent for
+              quick review. Complex legal treatment can vary by supply type, product classification, and jurisdictional
+              rules, so operational teams should still validate edge cases in their official workflow.
+            </p>
+            <p>
+              Using a structured calculator also helps standardize rounding behavior. Manual spreadsheet formulas often
+              differ across teams because of inconsistent decimal handling. Here, one consistent method is applied across
+              all three modes so the logic remains stable when rate or amount changes. This is especially useful for
+              high-volume quoting, recurring billing, and audit-prep spot checks.
+            </p>
+          </>
+        )}
+        example={(
+          <>
+            <p>
+              Assume your taxable service amount is ₹10,000 and GST rate is 18%. In add-GST mode, tax is ₹1,800 and
+              total invoice becomes ₹11,800. Now imagine you receive only final amount ₹11,800 from a partner statement
+              and need base value for accounting. In remove-GST or reverse mode, base becomes ₹10,000 and GST is
+              recovered as ₹1,800. The same number set validates that both forward and reverse operations align.
+            </p>
+            <p>
+              If a team member incorrectly subtracts 18% from ₹11,800 directly, they may get ₹9,676 as base, which is
+              wrong for inclusive extraction. The denominator method (100 + rate) avoids this mistake. This example is
+              why mode selection matters as much as formula accuracy.
+            </p>
+          </>
+        )}
+        tips={(
+          <>
+            <ul style={{ margin: 0, paddingLeft: '1rem' }}>
+              <li>Always confirm whether the amount you entered is GST-inclusive or tax-exclusive.</li>
+              <li>Use remove/reverse mode for settlement files and payout reports that provide final values only.</li>
+              <li>Keep rate selection aligned with product/service classification before invoice generation.</li>
+              <li>Do not use direct percentage subtraction to extract base from inclusive totals.</li>
+              <li>Reconcile with official GST returns and accounting books before submission deadlines.</li>
+            </ul>
+          </>
+        )}
+        faq={(
+          <>
+            {faqItems.map((item) => (
+              <div key={item.question} style={{ marginBottom: '0.65rem' }}>
+                <h3 style={{ margin: '0 0 0.15rem', fontSize: '0.95rem', color: '#0f2a43' }}>{item.question}</h3>
+                <p style={{ margin: 0 }}>{item.answer}</p>
+              </div>
+            ))}
+          </>
+        )}
+        relatedGuides={relatedGuides}
+        methodology={(
+          <>
+            <p>
+              Methodology is deterministic arithmetic with three explicit pathways: add-GST, remove-GST, and reverse
+              extraction. CGST/SGST split is represented as half-half for display and IGST as full-tax reference. The
+              model assumes single-rate application over the entered amount.
+            </p>
+            <p>
+              Assumptions and limits: mixed-rate invoices, exemptions, classification disputes, and composition-scheme
+              scenarios are outside this quick calculator scope. Treat output as operational estimate and verify against
+              your compliance process and official GST portal guidance.
+            </p>
+          </>
+        )}
+      >
+        <p style={{ margin: 0, color: '#475569', fontSize: '0.9rem' }}>
+          Choose the appropriate GST operation below based on whether your amount is exclusive or inclusive of tax.
+        </p>
+      </CalculatorArticleLayout>
       <div className="calculator-card">
         <div className="calculator-header gst-header">
           <div className="header-nav">
@@ -182,9 +328,9 @@ const GSTCalculator = () => {
               alt="Upaman Logo"
               className="header-logo"
             />
-            <h1 className="header-title">
+            <h2 className="header-title">
               Free GST Calculator India 2025 - Upaman
-            </h1>
+            </h2>
             <p style={{ 
               textAlign: 'center', 
               marginTop: '0.5rem', 
