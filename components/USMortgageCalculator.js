@@ -3,6 +3,7 @@ import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import { formatCurrency } from '../utils/calculations';
 
 const getMonthlyPayment = (principal, annualRate, months) => {
@@ -220,6 +221,17 @@ const USMortgageCalculator = () => {
                 {results.housingRatio > 28 ? ' (above common 28% guideline)' : ' (within common 28% guideline)'}
               </p>
             </div>
+            <PieBreakdownChart
+              title="Monthly payment composition"
+              items={[
+                { label: 'Principal & interest', value: results.principalAndInterest, color: '#3b82f6' },
+                { label: 'Property tax', value: results.propertyTaxMonthly, color: '#f59e0b' },
+                { label: 'Insurance', value: results.insuranceMonthly, color: '#10b981' },
+                { label: 'HOA', value: results.hoaMonthly, color: '#8b5cf6' },
+                { label: 'PMI', value: results.pmiMonthly, color: '#ef4444' }
+              ]}
+              formatter={formatUSD}
+            />
           </div>
 
           <ResultActions title="US Mortgage Calculator Summary" summaryLines={summaryLines} fileName="us-mortgage-calculator-summary.txt" />

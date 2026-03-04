@@ -5,6 +5,7 @@ import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 
 const SalaryCalculator = () => {
   const [activeTab, setActiveTab] = useState('ctc-breakdown');
@@ -816,6 +817,15 @@ const SalaryCalculator = () => {
                             ))}
                           </div>
                         </div>
+                        <PieBreakdownChart
+                          title="Annual salary composition"
+                          items={[
+                            { label: 'Take-home salary', value: ctcResult.netAnnualSalary, color: '#10b981' },
+                            { label: 'Employee deductions', value: ctcResult.deductions.total, color: '#f97316' },
+                            { label: 'Employer contributions', value: ctcResult.employerContributions.total, color: '#3b82f6' }
+                          ]}
+                          formatter={formatCurrency}
+                        />
                       </div>
 
                       {/* City Information */}
@@ -1083,6 +1093,22 @@ const SalaryCalculator = () => {
                         </p>
                       </div>
                     )}
+                    <ComparisonBars
+                      title="Salary offer comparison"
+                      items={[
+                        { label: 'Current salary', value: comparisonResult.currentSalary, color: '#64748b' },
+                        { label: 'New salary', value: comparisonResult.newSalary, color: '#3b82f6' }
+                      ]}
+                      formatter={formatCurrency}
+                    />
+                    <ComparisonBars
+                      title="Cost-adjusted comparison"
+                      items={[
+                        { label: 'Current (adjusted)', value: comparisonResult.currentAdjustedSalary, color: '#f97316' },
+                        { label: 'New (adjusted)', value: comparisonResult.newAdjustedSalary, color: '#10b981' }
+                      ]}
+                      formatter={formatCurrency}
+                    />
                   </div>
                   <ResultActions
                     title="Salary comparison summary"

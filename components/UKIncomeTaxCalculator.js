@@ -4,6 +4,7 @@ import { Calculator, TrendingUp, Info } from 'lucide-react';
 import AffiliateRecommendations from './AffiliateRecommendations';
 import AdSenseAd from './AdSenseAd';
 import HomeButton from './HomeButton';
+import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 
 const UKIncomeTaxCalculator = ({ onBack }) => {
   const [income, setIncome] = useState('');
@@ -12,6 +13,12 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
   const [studentLoan, setStudentLoan] = useState('none'); // none, plan1, plan2, plan4, plan5, postgrad
   const [results, setResults] = useState(null);
   const [showBreakdown, setShowBreakdown] = useState(false);
+
+  const formatGBP = (value) =>
+    `£${Number(value || 0).toLocaleString('en-GB', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    })}`;
 
   // 2025-26 Tax Rates
   const TAX_RATES = {
@@ -529,6 +536,24 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
                     <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>{results.effectiveRate.toFixed(1)}% effective rate</div>
                   </div>
                 </div>
+                <PieBreakdownChart
+                  title="Gross income composition"
+                  items={[
+                    { label: 'Net income', value: results.netIncome, color: '#10b981' },
+                    { label: 'Income tax', value: results.incomeTax, color: '#f97316' },
+                    { label: 'National Insurance', value: results.nationalInsurance, color: '#3b82f6' },
+                    { label: 'Student loan', value: results.studentLoanRepayment, color: '#8b5cf6' }
+                  ]}
+                  formatter={formatGBP}
+                />
+                <ComparisonBars
+                  title="Annual take-home vs tax burden"
+                  items={[
+                    { label: 'Annual take-home', value: results.netIncome, color: '#10b981' },
+                    { label: 'Total tax + NI + loan', value: results.totalTax, color: '#ef4444' }
+                  ]}
+                  formatter={formatGBP}
+                />
 
                 {/* Detailed Breakdown */}
                 <div style={{ marginBottom: '1.5rem' }}>

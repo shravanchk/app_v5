@@ -28,8 +28,7 @@ const CalculatorArticleLayout = ({
   tips,
   faq,
   methodology,
-  relatedGuides = [],
-  children
+  relatedGuides = []
 }) => {
   return (
     <article
@@ -41,8 +40,8 @@ const CalculatorArticleLayout = ({
     >
       <div
         style={{
-          background: 'linear-gradient(135deg, #0f2a43, #1d4e89)',
-          color: '#f8fafc',
+          background: 'linear-gradient(135deg, #eff6ff, #e2e8f0)',
+          color: '#0f2a43',
           borderRadius: '1rem',
           padding: '1.2rem 1.2rem 1rem',
           marginBottom: '0.95rem'
@@ -52,6 +51,7 @@ const CalculatorArticleLayout = ({
       </div>
 
       <section style={sectionCardStyle}>
+        <h2 style={sectionTitleStyle}>Topic overview</h2>
         <div style={bodyTextStyle}>{intro}</div>
       </section>
 
@@ -65,17 +65,12 @@ const CalculatorArticleLayout = ({
         <div style={bodyTextStyle}>{example}</div>
       </section>
 
-      <section style={{ ...sectionCardStyle, borderStyle: 'dashed' }}>
-        <h2 style={sectionTitleStyle}>Calculator tool</h2>
-        {children}
-      </section>
-
       <section style={sectionCardStyle}>
         <h2 style={sectionTitleStyle}>Tips and common mistakes</h2>
         <div style={bodyTextStyle}>{tips}</div>
       </section>
 
-      <section style={sectionCardStyle}>
+      <section id="faq-section" style={{ ...sectionCardStyle, scrollMarginTop: '90px' }}>
         <h2 style={sectionTitleStyle}>Frequently asked questions</h2>
         <div style={bodyTextStyle}>{faq}</div>
       </section>
@@ -86,7 +81,12 @@ const CalculatorArticleLayout = ({
           <ul style={{ margin: 0, paddingLeft: '1.1rem', ...bodyTextStyle }}>
             {relatedGuides.map((guide) => (
               <li key={guide.href} style={{ marginBottom: '0.35rem' }}>
-                <a href={guide.href} style={{ color: '#1d4e89', fontWeight: 600 }}>
+                <a
+                  href={guide.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: '#1d4e89', fontWeight: 600 }}
+                >
                   {guide.label}
                 </a>
               </li>

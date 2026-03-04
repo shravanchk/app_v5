@@ -4,6 +4,7 @@ import { Calculator, Euro, TrendingUp, Building, Info, Globe } from 'lucide-reac
 import AffiliateRecommendations from './AffiliateRecommendations';
 import AdSenseAd from './AdSenseAd';
 import HomeButton from './HomeButton';
+import { PieBreakdownChart } from './calculator/ResultVisualizations';
 
 const VATCalculator = ({ onBack }) => {
   const [amount, setAmount] = useState('');
@@ -500,6 +501,19 @@ const VATCalculator = ({ onBack }) => {
                     </div>
                   </div>
                 </div>
+                <PieBreakdownChart
+                  title="Net amount vs VAT share"
+                  items={[
+                    { label: 'Net amount', value: results.netAmount, color: '#3b82f6' },
+                    { label: 'VAT amount', value: results.vatAmount, color: '#f97316' }
+                  ]}
+                  formatter={(value) =>
+                    `${results.currency}${Number(value || 0).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
+                    })}`
+                  }
+                />
               </div>
 
               {/* Affiliate Recommendations */}

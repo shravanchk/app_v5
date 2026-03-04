@@ -3,6 +3,7 @@ import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import { formatCurrency } from '../utils/calculations';
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
@@ -190,6 +191,30 @@ const USSavingsCDCalculator = () => {
                 <strong>Savings projection period:</strong> {savingsResult.months} months
               </p>
             </div>
+            <PieBreakdownChart
+              title="Savings growth composition"
+              items={[
+                { label: 'Total contributed', value: savingsResult.totalContributed, color: '#3b82f6' },
+                { label: 'Interest earned', value: savingsResult.interestEarned, color: '#10b981' }
+              ]}
+              formatter={formatUSD}
+            />
+            <PieBreakdownChart
+              title="CD maturity composition"
+              items={[
+                { label: 'CD principal', value: Math.max(0, Number(inputs.cdDeposit) || 0), color: '#8b5cf6' },
+                { label: 'CD interest', value: cdResult.interestEarned, color: '#f97316' }
+              ]}
+              formatter={formatUSD}
+            />
+            <ComparisonBars
+              title="Ending value comparison"
+              items={[
+                { label: 'Savings ending balance', value: savingsResult.endingBalance, color: '#3b82f6' },
+                { label: 'CD maturity value', value: cdResult.maturityValue, color: '#8b5cf6' }
+              ]}
+              formatter={formatUSD}
+            />
           </div>
 
           <ResultActions title="US Savings & CD Calculator Summary" summaryLines={summaryLines} fileName="us-savings-cd-calculator-summary.txt" />

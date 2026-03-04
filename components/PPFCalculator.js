@@ -3,6 +3,7 @@ import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import { formatINR } from '../utils/calculations';
 
 const PPF_CONTRIBUTION_LIMIT = 150000;
@@ -289,6 +290,14 @@ const PPFCalculator = () => {
                 </div>
               </div>
             </div>
+            <PieBreakdownChart
+              title="Maturity value composition"
+              items={[
+                { label: 'Total investment', value: results.summary.totalInvested, color: '#3b82f6' },
+                { label: 'Interest earned', value: results.summary.totalInterest, color: '#10b981' }
+              ]}
+              formatter={formatINR}
+            />
             <ResultActions
               title="PPF projection summary"
               summaryLines={ppfShareLines}

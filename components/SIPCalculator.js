@@ -4,6 +4,7 @@ import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 
 const SIPCalculator = () => {
   const [activeTab, setActiveTab] = useState('sip');
@@ -323,6 +324,14 @@ const SIPCalculator = () => {
                       <div className="result-value emi">{sipResult.returnPercentage}%</div>
                     </div>
                   </div>
+                  <PieBreakdownChart
+                    title="Investment vs returns"
+                    items={[
+                      { label: 'Total investment', value: sipResult.totalInvestment, color: '#3b82f6' },
+                      { label: 'Total returns', value: sipResult.totalReturns, color: '#10b981' }
+                    ]}
+                    formatter={formatCurrency}
+                  />
 
                   {/* Affiliate Recommendations */}
                   <AffiliateRecommendations 
@@ -427,6 +436,14 @@ const SIPCalculator = () => {
                       <div className="result-value interest">{formatCurrency(goalResult.totalReturns)}</div>
                     </div>
                   </div>
+                  <PieBreakdownChart
+                    title="Target amount composition"
+                    items={[
+                      { label: 'Total investment', value: goalResult.totalInvestment, color: '#3b82f6' },
+                      { label: 'Projected returns', value: goalResult.totalReturns, color: '#10b981' }
+                    ]}
+                    formatter={formatCurrency}
+                  />
                   <ResultActions
                     title="Goal-based SIP summary"
                     summaryLines={goalShareLines}
@@ -533,6 +550,22 @@ const SIPCalculator = () => {
                     </div>
                     </div>
                   </div>
+                  <ComparisonBars
+                    title="Future value comparison"
+                    items={[
+                      { label: 'SIP future value', value: comparisonResult.sip.futureValue, color: '#3b82f6' },
+                      { label: 'Lumpsum future value', value: comparisonResult.lumpsum.futureValue, color: '#8b5cf6' }
+                    ]}
+                    formatter={formatCurrency}
+                  />
+                  <ComparisonBars
+                    title="Return comparison"
+                    items={[
+                      { label: 'SIP returns', value: comparisonResult.sip.returns, color: '#10b981' },
+                      { label: 'Lumpsum returns', value: comparisonResult.lumpsum.returns, color: '#f97316' }
+                    ]}
+                    formatter={formatCurrency}
+                  />
                   <ResultActions
                     title="SIP vs lumpsum comparison summary"
                     summaryLines={comparisonShareLines}

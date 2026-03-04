@@ -3,6 +3,7 @@ import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import { formatCurrency } from '../utils/calculations';
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
@@ -207,6 +208,16 @@ const US401kCalculator = () => {
                 <div className="result-value interest">{formatUSD(results.investmentGrowth)}</div>
               </div>
             </div>
+            <PieBreakdownChart
+              title="Projected balance composition"
+              items={[
+                { label: 'Starting balance', value: Math.max(0, Number(inputs.currentBalance) || 0), color: '#334155' },
+                { label: 'Your contributions', value: results.totalEmployeeContrib, color: '#3b82f6' },
+                { label: 'Employer contributions', value: results.totalEmployerContrib, color: '#14b8a6' },
+                { label: 'Investment growth', value: results.investmentGrowth, color: '#f97316' }
+              ]}
+              formatter={formatUSD}
+            />
 
             <div style={{ fontSize: '0.9rem', color: '#334155', lineHeight: 1.55 }}>
               <p style={{ margin: '0 0 0.35rem 0' }}>

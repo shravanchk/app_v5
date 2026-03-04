@@ -4,6 +4,7 @@ import { Calculator, Euro, TrendingUp, Users, Info, Globe, PiggyBank } from 'luc
 import AffiliateRecommendations from './AffiliateRecommendations';
 import AdSenseAd from './AdSenseAd';
 import HomeButton from './HomeButton';
+import { PieBreakdownChart } from './calculator/ResultVisualizations';
 
 const EuropeanSalaryCalculator = ({
   onBack,
@@ -924,6 +925,14 @@ const EuropeanSalaryCalculator = ({
                     <Users size={32} style={{ opacity: 0.7 }} />
                   </div>
                 </div>
+                <PieBreakdownChart
+                  title="Gross salary composition"
+                  items={[
+                    { label: 'Net take-home', value: results.netAnnual, color: '#10b981' },
+                    { label: 'Total deductions', value: results.breakdown.totalDeductions, color: '#f97316' }
+                  ]}
+                  formatter={(value) => formatCurrency(value, results.currency)}
+                />
 
                 {/* Detailed Breakdown */}
                 <div style={{

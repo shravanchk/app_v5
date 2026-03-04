@@ -3,6 +3,7 @@ import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { ComparisonBars } from './calculator/ResultVisualizations';
 import { formatINR } from '../utils/calculations';
 
 const MAX_MONTHS = 1200;
@@ -350,6 +351,22 @@ const CreditCardTrapCalculator = () => {
                 <div className="result-value" style={{ color: '#1d4ed8' }}>{formatDuration(monthsSaved)}</div>
               </div>
             </div>
+            <ComparisonBars
+              title="Interest comparison"
+              items={[
+                { label: 'Minimum due interest', value: minimumPlan.totalInterest, color: '#ef4444' },
+                { label: 'Your plan interest', value: acceleratedPlan.totalInterest, color: '#10b981' }
+              ]}
+              formatter={formatINR}
+            />
+            <ComparisonBars
+              title="Payoff timeline comparison"
+              items={[
+                { label: 'Minimum due months', value: minimumPlan.months, color: '#f97316' },
+                { label: 'Your plan months', value: acceleratedPlan.months, color: '#3b82f6' }
+              ]}
+              formatter={(value) => `${Math.round(value)} mo`}
+            />
           </div>
 
           {(minimumPlan.isUnpayable || acceleratedPlan.isUnpayable) && (

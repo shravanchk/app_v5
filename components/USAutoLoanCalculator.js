@@ -3,6 +3,7 @@ import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import { formatCurrency } from '../utils/calculations';
 
 const getMonthlyPayment = (principal, annualRate, months) => {
@@ -181,6 +182,19 @@ const USAutoLoanCalculator = () => {
               <p style={{ margin: '0 0 0.35rem 0' }}><strong>Sales tax estimate:</strong> {formatUSD(results.salesTax)}</p>
               <p style={{ margin: 0 }}><strong>Total out-of-pocket cost:</strong> {formatUSD(results.totalOutOfPocketCost)}</p>
             </div>
+            <PieBreakdownChart
+              title="Out-of-pocket cost composition"
+              items={[
+                {
+                  label: 'Upfront (down + trade-in)',
+                  value: Math.max(0, Number(inputs.downPayment) || 0) + Math.max(0, Number(inputs.tradeInValue) || 0),
+                  color: '#0f766e'
+                },
+                { label: 'Loan principal', value: results.financedAmount, color: '#3b82f6' },
+                { label: 'Loan interest', value: results.totalInterest, color: '#f97316' }
+              ]}
+              formatter={formatUSD}
+            />
           </div>
 
           <ResultActions title="US Auto Loan Calculator Summary" summaryLines={summaryLines} fileName="us-auto-loan-calculator-summary.txt" />

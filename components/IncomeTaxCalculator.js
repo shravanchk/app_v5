@@ -4,6 +4,7 @@ import { Calculator, TrendingUp, Info } from 'lucide-react';
 import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import CalculatorArticleLayout from './calculator/CalculatorArticleLayout';
+import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { buildFaqSchema } from '../utils/faqSchema';
@@ -387,125 +388,8 @@ const IncomeTaxCalculator = () => {
         />
       </Head>
 
-      <CalculatorArticleLayout
-        title="Income Tax Calculator India (FY 2025-26): Old vs New Regime With Worked Examples"
-        intro={(
-          <>
-            <p>
-              Income tax planning in India is not only about finding the tax amount at the end of the year. For most
-              people, the real decision is how salary, deductions, regime selection, and take-home cash flow fit
-              together month by month. A practical calculator should therefore help you do more than one action: it
-              should estimate salary tax, compare old and new regimes, and show how deductions change taxable income.
-              This page is built with that exact goal.
-            </p>
-            <p>
-              The Indian tax framework for FY 2025-26 (AY 2026-27) uses slab-based marginal taxation. That means each
-              slab of income is taxed at a different rate, not your full income at the top slab. Many taxpayers
-              overestimate their liability because they assume crossing a slab pushes all income into the higher rate.
-              The correct method is incremental and this calculator follows that approach. After base tax, cess is
-              applied and eligible rebate logic is considered so the output reflects a realistic planning estimate.
-            </p>
-            <p>
-              You can use this page in three ways. First, salaried users can model standard deduction and old-regime
-              items like 80C, 80D, NPS, HRA, and home-loan interest. Second, business users can estimate tax from net
-              profit after costs and depreciation. Third, the comparison tab highlights which regime currently delivers
-              lower tax and stronger take-home. Together these flows reduce guesswork before payroll planning, advance
-              tax decisions, and investment allocation.
-            </p>
-          </>
-        )}
-        explanation={(
-          <>
-            <p>
-              The core engine is slab-wise marginal computation. In simple terms, taxable income is split into ranges,
-              and each range is multiplied by its own rate. For example, if a part of your income sits in a 5% band and
-              the next part in a 10% band, the calculator applies those rates only to their respective portions. This is
-              the only accurate way to estimate liability under either regime.
-            </p>
-            <p>
-              For salary-tax mode, gross annual salary is the starting point. Under the old regime, eligible deductions
-              are applied based on common sections: 80C, 80D, NPS (80CCD 1B), HRA treatment, and home-loan interest.
-              Under the new regime, deduction availability is different, so the calculator applies the configured
-              standard-deduction logic for that regime and then computes taxable income accordingly. The taxable number
-              is then fed into slab rules and cess is added.
-            </p>
-            <p>
-              Rebate treatment is important because it can materially change final outflow at lower-to-middle income
-              levels. The calculator checks rebate eligibility after slab tax plus cess and reduces final payable tax
-              where applicable. This sequencing matters: if rebate is modeled incorrectly, the final tax number can be
-              off by thousands. That is why the output includes separate fields for base tax, cess, rebate, and final
-              payable amount.
-            </p>
-            <p>
-              Business-tax mode follows a similar structure but starts from gross business income and subtracts operating
-              expenses, depreciation, and other allowable values to arrive at taxable profit. Advance tax paid is then
-              netted out to estimate balance payable. This is useful for cash-flow planning because many owners only look
-              at annual P&L but not interim tax payments. Comparison mode then allows side-by-side old/new results so
-              you can evaluate whether deduction-heavy or simplified filing paths are currently better.
-            </p>
-          </>
-        )}
-        example={(
-          <>
-            <p>
-              Suppose a salaried user has annual salary of ₹12,00,000 and expects ₹1,50,000 under 80C, ₹25,000 under
-              80D, and ₹50,000 under NPS. In old-regime view, the calculator first adjusts salary by standard deduction
-              and eligible deductions, then computes slab tax on remaining taxable income. Cess is added and rebate is
-              checked where relevant. In new-regime view, the tool applies new-regime deduction treatment and runs slab
-              math again.
-            </p>
-            <p>
-              Assume the model returns old-regime tax of about ₹X and new-regime tax of about ₹Y (numbers depend on
-              final input mix). If old-regime tax is lower by ₹18,000, the comparison card marks old regime as better
-              and also shows higher take-home amount. If future deduction plans reduce, you can rerun quickly and see
-              whether the recommendation flips. This scenario-testing workflow is usually more useful than a one-time
-              static estimate.
-            </p>
-          </>
-        )}
-        tips={(
-          <>
-            <ul style={{ margin: 0, paddingLeft: '1rem' }}>
-              <li>Enter annual numbers consistently; avoid mixing monthly deductions with yearly salary.</li>
-              <li>Use comparison mode before locking payroll declarations for the year.</li>
-              <li>For HRA, maintain rent and allowance records; missing assumptions can skew old-regime output.</li>
-              <li>Re-run calculation when income changes due to bonus, switch, or variable pay revision.</li>
-              <li>Treat results as planning estimates and verify filing values with official documents.</li>
-            </ul>
-          </>
-        )}
-        faq={(
-          <>
-            {faqItems.map((item) => (
-              <div key={item.question} style={{ marginBottom: '0.65rem' }}>
-                <h3 style={{ margin: '0 0 0.15rem', fontSize: '0.95rem', color: '#0f2a43' }}>{item.question}</h3>
-                <p style={{ margin: 0 }}>{item.answer}</p>
-              </div>
-            ))}
-          </>
-        )}
-        relatedGuides={relatedGuides}
-        methodology={(
-          <>
-            <p>
-              Methodology is slab-first and regime-aware: compute taxable income, apply slab rates incrementally, add
-              cess, then apply rebate eligibility. Business mode computes taxable profit from gross income minus selected
-              expenses and deductions, then applies tax logic and advance-tax offset for balance payable estimate.
-            </p>
-            <p>
-              Assumptions: rates and regime rules in this app are modeled for FY 2025-26 / AY 2026-27 configuration.
-              Special incomes, surcharge edge cases, and rare exemptions are intentionally simplified for planning use.
-              For return filing, validate with official sources and professional advice where required.
-            </p>
-          </>
-        )}
-      >
-        <p style={{ margin: 0, color: '#475569', fontSize: '0.9rem' }}>
-          Use the calculator below to switch between salary tax, business tax, and old-vs-new regime comparison.
-        </p>
-      </CalculatorArticleLayout>
 
-      <div className="calculator-card">
+      <div id="calculator-app" className="calculator-card">
         <div className="calculator-header tax-header">
           <div className="header-nav">
             <HomeButton />
@@ -736,6 +620,14 @@ const IncomeTaxCalculator = () => {
                       </div>
                     </div>
                   </div>
+                  <PieBreakdownChart
+                    title="Take-home vs tax split"
+                    items={[
+                      { label: 'Net salary', value: salaryTaxResult.netSalary, color: '#10b981' },
+                      { label: 'Total tax', value: salaryTaxResult.totalTax, color: '#f97316' }
+                    ]}
+                    formatter={formatCurrency}
+                  />
 
                   {/* Affiliate Recommendations */}
                   <AffiliateRecommendations 
@@ -866,6 +758,15 @@ const IncomeTaxCalculator = () => {
                       </div>
                     </div>
                   </div>
+                  <PieBreakdownChart
+                    title="Business income distribution"
+                    items={[
+                      { label: 'Expenses', value: businessTaxResult.totalExpenses, color: '#f59e0b' },
+                      { label: 'Total tax', value: businessTaxResult.totalTax, color: '#ef4444' },
+                      { label: 'Profit after tax', value: Math.max(0, businessTaxResult.netProfit - businessTaxResult.totalTax), color: '#22c55e' }
+                    ]}
+                    formatter={formatCurrency}
+                  />
                   <ResultActions
                     title="Income tax business summary"
                     summaryLines={businessShareLines}
@@ -945,6 +846,14 @@ const IncomeTaxCalculator = () => {
                           </div>
                         </div>
                       </div>
+                      <ComparisonBars
+                        title="Regime tax comparison"
+                        items={[
+                          { label: 'Old regime tax', value: comparisonResult.oldRegimeTax, color: '#f97316' },
+                          { label: 'New regime tax', value: comparisonResult.newRegimeTax, color: '#3b82f6' }
+                        ]}
+                        formatter={formatCurrency}
+                      />
                       <ResultActions
                         title="Income tax regime comparison summary"
                         summaryLines={comparisonShareLines}
@@ -1091,6 +1000,129 @@ const IncomeTaxCalculator = () => {
           </div>
         </div>
       </div>
+      <CalculatorArticleLayout
+        title="Income Tax Calculator India (FY 2025-26): Old vs New Regime With Worked Examples"
+        summary={(
+          <p style={{ margin: 0 }}>
+            Estimate salary and business tax, compare old vs new regime, and review take-home impact quickly. Use the
+            calculator first, then scroll for detailed explanation, examples, FAQ, and methodology.
+          </p>
+        )}
+        intro={(
+          <>
+            <p>
+              Income tax planning in India is not only about finding the tax amount at the end of the year. For most
+              people, the real decision is how salary, deductions, regime selection, and take-home cash flow fit
+              together month by month. A practical calculator should therefore help you do more than one action: it
+              should estimate salary tax, compare old and new regimes, and show how deductions change taxable income.
+              This page is built with that exact goal.
+            </p>
+            <p>
+              The Indian tax framework for FY 2025-26 (AY 2026-27) uses slab-based marginal taxation. That means each
+              slab of income is taxed at a different rate, not your full income at the top slab. Many taxpayers
+              overestimate their liability because they assume crossing a slab pushes all income into the higher rate.
+              The correct method is incremental and this calculator follows that approach. After base tax, cess is
+              applied and eligible rebate logic is considered so the output reflects a realistic planning estimate.
+            </p>
+            <p>
+              You can use this page in three ways. First, salaried users can model standard deduction and old-regime
+              items like 80C, 80D, NPS, HRA, and home-loan interest. Second, business users can estimate tax from net
+              profit after costs and depreciation. Third, the comparison tab highlights which regime currently delivers
+              lower tax and stronger take-home. Together these flows reduce guesswork before payroll planning, advance
+              tax decisions, and investment allocation.
+            </p>
+          </>
+        )}
+        explanation={(
+          <>
+            <p>
+              The core engine is slab-wise marginal computation. In simple terms, taxable income is split into ranges,
+              and each range is multiplied by its own rate. For example, if a part of your income sits in a 5% band and
+              the next part in a 10% band, the calculator applies those rates only to their respective portions. This is
+              the only accurate way to estimate liability under either regime.
+            </p>
+            <p>
+              For salary-tax mode, gross annual salary is the starting point. Under the old regime, eligible deductions
+              are applied based on common sections: 80C, 80D, NPS (80CCD 1B), HRA treatment, and home-loan interest.
+              Under the new regime, deduction availability is different, so the calculator applies the configured
+              standard-deduction logic for that regime and then computes taxable income accordingly. The taxable number
+              is then fed into slab rules and cess is added.
+            </p>
+            <p>
+              Rebate treatment is important because it can materially change final outflow at lower-to-middle income
+              levels. The calculator checks rebate eligibility after slab tax plus cess and reduces final payable tax
+              where applicable. This sequencing matters: if rebate is modeled incorrectly, the final tax number can be
+              off by thousands. That is why the output includes separate fields for base tax, cess, rebate, and final
+              payable amount.
+            </p>
+            <p>
+              Business-tax mode follows a similar structure but starts from gross business income and subtracts operating
+              expenses, depreciation, and other allowable values to arrive at taxable profit. Advance tax paid is then
+              netted out to estimate balance payable. This is useful for cash-flow planning because many owners only look
+              at annual P&L but not interim tax payments. Comparison mode then allows side-by-side old/new results so
+              you can evaluate whether deduction-heavy or simplified filing paths are currently better.
+            </p>
+          </>
+        )}
+        example={(
+          <>
+            <p>
+              Suppose a salaried user has annual salary of ₹12,00,000 and expects ₹1,50,000 under 80C, ₹25,000 under
+              80D, and ₹50,000 under NPS. In old-regime view, the calculator first adjusts salary by standard deduction
+              and eligible deductions, then computes slab tax on remaining taxable income. Cess is added and rebate is
+              checked where relevant. In new-regime view, the tool applies new-regime deduction treatment and runs slab
+              math again.
+            </p>
+            <p>
+              Assume the model returns old-regime tax of about ₹X and new-regime tax of about ₹Y (numbers depend on
+              final input mix). If old-regime tax is lower by ₹18,000, the comparison card marks old regime as better
+              and also shows higher take-home amount. If future deduction plans reduce, you can rerun quickly and see
+              whether the recommendation flips. This scenario-testing workflow is usually more useful than a one-time
+              static estimate.
+            </p>
+          </>
+        )}
+        tips={(
+          <>
+            <ul style={{ margin: 0, paddingLeft: '1rem' }}>
+              <li>Enter annual numbers consistently; avoid mixing monthly deductions with yearly salary.</li>
+              <li>Use comparison mode before locking payroll declarations for the year.</li>
+              <li>For HRA, maintain rent and allowance records; missing assumptions can skew old-regime output.</li>
+              <li>Re-run calculation when income changes due to bonus, switch, or variable pay revision.</li>
+              <li>Treat results as planning estimates and verify filing values with official documents.</li>
+            </ul>
+          </>
+        )}
+        faq={(
+          <>
+            {faqItems.map((item) => (
+              <div key={item.question} style={{ marginBottom: '0.65rem' }}>
+                <h3 style={{ margin: '0 0 0.15rem', fontSize: '0.95rem', color: '#0f2a43' }}>{item.question}</h3>
+                <p style={{ margin: 0 }}>{item.answer}</p>
+              </div>
+            ))}
+          </>
+        )}
+        relatedGuides={relatedGuides}
+        methodology={(
+          <>
+            <p>
+              Methodology is slab-first and regime-aware: compute taxable income, apply slab rates incrementally, add
+              cess, then apply rebate eligibility. Business mode computes taxable profit from gross income minus selected
+              expenses and deductions, then applies tax logic and advance-tax offset for balance payable estimate.
+            </p>
+            <p>
+              Assumptions: rates and regime rules in this app are modeled for FY 2025-26 / AY 2026-27 configuration.
+              Special incomes, surcharge edge cases, and rare exemptions are intentionally simplified for planning use.
+              For return filing, validate with official sources and professional advice where required.
+            </p>
+          </>
+        )}
+      >
+        <p style={{ margin: 0, color: '#475569', fontSize: '0.9rem' }}>
+          Use the calculator below to switch between salary tax, business tax, and old-vs-new regime comparison.
+        </p>
+      </CalculatorArticleLayout>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { ComparisonBars } from './calculator/ResultVisualizations';
 import { formatCurrency } from '../utils/calculations';
 
 const MAX_MONTHS = 1200;
@@ -229,6 +230,22 @@ const USCreditCardPayoffCalculator = () => {
                 <strong>Total interest (fixed plan):</strong> {formatUSD(fixedPlan.totalInterest)}
               </p>
             </div>
+            <ComparisonBars
+              title="Total interest by payoff strategy"
+              items={[
+                { label: 'Minimum plan', value: minimumPlan.totalInterest, color: '#ef4444' },
+                { label: 'Fixed plan', value: fixedPlan.totalInterest, color: '#10b981' }
+              ]}
+              formatter={formatUSD}
+            />
+            <ComparisonBars
+              title="Payoff timeline by strategy"
+              items={[
+                { label: 'Minimum plan', value: minimumPlan.months, color: '#f97316' },
+                { label: 'Fixed plan', value: fixedPlan.months, color: '#3b82f6' }
+              ]}
+              formatter={(value) => `${Math.round(value)} mo`}
+            />
           </div>
 
           {!!previewRows.length && (

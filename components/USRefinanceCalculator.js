@@ -3,6 +3,7 @@ import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import { ComparisonBars } from './calculator/ResultVisualizations';
 import { formatCurrency } from '../utils/calculations';
 
 const getMonthlyPayment = (principal, annualRate, months) => {
@@ -186,6 +187,22 @@ const USRefinanceCalculator = () => {
                 <strong>Lifetime savings after costs:</strong> {formatUSD(results.lifetimeSavingsAfterCosts)}
               </p>
             </div>
+            <ComparisonBars
+              title="Current vs refinance payment"
+              items={[
+                { label: 'Current payment', value: results.currentPayment, color: '#ef4444' },
+                { label: 'Refinance payment', value: results.newPayment, color: '#10b981' }
+              ]}
+              formatter={formatUSD}
+            />
+            <ComparisonBars
+              title="Remaining interest comparison"
+              items={[
+                { label: 'Current remaining interest', value: results.interestRemainingCurrent, color: '#f97316' },
+                { label: 'Refinance interest', value: results.interestNewLoan, color: '#3b82f6' }
+              ]}
+              formatter={formatUSD}
+            />
           </div>
 
           <ResultActions title="US Refinance Calculator Summary" summaryLines={summaryLines} fileName="us-refinance-calculator-summary.txt" />
