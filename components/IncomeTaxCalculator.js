@@ -389,7 +389,7 @@ const IncomeTaxCalculator = () => {
       </Head>
 
 
-      <div id="calculator-app" className="calculator-card">
+      <div id="calculator-tool" className="calculator-card">
         <div className="calculator-header tax-header">
           <div className="header-nav">
             <HomeButton />

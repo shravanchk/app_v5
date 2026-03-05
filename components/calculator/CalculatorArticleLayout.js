@@ -22,6 +22,7 @@ const bodyTextStyle = {
 
 const CalculatorArticleLayout = ({
   title,
+  summary,
   intro,
   explanation,
   example,
@@ -48,6 +49,11 @@ const CalculatorArticleLayout = ({
         }}
       >
         <h1 style={{ margin: 0, fontSize: 'clamp(1.4rem, 3vw, 2rem)' }}>{title}</h1>
+        {summary ? (
+          <div style={{ ...bodyTextStyle, marginTop: '0.65rem', color: '#1e3a5f', fontWeight: 500 }}>
+            {summary}
+          </div>
+        ) : null}
       </div>
 
       <section style={sectionCardStyle}>

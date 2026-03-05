@@ -241,7 +241,7 @@ const ComprehensiveLoanCalculator = React.memo(() => {
       </Head>
 
 
-      <div id="calculator-app" className="calculator-card">
+      <div id="calculator-tool" className="calculator-card">
         <div className="calculator-header emi-header">
           <div className="header-nav">
             <HomeButton />

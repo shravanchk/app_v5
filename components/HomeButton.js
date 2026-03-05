@@ -25,6 +25,7 @@ const HomeButton = ({ className = '', style = {} }) => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    lineHeight: 0,
     width: '48px',
     height: '48px',
     ...style
@@ -57,9 +58,9 @@ const HomeButton = ({ className = '', style = {} }) => {
       aria-label="Navigate to home page"
     >
       <Home 
-        size={20} 
+        size={18}
         className="home-icon"
-        style={{ strokeWidth: 2 }}
+        style={{ strokeWidth: 2, display: 'block', margin: '0 auto', flexShrink: 0 }}
       />
     </button>
   );

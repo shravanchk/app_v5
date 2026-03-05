@@ -49,7 +49,7 @@ const Footer = () => {
               fontSize: '0.84rem',
               marginTop: '0.25rem'
             }}>
-              Financial calculators and workflows for practical decisions.
+              Decision-first financial tools for practical life and money choices.
             </div>
           </div>
         </div>
@@ -87,9 +87,7 @@ const Footer = () => {
           paddingTop: '0.5rem'
         }}>
           <div>
-            <h4 style={sectionTitleStyle}>
-              Indian Calculators
-            </h4>
+            <h4 style={sectionTitleStyle}>Core India Decision Tools</h4>
             <div style={{
               fontSize: '0.85rem'
             }}>
@@ -98,9 +96,7 @@ const Footer = () => {
               <a href="/sip-calculator" style={linkStyle}>SIP Calculator</a> • <a href="/loan-calculator" style={linkStyle}>Loan EMI Calculator</a><br/>
               <a href="/ppf-calculator" style={linkStyle}>PPF Calculator</a> • <a href="/credit-card-trap-calculator" style={linkStyle}>Credit Card Trap Calculator</a><br/>
               <a href="/salary-calculator" style={linkStyle}>Salary Calculator</a> • <a href="/irctc-calculator" style={linkStyle}>IRCTC Calculator</a><br/>
-              <a href="/age-calculator" style={linkStyle}>Age Calculator</a> • <a href="/json-tools" style={linkStyle}>JSON Tools</a><br/>
-              <a href="/scientific-calculator" style={linkStyle}>Scientific Calculator</a> • <a href="/statistics-calculator" style={linkStyle}>Statistics Calculator</a><br/>
-              <a href="/unit-converter" style={linkStyle}>Engineering Unit Converter</a>
+              <a href="/age-calculator" style={linkStyle}>Age Calculator</a>
             </div>
           </div>
           
@@ -140,16 +136,27 @@ const Footer = () => {
           </div>
           
           <div>
-            <h4 style={sectionTitleStyle}>
-              Policy and Trust
-            </h4>
+            <h4 style={sectionTitleStyle}>Policy and Trust</h4>
             <div style={{
               fontSize: '0.85rem'
             }}>
-              <a href="/methodology.html" style={linkStyle}>Methodology & Formula Notes</a><br/>
-              <a href="/editorial-policy.html" style={linkStyle}>Editorial Policy</a><br/>
-              <a href="/about.html" style={linkStyle}>About Upaman</a><br/>
+              <a href="/methodology" style={linkStyle}>Methodology & Formula Notes</a><br/>
+              <a href="/editorial-policy" style={linkStyle}>Editorial Policy</a><br/>
+              <a href="/about" style={linkStyle}>About Upaman</a><br/>
+              <a href="/contact" style={linkStyle}>Contact</a><br/>
               <a href="/privacy-policy.html" style={linkStyle}>Privacy Policy</a> • <a href="/terms-of-service.html" style={linkStyle}>Terms</a>
+            </div>
+          </div>
+
+          <div>
+            <h4 style={sectionTitleStyle}>Other Tools</h4>
+            <div style={{
+              fontSize: '0.85rem'
+            }}>
+              <a href="/json-tools" style={linkStyle}>JSON Tools</a><br/>
+              <a href="/scientific-calculator" style={linkStyle}>Scientific Calculator</a><br/>
+              <a href="/statistics-calculator" style={linkStyle}>Statistics Calculator</a><br/>
+              <a href="/unit-converter" style={linkStyle}>Engineering Unit Converter</a>
             </div>
           </div>
 

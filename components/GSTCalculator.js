@@ -206,7 +206,7 @@ const GSTCalculator = () => {
           }}
         />
       </Head>
-      <div id="calculator-app" className="calculator-card">
+      <div id="calculator-tool" className="calculator-card">
         <div className="calculator-header gst-header">
           <div className="header-nav">
             <HomeButton />

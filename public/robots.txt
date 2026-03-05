@@ -40,11 +40,12 @@ Allow: /us-auto-loan-calculator
 Allow: /us-401k-calculator
 Allow: /us-savings-cd-calculator
 Allow: /us-credit-card-payoff-calculator
-Allow: /about.html
+Allow: /about
 Allow: /privacy-policy.html
 Allow: /terms-of-service.html
-Allow: /methodology.html
-Allow: /editorial-policy.html
+Allow: /methodology
+Allow: /editorial-policy
+Allow: /contact
 Allow: /guide-emi-prepayment-strategy.html
 Allow: /guide-income-tax-regime-choice.html
 Allow: /guide-sip-step-up-planning.html

@@ -219,10 +219,10 @@
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://upaman.com/about.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <loc>https://upaman.com/about</loc>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.65</priority>
   </url>
   <url>
     <loc>https://upaman.com/privacy-policy.html</loc>
@@ -237,16 +237,22 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://upaman.com/methodology.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <loc>https://upaman.com/methodology</loc>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.72</priority>
   </url>
   <url>
-    <loc>https://upaman.com/editorial-policy.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <loc>https://upaman.com/editorial-policy</loc>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.72</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/contact</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.62</priority>
   </url>
   <url>
     <loc>https://upaman.com/guide-emi-prepayment-strategy.html</loc>

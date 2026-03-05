@@ -341,8 +341,8 @@ const MainLandingPage = () => {
     },
     {
       key: 'specialty-tools',
-      title: 'Specialty Tools',
-      description: 'Cross-region utilities and specialty calculators.',
+      title: 'Other Tools',
+      description: 'Non-core utilities and specialty calculators.',
       paths: [
         '/irctc-calculator',
         '/uk-rail-calculator',
@@ -1155,7 +1155,7 @@ const MainLandingPage = () => {
           WebkitTextFillColor: 'transparent',
           lineHeight: '1.2'
         }}>
-          Practical Calculators for Real Decisions
+          Decision-First Financial Tools for India
         </h1>
         <h2 style={{
           fontSize: '1.5rem',
@@ -1164,7 +1164,7 @@ const MainLandingPage = () => {
           marginBottom: '1rem',
           textAlign: 'center'
         }}>
-          US, Europe, and India calculators for tax, investing, borrowing, and debt payoff
+          Start with guided workflows for job, tax, and loan choices, then validate with transparent calculators.
         </h2>
         <p style={{
           fontSize: '1.25rem',
@@ -1174,8 +1174,8 @@ const MainLandingPage = () => {
           lineHeight: '1.55',
           textAlign: 'center'
         }}>
-          Transparent formulas, no signup, and fast calculations. Use guided workflows for major choices
-          or open region-focused standalone tools for quick checks.
+          Upaman focuses on expensive decisions: income tax regime, loan affordability, debt payoff, and investment
+          planning. Formulas are visible, assumptions are explicit, and outputs are structured for action.
         </p>
 
         <div style={{
@@ -1265,6 +1265,34 @@ const MainLandingPage = () => {
           }}>
             Calculations run locally
           </span>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          gap: '0.45rem 0.9rem',
+          marginBottom: '1rem'
+        }}>
+          {[
+            { label: 'About', href: '/about' },
+            { label: 'Methodology', href: '/methodology' },
+            { label: 'Editorial Policy', href: '/editorial-policy' },
+            { label: 'Contact', href: '/contact' }
+          ].map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              style={{
+                color: isDarkMode ? '#99f6e4' : '#0f766e',
+                textDecoration: 'none',
+                fontSize: '0.82rem',
+                fontWeight: 700
+              }}
+            >
+              {item.label}
+            </a>
+          ))}
         </div>
 
         <div
@@ -1404,10 +1432,37 @@ const MainLandingPage = () => {
           >
             {hasActiveSearch
               ? `${totalToolMatches} match${totalToolMatches === 1 ? '' : 'es'} found for "${toolSearch.trim()}".`
-              : 'Search across regional hubs, workflows, specialty tools, and decision guides.'}
+              : 'Search across workflows, regional hubs, other tools, and decision guides.'}
           </p>
         </div>
-        
+
+        {/* Workflow Menu */}
+        <div style={{ marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
+          <h3 style={sectionHeadingStyle}>{hasActiveSearch ? 'Matching Guided Workflows' : 'Start Here: Guided Workflows'}</h3>
+          <p style={sectionDescriptionStyle}>
+            {hasActiveSearch
+              ? 'Filtered workflow results based on your search.'
+              : 'Use these first for high-impact decisions. Each workflow combines multiple calculators in one flow.'}
+          </p>
+        </div>
+        <div style={{ ...cardsGridStyle, marginBottom: 'clamp(2rem, 6vw, 4rem)' }}>
+          {filteredWorkflows.length
+            ? filteredWorkflows.map(renderCalculatorCard)
+            : hasActiveSearch && (
+              <div style={{
+                ...cardStyle,
+                cursor: 'default'
+              }}>
+                <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: isDarkMode ? '#e2e8f0' : '#1e293b' }}>
+                  No workflow match found
+                </h4>
+                <p style={{ marginTop: '0.45rem', marginBottom: 0, fontSize: '0.86rem', color: isDarkMode ? '#94a3b8' : '#64748b' }}>
+                  Try broader terms like "loan", "salary", "budget", or "offer".
+                </p>
+              </div>
+            )}
+        </div>
+
         {/* Regional Hubs */}
         <div style={{ marginBottom: 'clamp(1rem, 3vw, 2rem)' }}>
           <h3 style={sectionHeadingStyle}>
@@ -1523,37 +1578,10 @@ const MainLandingPage = () => {
           ) : null
         )}
 
-        {/* Workflow Menu */}
-        <div style={{ marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
-          <h3 style={sectionHeadingStyle}>{hasActiveSearch ? 'Matching Guided Workflows' : 'Guided Workflows'}</h3>
-          <p style={sectionDescriptionStyle}>
-            {hasActiveSearch
-              ? 'Filtered workflow results based on your search.'
-              : 'Guided, multi-step flows that combine multiple decisions in one journey.'}
-          </p>
-        </div>
-        <div style={{ ...cardsGridStyle, marginBottom: 'clamp(2rem, 6vw, 4rem)' }}>
-          {filteredWorkflows.length
-            ? filteredWorkflows.map(renderCalculatorCard)
-            : hasActiveSearch && (
-              <div style={{
-                ...cardStyle,
-                cursor: 'default'
-              }}>
-                <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: isDarkMode ? '#e2e8f0' : '#1e293b' }}>
-                  No workflow match found
-                </h4>
-                <p style={{ marginTop: '0.45rem', marginBottom: 0, fontSize: '0.86rem', color: isDarkMode ? '#94a3b8' : '#64748b' }}>
-                  Try broader terms like "loan", "salary", "budget", or "offer".
-                </p>
-              </div>
-            )}
-        </div>
-
-        {/* Specialty Tools */}
+        {/* Other Tools */}
         <div style={{ marginBottom: 'clamp(1rem, 3vw, 2rem)' }}>
           <h3 style={sectionHeadingStyle}>
-            {hasActiveSearch ? 'Matching Specialty Tools' : 'Specialty Tools'}
+            {hasActiveSearch ? 'Matching Other Tools' : 'Other Tools'}
           </h3>
           <p style={sectionDescriptionStyle}>
             {hasActiveSearch
@@ -1673,7 +1701,7 @@ const MainLandingPage = () => {
           color: isDarkMode ? '#e2e8f0' : '#1e293b',
           lineHeight: '1.2'
         }}>
-          Why Choose Upaman Tools?
+          Why Users Trust Upaman
         </h2>
         
         <div style={{
@@ -1810,8 +1838,8 @@ const MainLandingPage = () => {
             lineHeight: '1.6',
             marginBottom: '1.5rem'
           }}>
-            Your trusted companion for travel planning and financial calculations.<br />
-            All calculations are performed locally for your privacy and security.
+            Decision-first financial tools with transparent assumptions and workflow-led guidance.<br />
+            Most calculations run locally in your browser for speed and privacy.
           </p>
 
           <p style={{
@@ -1827,8 +1855,8 @@ const MainLandingPage = () => {
             marginBottom: '1rem',
             fontSize: '0.875rem'
           }}>
-            <a 
-              href="/methodology.html" 
+            <a
+              href="/methodology"
               style={{
                 color: '#9dd6ff',
                 textDecoration: 'none',
@@ -1841,8 +1869,8 @@ const MainLandingPage = () => {
             >
               Methodology
             </a>
-            <a 
-              href="/editorial-policy.html" 
+            <a
+              href="/editorial-policy"
               style={{
                 color: '#60a5fa',
                 textDecoration: 'none',
@@ -1883,8 +1911,8 @@ const MainLandingPage = () => {
             >
               Terms of Service
             </a>
-            <a 
-              href="/about.html" 
+            <a
+              href="/about"
               style={{
                 color: '#60a5fa',
                 textDecoration: 'none',
@@ -1896,6 +1924,20 @@ const MainLandingPage = () => {
               onMouseOut={(e) => e.target.style.borderBottomColor = 'transparent'}
             >
               About Us
+            </a>
+            <a
+              href="/contact"
+              style={{
+                color: '#60a5fa',
+                textDecoration: 'none',
+                margin: '0 1rem',
+                borderBottom: '1px solid transparent',
+                transition: 'border-color 0.2s ease'
+              }}
+              onMouseOver={(e) => e.target.style.borderBottomColor = '#60a5fa'}
+              onMouseOut={(e) => e.target.style.borderBottomColor = 'transparent'}
+            >
+              Contact
             </a>
           </div>
 
