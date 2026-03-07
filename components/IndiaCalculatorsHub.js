@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Train, Calculator, TrendingUp, PiggyBank, Target, Banknote, Wallet } from 'lucide-react';
+import { Train, Calculator, TrendingUp, PiggyBank, Target, Banknote, Wallet, Home } from 'lucide-react';
 import { useRouter } from 'next/router';
 import HomeButton from './HomeButton';
 
@@ -35,6 +35,13 @@ const IndiaCalculatorsHub = () => {
         tags: ['FY 2025-26', 'Old vs new regime', 'Tax estimate']
       },
       {
+        title: 'Tax Regime Comparison Tool',
+        description: 'Check which regime saves more tax using salary and deduction-aware inputs.',
+        icon: Target,
+        path: '/tax-regime-comparison',
+        tags: ['Old vs new', 'Savings view', 'Decision support']
+      },
+      {
         title: 'GST Calculator',
         description: 'Add/remove/reverse GST with CGST, SGST, and IGST split.',
         icon: Calculator,
@@ -68,6 +75,27 @@ const IndiaCalculatorsHub = () => {
         icon: Train,
         path: '/irctc-calculator',
         tags: ['Booking date', 'Tatkal timing', 'Quick planning']
+      },
+      {
+        title: 'Buy vs Rent Calculator',
+        description: 'Estimate break-even timeline for buying vs renting using EMI and rent growth assumptions.',
+        icon: Home,
+        path: '/buy-vs-rent-calculator',
+        tags: ['Break-even year', 'EMI vs rent', 'Home decision']
+      },
+      {
+        title: 'Prepay vs Invest Workflow',
+        description: 'Compare whether monthly surplus should prepay debt or be invested for long-term growth.',
+        icon: Wallet,
+        path: '/prepay-vs-invest-workflow',
+        tags: ['Debt vs investing', 'Risk-adjusted', 'Surplus strategy']
+      },
+      {
+        title: 'Emergency Fund Readiness Workflow',
+        description: 'Find your target runway, current gap, and monthly plan to build a safer emergency corpus.',
+        icon: PiggyBank,
+        path: '/emergency-fund-readiness-workflow',
+        tags: ['Runway target', 'Gap to target', 'Milestone plan']
       },
       {
         title: 'Credit Card Trap Calculator',

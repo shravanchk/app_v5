@@ -3,6 +3,7 @@ import React from 'react';
 const defaultSources = [
   { label: 'Methodology', href: '/methodology' },
   { label: 'Editorial policy', href: '/editorial-policy' },
+  { label: 'Publisher standards', href: '/publisher-standards' },
   { label: 'About Upaman', href: '/about' },
   { label: 'Contact', href: '/contact' }
 ];
@@ -51,4 +52,3 @@ const CredibilityPanel = ({
 };
 
 export default CredibilityPanel;
-

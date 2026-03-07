@@ -142,9 +142,14 @@ const Footer = () => {
             }}>
               <a href="/methodology" style={linkStyle}>Methodology & Formula Notes</a><br/>
               <a href="/editorial-policy" style={linkStyle}>Editorial Policy</a><br/>
+              <a href="/publisher-standards" style={linkStyle}>Publisher Standards</a><br/>
+              <a href="/advertising-policy" style={linkStyle}>Advertising Policy</a><br/>
+              <a href="/corrections-policy" style={linkStyle}>Corrections Policy</a><br/>
+              <a href="/affiliate-disclosure" style={linkStyle}>Affiliate Disclosure</a><br/>
+              <a href="/cookie-policy" style={linkStyle}>Cookie Policy</a><br/>
               <a href="/about" style={linkStyle}>About Upaman</a><br/>
               <a href="/contact" style={linkStyle}>Contact</a><br/>
-              <a href="/privacy-policy.html" style={linkStyle}>Privacy Policy</a> • <a href="/terms-of-service.html" style={linkStyle}>Terms</a>
+              <a href="/privacy-policy" style={linkStyle}>Privacy Policy</a> • <a href="/terms-of-service" style={linkStyle}>Terms</a>
             </div>
           </div>
 

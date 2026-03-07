@@ -273,7 +273,19 @@ const AffiliateRecommendations = ({ calculatorType, result, isDarkMode = false }
         color: isDarkMode ? '#94a3b8' : '#64748b',
         textAlign: 'center'
       }}>
-        <em>* These are affiliate recommendations. We may earn a commission at no extra cost to you.</em>
+        <em>
+          * These are affiliate recommendations. We may earn a commission at no extra cost to you. See{' '}
+          <a
+            href="/affiliate-disclosure"
+            style={{
+              color: isDarkMode ? '#93c5fd' : '#1d4ed8',
+              textDecoration: 'none',
+              fontWeight: 700
+            }}
+          >
+            Affiliate Disclosure
+          </a>.
+        </em>
       </div>
     </div>
   );

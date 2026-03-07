@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Train, Clock, Shield, Target, Zap, Calendar, CreditCard, Briefcase, Home, Search, X, Sigma, BarChart3, Ruler } from 'lucide-react';
+import { Train, Clock, Shield, Target, Zap, Calendar, CreditCard, Briefcase, Home, Search, X, Sigma, BarChart3, Ruler, Wallet } from 'lucide-react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -216,6 +216,28 @@ const MainLandingPage = () => {
       badge: 'Workflow',
       badgeBg: isDarkMode ? 'rgba(15, 118, 110, 0.22)' : '#d7f2ee',
       badgeColor: isDarkMode ? '#99f6e4' : '#0f766e'
+    },
+    {
+      title: 'Prepay vs Invest Workflow',
+      description: 'Decide whether monthly surplus should prepay debt or be invested based on timeline and risk-adjusted outcomes',
+      icon: Wallet,
+      ...themedCard('accent'),
+      features: ['Interest saved', 'Corpus comparison', 'Action recommendation'],
+      path: '/prepay-vs-invest-workflow',
+      badge: 'Workflow',
+      badgeBg: isDarkMode ? 'rgba(180, 83, 9, 0.25)' : '#ffedd5',
+      badgeColor: isDarkMode ? '#fdba74' : '#9a3412'
+    },
+    {
+      title: 'Emergency Fund Readiness Workflow',
+      description: 'Estimate target emergency runway and monthly contribution plan based on your household risk profile',
+      icon: Shield,
+      ...themedCard('primary'),
+      features: ['Runway target', 'Gap analysis', 'Milestone plan'],
+      path: '/emergency-fund-readiness-workflow',
+      badge: 'Workflow',
+      badgeBg: isDarkMode ? 'rgba(29, 78, 137, 0.22)' : '#dbe7f4',
+      badgeColor: isDarkMode ? '#bfdbfe' : '#0f2a43'
     }
   ];
 
@@ -293,6 +315,28 @@ const MainLandingPage = () => {
       badgeColor: isDarkMode ? '#fdba74' : '#9a3412'
     },
     {
+      title: 'Tax Regime Comparison Tool',
+      description: 'Compare old vs new tax regime and identify which option saves more tax for your current deductions',
+      icon: Target,
+      ...themedCard('secondary'),
+      features: ['Old vs new', 'Deduction-aware', 'Savings recommendation'],
+      path: '/tax-regime-comparison',
+      badge: 'New',
+      badgeBg: isDarkMode ? 'rgba(15, 118, 110, 0.22)' : '#d7f2ee',
+      badgeColor: isDarkMode ? '#99f6e4' : '#0f766e'
+    },
+    {
+      title: 'Buy vs Rent Calculator',
+      description: 'Model home buying vs renting with EMI, rent growth, appreciation, and break-even timeline',
+      icon: Home,
+      ...themedCard('accent'),
+      features: ['Break-even year', 'Cash flow view', 'Home decision'],
+      path: '/buy-vs-rent-calculator',
+      badge: 'New',
+      badgeBg: isDarkMode ? 'rgba(180, 83, 9, 0.25)' : '#ffedd5',
+      badgeColor: isDarkMode ? '#fdba74' : '#9a3412'
+    },
+    {
       title: 'JSON Formatter & Validator',
       description: 'Validate, format, minify, flatten, unflatten, and convert JSON ↔ CSV in one workspace',
       icon: Zap,
@@ -347,6 +391,8 @@ const MainLandingPage = () => {
         '/irctc-calculator',
         '/uk-rail-calculator',
         '/credit-card-analyzer',
+        '/tax-regime-comparison',
+        '/buy-vs-rent-calculator',
         '/age-calculator',
         '/scientific-calculator',
         '/statistics-calculator',
@@ -396,6 +442,21 @@ const MainLandingPage = () => {
       title: 'PPF vs SIP Selection',
       description: 'When to prioritize guaranteed debt-style growth vs market-linked equity SIP.',
       href: '/guide-ppf-vs-sip-choice.html'
+    },
+    {
+      title: 'IRCTC Booking Strategy Guide',
+      description: 'Practical booking-window and Tatkal preparation checklist to improve booking success.',
+      href: '/guide-irctc-booking-strategy.html'
+    },
+    {
+      title: 'Prepay vs Invest Decision Guide',
+      description: 'Framework to allocate surplus between debt prepayment and investing with risk-adjusted assumptions.',
+      href: '/guide-prepay-vs-invest-decision.html'
+    },
+    {
+      title: 'Emergency Fund Readiness Guide',
+      description: 'How to set runway target, compute corpus gap, and build a milestone-based emergency buffer.',
+      href: '/guide-emergency-fund-readiness.html'
     }
   ];
 
@@ -684,26 +745,26 @@ const MainLandingPage = () => {
   return (
     <div style={containerStyle}>
       <Head>
-        <title>Free Financial Calculators 2026 US, Europe & India | Mortgage, VAT, Salary, Tax, SIP, EMI | Upaman</title>
+        <title>Decision-First Financial Calculators for Your Growth | Upaman</title>
         <meta
           name="description"
-          content="Free calculators and data tools for US, Europe and India, plus math and science utilities. Mortgage, refinance, VAT, salary, GST, Income Tax, SIP, EMI, scientific, statistics, and unit conversion tools."
+          content="Decision-first financial calculators for your growth. Plan tax, loans, savings, investing, salary, and more with transparent formulas, practical workflows, and useful utility tools."
         />
         <meta
           name="keywords"
           content="financial calculators US Europe India, scientific calculator, statistics calculator, unit converter, India calculators hub, US calculators hub, EU calculators hub, US mortgage calculator, US refinance calculator, US auto loan calculator, US 401k calculator, US savings cd calculator, US credit card payoff calculator, European VAT calculator, EU salary calculator, UK income tax calculator 2025-26, Germany salary calculator, France salary calculator, Netherlands salary calculator, GST calculator, income tax calculator India 2025-26, SIP calculator, EMI calculator, salary calculator, json formatter"
         />
         <link rel="canonical" href="https://upaman.com/" />
-        <meta property="og:title" content="Free Financial Calculators US, Europe & India | Complete Suite | Upaman" />
+        <meta property="og:title" content="Decision-First Financial Calculators for Your Growth | Upaman" />
         <meta
           property="og:description"
-          content="Complete suite of free calculators and data utilities for US, Europe and India, including mortgage, refinance, auto loan, VAT, scientific, statistics, and unit conversion tools."
+          content="Plan important money decisions with transparent calculators, practical workflows, and trusted methodology notes."
         />
         <meta property="og:url" content="https://upaman.com/" />
-        <meta name="twitter:title" content="Free Financial Calculators US, Europe & India | Essential Tools | Upaman" />
+        <meta name="twitter:title" content="Decision-First Financial Calculators for Your Growth | Upaman" />
         <meta
           name="twitter:description"
-          content="Complete suite of free calculators for US, Europe and India with finance, scientific, statistics, and unit conversion tools."
+          content="Decision-first calculators and workflows to help you plan tax, loans, savings, investing, and salary with confidence."
         />
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
@@ -711,7 +772,7 @@ const MainLandingPage = () => {
             "@type": "WebSite",
             "name": "Upaman Financial Calculators",
             "url": "https://upaman.com/",
-            "description": "Free financial calculators for US, Europe and India including mortgage, refinance, auto loan, 401(k), VAT, tax, SIP, EMI, salary and utility tools.",
+            "description": "Decision-first financial calculators and workflows for tax, loans, savings, investing, salary, and utility planning.",
             "potentialAction": {
               "@type": "SearchAction",
               "target": "https://upaman.com/search?q={search_term_string}",
@@ -1155,7 +1216,7 @@ const MainLandingPage = () => {
           WebkitTextFillColor: 'transparent',
           lineHeight: '1.2'
         }}>
-          Decision-First Financial Tools for India
+          Decision-First Financial Calculators for Your Growth
         </h1>
         <h2 style={{
           fontSize: '1.5rem',
@@ -1164,7 +1225,7 @@ const MainLandingPage = () => {
           marginBottom: '1rem',
           textAlign: 'center'
         }}>
-          Start with guided workflows for job, tax, and loan choices, then validate with transparent calculators.
+          Start with guided workflows for job, tax, loan, and savings choices, then validate with transparent calculators.
         </h2>
         <p style={{
           fontSize: '1.25rem',
@@ -1278,6 +1339,7 @@ const MainLandingPage = () => {
             { label: 'About', href: '/about' },
             { label: 'Methodology', href: '/methodology' },
             { label: 'Editorial Policy', href: '/editorial-policy' },
+            { label: 'Publisher Standards', href: '/publisher-standards' },
             { label: 'Contact', href: '/contact' }
           ].map((item) => (
             <a
@@ -1884,7 +1946,7 @@ const MainLandingPage = () => {
               Editorial Policy
             </a>
             <a 
-              href="/privacy-policy.html" 
+              href="/privacy-policy" 
               style={{
                 color: '#60a5fa',
                 textDecoration: 'none',
@@ -1898,7 +1960,7 @@ const MainLandingPage = () => {
               Privacy Policy
             </a>
             <a 
-              href="/terms-of-service.html" 
+              href="/terms-of-service" 
               style={{
                 color: '#60a5fa',
                 textDecoration: 'none',
@@ -1939,6 +2001,17 @@ const MainLandingPage = () => {
             >
               Contact
             </a>
+          </div>
+
+          <div style={{
+            marginBottom: '1rem',
+            fontSize: '0.82rem'
+          }}>
+            <a href="/publisher-standards" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>Publisher Standards</a>
+            <a href="/advertising-policy" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>Advertising Policy</a>
+            <a href="/corrections-policy" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>Corrections Policy</a>
+            <a href="/affiliate-disclosure" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>Affiliate Disclosure</a>
+            <a href="/cookie-policy" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>Cookie Policy</a>
           </div>
 
           <div style={{

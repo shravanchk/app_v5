@@ -3,7 +3,7 @@ import Head from 'next/head';
 import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import CalculatorArticleLayout from './calculator/CalculatorArticleLayout';
-import { PieBreakdownChart } from './calculator/ResultVisualizations';
+import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { buildFaqSchema } from '../utils/faqSchema';
@@ -678,6 +678,16 @@ const ComprehensiveLoanCalculator = React.memo(() => {
                       </div>
                     ))}
                   </div>
+
+                  <ComparisonBars
+                    title="Prepayment scenarios: total savings comparison"
+                    items={scenarios.map((scenario) => ({
+                      label: scenario.title,
+                      value: scenario.totalSavings,
+                      color: scenario.isHighlighted ? '#16a34a' : '#60a5fa'
+                    }))}
+                    formatter={formatINR}
+                  />
 
                   <div style={{
                     background: 'linear-gradient(135deg, #ECF0F1, #BDC3C7)',

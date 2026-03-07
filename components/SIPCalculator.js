@@ -5,6 +5,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
+import SearchLandingSections from './calculator/SearchLandingSections';
 
 const SIPCalculator = () => {
   const [activeTab, setActiveTab] = useState('sip');
@@ -188,6 +189,21 @@ const SIPCalculator = () => {
     `SIP return %: ${comparisonResult.sip.returnPercentage}%`,
     `Lumpsum return %: ${comparisonResult.lumpsum.returnPercentage}%`
   ] : [];
+
+  const seoFaqItems = [
+    {
+      question: 'What is a SIP step-up calculator used for?',
+      answer: 'It helps you model yearly increase in monthly SIP amount so investments can scale with income growth instead of staying flat.'
+    },
+    {
+      question: 'Are SIP returns guaranteed?',
+      answer: 'No. SIP returns are market-linked. This tool uses expected return assumptions for planning scenarios only.'
+    },
+    {
+      question: 'Should I choose SIP or lumpsum?',
+      answer: 'That depends on cash flow and risk profile. Comparison mode helps you evaluate projected outcomes under aligned assumptions.'
+    }
+  ];
 
   return (
     <div className="calculator-container sip-container">
@@ -600,6 +616,40 @@ const SIPCalculator = () => {
             guideLinks={[
               { label: 'SIP step-up planning guide', href: '/guide-sip-step-up-planning.html' },
               { label: 'PPF vs SIP guide', href: '/guide-ppf-vs-sip-choice.html' }
+            ]}
+          />
+          <SearchLandingSections
+            intro={(
+              <>
+                <p>
+                  SIP planning is most effective when you model both contribution behavior and target outcomes. This SIP
+                  calculator supports regular SIP, goal-based planning, and SIP vs lumpsum comparison in one workflow.
+                </p>
+                <p>
+                  If you are searching for SIP step-up calculator or goal SIP calculator, this page helps you estimate
+                  required monthly investment, return contribution, and how annual step-up changes long-term outcomes.
+                </p>
+              </>
+            )}
+            example={(
+              <p>
+                Assume ₹15,000 monthly SIP for 15 years at expected 12% annual return. The calculator projects total
+                invested amount, expected corpus, and returns. Add a 10% yearly step-up to compare how progressive
+                contribution growth can improve final corpus without a large first-year commitment.
+              </p>
+            )}
+            formula={(
+              <p>
+                SIP mode uses periodic compounding across monthly contributions. Goal mode reverses compounding logic to
+                estimate required monthly SIP for a target corpus. Comparison mode evaluates recurring SIP and one-time
+                lumpsum under the same return horizon for consistent decision support.
+              </p>
+            )}
+            faqItems={seoFaqItems}
+            relatedLinks={[
+              { label: 'PPF Calculator', href: '/ppf-calculator' },
+              { label: 'Salary Calculator', href: '/salary-calculator' },
+              { label: 'SIP Step-up Planning Guide', href: '/guide-sip-step-up-planning.html' }
             ]}
           />
         </div>

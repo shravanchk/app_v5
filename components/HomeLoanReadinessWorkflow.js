@@ -217,6 +217,54 @@ const HomeLoanReadinessWorkflow = () => {
     fontWeight: 600,
     cursor: 'pointer'
   });
+  const stepPrimaryCtaStyle = {
+    marginTop: '1.1rem',
+    width: 'auto',
+    minWidth: '220px',
+    padding: '0.58rem 0.95rem',
+    fontSize: '0.88rem',
+    lineHeight: 1.2
+  };
+  const stepInlineCtaStyle = {
+    width: 'auto',
+    minWidth: '200px',
+    padding: '0.56rem 0.9rem',
+    fontSize: '0.86rem',
+    lineHeight: 1.2
+  };
+  const helperBoxStyle = {
+    background: '#eff6ff',
+    border: '1px solid #bfdbfe',
+    borderRadius: '0.75rem',
+    padding: '0.85rem',
+    marginBottom: '1rem',
+    color: '#1e3a8a'
+  };
+  const hintStyle = {
+    margin: '0.25rem 0 0',
+    fontSize: '0.8rem',
+    color: '#64748b'
+  };
+  const tipIconStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '16px',
+    height: '16px',
+    borderRadius: '999px',
+    border: '1px solid #94a3b8',
+    color: '#475569',
+    fontSize: '0.68rem',
+    lineHeight: 1,
+    cursor: 'help',
+    background: '#f8fafc'
+  };
+  const withTipLabel = (text, tip) => (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+      <span>{text}</span>
+      <span style={tipIconStyle} title={tip} aria-label={tip}>i</span>
+    </span>
+  );
 
   return (
     <div className="calculator-container ppf-container">
@@ -248,9 +296,17 @@ const HomeLoanReadinessWorkflow = () => {
           {step === 1 && (
             <div className="input-section">
               <h2 className="section-title">Step 1: Household and loan assumptions</h2>
+              <div style={helperBoxStyle}>
+                <strong>How to use this step:</strong>
+                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
+                  <li>Enter only reliable monthly net income and essential fixed costs.</li>
+                  <li>Use realistic interest rate and tenure from lender terms.</li>
+                  <li>This step checks affordability, not loan approval guarantee.</li>
+                </ul>
+              </div>
               <div className="responsive-grid">
                 <div>
-                  <label className="input-label">Region</label>
+                  <label className="input-label">{withTipLabel('Region', 'Changes currency and market assumptions for affordability model.')}</label>
                   <select
                     className="calculator-input"
                     value={inputs.region}
@@ -273,7 +329,7 @@ const HomeLoanReadinessWorkflow = () => {
                 </div>
                 <div>
                   <label className="input-label">
-                    {regionConfig.monthlyIncomeLabel} ({regionConfig.currency})
+                    {withTipLabel(`${regionConfig.monthlyIncomeLabel} (${regionConfig.currency})`, 'Monthly net income used for safe EMI budgeting.')}
                   </label>
                   <input
                     className="calculator-input"
@@ -282,10 +338,11 @@ const HomeLoanReadinessWorkflow = () => {
                     value={inputs.monthlyInHand}
                     onChange={(e) => setInputs((prev) => ({ ...prev, monthlyInHand: e.target.value }))}
                   />
+                  <p style={hintStyle}>Use after-tax monthly income, not gross salary.</p>
                 </div>
                 <div>
                   <label className="input-label">
-                    {regionConfig.monthlyExpensesLabel} ({regionConfig.currency})
+                    {withTipLabel(`${regionConfig.monthlyExpensesLabel} (${regionConfig.currency})`, 'Essential recurring spend deducted before housing capacity is calculated.')}
                   </label>
                   <input
                     className="calculator-input"
@@ -294,10 +351,11 @@ const HomeLoanReadinessWorkflow = () => {
                     value={inputs.monthlyFixedExpenses}
                     onChange={(e) => setInputs((prev) => ({ ...prev, monthlyFixedExpenses: e.target.value }))}
                   />
+                  <p style={hintStyle}>Include only unavoidable expenses and subscriptions.</p>
                 </div>
                 <div>
                   <label className="input-label">
-                    {regionConfig.existingDebtLabel} ({regionConfig.currency})
+                    {withTipLabel(`${regionConfig.existingDebtLabel} (${regionConfig.currency})`, 'Existing EMIs reduce your safe room for a new housing payment.')}
                   </label>
                   <input
                     className="calculator-input"
@@ -309,7 +367,7 @@ const HomeLoanReadinessWorkflow = () => {
                 </div>
                 <div>
                   <label className="input-label">
-                    {regionConfig.downPaymentLabel} ({regionConfig.currency})
+                    {withTipLabel(`${regionConfig.downPaymentLabel} (${regionConfig.currency})`, 'Higher down payment improves affordability and lowers required loan size.')}
                   </label>
                   <input
                     className="calculator-input"
@@ -321,7 +379,7 @@ const HomeLoanReadinessWorkflow = () => {
                 </div>
                 <div>
                   <label className="input-label">
-                    {regionConfig.propertyCostLabel} ({regionConfig.currency})
+                    {withTipLabel(`${regionConfig.propertyCostLabel} (${regionConfig.currency})`, 'Used to test whether your target property fits safe budget.') }
                   </label>
                   <input
                     className="calculator-input"
@@ -332,7 +390,7 @@ const HomeLoanReadinessWorkflow = () => {
                   />
                 </div>
                 <div>
-                  <label className="input-label">Interest Rate (% per year)</label>
+                  <label className="input-label">{withTipLabel('Interest Rate (% per year)', 'Current effective borrowing rate expected for your loan.')}</label>
                   <input
                     className="calculator-input"
                     type="number"
@@ -343,7 +401,7 @@ const HomeLoanReadinessWorkflow = () => {
                   />
                 </div>
                 <div>
-                  <label className="input-label">Loan Tenure (years)</label>
+                  <label className="input-label">{withTipLabel('Loan Tenure (years)', 'Longer tenure lowers EMI but increases total interest paid.')}</label>
                   <input
                     className="calculator-input"
                     type="number"
@@ -353,7 +411,7 @@ const HomeLoanReadinessWorkflow = () => {
                   />
                 </div>
                 <div>
-                  <label className="input-label">Risk Profile</label>
+                  <label className="input-label">{withTipLabel('Risk Profile', 'Controls safety buffer and allowed EMI intensity in model.')}</label>
                   <select
                     className="calculator-input"
                     value={inputs.riskProfile}
@@ -368,7 +426,12 @@ const HomeLoanReadinessWorkflow = () => {
               <div style={{ marginTop: '0.75rem', color: '#475569', fontSize: '0.92rem' }}>
                 Model assumptions: {regionConfig.assumptions}
               </div>
-              <button className="calculator-button primary-button" type="button" onClick={() => setStep(2)}>
+              <button
+                className="calculator-button primary-button"
+                type="button"
+                style={stepPrimaryCtaStyle}
+                onClick={() => setStep(2)}
+              >
                 Continue to Affordability
               </button>
             </div>
@@ -377,6 +440,14 @@ const HomeLoanReadinessWorkflow = () => {
           {step === 2 && (
             <div className="results-container">
               <h2 className="results-title">Step 2: Affordability snapshot</h2>
+              <div style={helperBoxStyle}>
+                <strong>How to read this step:</strong>
+                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
+                  <li>Safe EMI and housing budget represent conservative comfort zone.</li>
+                  <li>Compare required housing payment vs safe budget to see stress risk.</li>
+                  <li>Use this before committing to down payment or booking amount.</li>
+                </ul>
+              </div>
               <div className="responsive-grid">
                 <div className="result-item">
                   <p className="result-label">
@@ -429,7 +500,12 @@ const HomeLoanReadinessWorkflow = () => {
                 <button className="calculator-button" type="button" onClick={() => setStep(1)}>
                   Back to Inputs
                 </button>
-                <button className="calculator-button success-button" type="button" onClick={() => setStep(3)}>
+                <button
+                  className="calculator-button success-button"
+                  type="button"
+                  style={stepInlineCtaStyle}
+                  onClick={() => setStep(3)}
+                >
                   Continue to Action Plan
                 </button>
               </div>
@@ -452,6 +528,15 @@ const HomeLoanReadinessWorkflow = () => {
                   <CheckCircle2 size={16} style={{ verticalAlign: 'middle' }} /> {output.readiness.label}
                 </p>
                 <p style={{ margin: '0.4rem 0 0 0', color: '#334155' }}>{output.readiness.reason}</p>
+              </div>
+
+              <div style={helperBoxStyle}>
+                <strong>How to use this plan:</strong>
+                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
+                  <li>If labeled "Almost ready", close the smallest gap first (EMI or down payment).</li>
+                  <li>Check tenure sensitivity cards before final tenure selection.</li>
+                  <li>Re-run with lender-confirmed rate before final agreement.</li>
+                </ul>
               </div>
 
               <div className="responsive-grid">

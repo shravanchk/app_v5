@@ -311,6 +311,54 @@ const JobOfferWorkflow = () => {
     fontWeight: 600,
     cursor: 'pointer'
   });
+  const stepPrimaryCtaStyle = {
+    marginTop: '1.1rem',
+    width: 'auto',
+    minWidth: '220px',
+    padding: '0.58rem 0.95rem',
+    fontSize: '0.88rem',
+    lineHeight: 1.2
+  };
+  const stepInlineCtaStyle = {
+    width: 'auto',
+    minWidth: '200px',
+    padding: '0.56rem 0.9rem',
+    fontSize: '0.86rem',
+    lineHeight: 1.2
+  };
+  const helperBoxStyle = {
+    background: '#eff6ff',
+    border: '1px solid #bfdbfe',
+    borderRadius: '0.75rem',
+    padding: '0.85rem',
+    marginBottom: '1rem',
+    color: '#1e3a8a'
+  };
+  const hintStyle = {
+    margin: '0.25rem 0 0',
+    fontSize: '0.8rem',
+    color: '#64748b'
+  };
+  const tipIconStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '16px',
+    height: '16px',
+    borderRadius: '999px',
+    border: '1px solid #94a3b8',
+    color: '#475569',
+    fontSize: '0.68rem',
+    lineHeight: 1,
+    cursor: 'help',
+    background: '#f8fafc'
+  };
+  const withTipLabel = (text, tip) => (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+      <span>{text}</span>
+      <span style={tipIconStyle} title={tip} aria-label={tip}>i</span>
+    </span>
+  );
 
   return (
     <div className="calculator-container salary-container">
@@ -342,9 +390,17 @@ const JobOfferWorkflow = () => {
           {step === 1 && (
             <div className="input-section">
               <h2 className="section-title">Step 1: Enter current vs new offer</h2>
+              <div style={helperBoxStyle}>
+                <strong>How to use this step:</strong>
+                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
+                  <li>Enter current and new package values from actual offer letters.</li>
+                  <li>Choose location types honestly to avoid inflated gain estimates.</li>
+                  <li>Keep fixed costs realistic so monthly surplus calculation is useful.</li>
+                </ul>
+              </div>
               <div className="responsive-grid">
                 <div>
-                  <label className="input-label">Region</label>
+                  <label className="input-label">{withTipLabel('Region', 'Changes tax and cost-of-living model assumptions.')}</label>
                   <select
                     className="calculator-input"
                     value={inputs.region}
@@ -364,7 +420,7 @@ const JobOfferWorkflow = () => {
                 </div>
                 <div>
                   <label className="input-label">
-                    Current {regionConfig.annualCompLabel} ({regionConfig.currency})
+                    {withTipLabel(`Current ${regionConfig.annualCompLabel} (${regionConfig.currency})`, 'Use your current total annual package before deductions.')}
                   </label>
                   <input
                     className="calculator-input"
@@ -373,10 +429,11 @@ const JobOfferWorkflow = () => {
                     value={inputs.currentCTC}
                     onChange={(e) => setInputs((prev) => ({ ...prev, currentCTC: e.target.value }))}
                   />
+                  <p style={hintStyle}>Use current effective annual package, not outdated salary.</p>
                 </div>
                 <div>
                   <label className="input-label">
-                    New {regionConfig.annualCompLabel} ({regionConfig.currency})
+                    {withTipLabel(`New ${regionConfig.annualCompLabel} (${regionConfig.currency})`, 'Enter the offered annual package to compare against current pay.')}
                   </label>
                   <input
                     className="calculator-input"
@@ -385,9 +442,10 @@ const JobOfferWorkflow = () => {
                     value={inputs.newCTC}
                     onChange={(e) => setInputs((prev) => ({ ...prev, newCTC: e.target.value }))}
                   />
+                  <p style={hintStyle}>If offer has variable pay, use conservative expected value.</p>
                 </div>
                 <div>
-                  <label className="input-label">Current Location Type</label>
+                  <label className="input-label">{withTipLabel('Current Location Type', 'Used for cost-of-living adjustment in real-gain comparison.')}</label>
                   <select
                     className="calculator-input"
                     value={inputs.currentCity}
@@ -401,7 +459,7 @@ const JobOfferWorkflow = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="input-label">New Location Type</label>
+                  <label className="input-label">{withTipLabel('New Location Type', 'Higher-cost location can reduce real benefit even with higher pay.')}</label>
                   <select
                     className="calculator-input"
                     value={inputs.newCity}
@@ -416,7 +474,7 @@ const JobOfferWorkflow = () => {
                 </div>
                 <div>
                   <label className="input-label">
-                    {regionConfig.fixedCostLabel} ({regionConfig.currency})
+                    {withTipLabel(`${regionConfig.fixedCostLabel} (${regionConfig.currency})`, 'Used to estimate post-switch free monthly surplus.')}
                   </label>
                   <input
                     className="calculator-input"
@@ -425,9 +483,10 @@ const JobOfferWorkflow = () => {
                     value={inputs.monthlyFixedCosts}
                     onChange={(e) => setInputs((prev) => ({ ...prev, monthlyFixedCosts: e.target.value }))}
                   />
+                  <p style={hintStyle}>Include rent, EMIs, and recurring essentials only.</p>
                 </div>
                 <div>
-                  <label className="input-label">Risk Profile</label>
+                  <label className="input-label">{withTipLabel('Risk Profile', 'Controls suggested split between investing, emergency fund, and EMI cap.')}</label>
                   <select
                     className="calculator-input"
                     value={inputs.riskProfile}
@@ -442,7 +501,12 @@ const JobOfferWorkflow = () => {
               <div style={{ marginTop: '0.75rem', color: '#475569', fontSize: '0.92rem' }}>
                 Model assumptions: {regionConfig.taxModelLabel}
               </div>
-              <button className="calculator-button primary-button" type="button" onClick={() => setStep(2)}>
+              <button
+                className="calculator-button primary-button"
+                type="button"
+                style={stepPrimaryCtaStyle}
+                onClick={() => setStep(2)}
+              >
                 Continue to In-hand Impact
               </button>
             </div>
@@ -451,6 +515,14 @@ const JobOfferWorkflow = () => {
           {step === 2 && (
             <div className="results-container">
               <h2 className="results-title">Step 2: What changes if you switch?</h2>
+              <div style={helperBoxStyle}>
+                <strong>How to read this step:</strong>
+                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
+                  <li>Monthly gain is raw cash difference after modeled deductions.</li>
+                  <li>Cost-of-living adjusted gain shows real spending-power change.</li>
+                  <li>If adjusted gain is low, negotiate or revise expectations before switching.</li>
+                </ul>
+              </div>
               <div className="responsive-grid">
                 <div className="result-item">
                   <p className="result-label">
@@ -498,7 +570,12 @@ const JobOfferWorkflow = () => {
                 <button className="calculator-button" type="button" onClick={() => setStep(1)}>
                   Back to Inputs
                 </button>
-                <button className="calculator-button success-button" type="button" onClick={() => setStep(3)}>
+                <button
+                  className="calculator-button success-button"
+                  type="button"
+                  style={stepInlineCtaStyle}
+                  onClick={() => setStep(3)}
+                >
                   Continue to Decision Plan
                 </button>
               </div>
@@ -521,6 +598,15 @@ const JobOfferWorkflow = () => {
                   <CheckCircle2 size={16} style={{ verticalAlign: 'middle' }} /> {deltas.recommendation.label}
                 </p>
                 <p style={{ margin: '0.4rem 0 0 0', color: '#334155' }}>{deltas.recommendation.reason}</p>
+              </div>
+
+              <div style={helperBoxStyle}>
+                <strong>How to use this plan:</strong>
+                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
+                  <li>Treat this as first-month allocation guidance after switching.</li>
+                  <li>Protect emergency runway first, then scale investing and EMI commitments.</li>
+                  <li>Re-run after 2-3 salary cycles with actual cash-flow data.</li>
+                </ul>
               </div>
 
               <div className="responsive-grid">

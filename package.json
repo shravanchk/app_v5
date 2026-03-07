@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "Upaman Next.js migration scaffold with preserved v4 look and feel",
+  "engines": {
+    "node": ">=20 <23"
+  },
   "scripts": {
-    "dev": "next dev",
+    "clean": "rm -rf .next out",
+    "predev": "npm run clean",
+    "dev": "NODE_ENV=development next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

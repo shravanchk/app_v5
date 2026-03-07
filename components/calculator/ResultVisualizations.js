@@ -1,17 +1,18 @@
 import React from 'react';
 
 const cardStyle = {
-  marginTop: '0.95rem',
-  padding: '0.9rem',
+  marginTop: '1rem',
+  padding: 'clamp(0.8rem, 2.8vw, 1rem)',
   border: '1px solid #e2e8f0',
-  borderRadius: '0.9rem',
-  background: 'linear-gradient(135deg, #f8fafc, #ffffff)'
+  borderRadius: '1rem',
+  background: 'linear-gradient(135deg, #f8fafc, #ffffff)',
+  boxShadow: '0 1px 2px rgba(15, 42, 67, 0.04)'
 };
 
 const titleStyle = {
-  margin: '0 0 0.7rem',
+  margin: '0 0 0.8rem',
   color: '#0f2a43',
-  fontSize: '0.95rem',
+  fontSize: 'clamp(0.92rem, 2.6vw, 1rem)',
   fontWeight: 700
 };
 
@@ -31,7 +32,10 @@ const describeArc = (x, y, radius, startAngle, endAngle) => {
 };
 
 export const PieBreakdownChart = ({ title, items, formatter = (value) => `${Math.round(value)}` }) => {
-  const sanitizedItems = items.filter((item) => item.value > 0);
+  const sanitizedItems = items
+    .filter((item) => item && Number.isFinite(item.value))
+    .map((item) => ({ ...item, value: Math.max(0, item.value) }))
+    .filter((item) => item.value > 0);
   const total = sanitizedItems.reduce((sum, item) => sum + item.value, 0);
 
   if (!total) return null;
@@ -48,8 +52,23 @@ export const PieBreakdownChart = ({ title, items, formatter = (value) => `${Math
   return (
     <section style={cardStyle}>
       <h4 style={titleStyle}>{title}</h4>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', alignItems: 'center' }}>
-        <svg viewBox="0 0 120 120" width="150" height="150" role="img" aria-label={title}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.9rem',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <svg
+          viewBox="0 0 120 120"
+          width="160"
+          height="160"
+          role="img"
+          aria-label={title}
+          style={{ width: 'clamp(132px, 36vw, 168px)', height: 'auto', flex: '0 0 auto' }}
+        >
           {segments.map((segment) => (
             <path
               key={segment.label}
@@ -59,29 +78,56 @@ export const PieBreakdownChart = ({ title, items, formatter = (value) => `${Math
               strokeWidth="1.5"
             />
           ))}
-          <circle cx="60" cy="60" r="26" fill="#ffffff" />
-          <text x="60" y="56" textAnchor="middle" fontSize="9" fill="#475569">
+          <circle cx="60" cy="60" r="28" fill="#ffffff" />
+          <text x="60" y="55" textAnchor="middle" fontSize="9" fill="#475569">
             Total
           </text>
           <text x="60" y="68" textAnchor="middle" fontSize="10" fontWeight="700" fill="#0f2a43">
             {formatter(total)}
           </text>
         </svg>
-        <ul style={{ margin: 0, paddingLeft: '1rem', color: '#334155', fontSize: '0.86rem', lineHeight: 1.55, flex: 1, minWidth: '200px' }}>
+        <ul
+          style={{
+            margin: 0,
+            paddingLeft: 0,
+            listStyle: 'none',
+            color: '#334155',
+            fontSize: '0.86rem',
+            lineHeight: 1.55,
+            flex: 1,
+            minWidth: '220px'
+          }}
+        >
           {segments.map((segment) => (
-            <li key={segment.label} style={{ marginBottom: '0.35rem' }}>
-              <span
-                aria-hidden="true"
-                style={{
-                  display: 'inline-block',
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '999px',
-                  background: segment.color,
-                  marginRight: '0.45rem'
-                }}
-              />
-              <strong>{segment.label}</strong>: {formatter(segment.value)} ({segment.share.toFixed(1)}%)
+            <li
+              key={segment.label}
+              style={{
+                marginBottom: '0.45rem',
+                border: '1px solid #e2e8f0',
+                borderRadius: '0.6rem',
+                padding: '0.45rem 0.6rem',
+                background: '#ffffff'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.6rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '999px',
+                      background: segment.color,
+                      marginRight: '0.45rem',
+                      flex: '0 0 auto'
+                    }}
+                  />
+                  <strong style={{ color: '#0f2a43' }}>{segment.label}</strong>
+                </div>
+                <strong style={{ color: '#334155', whiteSpace: 'nowrap' }}>{segment.share.toFixed(1)}%</strong>
+              </div>
+              <div style={{ marginTop: '0.2rem', color: '#475569', fontSize: '0.82rem' }}>{formatter(segment.value)}</div>
             </li>
           ))}
         </ul>
@@ -91,26 +137,38 @@ export const PieBreakdownChart = ({ title, items, formatter = (value) => `${Math
 };
 
 export const ComparisonBars = ({ title, items, formatter = (value) => `${Math.round(value)}` }) => {
-  const max = Math.max(...items.map((item) => item.value), 0);
-  if (!max) return null;
+  const normalizedItems = items
+    .filter((item) => item && Number.isFinite(item.value))
+    .map((item) => ({ ...item, absValue: Math.abs(item.value) }));
+  const max = Math.max(...normalizedItems.map((item) => item.absValue), 0);
+  if (!max || !normalizedItems.length) return null;
 
   return (
     <section style={cardStyle}>
       <h4 style={titleStyle}>{title}</h4>
       <div style={{ display: 'grid', gap: '0.65rem' }}>
-        {items.map((item) => {
-          const width = `${Math.max(6, (item.value / max) * 100)}%`;
+        {normalizedItems.map((item) => {
+          const width = `${Math.max(6, (item.absValue / max) * 100)}%`;
           return (
             <div key={item.label}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', color: '#334155' }}>
-                <strong>{item.label}</strong>
-                <span>{formatter(item.value)}</span>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '0.84rem',
+                  color: '#334155',
+                  gap: '0.6rem',
+                  flexWrap: 'wrap'
+                }}
+              >
+                <strong style={{ color: '#0f2a43' }}>{item.label}</strong>
+                <span style={{ whiteSpace: 'nowrap' }}>{formatter(item.value)}</span>
               </div>
-              <div style={{ marginTop: '0.25rem', background: '#e2e8f0', borderRadius: '999px', height: '11px' }}>
+              <div style={{ marginTop: '0.28rem', background: '#e2e8f0', borderRadius: '999px', height: '12px' }}>
                 <div
                   style={{
                     width,
-                    height: '11px',
+                    height: '12px',
                     borderRadius: '999px',
                     background: item.color
                   }}

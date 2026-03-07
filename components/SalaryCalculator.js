@@ -6,6 +6,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
+import SearchLandingSections from './calculator/SearchLandingSections';
 
 const SalaryCalculator = () => {
   const [activeTab, setActiveTab] = useState('ctc-breakdown');
@@ -285,6 +286,21 @@ const SalaryCalculator = () => {
     `Nominal change: ${comparisonResult.percentageIncrease.toFixed(1)}%`,
     `Cost-adjusted change: ${comparisonResult.realPercentageIncrease.toFixed(1)}%`
   ] : [];
+
+  const seoFaqItems = [
+    {
+      question: 'How do I estimate 15 LPA or 20 LPA in-hand salary?',
+      answer: 'Enter your annual CTC and review monthly take-home after modeled deductions. Use city and PF settings to approximate your specific payroll context.'
+    },
+    {
+      question: 'Why can in-hand salary differ from this calculator?',
+      answer: 'Actual payroll depends on employer structure, allowance policy, tax declarations, and state-specific deductions. Treat outputs as planning estimates.'
+    },
+    {
+      question: 'Can I compare two job offers here?',
+      answer: 'Yes. Use the comparison tab to evaluate nominal and cost-adjusted salary difference between two offers and city contexts.'
+    }
+  ];
 
   return (
     <div className="calculator-container salary-container">
@@ -1145,6 +1161,43 @@ const SalaryCalculator = () => {
             guideLinks={[
               { label: 'CTC to in-hand breakdown guide', href: '/guide-ctc-inhand-breakdown.html' },
               { label: 'Old vs new tax regime guide', href: '/guide-income-tax-regime-choice.html' }
+            ]}
+          />
+          <SearchLandingSections
+            intro={(
+              <>
+                <p>
+                  Salary decisions are among the highest-impact financial choices for most professionals, especially
+                  during job switches. A useful CTC to in-hand salary calculator should do more than just one net
+                  number. It should show deduction components, monthly cash flow impact, and salary-comparison context.
+                  This page is structured for that decision workflow.
+                </p>
+                <p>
+                  Use it to estimate take-home from annual CTC, compare offers across city contexts, and review how
+                  deduction assumptions influence your real monthly spending capacity.
+                </p>
+              </>
+            )}
+            example={(
+              <p>
+                Suppose your offer is ₹15,00,000 CTC in a metro city with standard PF setup. Enter values, then review
+                monthly in-hand and annual take-home. Next, compare with an alternate ₹17,00,000 offer in a different
+                city. The comparison panel highlights nominal raise vs cost-adjusted raise, which is often more useful
+                for final negotiation decisions.
+              </p>
+            )}
+            formula={(
+              <p>
+                The model uses component-split estimation for basic, HRA, and allowances, then applies deduction roll-up
+                (PF, tax assumptions, and selected statutory fields) to estimate net annual and monthly salary. Offer
+                comparison mode additionally normalizes outcomes using city cost multipliers for practical purchasing-power context.
+              </p>
+            )}
+            faqItems={seoFaqItems}
+            relatedLinks={[
+              { label: 'Income Tax Calculator (India)', href: '/income-tax-calculator' },
+              { label: 'Tax Regime Comparison Tool', href: '/tax-regime-comparison' },
+              { label: 'CTC to In-hand Salary Guide', href: '/guide-ctc-inhand-breakdown.html' }
             ]}
           />
         </div>

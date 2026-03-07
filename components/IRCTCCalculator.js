@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Calendar, Clock, Train,  CalendarDays } from 'lucide-react';
 import Head from 'next/head';
 import HomeButton from './HomeButton';
+import SearchLandingSections from './calculator/SearchLandingSections';
 
 const IRCTCCalculator = () => {
   const [journeyDate, setJourneyDate] = useState('');
@@ -464,6 +465,21 @@ const IRCTCCalculator = () => {
       window.removeEventListener('storage', syncTheme);
     };
   }, []);
+
+  const seoFaqItems = [
+    {
+      question: 'When does IRCTC general booking open?',
+      answer: 'For most regular classes, booking opens at 10:00 AM IST as per current applicable booking window rules.'
+    },
+    {
+      question: 'When does Tatkal booking open?',
+      answer: 'Tatkal generally opens one day before journey date around 11:00 AM IST. Always verify final timing on the official IRCTC portal.'
+    },
+    {
+      question: 'Can this tool guarantee seat availability?',
+      answer: 'No. It helps plan booking windows and timing strategy. Final availability depends on live quota, demand, and IRCTC system status.'
+    }
+  ];
   
   return (
     <div className={`calculator-container irctc-container ${isDarkMode ? 'dark' : ''}`}>
@@ -910,6 +926,42 @@ END:VCALENDAR`}
               </div>
             </div>
           </div>
+
+          <SearchLandingSections
+            intro={(
+              <>
+                <p>
+                  IRCTC booking timing queries are highly intent-driven: users usually need exact opening windows for
+                  regular and Tatkal booking, not long documentation. This page combines timing logic and practical
+                  booking planning so you can avoid missing critical windows.
+                </p>
+                <p>
+                  Use this tool before important travel bookings to calculate booking date, time, and quota context in
+                  one place.
+                </p>
+              </>
+            )}
+            example={(
+              <p>
+                If your journey date is April 30 and the train follows a 60-day advance window, booking date is derived
+                by moving back the configured days and applying opening-time logic. For Tatkal journeys, the calculator
+                applies one-day window rules with expected opening time to help you prepare in advance.
+              </p>
+            )}
+            formula={(
+              <p>
+                Core logic: booking date = journey date minus applicable advance-booking days, then attach quota-specific
+                opening time (regular, Tatkal, or other selected quota category). Display layers then provide category
+                labels, reminders, and practical timing guidance for real booking behavior.
+              </p>
+            )}
+            faqItems={seoFaqItems}
+            relatedLinks={[
+              { label: 'Age Calculator (Travel age checks)', href: '/age-calculator' },
+              { label: 'Loan & EMI Calculator', href: '/loan-calculator' },
+              { label: 'IRCTC and Booking Strategy Guide', href: '/guide-irctc-booking-strategy.html' }
+            ]}
+          />
 
         </div>
         {/* Footer */}

@@ -24,6 +24,12 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://upaman.com/tax-regime-comparison</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://upaman.com/sip-calculator</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>weekly</changefreq>
@@ -40,6 +46,12 @@
     <lastmod>2026-02-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/buy-vs-rent-calculator</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.86</priority>
   </url>
   <url>
     <loc>https://upaman.com/irctc-calculator</loc>
@@ -68,6 +80,18 @@
   <url>
     <loc>https://upaman.com/home-loan-readiness-workflow</loc>
     <lastmod>2026-02-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/prepay-vs-invest-workflow</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/emergency-fund-readiness-workflow</loc>
+    <lastmod>2026-03-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.88</priority>
   </url>
@@ -225,16 +249,16 @@
     <priority>0.65</priority>
   </url>
   <url>
-    <loc>https://upaman.com/privacy-policy.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <loc>https://upaman.com/privacy-policy</loc>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.62</priority>
   </url>
   <url>
-    <loc>https://upaman.com/terms-of-service.html</loc>
-    <lastmod>2026-02-24</lastmod>
+    <loc>https://upaman.com/terms-of-service</loc>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.62</priority>
   </url>
   <url>
     <loc>https://upaman.com/methodology</loc>
@@ -253,6 +277,36 @@
     <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.62</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/publisher-standards</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.68</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/advertising-policy</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.66</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/corrections-policy</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.66</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/affiliate-disclosure</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.64</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/cookie-policy</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.64</priority>
   </url>
   <url>
     <loc>https://upaman.com/guide-emi-prepayment-strategy.html</loc>
@@ -283,6 +337,24 @@
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.66</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guide-irctc-booking-strategy.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.66</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guide-prepay-vs-invest-decision.html</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.68</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guide-emergency-fund-readiness.html</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.68</priority>
   </url>
   <url>
     <loc>https://upaman.com/guide-ppf-vs-sip-choice.html</loc>

@@ -17,10 +17,14 @@ Allow: /sip-calculator
 Allow: /ppf-calculator
 Allow: /gst-calculator
 Allow: /income-tax-calculator
+Allow: /tax-regime-comparison
 Allow: /salary-calculator
+Allow: /buy-vs-rent-calculator
 Allow: /india-calculators
 Allow: /job-offer-workflow
 Allow: /home-loan-readiness-workflow
+Allow: /prepay-vs-invest-workflow
+Allow: /emergency-fund-readiness-workflow
 Allow: /age-calculator
 Allow: /scientific-calculator
 Allow: /statistics-calculator
@@ -41,10 +45,15 @@ Allow: /us-401k-calculator
 Allow: /us-savings-cd-calculator
 Allow: /us-credit-card-payoff-calculator
 Allow: /about
-Allow: /privacy-policy.html
-Allow: /terms-of-service.html
+Allow: /privacy-policy
+Allow: /cookie-policy
+Allow: /terms-of-service
 Allow: /methodology
 Allow: /editorial-policy
+Allow: /publisher-standards
+Allow: /advertising-policy
+Allow: /corrections-policy
+Allow: /affiliate-disclosure
 Allow: /contact
 Allow: /guide-emi-prepayment-strategy.html
 Allow: /guide-income-tax-regime-choice.html
@@ -52,6 +61,9 @@ Allow: /guide-sip-step-up-planning.html
 Allow: /guide-credit-card-minimum-due-trap.html
 Allow: /guide-ctc-inhand-breakdown.html
 Allow: /guide-ppf-vs-sip-choice.html
+Allow: /guide-irctc-booking-strategy.html
+Allow: /guide-prepay-vs-invest-decision.html
+Allow: /guide-emergency-fund-readiness.html
 
 # Known non-content or legacy areas
 Disallow: /build/
