@@ -745,7 +745,7 @@ const MainLandingPage = () => {
   return (
     <div style={containerStyle}>
       <Head>
-        <title>Decision-First Financial Calculators for Your Growth | Upaman</title>
+        <title>Decision-First Financial Calculators | Upaman</title>
         <meta
           name="description"
           content="Decision-first financial calculators for your growth. Plan tax, loans, savings, investing, salary, and more with transparent formulas, practical workflows, and useful utility tools."
@@ -755,13 +755,13 @@ const MainLandingPage = () => {
           content="financial calculators US Europe India, scientific calculator, statistics calculator, unit converter, India calculators hub, US calculators hub, EU calculators hub, US mortgage calculator, US refinance calculator, US auto loan calculator, US 401k calculator, US savings cd calculator, US credit card payoff calculator, European VAT calculator, EU salary calculator, UK income tax calculator 2025-26, Germany salary calculator, France salary calculator, Netherlands salary calculator, GST calculator, income tax calculator India 2025-26, SIP calculator, EMI calculator, salary calculator, json formatter"
         />
         <link rel="canonical" href="https://upaman.com/" />
-        <meta property="og:title" content="Decision-First Financial Calculators for Your Growth | Upaman" />
+        <meta property="og:title" content="Decision-First Financial Calculators | Upaman" />
         <meta
           property="og:description"
           content="Plan important money decisions with transparent calculators, practical workflows, and trusted methodology notes."
         />
         <meta property="og:url" content="https://upaman.com/" />
-        <meta name="twitter:title" content="Decision-First Financial Calculators for Your Growth | Upaman" />
+        <meta name="twitter:title" content="Decision-First Financial Calculators | Upaman" />
         <meta
           name="twitter:description"
           content="Decision-first calculators and workflows to help you plan tax, loans, savings, investing, and salary with confidence."
@@ -1216,7 +1216,7 @@ const MainLandingPage = () => {
           WebkitTextFillColor: 'transparent',
           lineHeight: '1.2'
         }}>
-          Decision-First Financial Calculators for Your Growth
+          Decision-First Financial Calculators
         </h1>
         <h2 style={{
           fontSize: '1.5rem',
@@ -1225,7 +1225,7 @@ const MainLandingPage = () => {
           marginBottom: '1rem',
           textAlign: 'center'
         }}>
-          Start with guided workflows for job, tax, loan, and savings choices, then validate with transparent calculators.
+          Interactive tools and guided workflows to compare real financial decisions like rent vs buy, debt payoff, salary offers, and retirement planning.
         </h2>
         <p style={{
           fontSize: '1.25rem',

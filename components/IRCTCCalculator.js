@@ -2,7 +2,10 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Calendar, Clock, Train,  CalendarDays } from 'lucide-react';
 import Head from 'next/head';
 import HomeButton from './HomeButton';
+import EEATPanel from './calculator/EEATPanel';
 import SearchLandingSections from './calculator/SearchLandingSections';
+import { buildFaqSchema } from '../utils/faqSchema';
+import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 
 const IRCTCCalculator = () => {
   const [journeyDate, setJourneyDate] = useState('');
@@ -480,6 +483,24 @@ const IRCTCCalculator = () => {
       answer: 'No. It helps plan booking windows and timing strategy. Final availability depends on live quota, demand, and IRCTC system status.'
     }
   ];
+  const softwareSchema = buildSoftwareApplicationSchema({
+    name: 'IRCTC Advance Booking Calculator 2025',
+    url: 'https://upaman.com/irctc-calculator',
+    description: 'Calculate IRCTC booking window dates and timing guidance for regular and Tatkal bookings.',
+    applicationCategory: 'TravelApplication',
+    featureList: [
+      'Advance booking date calculator',
+      'Tatkal window timing helper',
+      'Booking reminder and calendar links',
+      'Quota and timing guidance'
+    ]
+  });
+  const faqSchema = buildFaqSchema(seoFaqItems);
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
+    { name: 'IRCTC Calculator', item: 'https://upaman.com/irctc-calculator' }
+  ]);
   
   return (
     <div className={`calculator-container irctc-container ${isDarkMode ? 'dark' : ''}`}>
@@ -498,23 +519,9 @@ const IRCTCCalculator = () => {
     <meta name="twitter:title" content="IRCTC Booking Charges Calculator 2025 | Upaman" />
     <meta name="twitter:description" content="IRCTC train ticket booking fee & convenience charge calculator." />
     <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-      "name": "IRCTC Booking Charges Calculator 2025",
-            "url": "https://upaman.com/irctc-calculator",
-            "description": "Free IRCTC train booking calculator for convenience fees and total booking charges calculation",
-            "applicationCategory": "Travel & Transportation",
-            "operatingSystem": "Web Browser",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "INR"
-            },
-            "featureList": ["IRCTC Booking Calculator", "Convenience Fee Calculator", "Payment Gateway Charges", "Train Fare Calculator", "Railway Booking Charges"]
-          })
-        }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
       <button 
         style={themeToggleStyles.button} 
@@ -927,6 +934,18 @@ END:VCALENDAR`}
             </div>
           </div>
 
+          <EEATPanel
+            author="Upaman Research Team"
+            reviewer="Travel Utility Review Desk (Upaman)"
+            reviewedOn="March 7, 2026"
+            scope="Booking-window output is based on modeled IRCTC timing rules and should be verified against official portal notices."
+            sources={[
+              { label: 'IRCTC Official Portal', url: 'https://www.irctc.co.in/' },
+              { label: 'Indian Railways', url: 'https://indianrailways.gov.in/' },
+              { label: 'Railway Enquiry', url: 'https://enquiry.indianrail.gov.in/' }
+            ]}
+          />
+
           <SearchLandingSections
             intro={(
               <>
@@ -958,6 +977,7 @@ END:VCALENDAR`}
             faqItems={seoFaqItems}
             relatedLinks={[
               { label: 'Age Calculator (Travel age checks)', href: '/age-calculator' },
+              { label: 'Income Tax Calculator', href: '/income-tax-calculator' },
               { label: 'Loan & EMI Calculator', href: '/loan-calculator' },
               { label: 'IRCTC and Booking Strategy Guide', href: '/guide-irctc-booking-strategy.html' }
             ]}

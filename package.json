@@ -8,8 +8,8 @@
   },
   "scripts": {
     "clean": "rm -rf .next out",
-    "predev": "npm run clean",
     "dev": "NODE_ENV=development next dev",
+    "dev:fresh": "npm run clean && NODE_ENV=development next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

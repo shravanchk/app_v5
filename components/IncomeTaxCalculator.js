@@ -4,10 +4,12 @@ import { Calculator, TrendingUp, Info } from 'lucide-react';
 import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import CalculatorArticleLayout from './calculator/CalculatorArticleLayout';
+import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { buildFaqSchema } from '../utils/faqSchema';
+import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 
 const IncomeTaxCalculator = () => {
   const [activeTab, setActiveTab] = useState('salary-tax');
@@ -288,27 +290,19 @@ const IncomeTaxCalculator = () => {
     }
   }, [activeTab, calculateTaxComparison]);
 
-  const jsonLdData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Income Tax Calculator India FY 2025-26",
-    "description": "Free online income tax calculator for India FY 2025-26. Calculate salary tax, business tax with both old and new tax regimes. Compare tax slabs and get detailed breakdown.",
-    "applicationCategory": "FinanceApplication",
-    "operatingSystem": "Web Browser",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "INR"
-    },
-    "featureList": [
-      "Salary Tax Calculator",
-      "Business Income Tax Calculator", 
-      "Old vs New Tax Regime Comparison",
-      "Tax Slabs FY 2025-26",
-      "Section 80C, 80D Deductions",
-      "HRA Exemption Calculator"
+  const jsonLdData = buildSoftwareApplicationSchema({
+    name: 'Income Tax Calculator India FY 2025-26',
+    url: 'https://upaman.com/income-tax-calculator',
+    description: 'Free online income tax calculator for India FY 2025-26. Calculate salary tax, business tax with both old and new tax regimes. Compare tax slabs and get detailed breakdown.',
+    featureList: [
+      'Salary Tax Calculator',
+      'Business Income Tax Calculator',
+      'Old vs New Tax Regime Comparison',
+      'Tax Slabs FY 2025-26',
+      'Section 80C, 80D Deductions',
+      'HRA Exemption Calculator'
     ]
-  };
+  });
 
   const salaryShareLines = salaryTaxResult ? [
     `Gross salary: ${formatCurrency(salaryTaxResult.grossSalary)}`,
@@ -353,11 +347,29 @@ const IncomeTaxCalculator = () => {
   ];
 
   const faqSchema = buildFaqSchema(faqItems);
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
+    { name: 'Income Tax Calculator', item: 'https://upaman.com/income-tax-calculator' }
+  ]);
 
   const relatedGuides = [
     { label: 'Old vs new tax regime guide', href: '/guide-income-tax-regime-choice.html' },
     { label: 'CTC to in-hand breakdown guide', href: '/guide-ctc-inhand-breakdown.html' },
     { label: 'SIP step-up planning guide', href: '/guide-sip-step-up-planning.html' }
+  ];
+
+  const nextStepTools = [
+    { label: 'Tax regime comparison tool', href: '/tax-regime-comparison' },
+    { label: 'Salary calculator (CTC to in-hand)', href: '/salary-calculator' },
+    { label: 'SIP calculator for tax-savings planning', href: '/sip-calculator' },
+    { label: 'PPF calculator for Section 80C planning', href: '/ppf-calculator' }
+  ];
+
+  const eeatSources = [
+    { label: 'Income Tax Department', url: 'https://www.incometax.gov.in/' },
+    { label: 'CBDT', url: 'https://incometaxindia.gov.in/' },
+    { label: 'Ministry of Finance', url: 'https://www.finmin.gov.in/' }
   ];
 
   return (
@@ -384,6 +396,12 @@ const IncomeTaxCalculator = () => {
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(faqSchema)
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbSchema)
           }}
         />
       </Head>
@@ -1008,6 +1026,15 @@ const IncomeTaxCalculator = () => {
             calculator first, then scroll for detailed explanation, examples, FAQ, and methodology.
           </p>
         )}
+        trustPanel={(
+          <EEATPanel
+            author="Upaman Research Team"
+            reviewer="Tax Policy Review Desk (Upaman)"
+            reviewedOn="March 7, 2026"
+            scope="Covers slab-based tax planning estimates for salaried and business users under FY 2025-26 / AY 2026-27 assumptions."
+            sources={eeatSources}
+          />
+        )}
         intro={(
           <>
             <p>
@@ -1104,6 +1131,7 @@ const IncomeTaxCalculator = () => {
           </>
         )}
         relatedGuides={relatedGuides}
+        nextStepTools={nextStepTools}
         methodology={(
           <>
             <p>

@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
+import EEATPanel from './calculator/EEATPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { ComparisonBars } from './calculator/ResultVisualizations';
+import SearchLandingSections from './calculator/SearchLandingSections';
 import { formatINR } from '../utils/calculations';
+import { buildFaqSchema } from '../utils/faqSchema';
+import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 
 const MAX_MONTHS = 1200;
 
@@ -137,6 +141,37 @@ const CreditCardTrapCalculator = () => {
     `Interest saved: ${formatINR(interestSaved)}`,
     `Time saved: ${formatDuration(monthsSaved)}`
   ];
+  const faqItems = [
+    {
+      question: 'Why is minimum due repayment expensive?',
+      answer: 'Minimum due often covers a large interest component and a small principal component, which extends payoff period and increases total interest.'
+    },
+    {
+      question: 'How should I choose my fixed monthly payment?',
+      answer: 'Pick a sustainable amount above minimum due, keep it consistent, and increase it whenever income improves to reduce total borrowing cost.'
+    },
+    {
+      question: 'Can this calculator replace lender statements?',
+      answer: 'No. Use it for planning and habit correction. Final repayment and billing values should be validated with official card statements.'
+    }
+  ];
+  const softwareSchema = buildSoftwareApplicationSchema({
+    name: 'Credit Card Trap Calculator',
+    url: 'https://upaman.com/credit-card-trap-calculator',
+    description: 'Compare minimum-due repayment vs accelerated monthly payment and estimate payoff time and interest savings.',
+    featureList: [
+      'Minimum due payoff simulation',
+      'Accelerated repayment simulation',
+      'Interest saved analysis',
+      'Month-wise debt schedule'
+    ]
+  });
+  const faqSchema = buildFaqSchema(faqItems);
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
+    { name: 'Credit Card Trap Calculator', item: 'https://upaman.com/credit-card-trap-calculator' }
+  ]);
 
   const scheduleRows = acceleratedPlan.schedule.slice(0, 24);
 
@@ -179,29 +214,11 @@ const CreditCardTrapCalculator = () => {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebApplication',
-              name: 'Credit Card Trap Calculator',
-              url: 'https://upaman.com/credit-card-trap-calculator',
-              description:
-                'Credit card payoff estimator that compares minimum due repayment vs accelerated monthly repayment.',
-              applicationCategory: 'FinanceApplication',
-              operatingSystem: 'Web Browser',
-              offers: {
-                '@type': 'Offer',
-                price: '0',
-                priceCurrency: 'INR'
-              },
-              featureList: [
-                'Minimum due payoff simulation',
-                'Fixed monthly payment simulation',
-                'Interest saved comparison',
-                'Month-wise debt table'
-              ]
-            })
+            __html: JSON.stringify(softwareSchema)
           }}
         />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 
       <div className="calculator-card">
@@ -441,6 +458,16 @@ const CreditCardTrapCalculator = () => {
             fileName="upaman-credit-card-trap-summary.txt"
           />
 
+          <EEATPanel
+            author="Upaman Research Team"
+            reviewer="Debt and Credit Behavior Review Desk (Upaman)"
+            reviewedOn="March 7, 2026"
+            scope="Models revolving credit payoff scenarios with fixed APR assumptions and no new spending."
+            sources={[
+              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+              { label: 'RBI FAQs', url: 'https://rbi.org.in/' }
+            ]}
+          />
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
             inputs={[
@@ -463,6 +490,35 @@ const CreditCardTrapCalculator = () => {
             guideLinks={[
               { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' },
               { label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' }
+            ]}
+          />
+          <SearchLandingSections
+            intro={(
+              <p>
+                Credit card debt grows quickly when repayments stay near minimum due. This page compares minimum-due
+                payoff vs a fixed repayment plan so you can choose a practical monthly strategy before interest costs
+                compound further.
+              </p>
+            )}
+            example={(
+              <p>
+                For a ₹2.5 lakh balance at high APR, minimum due can stretch payoff over years with heavy interest.
+                Increasing monthly payment to a fixed target shortens payoff horizon and reduces total interest. Use the
+                side-by-side result cards to set an achievable but aggressive payment plan.
+              </p>
+            )}
+            formula={(
+              <p>
+                Month loop: add interest on opening balance, compute minimum due, apply either minimum due or selected
+                fixed payment (whichever is higher in accelerated mode), then update closing balance. Repeat until
+                payoff and track cumulative interest.
+              </p>
+            )}
+            faqItems={faqItems}
+            relatedLinks={[
+              { label: 'Loan EMI Calculator', href: '/loan-calculator' },
+              { label: 'Prepay vs Invest Workflow', href: '/prepay-vs-invest-workflow' },
+              { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' }
             ]}
           />
         </div>

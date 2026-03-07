@@ -3,10 +3,12 @@ import Head from 'next/head';
 import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import CalculatorArticleLayout from './calculator/CalculatorArticleLayout';
+import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { buildFaqSchema } from '../utils/faqSchema';
+import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 import { formatINR } from '../utils/calculations';
 
 const ComprehensiveLoanCalculator = React.memo(() => {
@@ -191,11 +193,42 @@ const ComprehensiveLoanCalculator = React.memo(() => {
   ];
 
   const faqSchema = buildFaqSchema(faqItems);
+  const softwareSchema = buildSoftwareApplicationSchema({
+    name: 'EMI and Loan Calculator 2025 India',
+    url: 'https://upaman.com/loan-calculator',
+    description: 'Free EMI calculator for home, car, and personal loans with prepayment scenarios and amortization schedule.',
+    applicationCategory: 'FinanceApplication',
+    featureList: [
+      'EMI Calculator',
+      'Prepayment Calculator',
+      'Amortization Schedule',
+      'Interest Savings Calculator',
+      'Loan Comparison Tool'
+    ]
+  });
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
+    { name: 'Loan Calculator', item: 'https://upaman.com/loan-calculator' }
+  ]);
 
   const relatedGuides = [
     { label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' },
     { label: 'CTC to in-hand breakdown guide', href: '/guide-ctc-inhand-breakdown.html' },
     { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' }
+  ];
+
+  const nextStepTools = [
+    { label: 'Home loan readiness workflow', href: '/home-loan-readiness-workflow' },
+    { label: 'Prepay vs invest workflow', href: '/prepay-vs-invest-workflow' },
+    { label: 'Buy vs rent calculator', href: '/buy-vs-rent-calculator' },
+    { label: 'Income tax calculator', href: '/income-tax-calculator' }
+  ];
+
+  const eeatSources = [
+    { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+    { label: 'National Housing Bank', url: 'https://nhb.org.in/' },
+    { label: 'SBI Home Loans', url: 'https://homeloans.sbi/' }
   ];
 
   return (
@@ -216,26 +249,18 @@ const ComprehensiveLoanCalculator = React.memo(() => {
     <meta name="twitter:description" content="Free EMI & Loan Calculator with prepayment savings and amortization schedule." />
     <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-      "name": "EMI & Loan Calculator 2025 India",
-      "url": "https://upaman.com/loan-calculator",
-            "description": "Free EMI Calculator for home loan, car loan, personal loan with prepayment options and amortization schedule",
-            "applicationCategory": "Finance & Loans",
-            "operatingSystem": "Web Browser",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "INR"
-            },
-            "featureList": ["EMI Calculator", "Prepayment Calculator", "Amortization Schedule", "Interest Savings Calculator", "Loan Comparison Tool"]
-          })
+          __html: JSON.stringify(softwareSchema)
         }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(faqSchema)
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbSchema)
           }}
         />
       </Head>
@@ -798,6 +823,15 @@ const ComprehensiveLoanCalculator = React.memo(() => {
             examples, mistakes, and decision tips below the tool.
           </p>
         )}
+        trustPanel={(
+          <EEATPanel
+            author="Upaman Research Team"
+            reviewer="Credit and Lending Review Desk (Upaman)"
+            reviewedOn="March 7, 2026"
+            scope="Covers fixed-rate EMI projections and prepayment scenario estimates for education and planning."
+            sources={eeatSources}
+          />
+        )}
         intro={(
           <>
             <p>
@@ -890,6 +924,7 @@ const ComprehensiveLoanCalculator = React.memo(() => {
           </>
         )}
         relatedGuides={relatedGuides}
+        nextStepTools={nextStepTools}
         methodology={(
           <>
             <p>

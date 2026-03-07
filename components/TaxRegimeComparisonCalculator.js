@@ -2,7 +2,9 @@ import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import HomeButton from './HomeButton';
 import SearchLandingSections from './calculator/SearchLandingSections';
+import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
+import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 
 const oldSlabs = [
   { min: 0, max: 250000, rate: 0 },
@@ -88,6 +90,46 @@ const TaxRegimeComparisonCalculator = () => {
   const newTakeHome = Math.max(0, salary - result.newTotalTax);
   const recommendedTax = result.betterRegime === 'Old Regime' ? result.oldTotalTax : result.newTotalTax;
   const recommendedTakeHome = result.betterRegime === 'Old Regime' ? oldTakeHome : newTakeHome;
+  const softwareSchema = buildSoftwareApplicationSchema({
+    name: 'Tax Regime Comparison Tool India',
+    url: 'https://upaman.com/tax-regime-comparison',
+    description: 'Compare old vs new tax regime in India with salary, deductions, cess, and rebate logic.',
+    featureList: [
+      'Old vs New Regime Comparison',
+      'Deduction-aware tax estimate',
+      'Take-home and savings comparison'
+    ]
+  });
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
+    { name: 'Tax Regime Comparison', item: 'https://upaman.com/tax-regime-comparison' }
+  ]);
+  const eeatSources = [
+    { label: 'Income Tax Department', url: 'https://www.incometax.gov.in/' },
+    { label: 'CBDT', url: 'https://incometaxindia.gov.in/' },
+    { label: 'Ministry of Finance', url: 'https://www.finmin.gov.in/' }
+  ];
+  const faqItems = [
+    {
+      question: 'Which regime is better for high deductions?',
+      answer: 'In many cases old regime performs better when eligible deductions are substantial, but exact outcome depends on income and deduction mix.'
+    },
+    {
+      question: 'Does this include cess and rebate?',
+      answer: 'Yes. The calculator applies cess and basic rebate logic after slab computation for practical planning output.'
+    },
+    {
+      question: 'Can this replace return filing?',
+      answer: 'No. Use this for planning decisions. Final filing values should be validated with official documents and rules.'
+    }
+  ];
+  const relatedLinks = [
+    { label: 'Income Tax Calculator India', href: '/income-tax-calculator' },
+    { label: 'Salary Calculator (CTC to In-hand)', href: '/salary-calculator' },
+    { label: 'PPF Calculator for 80C planning', href: '/ppf-calculator' },
+    { label: 'Old vs New Regime Guide', href: '/guide-income-tax-regime-choice.html' }
+  ];
 
   return (
     <div className="calculator-container" style={{ background: 'linear-gradient(135deg, #f6f4ef 0%, #e7edf4 100%)' }}>
@@ -98,6 +140,18 @@ const TaxRegimeComparisonCalculator = () => {
           content="Compare old vs new tax regime in India with salary, deductions, and rebate logic to identify which regime saves more tax."
         />
         <link rel="canonical" href="https://upaman.com/tax-regime-comparison" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(softwareSchema)
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbSchema)
+          }}
+        />
       </Head>
 
       <div className="calculator-card">
@@ -195,6 +249,14 @@ const TaxRegimeComparisonCalculator = () => {
             formatter={formatCurrency}
           />
 
+          <EEATPanel
+            author="Upaman Research Team"
+            reviewer="Tax Policy Review Desk (Upaman)"
+            reviewedOn="March 7, 2026"
+            scope="This tool compares old vs new Indian tax regime using slab math, standard deductions, cess, and rebate checks."
+            sources={eeatSources}
+          />
+
           <SearchLandingSections
             intro={(
               <p>
@@ -217,34 +279,8 @@ const TaxRegimeComparisonCalculator = () => {
                 Cess and rebate checks are applied after base slab tax to derive final payable tax.
               </p>
             )}
-            faqItems={[
-              {
-                question: 'Which regime is better for high deductions?',
-                answer: 'In many cases old regime performs better when eligible deductions are substantial, but exact outcome depends on income and deduction mix.'
-              },
-              {
-                question: 'Does this include cess and rebate?',
-                answer: 'Yes. The calculator applies cess and basic rebate logic after slab computation for practical planning output.'
-              },
-              {
-                question: 'Can this replace return filing?',
-                answer: 'No. Use this for planning decisions. Final filing values should be validated with official documents and rules.'
-              }
-            ]}
-            relatedLinks={[
-              { label: 'Income Tax Calculator India', href: '/income-tax-calculator' },
-              { label: 'Salary Calculator (CTC to In-hand)', href: '/salary-calculator' },
-              { label: 'Old vs New Regime Guide', href: '/guide-income-tax-regime-choice.html' }
-            ]}
-            softwareSchema={{
-              '@context': 'https://schema.org',
-              '@type': 'SoftwareApplication',
-              name: 'Tax Regime Comparison Tool India',
-              url: 'https://upaman.com/tax-regime-comparison',
-              applicationCategory: 'FinanceApplication',
-              operatingSystem: 'Web Browser',
-              offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' }
-            }}
+            faqItems={faqItems}
+            relatedLinks={relatedLinks}
           />
         </div>
       </div>

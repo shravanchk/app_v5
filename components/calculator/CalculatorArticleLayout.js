@@ -23,13 +23,16 @@ const bodyTextStyle = {
 const CalculatorArticleLayout = ({
   title,
   summary,
+  trustPanel = null,
   intro,
   explanation,
   example,
   tips,
   faq,
   methodology,
-  relatedGuides = []
+  relatedGuides = [],
+  nextStepTools = [],
+  children
 }) => {
   return (
     <article
@@ -55,6 +58,8 @@ const CalculatorArticleLayout = ({
           </div>
         ) : null}
       </div>
+
+      {trustPanel}
 
       <section style={sectionCardStyle}>
         <h2 style={sectionTitleStyle}>Topic overview</h2>
@@ -101,10 +106,32 @@ const CalculatorArticleLayout = ({
         </section>
       ) : null}
 
+      {nextStepTools.length ? (
+        <section style={sectionCardStyle}>
+          <h2 style={sectionTitleStyle}>Next Step Tools</h2>
+          <ul style={{ margin: 0, paddingLeft: '1.1rem', ...bodyTextStyle }}>
+            {nextStepTools.map((tool) => (
+              <li key={tool.href} style={{ marginBottom: '0.35rem' }}>
+                <a href={tool.href} style={{ color: '#1d4e89', fontWeight: 600 }}>
+                  {tool.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       <section style={sectionCardStyle}>
         <h2 style={sectionTitleStyle}>Methodology and assumptions</h2>
         <div style={bodyTextStyle}>{methodology}</div>
       </section>
+
+      {children ? (
+        <section style={{ ...sectionCardStyle, marginBottom: 0 }}>
+          <h2 style={sectionTitleStyle}>Use the calculator</h2>
+          <div style={bodyTextStyle}>{children}</div>
+        </section>
+      ) : null}
     </article>
   );
 };

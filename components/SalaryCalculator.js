@@ -5,8 +5,11 @@ import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import SearchLandingSections from './calculator/SearchLandingSections';
+import { buildFaqSchema } from '../utils/faqSchema';
+import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 
 const SalaryCalculator = () => {
   const [activeTab, setActiveTab] = useState('ctc-breakdown');
@@ -302,6 +305,25 @@ const SalaryCalculator = () => {
     }
   ];
 
+  const softwareSchema = buildSoftwareApplicationSchema({
+    name: 'Salary Calculator India 2025',
+    url: 'https://upaman.com/salary-calculator',
+    description: 'Calculate CTC to in-hand salary with deduction estimates and compare offers across city contexts.',
+    featureList: [
+      'CTC to In-hand Salary Calculator',
+      'Salary Comparison Tool',
+      'City Cost-Adjusted Salary Comparison',
+      'Deduction Breakdown'
+    ]
+  });
+
+  const faqSchema = buildFaqSchema(seoFaqItems);
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
+    { name: 'Salary Calculator', item: 'https://upaman.com/salary-calculator' }
+  ]);
+
   return (
     <div className="calculator-container salary-container">
       <style>{slideInAnimation}</style>
@@ -341,126 +363,9 @@ const SalaryCalculator = () => {
         <meta name="author" content="Upaman Financial Tools" />
         <meta name="copyright" content="Upaman.com" />
         
-        {/* Schema Markup */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": "Free Salary Calculator India 2025",
-            "alternateName": "CTC to In-Hand Salary Calculator",
-            "url": "https://upaman.com/salary-calculator",
-            "description": "Free comprehensive salary calculator for India with CTC to in-hand salary conversion, accurate PF, income tax, professional tax, ESI calculations, city-wise salary comparison, and employer contribution details.",
-            "applicationCategory": ["FinanceApplication", "CalculatorApplication"],
-            "operatingSystem": "Web Browser",
-            "browserRequirements": "HTML5, JavaScript",
-            "softwareVersion": "2.0",
-            "datePublished": "2025-01-01",
-            "dateModified": "2025-09-13",
-            "inLanguage": "en-IN",
-            "author": {
-              "@type": "Organization",
-              "name": "Upaman",
-              "url": "https://upaman.com"
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "Upaman",
-              "url": "https://upaman.com"
-            },
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "INR",
-              "availability": "https://schema.org/InStock"
-            },
-            "featureList": [
-              "CTC to In-Hand Salary Calculator",
-              "PF Calculator with Latest Rates",
-              "Income Tax Calculator FY 2025-26",
-              "Professional Tax Calculator",
-              "ESI Calculator",
-              "Salary Comparison Tool",
-              "City-wise Cost of Living Adjustment",
-              "Employer Contribution Calculator",
-              "Gratuity Calculator",
-              "Take-home Salary Percentage",
-              "Gross vs Net Salary Breakdown",
-              "Job Offer Comparison Tool"
-            ],
-            "about": [
-              {
-                "@type": "Thing",
-                "name": "Salary Calculation",
-                "description": "Calculate take-home salary from CTC"
-              },
-              {
-                "@type": "Thing", 
-                "name": "Income Tax India",
-                "description": "Income tax calculation for FY 2025-26"
-              },
-              {
-                "@type": "Thing",
-                "name": "Provident Fund",
-                "description": "PF calculation with latest rates"
-              },
-              {
-                "@type": "Thing",
-                "name": "Professional Tax",
-                "description": "State-wise professional tax calculation"
-              }
-            ],
-            "keywords": "salary calculator, CTC calculator, in-hand salary, take-home salary, PF calculator, tax calculator, salary comparison, India salary calculator 2025",
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "reviewCount": "2847",
-              "bestRating": "5",
-              "worstRating": "1"
-            }
-          })
-        }} />
-        
-        {/* FAQ Schema */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "How to calculate in-hand salary from CTC?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "To calculate in-hand salary from CTC: 1) Calculate basic salary (45% of CTC), 2) Add HRA and allowances, 3) Deduct PF (12% of basic), 4) Deduct income tax based on tax slabs, 5) Deduct professional tax and ESI if applicable. Use our free salary calculator for accurate calculations."
-                }
-              },
-              {
-                "@type": "Question", 
-                "name": "What is the difference between CTC and in-hand salary?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "CTC (Cost to Company) is the total cost a company spends on an employee including salary, benefits, PF, gratuity etc. In-hand salary is the actual amount received after all deductions like PF, taxes, professional tax etc. Typically, in-hand salary is 70-80% of CTC."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How much PF is deducted from salary in India 2025?",
-                "acceptedAnswer": {
-                  "@type": "Answer", 
-                  "text": "In India, 12% of basic salary is deducted as employee PF contribution, with a maximum limit of ₹1,800 per month (₹21,600 annually). The employer also contributes an equal amount. Use our salary calculator to see exact PF deductions."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Is this salary calculator accurate for 2025?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes, our salary calculator is updated with latest tax slabs for FY 2025-26, current PF rates, ESI limits, and professional tax rates across Indian states. It provides highly accurate in-hand salary calculations."
-                }
-              }
-            ]
-          })
-        }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 
       <div className="calculator-card" style={{
@@ -1138,6 +1043,17 @@ const SalaryCalculator = () => {
         </div>
 
         <div className="mobile-card-content" style={{ paddingTop: 0 }}>
+          <EEATPanel
+            author="Upaman Research Team"
+            reviewer="Compensation and Payroll Review Desk (Upaman)"
+            reviewedOn="March 7, 2026"
+            scope="Salary outputs are planning estimates based on modeled structure, deduction assumptions, and city normalization."
+            sources={[
+              { label: 'EPFO', url: 'https://www.epfindia.gov.in/' },
+              { label: 'Income Tax Department', url: 'https://www.incometax.gov.in/' },
+              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' }
+            ]}
+          />
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
             inputs={[

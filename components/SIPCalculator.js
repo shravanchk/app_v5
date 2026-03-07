@@ -4,8 +4,11 @@ import AffiliateRecommendations from './AffiliateRecommendations';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import SearchLandingSections from './calculator/SearchLandingSections';
+import { buildFaqSchema } from '../utils/faqSchema';
+import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 
 const SIPCalculator = () => {
   const [activeTab, setActiveTab] = useState('sip');
@@ -205,6 +208,24 @@ const SIPCalculator = () => {
     }
   ];
 
+  const softwareSchema = buildSoftwareApplicationSchema({
+    name: 'SIP Calculator 2025 India',
+    url: 'https://upaman.com/sip-calculator',
+    description: 'SIP, step-up SIP, goal-based SIP, and SIP vs lumpsum projection calculator for planning.',
+    featureList: [
+      'SIP Calculator',
+      'Step-up SIP Calculator',
+      'Goal-based SIP Planner',
+      'SIP vs Lumpsum Comparison'
+    ]
+  });
+  const faqSchema = buildFaqSchema(seoFaqItems);
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
+    { name: 'SIP Calculator', item: 'https://upaman.com/sip-calculator' }
+  ]);
+
   return (
     <div className="calculator-container sip-container">
       <Head>
@@ -222,23 +243,9 @@ const SIPCalculator = () => {
     <meta name="twitter:title" content="SIP Calculator 2025 India | Upaman" />
     <meta name="twitter:description" content="Mutual fund SIP, step-up & goal planning calculator." />
     <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-      "name": "SIP Calculator 2025 India",
-            "url": "https://upaman.com/sip-calculator",
-            "description": "Free SIP Calculator for systematic investment planning with step-up, lumpsum, and goal-based calculations",
-            "applicationCategory": "Finance & Investment",
-            "operatingSystem": "Web Browser",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "INR"
-            },
-            "featureList": ["SIP Calculator", "Step-up SIP Calculator", "Lumpsum Calculator", "Goal-based SIP Calculator", "Investment Returns Projection"]
-          })
-        }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
       <div className="calculator-card">
         <div className="calculator-header sip-header">
@@ -594,6 +601,17 @@ const SIPCalculator = () => {
         </div>
 
         <div className="mobile-card-content" style={{ paddingTop: 0 }}>
+          <EEATPanel
+            author="Upaman Research Team"
+            reviewer="Investment Methodology Review Desk (Upaman)"
+            reviewedOn="March 7, 2026"
+            scope="SIP projections are deterministic scenarios based on constant return assumptions and periodic contributions."
+            sources={[
+              { label: 'SEBI Investor Education', url: 'https://investor.sebi.gov.in/' },
+              { label: 'AMFI Knowledge Center', url: 'https://www.amfiindia.com/investor-corner/knowledge-center' },
+              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' }
+            ]}
+          />
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
             inputs={[
