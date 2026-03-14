@@ -25,6 +25,7 @@ Allow: /job-offer-workflow
 Allow: /home-loan-readiness-workflow
 Allow: /prepay-vs-invest-workflow
 Allow: /emergency-fund-readiness-workflow
+Allow: /rent-vs-buy-workflow
 Allow: /age-calculator
 Allow: /scientific-calculator
 Allow: /statistics-calculator

@@ -98,6 +98,13 @@ const IndiaCalculatorsHub = () => {
         tags: ['Runway target', 'Gap to target', 'Milestone plan']
       },
       {
+        title: 'Rent vs Buy Decision Workflow',
+        description: 'Compare renting versus buying with break-even year, affordability, and monthly cash-buffer guidance.',
+        icon: Home,
+        path: '/rent-vs-buy-workflow',
+        tags: ['Break-even year', 'Cash buffer', 'Housing decision']
+      },
+      {
         title: 'Credit Card Trap Calculator',
         description: 'Compare minimum due vs fixed payment and estimate payoff time.',
         icon: Wallet,

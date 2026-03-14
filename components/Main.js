@@ -238,6 +238,17 @@ const MainLandingPage = () => {
       badge: 'Workflow',
       badgeBg: isDarkMode ? 'rgba(29, 78, 137, 0.22)' : '#dbe7f4',
       badgeColor: isDarkMode ? '#bfdbfe' : '#0f2a43'
+    },
+    {
+      title: 'Rent vs Buy Decision Workflow',
+      description: 'Compare affordability, break-even timeline, and monthly flexibility before deciding whether to keep renting or buy a home',
+      icon: Home,
+      ...themedCard('accent'),
+      features: ['Break-even year', 'Cash buffer check', 'Housing action plan'],
+      path: '/rent-vs-buy-workflow',
+      badge: 'Workflow',
+      badgeBg: isDarkMode ? 'rgba(180, 83, 9, 0.25)' : '#ffedd5',
+      badgeColor: isDarkMode ? '#fdba74' : '#9a3412'
     }
   ];
 

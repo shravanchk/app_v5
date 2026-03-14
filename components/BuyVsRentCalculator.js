@@ -231,6 +231,7 @@ const BuyVsRentCalculator = () => {
               }
             ]}
             relatedLinks={[
+              { label: 'Rent vs Buy Decision Workflow', href: '/rent-vs-buy-workflow' },
               { label: 'Loan & EMI Calculator', href: '/loan-calculator' },
               { label: 'Home Loan Readiness Workflow', href: '/home-loan-readiness-workflow' },
               { label: 'EMI Prepayment Strategy Guide', href: '/guide-emi-prepayment-strategy.html' }

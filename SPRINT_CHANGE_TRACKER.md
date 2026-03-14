@@ -1,6 +1,6 @@
 # Upaman Sprint + Change Tracker
 
-Last updated: 2026-03-07  
+Last updated: 2026-03-14  
 Project: `/Users/shravancherukuri/workspace/app_v5`
 
 Purpose: Single source of truth for implementation scope, sprint status, and change history so work is trackable and repeatable.
@@ -51,6 +51,7 @@ Target: apply high-impact template and authority improvements on priority pages
 | Add reusable schema helpers (`SoftwareApplication`, `FAQ`, `Breadcrumb`) | DONE | `utils/schema.js` and integration in target pages |
 | Strengthen internal linking blocks ("Next step tools", related guides) | DONE | completed across sprint priority pages (tax/loan/regime/salary/sip/credit-card/irctc) |
 | Apply answer-first layout standard on top priority pages | DONE | calculator-first flow retained with trust+insight+related sections on priority pages |
+| Add high-intent workflow expansion | DEPLOYED | added `rent-vs-buy-workflow` with scenario comparison, charts, and action-plan output |
 
 Priority pages for Sprint 1:
 - `/income-tax-calculator`
@@ -98,6 +99,8 @@ Target: broaden authority and improve conversion/retention
 | 2026-03-07 | Sprint 1 | Updated homepage hero messaging to "Decision-First Financial Calculators" with decision-focused subheading | DONE | code updated in `components/Main.js` | Pending |
 | 2026-03-07 | Sprint 1 | Aligned homepage metadata titles (`title`, `og:title`, `twitter:title`) with updated H1 | DONE | metadata updated in `components/Main.js` | Pending |
 | 2026-03-07 | Sprint 0 | Fixed recurring local chunk-missing runtime loop by removing auto-clean on `npm run dev`; added explicit `npm run dev:fresh` | DONE | `dev:fresh` returns `200` for `/` and `/_next/static/chunks/pages/_app.js` | N/A |
+| 2026-03-14 | Sprint 1 | Added `rent-vs-buy-workflow` page and workflow component with break-even logic, comparison charts, and action-plan recommendations | DEPLOYED | `npm run build` passed; route generated at `/rent-vs-buy-workflow` | Cloudflare Pages deploy completed |
+| 2026-03-14 | Sprint 1 | Added workflow discovery/crawl links from homepage, India hub, related tools, `_app`, `robots.txt`, and `sitemap.xml` | DEPLOYED | build passed and sitemap entry added | Live on `upaman.com` |
 
 ---
 
