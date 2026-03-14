@@ -1,6 +1,11 @@
 import React, { useMemo, useState } from 'react';
+import Head from 'next/head';
 import { Home, Wallet, ShieldCheck, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import HomeButton from './HomeButton';
+import EEATPanel from './calculator/EEATPanel';
+import SearchLandingSections from './calculator/SearchLandingSections';
+import { buildBreadcrumbSchema } from '../utils/schema';
+import { editorialProfiles } from '../utils/editorialProfiles';
 
 const regionSettings = {
   india: {
@@ -129,6 +134,24 @@ const HomeLoanReadinessWorkflow = () => {
   });
 
   const regionConfig = regionSettings[inputs.region];
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'Home Loan Readiness Workflow', item: 'https://upaman.com/home-loan-readiness-workflow' }
+  ]);
+  const faqItems = [
+    {
+      question: 'Is lender approval the same as safe affordability?',
+      answer: 'No. A lender can approve a higher amount than what feels safe in your monthly budget. This workflow focuses on practical affordability.'
+    },
+    {
+      question: 'Why does the workflow include ownership overhead?',
+      answer: 'Property costs do not end at EMI. Taxes, insurance, maintenance, and related charges change the true monthly burden.'
+    },
+    {
+      question: 'Why does tenure sensitivity matter?',
+      answer: 'A longer tenure can reduce EMI pressure but usually increases total interest. You need both the monthly view and the cost-over-time view.'
+    }
+  ];
 
   const output = useMemo(() => {
     const inHand = Number(inputs.monthlyInHand) || 0;
@@ -268,6 +291,9 @@ const HomeLoanReadinessWorkflow = () => {
 
   return (
     <div className="calculator-container ppf-container">
+      <Head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      </Head>
       <div className="calculator-card">
         <div className="calculator-header ppf-header">
           <div className="header-nav">
@@ -281,6 +307,18 @@ const HomeLoanReadinessWorkflow = () => {
         </div>
 
         <div className="mobile-card-content">
+          <EEATPanel
+            author={editorialProfiles.researchTeam}
+            reviewer={editorialProfiles.financeReviewDesk}
+            reviewedOn="March 14, 2026"
+            scope="This workflow estimates a safe home-loan budget using in-hand income, fixed obligations, tenure assumptions, and a buffer-aware affordability model."
+            sources={[
+              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+              { label: 'National Housing Bank', url: 'https://nhb.org.in/' },
+              { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/owning-a-home/' }
+            ]}
+          />
+
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
             <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
               1. Inputs
@@ -582,6 +620,41 @@ const HomeLoanReadinessWorkflow = () => {
               </button>
             </div>
           )}
+
+          <SearchLandingSections
+            intro={(
+              <>
+                <p>
+                  A safe EMI is not the highest EMI a lender will approve. It is the EMI your household can carry while
+                  still protecting fixed expenses, upkeep costs, and a post-payment cash buffer.
+                </p>
+                <p>
+                  This workflow turns that idea into a practical readiness check by comparing your target property budget
+                  against a buffer-aware monthly affordability model.
+                </p>
+              </>
+            )}
+            example={(
+              <p>
+                If your in-hand income is strong but fixed commitments are already high, the workflow may still show that
+                the target property is not comfortably affordable. In that case the issue is not income alone, but the
+                remaining room after existing obligations and ownership overhead.
+              </p>
+            )}
+            formula={(
+              <p>
+                Core flow: estimate disposable income after fixed expenses and existing debt, cap housing exposure using
+                a profile-based affordability ratio, adjust for ownership overhead, then compare that safe payment against
+                the payment required for the selected property, rate, and tenure.
+              </p>
+            )}
+            faqItems={faqItems}
+            relatedLinks={[
+              { label: 'How Much EMI Is Safe Guide', href: '/guides/how-much-emi-is-safe' },
+              { label: 'Loan and EMI Calculator', href: '/loan-calculator' },
+              { label: 'Rent vs Buy Decision Workflow', href: '/rent-vs-buy-workflow' }
+            ]}
+          />
         </div>
       </div>
     </div>

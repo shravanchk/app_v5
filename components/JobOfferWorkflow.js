@@ -1,6 +1,11 @@
 import React, { useMemo, useState } from 'react';
+import Head from 'next/head';
 import { Briefcase, TrendingUp, PiggyBank, Wallet, CheckCircle2 } from 'lucide-react';
 import HomeButton from './HomeButton';
+import EEATPanel from './calculator/EEATPanel';
+import SearchLandingSections from './calculator/SearchLandingSections';
+import { buildBreadcrumbSchema } from '../utils/schema';
+import { editorialProfiles } from '../utils/editorialProfiles';
 
 const regionConfigs = {
   india: {
@@ -265,6 +270,24 @@ const JobOfferWorkflow = () => {
   });
 
   const regionConfig = regionConfigs[inputs.region];
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'Job Offer Decision Workflow', item: 'https://upaman.com/job-offer-workflow' }
+  ]);
+  const faqItems = [
+    {
+      question: 'Why compare job offers using take-home instead of CTC?',
+      answer: 'Take-home pay is what actually reaches your budget. CTC or gross pay can overstate the practical benefit of switching jobs.'
+    },
+    {
+      question: 'Why does location matter in this workflow?',
+      answer: 'A higher offer in a more expensive city may not improve real monthly flexibility as much as the headline number suggests.'
+    },
+    {
+      question: 'What should I do if the real gain is small?',
+      answer: 'That usually means you should negotiate harder, delay the switch, or compare non-cash factors more carefully before deciding.'
+    }
+  ];
   const locationOptions = Object.entries(regionConfig.locationTiers);
 
   const current = useMemo(
@@ -362,6 +385,9 @@ const JobOfferWorkflow = () => {
 
   return (
     <div className="calculator-container salary-container">
+      <Head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      </Head>
       <div className="calculator-card">
         <div className="calculator-header salary-header">
           <div className="header-nav">
@@ -375,6 +401,18 @@ const JobOfferWorkflow = () => {
         </div>
 
         <div className="mobile-card-content">
+          <EEATPanel
+            author={editorialProfiles.researchTeam}
+            reviewer={editorialProfiles.financeReviewDesk}
+            reviewedOn="March 14, 2026"
+            scope="This workflow compares modeled take-home impact, city-adjusted spending power, and monthly surplus guidance. It supports planning, not formal compensation advice."
+            sources={[
+              { label: 'Income Tax Department of India', url: 'https://incometaxindia.gov.in/' },
+              { label: 'IRS', url: 'https://www.irs.gov/' },
+              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' }
+            ]}
+          />
+
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
             <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
               1. Inputs
@@ -650,6 +688,41 @@ const JobOfferWorkflow = () => {
               </button>
             </div>
           )}
+
+          <SearchLandingSections
+            intro={(
+              <>
+                <p>
+                  Job offers should be compared using real cash-flow improvement, not just the package headline. The more
+                  useful question is how much more money reaches your monthly budget after deductions and location-linked costs.
+                </p>
+                <p>
+                  This workflow combines take-home comparison, city-adjusted spending power, and a first-month action plan
+                  so the decision is grounded in actual affordability.
+                </p>
+              </>
+            )}
+            example={(
+              <p>
+                If one role increases take-home by 18,000 per month but rent and fixed costs rise by 12,000 after a move,
+                the practical gain is much smaller than the offer headline suggests. That is exactly the kind of mismatch
+                this workflow is designed to expose.
+              </p>
+            )}
+            formula={(
+              <p>
+                Core flow: estimate monthly net pay after modeled tax, employee contribution, and local charges; adjust the
+                output by cost-of-living assumptions; subtract fixed expenses; then translate the remaining surplus into a
+                simple recommendation and allocation plan.
+              </p>
+            )}
+            faqItems={faqItems}
+            relatedLinks={[
+              { label: 'How to Compare Job Offers Guide', href: '/guides/how-to-compare-job-offers' },
+              { label: 'Salary Calculator', href: '/salary-calculator' },
+              { label: 'CTC to In-hand Breakdown Guide', href: '/guide-ctc-inhand-breakdown.html' }
+            ]}
+          />
         </div>
       </div>
     </div>

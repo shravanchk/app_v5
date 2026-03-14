@@ -24,6 +24,26 @@ const itemValueStyle = {
   lineHeight: 1.55
 };
 
+const renderIdentity = (value) => {
+  if (!value) return null;
+  if (typeof value === 'string') return value;
+  if (value.url) {
+    return (
+      <a
+        href={value.url}
+        style={{
+          color: '#1d4e89',
+          textDecoration: 'none',
+          fontWeight: 600
+        }}
+      >
+        {value.label}
+      </a>
+    );
+  }
+  return value.label || null;
+};
+
 const EEATPanel = ({
   author,
   reviewer,
@@ -54,11 +74,11 @@ const EEATPanel = ({
       >
         <div>
           <p style={itemTitleStyle}>Author</p>
-          <p style={itemValueStyle}>{author}</p>
+          <p style={itemValueStyle}>{renderIdentity(author)}</p>
         </div>
         <div>
           <p style={itemTitleStyle}>Reviewed by</p>
-          <p style={itemValueStyle}>{reviewer}</p>
+          <p style={itemValueStyle}>{renderIdentity(reviewer)}</p>
         </div>
         <div>
           <p style={itemTitleStyle}>Last reviewed</p>

@@ -26,6 +26,7 @@ Allow: /home-loan-readiness-workflow
 Allow: /prepay-vs-invest-workflow
 Allow: /emergency-fund-readiness-workflow
 Allow: /rent-vs-buy-workflow
+Allow: /car-ownership-cost-workflow
 Allow: /age-calculator
 Allow: /scientific-calculator
 Allow: /statistics-calculator
@@ -46,6 +47,10 @@ Allow: /us-401k-calculator
 Allow: /us-savings-cd-calculator
 Allow: /us-credit-card-payoff-calculator
 Allow: /about
+Allow: /review-process
+Allow: /authors/upaman-research-team
+Allow: /authors/personal-finance-review-desk
+Allow: /authors/travel-utility-review-desk
 Allow: /privacy-policy
 Allow: /cookie-policy
 Allow: /terms-of-service
@@ -65,6 +70,9 @@ Allow: /guide-ppf-vs-sip-choice.html
 Allow: /guide-irctc-booking-strategy.html
 Allow: /guide-prepay-vs-invest-decision.html
 Allow: /guide-emergency-fund-readiness.html
+Allow: /guides/how-to-compare-job-offers
+Allow: /guides/how-much-emi-is-safe
+Allow: /guides/car-ownership-cost-guide
 
 # Known non-content or legacy areas
 Disallow: /build/

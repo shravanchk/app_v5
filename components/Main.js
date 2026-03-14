@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Train, Clock, Shield, Target, Zap, Calendar, CreditCard, Briefcase, Home, Search, X, Sigma, BarChart3, Ruler, Wallet } from 'lucide-react';
+import { Train, Clock, Shield, Target, Zap, Calendar, CreditCard, Briefcase, Home, Search, X, Sigma, BarChart3, Ruler, Wallet, Car } from 'lucide-react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -249,6 +249,17 @@ const MainLandingPage = () => {
       badge: 'Workflow',
       badgeBg: isDarkMode ? 'rgba(180, 83, 9, 0.25)' : '#ffedd5',
       badgeColor: isDarkMode ? '#fdba74' : '#9a3412'
+    },
+    {
+      title: 'Car Ownership Cost Workflow',
+      description: 'Estimate true monthly driving cost using fuel, tolls, parking, EMI, maintenance, insurance, and depreciation in one view',
+      icon: Car,
+      ...themedCard('secondary'),
+      features: ['Fuel expense', 'True car cost', 'Cheaper commute comparison'],
+      path: '/car-ownership-cost-workflow',
+      badge: 'Workflow',
+      badgeBg: isDarkMode ? 'rgba(15, 118, 110, 0.22)' : '#d7f2ee',
+      badgeColor: isDarkMode ? '#99f6e4' : '#0f766e'
     }
   ];
 
@@ -468,6 +479,21 @@ const MainLandingPage = () => {
       title: 'Emergency Fund Readiness Guide',
       description: 'How to set runway target, compute corpus gap, and build a milestone-based emergency buffer.',
       href: '/guide-emergency-fund-readiness.html'
+    },
+    {
+      title: 'How to Compare Job Offers',
+      description: 'A more practical framework for comparing take-home, city cost, and monthly surplus before switching.',
+      href: '/guides/how-to-compare-job-offers'
+    },
+    {
+      title: 'How Much EMI Is Safe',
+      description: 'Use a buffer-aware EMI framework instead of relying only on lender approval or a headline property budget.',
+      href: '/guides/how-much-emi-is-safe'
+    },
+    {
+      title: 'Car Ownership Cost Guide',
+      description: 'See why fuel alone understates your monthly car budget once EMI, insurance, upkeep, and depreciation are included.',
+      href: '/guides/car-ownership-cost-guide'
     }
   ];
 

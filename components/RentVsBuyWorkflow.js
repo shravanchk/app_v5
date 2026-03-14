@@ -1,7 +1,12 @@
 import React, { useMemo, useState } from 'react';
+import Head from 'next/head';
 import { Home, Wallet, ShieldCheck, CheckCircle2, Clock } from 'lucide-react';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import HomeButton from './HomeButton';
+import EEATPanel from './calculator/EEATPanel';
+import SearchLandingSections from './calculator/SearchLandingSections';
+import { buildBreadcrumbSchema } from '../utils/schema';
+import { editorialProfiles } from '../utils/editorialProfiles';
 
 const regionSettings = {
   india: {
@@ -121,6 +126,24 @@ const RentVsBuyWorkflow = () => {
   });
 
   const regionConfig = regionSettings[inputs.region];
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'Rent vs Buy Decision Workflow', item: 'https://upaman.com/rent-vs-buy-workflow' }
+  ]);
+  const faqItems = [
+    {
+      question: 'What usually decides rent versus buy more than anything else?',
+      answer: 'Planned stay duration is often the biggest factor because buying has upfront and ownership costs that need time to be recovered.'
+    },
+    {
+      question: 'Why does this workflow use effective cost instead of just EMI versus rent?',
+      answer: 'EMI alone misses down payment, closing costs, ownership overhead, and equity built over time. Effective cost is a better decision view.'
+    },
+    {
+      question: 'What if buying is cheaper on paper but my monthly buffer looks weak?',
+      answer: 'That usually means buying may still be financially stressful despite a long-run advantage. Monthly resilience still matters.'
+    }
+  ];
 
   const output = useMemo(() => {
     const monthlyInHand = Math.max(0, Number(inputs.monthlyInHand) || 0);
@@ -317,6 +340,9 @@ const RentVsBuyWorkflow = () => {
 
   return (
     <div className="calculator-container emi-container">
+      <Head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      </Head>
       <div className="calculator-card">
         <div className="calculator-header emi-header">
           <div className="header-nav">
@@ -330,6 +356,18 @@ const RentVsBuyWorkflow = () => {
         </div>
 
         <div className="mobile-card-content">
+          <EEATPanel
+            author={editorialProfiles.researchTeam}
+            reviewer={editorialProfiles.financeReviewDesk}
+            reviewedOn="March 14, 2026"
+            scope="This workflow compares renting and buying using affordability, effective cost, ownership overhead, and planned stay assumptions."
+            sources={[
+              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+              { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/owning-a-home/' },
+              { label: 'National Housing Bank', url: 'https://nhb.org.in/' }
+            ]}
+          />
+
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
             <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
               1. Inputs
@@ -660,6 +698,40 @@ const RentVsBuyWorkflow = () => {
               </div>
             </div>
           )}
+
+          <SearchLandingSections
+            intro={(
+              <>
+                <p>
+                  Rent versus buy is not an EMI comparison. The real decision depends on stay duration, upfront cash,
+                  ownership costs, and whether the buy path still leaves enough monthly flexibility after fixed expenses.
+                </p>
+                <p>
+                  This workflow combines those pieces into one housing decision view so you can see when buying becomes
+                  stronger and when renting still protects cash flow better.
+                </p>
+              </>
+            )}
+            example={(
+              <p>
+                A household may find that buying beats renting after year seven, but if the expected stay is only four years
+                or the buy path leaves too little monthly buffer, renting can still be the safer decision today.
+              </p>
+            )}
+            formula={(
+              <p>
+                Core flow: estimate total buy outflow using EMI, down payment, closing costs, and ownership overhead; compare
+                it with cumulative rent outflow; subtract built home equity to estimate effective buy cost; then evaluate the
+                result against planned stay and monthly buffer protection.
+              </p>
+            )}
+            faqItems={faqItems}
+            relatedLinks={[
+              { label: 'Buy vs Rent Calculator', href: '/buy-vs-rent-calculator' },
+              { label: 'Home Loan Readiness Workflow', href: '/home-loan-readiness-workflow' },
+              { label: 'How Much EMI Is Safe Guide', href: '/guides/how-much-emi-is-safe' }
+            ]}
+          />
         </div>
       </div>
     </div>

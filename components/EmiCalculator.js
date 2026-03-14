@@ -221,6 +221,7 @@ const ComprehensiveLoanCalculator = React.memo(() => {
   const nextStepTools = [
     { label: 'Home loan readiness workflow', href: '/home-loan-readiness-workflow' },
     { label: 'Prepay vs invest workflow', href: '/prepay-vs-invest-workflow' },
+    { label: 'Car ownership cost workflow', href: '/car-ownership-cost-workflow' },
     { label: 'Buy vs rent calculator', href: '/buy-vs-rent-calculator' },
     { label: 'Income tax calculator', href: '/income-tax-calculator' }
   ];

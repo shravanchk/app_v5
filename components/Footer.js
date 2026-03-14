@@ -148,6 +148,8 @@ const Footer = () => {
               <a href="/affiliate-disclosure" style={linkStyle}>Affiliate Disclosure</a><br/>
               <a href="/cookie-policy" style={linkStyle}>Cookie Policy</a><br/>
               <a href="/about" style={linkStyle}>About Upaman</a><br/>
+              <a href="/review-process" style={linkStyle}>Review Process</a><br/>
+              <a href="/authors/upaman-research-team" style={linkStyle}>Research Team</a><br/>
               <a href="/contact" style={linkStyle}>Contact</a><br/>
               <a href="/privacy-policy" style={linkStyle}>Privacy Policy</a> • <a href="/terms-of-service" style={linkStyle}>Terms</a>
             </div>
@@ -176,7 +178,10 @@ const Footer = () => {
               <a href="/guide-income-tax-regime-choice.html" style={linkStyle}>Tax Regime Guide</a><br/>
               <a href="/guide-sip-step-up-planning.html" style={linkStyle}>SIP Step-up Guide</a><br/>
               <a href="/guide-credit-card-minimum-due-trap.html" style={linkStyle}>Credit Card Trap Guide</a><br/>
-              <a href="/guide-ctc-inhand-breakdown.html" style={linkStyle}>CTC to In-hand Guide</a>
+              <a href="/guide-ctc-inhand-breakdown.html" style={linkStyle}>CTC to In-hand Guide</a><br/>
+              <a href="/guides/how-to-compare-job-offers" style={linkStyle}>Job Offer Guide</a><br/>
+              <a href="/guides/how-much-emi-is-safe" style={linkStyle}>Safe EMI Guide</a><br/>
+              <a href="/guides/car-ownership-cost-guide" style={linkStyle}>Car Cost Guide</a>
             </div>
           </div>
         </div>

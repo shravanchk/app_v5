@@ -22,6 +22,7 @@ const AD_ELIGIBLE_ROUTES = new Set([
   '/prepay-vs-invest-workflow',
   '/emergency-fund-readiness-workflow',
   '/rent-vs-buy-workflow',
+  '/car-ownership-cost-workflow',
   '/buy-vs-rent-calculator',
   '/netherlands-salary-calculator',
   '/ppf-calculator',

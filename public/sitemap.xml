@@ -102,6 +102,12 @@
     <priority>0.88</priority>
   </url>
   <url>
+    <loc>https://upaman.com/car-ownership-cost-workflow</loc>
+    <lastmod>2026-03-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.86</priority>
+  </url>
+  <url>
     <loc>https://upaman.com/age-calculator</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>weekly</changefreq>
@@ -255,6 +261,30 @@
     <priority>0.65</priority>
   </url>
   <url>
+    <loc>https://upaman.com/review-process</loc>
+    <lastmod>2026-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.64</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/authors/upaman-research-team</loc>
+    <lastmod>2026-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.58</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/authors/personal-finance-review-desk</loc>
+    <lastmod>2026-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.58</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/authors/travel-utility-review-desk</loc>
+    <lastmod>2026-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.56</priority>
+  </url>
+  <url>
     <loc>https://upaman.com/privacy-policy</loc>
     <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -367,5 +397,23 @@
     <lastmod>2026-02-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.66</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guides/how-to-compare-job-offers</loc>
+    <lastmod>2026-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guides/how-much-emi-is-safe</loc>
+    <lastmod>2026-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guides/car-ownership-cost-guide</loc>
+    <lastmod>2026-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.68</priority>
   </url>
 </urlset>

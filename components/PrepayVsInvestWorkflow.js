@@ -1,7 +1,12 @@
 import React, { useMemo, useState } from 'react';
+import Head from 'next/head';
 import { ArrowRightLeft, TrendingUp, ShieldCheck, PiggyBank, CheckCircle2 } from 'lucide-react';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import HomeButton from './HomeButton';
+import EEATPanel from './calculator/EEATPanel';
+import SearchLandingSections from './calculator/SearchLandingSections';
+import { buildBreadcrumbSchema } from '../utils/schema';
+import { editorialProfiles } from '../utils/editorialProfiles';
 
 const regionSettings = {
   india: {
@@ -143,6 +148,24 @@ const PrepayVsInvestWorkflow = () => {
   });
 
   const regionConfig = regionSettings[inputs.region];
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'Prepay Loan vs Invest Workflow', item: 'https://upaman.com/prepay-vs-invest-workflow' }
+  ]);
+  const faqItems = [
+    {
+      question: 'When does prepayment usually look stronger?',
+      answer: 'Prepayment tends to look stronger when the loan rate is high relative to the risk-adjusted return you can reasonably expect from investing.'
+    },
+    {
+      question: 'Why use risk-adjusted return instead of headline return?',
+      answer: 'Headline return can be optimistic. A haircut makes the comparison against guaranteed interest savings more realistic.'
+    },
+    {
+      question: 'Is a hybrid split a valid choice?',
+      answer: 'Yes. When the outputs are close, splitting surplus between prepayment and investing can reduce regret and balance certainty with growth.'
+    }
+  ];
 
   const output = useMemo(() => {
     const outstandingLoan = Number(inputs.outstandingLoan) || 0;
@@ -255,6 +278,9 @@ const PrepayVsInvestWorkflow = () => {
 
   return (
     <div className="calculator-container emi-container">
+      <Head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      </Head>
       <div className="calculator-card">
         <div className="calculator-header emi-header">
           <div className="header-nav">
@@ -268,6 +294,17 @@ const PrepayVsInvestWorkflow = () => {
         </div>
 
         <div className="mobile-card-content">
+          <EEATPanel
+            author={editorialProfiles.researchTeam}
+            reviewer={editorialProfiles.financeReviewDesk}
+            reviewedOn="March 14, 2026"
+            scope="This workflow compares guaranteed interest savings from loan prepayment with a risk-adjusted investment path using the same time horizon."
+            sources={[
+              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+              { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/' }
+            ]}
+          />
+
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
             <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
               1. Inputs
@@ -546,6 +583,42 @@ const PrepayVsInvestWorkflow = () => {
               </button>
             </div>
           )}
+
+          <SearchLandingSections
+            intro={(
+              <>
+                <p>
+                  The better choice for monthly surplus depends on what that surplus can do with certainty versus what it
+                  might do with risk. Prepayment reduces guaranteed interest drag. Investing can build more wealth, but only
+                  if realistic returns beat loan cost over time.
+                </p>
+                <p>
+                  This workflow compares both paths on the same horizon so you can see months saved, interest saved, and
+                  corpus difference before deciding.
+                </p>
+              </>
+            )}
+            example={(
+              <p>
+                If your loan costs 8.5% and your realistic risk-adjusted investing return is closer to 9% than 12%, the
+                case for investing may be weaker than headline market-return assumptions suggest. That is why the decision
+                should be modeled, not guessed.
+              </p>
+            )}
+            formula={(
+              <p>
+                Core flow: simulate baseline loan interest, simulate a surplus-prepayment path, estimate months shortened and
+                interest saved, then compare that result with monthly investing using a risk-adjusted return over the same
+                horizon.
+              </p>
+            )}
+            faqItems={faqItems}
+            relatedLinks={[
+              { label: 'Prepay vs Invest Decision Guide', href: '/guide-prepay-vs-invest-decision.html' },
+              { label: 'Emergency Fund Readiness Workflow', href: '/emergency-fund-readiness-workflow' },
+              { label: 'How Much EMI Is Safe Guide', href: '/guides/how-much-emi-is-safe' }
+            ]}
+          />
         </div>
       </div>
     </div>

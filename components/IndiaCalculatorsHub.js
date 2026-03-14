@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Train, Calculator, TrendingUp, PiggyBank, Target, Banknote, Wallet, Home } from 'lucide-react';
+import { Train, Calculator, TrendingUp, PiggyBank, Target, Banknote, Wallet, Home, Car } from 'lucide-react';
 import { useRouter } from 'next/router';
 import HomeButton from './HomeButton';
 
@@ -103,6 +103,13 @@ const IndiaCalculatorsHub = () => {
         icon: Home,
         path: '/rent-vs-buy-workflow',
         tags: ['Break-even year', 'Cash buffer', 'Housing decision']
+      },
+      {
+        title: 'Car Ownership Cost Workflow',
+        description: 'Estimate fuel, toll, parking, EMI, and upkeep cost before treating your car budget as manageable.',
+        icon: Car,
+        path: '/car-ownership-cost-workflow',
+        tags: ['Fuel expense', 'Transport budget', 'Cheaper commute check']
       },
       {
         title: 'Credit Card Trap Calculator',

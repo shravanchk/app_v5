@@ -1,7 +1,12 @@
 import React, { useMemo, useState } from 'react';
+import Head from 'next/head';
 import { ShieldCheck, AlertTriangle, Wallet, Target, CheckCircle2 } from 'lucide-react';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import HomeButton from './HomeButton';
+import EEATPanel from './calculator/EEATPanel';
+import SearchLandingSections from './calculator/SearchLandingSections';
+import { buildBreadcrumbSchema } from '../utils/schema';
+import { editorialProfiles } from '../utils/editorialProfiles';
 
 const regionSettings = {
   india: {
@@ -68,6 +73,24 @@ const EmergencyFundReadinessWorkflow = () => {
   });
 
   const regionConfig = regionSettings[inputs.region];
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', item: 'https://upaman.com/' },
+    { name: 'Emergency Fund Readiness Workflow', item: 'https://upaman.com/emergency-fund-readiness-workflow' }
+  ]);
+  const faqItems = [
+    {
+      question: 'How many months should an emergency fund cover?',
+      answer: 'It depends on income stability, dependents, insurance coverage, and whether the household relies on one income source. That is why this workflow adjusts the target instead of forcing one rule.'
+    },
+    {
+      question: 'Where should an emergency fund be kept?',
+      answer: 'Emergency funds are usually strongest in high-liquidity, low-volatility instruments rather than long-lock investments.'
+    },
+    {
+      question: 'Should I invest or prepay debt before building emergency savings?',
+      answer: 'In most cases, a thin emergency buffer increases risk. Build a basic safety layer first, then optimize debt or investing decisions.'
+    }
+  ];
 
   const output = useMemo(() => {
     const monthlyEssentials = Math.max(1, Number(inputs.monthlyEssentials) || 1);
@@ -214,6 +237,9 @@ const EmergencyFundReadinessWorkflow = () => {
 
   return (
     <div className="calculator-container salary-container">
+      <Head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      </Head>
       <div className="calculator-card">
         <div className="calculator-header salary-header">
           <div className="header-nav">
@@ -227,6 +253,17 @@ const EmergencyFundReadinessWorkflow = () => {
         </div>
 
         <div className="mobile-card-content">
+          <EEATPanel
+            author={editorialProfiles.researchTeam}
+            reviewer={editorialProfiles.financeReviewDesk}
+            reviewedOn="March 14, 2026"
+            scope="This workflow estimates emergency-fund runway based on fixed expenses, household risk, and current liquid reserves."
+            sources={[
+              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+              { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/' }
+            ]}
+          />
+
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
             <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
               1. Inputs
@@ -532,6 +569,39 @@ const EmergencyFundReadinessWorkflow = () => {
               </button>
             </div>
           )}
+
+          <SearchLandingSections
+            intro={(
+              <>
+                <p>
+                  Emergency funds are not just about a fixed number of months. The right runway depends on job stability,
+                  income variability, dependents, insurance coverage, and whether your household relies on one income stream.
+                </p>
+                <p>
+                  This workflow converts those risk factors into a clearer runway target and a practical monthly funding plan.
+                </p>
+              </>
+            )}
+            example={(
+              <p>
+                Two households with the same monthly expenses can need very different buffers. A salaried dual-income
+                household with insurance needs less runway than a variable-income single-earner household supporting dependents.
+              </p>
+            )}
+            formula={(
+              <p>
+                Core flow: start from monthly essentials, adjust target months using job risk, income stability, insurance,
+                household structure, and dependents, then compare the target corpus with current liquid reserves to estimate
+                gap and timeline to target.
+              </p>
+            )}
+            faqItems={faqItems}
+            relatedLinks={[
+              { label: 'Emergency Fund Readiness Guide', href: '/guide-emergency-fund-readiness.html' },
+              { label: 'Prepay vs Invest Workflow', href: '/prepay-vs-invest-workflow' },
+              { label: 'Car Ownership Cost Guide', href: '/guides/car-ownership-cost-guide' }
+            ]}
+          />
         </div>
       </div>
     </div>
