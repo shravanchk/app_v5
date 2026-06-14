@@ -209,7 +209,7 @@ const SIPCalculator = () => {
   ];
 
   const softwareSchema = buildSoftwareApplicationSchema({
-    name: 'SIP Calculator 2025 India',
+    name: 'SIP Calculator India',
     url: 'https://upaman.com/sip-calculator',
     description: 'SIP, step-up SIP, goal-based SIP, and SIP vs lumpsum projection calculator for planning.',
     featureList: [
@@ -229,18 +229,18 @@ const SIPCalculator = () => {
   return (
     <div className="calculator-container sip-container">
       <Head>
-    <title>SIP Calculator 2025 India | Mutual Fund Returns & Goal Planning | Upaman</title>
-    <meta name="description" content="Free SIP Calculator India 2025. Calculate SIP & lumpsum returns, step-up growth, goal-based investment planning and wealth projections." />
-    <meta name="keywords" content="SIP calculator India 2025, mutual fund SIP, goal based SIP, lumpsum vs SIP, investment calculator" />
+    <title>SIP Calculator India | Mutual Fund Returns & Goal Planning | Upaman</title>
+    <meta name="description" content="Free SIP Calculator India. Calculate SIP & lumpsum returns, step-up growth, goal-based investment planning and wealth projections." />
+    <meta name="keywords" content="SIP calculator India, mutual fund SIP, goal based SIP, lumpsum vs SIP, investment calculator" />
     <link rel="canonical" href="https://upaman.com/sip-calculator" />
-    <meta property="og:title" content="SIP Calculator 2025 India | Upaman" />
+    <meta property="og:title" content="SIP Calculator India | Upaman" />
     <meta property="og:description" content="SIP, step-up, goal & lumpsum mutual fund return projections." />
     <meta property="og:url" content="https://upaman.com/sip-calculator" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
     <meta property="og:image:alt" content="SIP Calculator - Upaman" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SIP Calculator 2025 India | Upaman" />
+    <meta name="twitter:title" content="SIP Calculator India | Upaman" />
     <meta name="twitter:description" content="Mutual fund SIP, step-up & goal planning calculator." />
     <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />

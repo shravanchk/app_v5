@@ -539,7 +539,7 @@ const MainLandingPage = () => {
       hubDescription: 'Tax, investment, loan, salary, and IRCTC planning tools for India.',
       tools: [
         { title: 'Loan & EMI Calculator', path: '/loan-calculator', keywords: 'emi loan amortization prepayment' },
-        { title: 'Income Tax Calculator', path: '/income-tax-calculator', keywords: 'tax regime fy 2025-26 india' },
+        { title: 'Income Tax Calculator', path: '/income-tax-calculator', keywords: 'tax regime fy 2026-27 india ay 2027-28' },
         { title: 'GST Calculator', path: '/gst-calculator', keywords: 'gst cgst sgst igst' },
         { title: 'SIP Calculator', path: '/sip-calculator', keywords: 'sip returns mutual fund goal' },
         { title: 'PPF Calculator', path: '/ppf-calculator', keywords: 'ppf maturity interest' },
@@ -789,7 +789,7 @@ const MainLandingPage = () => {
         />
         <meta
           name="keywords"
-          content="financial calculators US Europe India, scientific calculator, statistics calculator, unit converter, India calculators hub, US calculators hub, EU calculators hub, US mortgage calculator, US refinance calculator, US auto loan calculator, US 401k calculator, US savings cd calculator, US credit card payoff calculator, European VAT calculator, EU salary calculator, UK income tax calculator 2025-26, Germany salary calculator, France salary calculator, Netherlands salary calculator, GST calculator, income tax calculator India 2025-26, SIP calculator, EMI calculator, salary calculator, json formatter"
+          content="financial calculators US Europe India, scientific calculator, statistics calculator, unit converter, India calculators hub, US calculators hub, EU calculators hub, US mortgage calculator, US refinance calculator, US auto loan calculator, US 401k calculator, US savings cd calculator, US credit card payoff calculator, European VAT calculator, EU salary calculator, UK income tax calculator 2026-27, Germany salary calculator, France salary calculator, Netherlands salary calculator, GST calculator, income tax calculator India FY 2026-27, SIP calculator, EMI calculator, salary calculator, json formatter"
         />
         <link rel="canonical" href="https://upaman.com/" />
         <meta property="og:title" content="Decision-First Financial Calculators | Upaman" />
@@ -844,7 +844,7 @@ const MainLandingPage = () => {
                 "@type": "SoftwareApplication", 
                 "name": "Income Tax Calculator",
                 "url": "https://upaman.com/income-tax-calculator",
-                "description": "Calculate income tax liability for FY 2025-26 with new and old tax regime",
+                "description": "Calculate income tax liability for FY 2026-27 with new and old tax regime",
                 "applicationCategory": "FinanceApplication",
                 "offers": {
                   "@type": "Offer",
@@ -892,7 +892,7 @@ const MainLandingPage = () => {
                 "@type": "SoftwareApplication",
                 "name": "UK Income Tax Calculator",
                 "url": "https://upaman.com/uk-income-tax-calculator",
-                "description": "Calculate UK income tax for 2025-26 with Scottish rates and National Insurance",
+                "description": "Calculate UK income tax for 2026-27 with Scottish rates and National Insurance",
                 "applicationCategory": "FinanceApplication",
                 "offers": {
                   "@type": "Offer",

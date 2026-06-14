@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { trackEvent } from '../utils/analytics';
 
 const buildReportText = ({ title, summaryLines, shareUrl }) =>
   [
@@ -26,6 +27,7 @@ const ResultActions = ({ title, summaryLines = [], fileName = 'calculation-summa
   const copySummary = async () => {
     try {
       await navigator.clipboard.writeText(reportText);
+      trackEvent('result_action', { action: 'copy', report_title: title });
       setTemporaryStatus('Summary copied.');
     } catch (error) {
       setTemporaryStatus('Unable to copy. Try download.');
@@ -40,6 +42,7 @@ const ResultActions = ({ title, summaryLines = [], fileName = 'calculation-summa
           text: summaryLines.join('\n'),
           url: shareUrl
         });
+        trackEvent('result_action', { action: 'share', report_title: title });
         setTemporaryStatus('Shared successfully.');
         return;
       } catch (error) {
@@ -61,6 +64,7 @@ const ResultActions = ({ title, summaryLines = [], fileName = 'calculation-summa
       anchor.click();
       anchor.remove();
       URL.revokeObjectURL(objectUrl);
+      trackEvent('result_action', { action: 'download', report_title: title });
       setTemporaryStatus('Report downloaded.');
     } catch (error) {
       setTemporaryStatus('Download failed.');

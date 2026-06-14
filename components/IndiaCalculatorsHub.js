@@ -29,10 +29,10 @@ const IndiaCalculatorsHub = () => {
       },
       {
         title: 'Income Tax Calculator',
-        description: 'Estimate income tax for FY 2025-26 with old/new regime comparison.',
+        description: 'Estimate income tax for FY 2026-27 with old/new regime comparison.',
         icon: Target,
         path: '/income-tax-calculator',
-        tags: ['FY 2025-26', 'Old vs new regime', 'Tax estimate']
+        tags: ['FY 2026-27', 'Old vs new regime', 'Tax estimate']
       },
       {
         title: 'Tax Regime Comparison Tool',

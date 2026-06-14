@@ -4,8 +4,19 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-SXZKYDXLKW" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-SXZKYDXLKW');
+            `
+          }}
+        />
         <meta charSet="utf-8" />
-        <meta name="theme-color" content="#e44004" />
+        <meta name="theme-color" content="#1d4e89" />
         <link rel="icon" type="image/svg+xml" href="/upaman-elephant-logo.svg?v=20260223a" />
         <link rel="shortcut icon" type="image/svg+xml" href="/upaman-elephant-logo.svg?v=20260223a" />
         <link rel="apple-touch-icon" href="/upaman-elephant-logo.svg?v=20260223a" />

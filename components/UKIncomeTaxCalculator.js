@@ -5,6 +5,8 @@ import AffiliateRecommendations from './AffiliateRecommendations';
 import AdSenseAd from './AdSenseAd';
 import HomeButton from './HomeButton';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
+import ResultActions from './ResultActions';
+const { calculateUKTax } = require('../utils/taxCalculations');
 
 const UKIncomeTaxCalculator = ({ onBack }) => {
   const [income, setIncome] = useState('');
@@ -20,50 +22,17 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
       maximumFractionDigits: 0
     })}`;
 
-  // 2025-26 Tax Rates
-  const TAX_RATES = {
-    personalAllowance: 12570,
-    england: {
-      basic: { min: 12570, max: 50270, rate: 0.20 },
-      higher: { min: 50270, max: 125140, rate: 0.40 },
-      additional: { min: 125140, rate: 0.45 }
-    },
-    scotland: {
-      starter: { min: 12570, max: 14876, rate: 0.19 },
-      basic: { min: 14876, max: 26561, rate: 0.20 },
-      intermediate: { min: 26561, max: 43662, rate: 0.21 },
-      higher: { min: 43662, max: 125140, rate: 0.42 },
-      top: { min: 125140, rate: 0.47 }
-    }
-  };
-
-  const NI_RATES = {
-    class1: {
-      threshold: 12570,
-      upperLimit: 50270,
-      rate1: 0.12,
-      rate2: 0.02
-    }
-  };
-
-  const STUDENT_LOAN_RATES = {
-    plan1: { threshold: 24990, rate: 0.09 },
-    plan2: { threshold: 27295, rate: 0.09 },
-    plan4: { threshold: 31395, rate: 0.09 },
-    plan5: { threshold: 25000, rate: 0.09 },
-    postgrad: { threshold: 21000, rate: 0.06 }
-  };
-
   const calculateMarginalRate = (income) => {
     if (region === 'scotland') {
-      if (income <= 14876) return 31; // 19% + 12%
-      if (income <= 26561) return 32; // 20% + 12%
-      if (income <= 43662) return 33; // 21% + 12%
-      if (income <= 50270) return 54; // 42% + 12%
-      if (income <= 125140) return 44; // 42% + 2%
-      return 49; // 47% + 2%
+      if (income <= 16537) return 27; // 19% + 8%
+      if (income <= 29526) return 28; // 20% + 8%
+      if (income <= 43662) return 29; // 21% + 8%
+      if (income <= 50270) return 50; // 42% + 8%
+      if (income <= 75000) return 44; // 42% + 2%
+      if (income <= 125140) return 47; // 45% + 2%
+      return 50; // 48% + 2%
     } else {
-      if (income <= 50270) return 32; // 20% + 12%
+      if (income <= 50270) return 28; // 20% + 8%
       if (income <= 125140) return 42; // 40% + 2%
       return 47; // 45% + 2%
     }
@@ -73,116 +42,32 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
     const performCalculation = () => {
       if (!income) return;
 
-      const grossIncome = parseFloat(income);
-      const pension = parseFloat(pensionContribution) || 0;
-      const taxableIncome = Math.max(0, grossIncome - pension);
-
-      // Personal Allowance reduction for high earners
-      let personalAllowance = TAX_RATES.personalAllowance;
-      if (taxableIncome > 100000) {
-        const reduction = Math.min(personalAllowance, Math.floor((taxableIncome - 100000) / 2));
-        personalAllowance = Math.max(0, personalAllowance - reduction);
-      }
-
-      // Income Tax calculation
-      let incomeTax = 0;
-      const taxableAfterAllowance = Math.max(0, taxableIncome - personalAllowance);
-
-      if (region === 'scotland') {
-        const rates = TAX_RATES.scotland;
-        
-        // Scottish tax calculation
-        if (taxableAfterAllowance > rates.starter.min - personalAllowance) {
-          const starterTax = Math.min(taxableAfterAllowance, rates.starter.max - personalAllowance) * rates.starter.rate;
-          incomeTax += starterTax;
-        }
-        
-        if (taxableAfterAllowance > rates.basic.min - personalAllowance) {
-          const basicAmount = Math.min(taxableAfterAllowance - (rates.basic.min - personalAllowance), rates.basic.max - rates.basic.min);
-          if (basicAmount > 0) incomeTax += basicAmount * rates.basic.rate;
-        }
-        
-        if (taxableAfterAllowance > rates.intermediate.min - personalAllowance) {
-          const intAmount = Math.min(taxableAfterAllowance - (rates.intermediate.min - personalAllowance), rates.intermediate.max - rates.intermediate.min);
-          if (intAmount > 0) incomeTax += intAmount * rates.intermediate.rate;
-        }
-        
-        if (taxableAfterAllowance > rates.higher.min - personalAllowance) {
-          const higherAmount = Math.min(taxableAfterAllowance - (rates.higher.min - personalAllowance), rates.higher.max - rates.higher.min);
-          if (higherAmount > 0) incomeTax += higherAmount * rates.higher.rate;
-        }
-        
-        if (taxableAfterAllowance > rates.top.min - personalAllowance) {
-          const topAmount = taxableAfterAllowance - (rates.top.min - personalAllowance);
-          if (topAmount > 0) incomeTax += topAmount * rates.top.rate;
-        }
-      } else {
-        // England, Wales, Northern Ireland
-        const rates = TAX_RATES.england;
-        
-        if (taxableAfterAllowance > rates.basic.min - personalAllowance) {
-          const basicAmount = Math.min(taxableAfterAllowance, rates.basic.max - personalAllowance);
-          incomeTax += basicAmount * rates.basic.rate;
-        }
-        
-        if (taxableAfterAllowance > rates.higher.min - personalAllowance) {
-          const higherAmount = Math.min(taxableAfterAllowance - (rates.higher.min - personalAllowance), rates.higher.max - rates.higher.min);
-          if (higherAmount > 0) incomeTax += higherAmount * rates.higher.rate;
-        }
-        
-        if (taxableAfterAllowance > rates.additional.min - personalAllowance) {
-          const additionalAmount = taxableAfterAllowance - (rates.additional.min - personalAllowance);
-          if (additionalAmount > 0) incomeTax += additionalAmount * rates.additional.rate;
-        }
-      }
-
-      // National Insurance calculation
-      let nationalInsurance = 0;
-      const niableIncome = Math.max(0, grossIncome - NI_RATES.class1.threshold);
-      
-      if (niableIncome > 0) {
-        const lowerAmount = Math.min(niableIncome, NI_RATES.class1.upperLimit - NI_RATES.class1.threshold);
-        nationalInsurance += lowerAmount * NI_RATES.class1.rate1;
-        
-        if (niableIncome > NI_RATES.class1.upperLimit - NI_RATES.class1.threshold) {
-          const upperAmount = niableIncome - (NI_RATES.class1.upperLimit - NI_RATES.class1.threshold);
-          nationalInsurance += upperAmount * NI_RATES.class1.rate2;
-        }
-      }
-
-      // Student Loan calculation
-      let studentLoanRepayment = 0;
-      if (studentLoan !== 'none' && STUDENT_LOAN_RATES[studentLoan]) {
-        const threshold = STUDENT_LOAN_RATES[studentLoan].threshold;
-        const rate = STUDENT_LOAN_RATES[studentLoan].rate;
-        if (grossIncome > threshold) {
-          studentLoanRepayment = (grossIncome - threshold) * rate;
-        }
-      }
-
-      const totalTax = incomeTax + nationalInsurance + studentLoanRepayment;
-      const netIncome = grossIncome - totalTax;
+      const taxResult = calculateUKTax({
+        grossIncome: parseFloat(income),
+        pensionContribution: parseFloat(pensionContribution) || 0,
+        region,
+        studentLoan
+      });
 
       setResults({
-        grossIncome,
-        incomeTax,
-        nationalInsurance,
-        studentLoanRepayment,
-        pension,
-        totalTax,
-        netIncome,
-        personalAllowance,
-        taxableIncome,
-        effectiveRate: (totalTax / grossIncome) * 100,
-        marginalRate: calculateMarginalRate(grossIncome),
-        monthlyNet: netIncome / 12,
-        weeklyNet: netIncome / 52
+        ...taxResult,
+        marginalRate: calculateMarginalRate(taxResult.grossIncome)
       });
     };
 
     performCalculation();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [income, region, pensionContribution, studentLoan]);
+
+  const resultShareLines = results ? [
+    `Gross income: ${formatGBP(results.grossIncome)}`,
+    `Income tax: ${formatGBP(results.incomeTax)}`,
+    `Employee National Insurance: ${formatGBP(results.nationalInsurance)}`,
+    `Student loan repayment: ${formatGBP(results.studentLoanRepayment)}`,
+    `Pension contribution: ${formatGBP(results.pension)}`,
+    `Annual take-home: ${formatGBP(results.netIncome)}`,
+    `Tax year: 2026-27`
+  ] : [];
 
   return (
     <div style={{ 
@@ -192,20 +77,20 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
       fontFamily: 'var(--app-font)'
     }}>
       <Head>
-        <title>UK Income Tax Calculator 2025-26 | Free Tax Calculator | Personal Allowance £12,570 | Upaman</title>
-        <meta name="description" content="Free UK Income Tax Calculator for 2025-26. Calculate income tax, National Insurance, student loan repayments with Personal Allowance £12,570. Supports England, Scotland, Wales tax rates." />
-        <meta name="keywords" content="UK income tax calculator 2025-26, personal allowance 12570, income tax rates UK, national insurance calculator, student loan repayment calculator, Scottish tax rates, UK tax calculator free" />
+        <title>UK Income Tax Calculator 2026-27 | Tax, NI & Student Loan | Upaman</title>
+        <meta name="description" content="UK Income Tax Calculator for 2026-27. Estimate PAYE tax, 8% employee National Insurance, pension impact, student loans, and Scottish tax bands." />
+        <meta name="keywords" content="UK income tax calculator 2026-27, personal allowance 12570, national insurance calculator 2026-27, student loan repayment, Scottish tax rates" />
         <link rel="canonical" href="https://upaman.com/uk-income-tax-calculator" />
         
         {/* Open Graph Tags */}
-        <meta property="og:title" content="UK Income Tax Calculator 2025-26 | Free Tax Calculator" />
-        <meta property="og:description" content="Calculate UK income tax, National Insurance & student loans for 2025-26. Personal Allowance £12,570. Supports all UK regions." />
+        <meta property="og:title" content="UK Income Tax Calculator 2026-27 | Tax, NI & Student Loan" />
+        <meta property="og:description" content="Calculate UK income tax, employee National Insurance and student loan repayments for 2026-27." />
         <meta property="og:url" content="https://upaman.com/uk-income-tax-calculator" />
         <meta property="og:type" content="website" />
         
         {/* Twitter Cards */}
-        <meta name="twitter:title" content="UK Income Tax Calculator 2025-26 | Free" />
-        <meta name="twitter:description" content="Calculate UK income tax, National Insurance & student loans for 2025-26. Personal Allowance £12,570." />
+        <meta name="twitter:title" content="UK Income Tax Calculator 2026-27" />
+        <meta name="twitter:description" content="Calculate UK income tax, employee National Insurance and student loans for 2026-27." />
         <meta name="twitter:card" content="summary_large_image" />
 
         {/* Schema Markup */}
@@ -213,8 +98,8 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "UK Income Tax Calculator 2025-26",
-            "description": "Calculate UK income tax, National Insurance, and student loan repayments for tax year 2025-26",
+            "name": "UK Income Tax Calculator 2026-27",
+            "description": "Calculate UK income tax, National Insurance, pension impact, and student loan repayments for tax year 2026-27",
             "url": "https://upaman.com/uk-income-tax-calculator",
             "applicationCategory": "FinanceApplication",
             "operatingSystem": "Web",
@@ -224,7 +109,7 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
               "priceCurrency": "GBP"
             },
             "featureList": [
-              "Income Tax calculation for 2025-26",
+              "Income Tax calculation for 2026-27",
               "National Insurance calculation",
               "Student Loan repayment calculation",
               "Scottish tax rates support",
@@ -242,15 +127,15 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "What is the Personal Allowance for 2025-26?",
+                "name": "What is the Personal Allowance for 2026-27?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "The Personal Allowance for 2025-26 is £12,570. This is the amount you can earn before paying income tax."
+                  "text": "The standard Personal Allowance for 2026-27 is £12,570. It reduces by £1 for every £2 of adjusted net income above £100,000."
                 }
               },
               {
                 "@type": "Question",
-                "name": "What are the UK income tax rates for 2025-26?",
+                "name": "What are the UK income tax rates for 2026-27?",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "For England, Wales and Northern Ireland: 20% (£12,571-£50,270), 40% (£50,271-£125,140), 45% (over £125,140). Scotland has different rates with additional bands."
@@ -261,7 +146,7 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
                 "name": "How is National Insurance calculated?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "National Insurance is charged at 12% on earnings between £12,570-£50,270, and 2% on earnings above £50,270."
+                  "text": "Employee Class 1 National Insurance category A is charged at 8% on earnings between £12,570 and £50,270, then 2% above £50,270."
                 }
               }
             ]
@@ -295,7 +180,7 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
               marginBottom: '0',
               fontWeight: '500'
             }}>
-              Calculate Tax, National Insurance & Student Loans for 2025-26
+              Calculate Tax, National Insurance & Student Loans for 2026-27
             </p>
           </div>
         </div>
@@ -466,7 +351,7 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
                     marginBottom: '0.5rem'
                   }}>
                     <Info size={16} style={{ color: '#0f766e' }} />
-                    <span style={{ fontWeight: '600', color: '#115e59' }}>2025-26 Tax Year</span>
+                    <span style={{ fontWeight: '600', color: '#115e59' }}>2026-27 Tax Year</span>
                   </div>
                   <p style={{ 
                     fontSize: '0.85rem', 
@@ -474,7 +359,7 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
                     margin: 0,
                     lineHeight: '1.4'
                   }}>
-                    Personal Allowance: £12,570 • Tax rates from 6 April 2025
+                    Personal Allowance: £12,570 • Rates apply from 6 April 2026
                   </p>
                 </div>
               </div>
@@ -542,7 +427,8 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
                     { label: 'Net income', value: results.netIncome, color: '#10b981' },
                     { label: 'Income tax', value: results.incomeTax, color: '#f97316' },
                     { label: 'National Insurance', value: results.nationalInsurance, color: '#3b82f6' },
-                    { label: 'Student loan', value: results.studentLoanRepayment, color: '#8b5cf6' }
+                    { label: 'Student loan', value: results.studentLoanRepayment, color: '#8b5cf6' },
+                    { label: 'Pension', value: results.pension, color: '#0f766e' }
                   ]}
                   formatter={formatGBP}
                 />
@@ -550,9 +436,14 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
                   title="Annual take-home vs tax burden"
                   items={[
                     { label: 'Annual take-home', value: results.netIncome, color: '#10b981' },
-                    { label: 'Total tax + NI + loan', value: results.totalTax, color: '#ef4444' }
+                    { label: 'Total deductions', value: results.totalDeductions, color: '#ef4444' }
                   ]}
                   formatter={formatGBP}
+                />
+                <ResultActions
+                  title="UK tax calculation summary (2026-27)"
+                  summaryLines={resultShareLines}
+                  fileName="upaman-uk-tax-2026-27-summary.txt"
                 />
 
                 {/* Detailed Breakdown */}
@@ -668,16 +559,16 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
             border: '1px solid #dbe2eb'
           }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: '700', marginBottom: '1.5rem', color: '#1e293b' }}>
-              UK Tax Calculator FAQ 2025-26
+              UK Tax Calculator FAQ 2026-27
             </h2>
             
             <div style={{ display: 'grid', gap: '1rem' }}>
               <details style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
                 <summary style={{ fontWeight: '600', cursor: 'pointer', color: '#374151' }}>
-                  What is the Personal Allowance for 2025-26?
+                  What is the Personal Allowance for 2026-27?
                 </summary>
                 <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  The Personal Allowance for 2025-26 is £12,570. This is the amount you can earn tax-free before paying income tax. 
+                  The standard Personal Allowance for 2026-27 is £12,570. This is the amount you can earn tax-free before paying income tax.
                   However, it reduces by £1 for every £2 you earn over £100,000.
                 </p>
               </details>
@@ -687,7 +578,7 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
                   How do Scottish tax rates differ?
                 </summary>
                 <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  Scotland has 5 tax bands: Starter (19%), Basic (20%), Intermediate (21%), Higher (42%), and Top (47%). 
+                  Scotland has 6 tax bands: Starter (19%), Basic (20%), Intermediate (21%), Higher (42%), Advanced (45%), and Top (48%).
                   This differs from England/Wales/NI which have 3 bands: Basic (20%), Higher (40%), Additional (45%).
                 </p>
               </details>
@@ -697,7 +588,7 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
                   How is National Insurance calculated?
                 </summary>
                 <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  National Insurance is charged at 12% on earnings between £12,570-£50,270, and 2% on earnings above £50,270. 
+                  Employee Class 1 National Insurance category A is charged at 8% on earnings between £12,570 and £50,270, and 2% above £50,270.
                   The threshold aligns with the Personal Allowance.
                 </p>
               </details>
@@ -707,13 +598,29 @@ const UKIncomeTaxCalculator = ({ onBack }) => {
                   What are the different Student Loan plans?
                 </summary>
                 <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  Plan 1 (pre-2012): £24,990 threshold. Plan 2 (2012+): £27,295 threshold. Plan 4 (Scotland): £31,395 threshold. 
+                  Plan 1: £26,900 threshold. Plan 2: £29,385 threshold. Plan 4: £33,795 threshold.
                   Plan 5 (2023+): £25,000 threshold. All charge 9% above threshold, except Postgraduate (6% above £21,000).
                 </p>
               </details>
             </div>
           </div>
         </div>
+
+        <section style={{ marginTop: '2rem', background: '#ffffff', border: '1px solid #dbe2eb', borderRadius: '12px', padding: '1.25rem' }}>
+          <h2 style={{ margin: '0 0 0.65rem', color: '#0f2a43', fontSize: '1.15rem' }}>2026-27 methodology and official sources</h2>
+          <p style={{ margin: '0 0 0.65rem', color: '#475569', lineHeight: 1.6 }}>
+            This estimate applies the standard Personal Allowance taper, regional income-tax bands, employee Class 1
+            National Insurance category A, and annual student-loan thresholds. Pension input is treated as reducing
+            adjusted net income and take-home; actual payroll treatment can vary by scheme.
+          </p>
+          <p style={{ margin: 0, color: '#475569', lineHeight: 1.7 }}>
+            Official references: <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer">UK Income Tax rates</a>,{' '}
+            <a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener noreferrer">Scottish Income Tax</a>,{' '}
+            <a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener noreferrer">HMRC 2026-27 payroll thresholds</a>, and{' '}
+            <a href="https://www.gov.uk/repaying-your-student-loan/what-you-pay" target="_blank" rel="noopener noreferrer">student-loan repayment thresholds</a>.
+            See also the <a href="/guides/uk-tax-rates-2026-27">UK tax rates 2026-27 guide</a>.
+          </p>
+        </section>
 
         {/* Final AdSense */}
         <div style={{ marginTop: '2rem', textAlign: 'center' }}>

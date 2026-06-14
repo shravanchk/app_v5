@@ -506,14 +506,14 @@ const UKRailCalculator = ({ isDarkMode: appIsDarkMode }) => {
           content="Plan your UK rail journey with real-time train departures, platform information, and fare estimates. Covering all major British railway stations."
         />
         <meta property="og:url" content="https://upaman.com/uk-rail-calculator" />
-        <meta property="og:image" content="https://upaman.com/logo512.png" />
+        <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="UK Rail Journey Planner | Live Train Times" />
         <meta
           name="twitter:description"
           content="Real-time UK train departures, platform info, and fare estimates for all British railway stations."
         />
-        <meta name="twitter:image" content="https://upaman.com/logo512.png" />
+        <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

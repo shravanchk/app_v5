@@ -7,6 +7,7 @@ import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
+import SavedScenarios from './SavedScenarios';
 import { buildFaqSchema } from '../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 import { formatINR } from '../utils/calculations';
@@ -104,6 +105,38 @@ const ComprehensiveLoanCalculator = React.memo(() => {
     }, 100);
   };
 
+  const restoreEMIScenario = useCallback((scenarioData) => {
+    if (!scenarioData?.inputs) return;
+
+    const { loanAmount, interestRate, loanTenure, tenureUnit } = scenarioData.inputs;
+    const tenureInMonths = tenureUnit === 'years' ? loanTenure * 12 : loanTenure;
+    const emi = calculateEMI(loanAmount, interestRate, tenureInMonths);
+    const totalAmount = emi * tenureInMonths;
+    const totalInterest = totalAmount - loanAmount;
+
+    setActiveTab('emi');
+    setEmiParams(scenarioData.inputs);
+    setEmiResult({
+      emi: Math.round(emi),
+      totalAmount: Math.round(totalAmount),
+      totalInterest: Math.round(totalInterest),
+      loanAmount,
+      tenureInMonths,
+      displayTenure: tenureUnit === 'years' ? `${loanTenure} years (${tenureInMonths} months)` : `${loanTenure} months`
+    });
+    setAmortizationData(generateAmortization(loanAmount, interestRate, tenureInMonths, emi));
+
+    setTimeout(() => {
+      if (resultsRef.current) {
+        resultsRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest'
+        });
+      }
+    }, 100);
+  }, [calculateEMI, generateAmortization]);
+
   const generateScenarios = useCallback(() => {
     const { outstandingAmount, currentEMI, remainingMonths, remainingTenureUnit, interestRate } = prepaymentParams;
     if (!outstandingAmount || !currentEMI || !remainingMonths || !interestRate) return [];
@@ -173,6 +206,14 @@ const ComprehensiveLoanCalculator = React.memo(() => {
     `Tenure: ${emiResult.displayTenure}`
   ] : [];
 
+  const emiScenario = emiResult ? {
+    summary: `${formatINR(emiResult.emi)} EMI for ${emiResult.displayTenure}`,
+    data: {
+      inputs: emiParams,
+      result: emiResult
+    }
+  } : null;
+
   const faqItems = [
     {
       question: 'How is EMI calculated in this tool?',
@@ -194,7 +235,7 @@ const ComprehensiveLoanCalculator = React.memo(() => {
 
   const faqSchema = buildFaqSchema(faqItems);
   const softwareSchema = buildSoftwareApplicationSchema({
-    name: 'EMI and Loan Calculator 2025 India',
+    name: 'EMI and Loan Calculator India',
     url: 'https://upaman.com/loan-calculator',
     description: 'Free EMI calculator for home, car, and personal loans with prepayment scenarios and amortization schedule.',
     applicationCategory: 'FinanceApplication',
@@ -235,18 +276,18 @@ const ComprehensiveLoanCalculator = React.memo(() => {
   return (
     <div className="calculator-container emi-container">
       <Head>
-    <title>EMI & Loan Calculator 2025 India | Home, Car & Personal Loan EMI | Upaman</title>
-    <meta name="description" content="Free EMI & Loan Calculator India 2025. Calculate home, car, personal loan EMIs, prepayment savings and complete amortization schedule with interest breakdown." />
-    <meta name="keywords" content="EMI calculator India 2025, loan calculator, home loan EMI, car loan EMI, personal loan EMI, prepayment calculator, amortization schedule" />
+    <title>EMI & Loan Calculator India | Home, Car & Personal Loan EMI | Upaman</title>
+    <meta name="description" content="Free EMI & Loan Calculator India. Calculate home, car, personal loan EMIs, prepayment savings and complete amortization schedule with interest breakdown." />
+    <meta name="keywords" content="EMI calculator India, loan calculator, home loan EMI, car loan EMI, personal loan EMI, prepayment calculator, amortization schedule" />
     <link rel="canonical" href="https://upaman.com/loan-calculator" />
-    <meta property="og:title" content="EMI & Loan Calculator 2025 India | Upaman" />
+    <meta property="og:title" content="EMI & Loan Calculator India | Upaman" />
     <meta property="og:description" content="Calculate EMI for home, car & personal loans with prepayment impact and amortization schedule." />
     <meta property="og:url" content="https://upaman.com/loan-calculator" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
     <meta property="og:image:alt" content="EMI & Loan Calculator - Upaman" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="EMI & Loan Calculator 2025 India | Upaman" />
+    <meta name="twitter:title" content="EMI & Loan Calculator India | Upaman" />
     <meta name="twitter:description" content="Free EMI & Loan Calculator with prepayment savings and amortization schedule." />
     <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{
@@ -424,6 +465,13 @@ const ComprehensiveLoanCalculator = React.memo(() => {
                     title="Loan EMI summary"
                     summaryLines={emiShareLines}
                     fileName="upaman-emi-summary.txt"
+                  />
+                  <SavedScenarios
+                    storageKey="upaman:loan-calculator:emi-scenarios"
+                    currentScenario={emiScenario}
+                    defaultName={`EMI ${emiResult.displayTenure}`}
+                    onLoadScenario={restoreEMIScenario}
+                    disabled={!emiResult}
                   />
                 </div>
               )}

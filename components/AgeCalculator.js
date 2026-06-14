@@ -704,13 +704,13 @@ const AgeCalculator = () => {
       <style>{animations}</style>
       
       <Head>
-        <title>Age Calculator 2025 | Free Age Calculator India | Years Months Days | Upaman</title>
-        <meta name="description" content="Free Age Calculator India 2025. Calculate exact age in years, months, days with life milestones, zodiac sign, next birthday countdown. Unique face animation by Upaman." />
-        <meta name="keywords" content="age calculator India 2025, age calculator upaman, exact age calculator, age in days calculator, birthday calculator, life milestones calculator, zodiac calculator upaman" />
+        <title>Age Calculator | Free Age Calculator India | Years Months Days | Upaman</title>
+        <meta name="description" content="Free Age Calculator India. Calculate exact age in years, months, days with life milestones, zodiac sign, next birthday countdown. Unique face animation by Upaman." />
+        <meta name="keywords" content="age calculator India, age calculator upaman, exact age calculator, age in days calculator, birthday calculator, life milestones calculator, zodiac calculator upaman" />
         <link rel="canonical" href="https://upaman.com/age-calculator" />
         
         {/* Open Graph Tags */}
-        <meta property="og:title" content="Age Calculator 2025 | Free Age Calculator India | Upaman" />
+        <meta property="og:title" content="Age Calculator | Free Age Calculator India | Upaman" />
         <meta property="og:description" content="Calculate exact age with life milestones and face animation. Free age calculator by Upaman." />
         <meta property="og:url" content="https://upaman.com/age-calculator" />
         <meta property="og:type" content="website" />
@@ -720,7 +720,7 @@ const AgeCalculator = () => {
         
         {/* Twitter Cards */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Age Calculator 2025 | Free Age Calculator | Upaman" />
+        <meta name="twitter:title" content="Age Calculator | Free Age Calculator | Upaman" />
         <meta name="twitter:description" content="Calculate exact age with life milestones and zodiac sign. Free age calculator by Upaman." />
         <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <meta name="twitter:image:alt" content="Age Calculator - Upaman" />
@@ -730,7 +730,7 @@ const AgeCalculator = () => {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            "name": "Age Calculator 2025 India",
+            "name": "Age Calculator India",
             "url": "https://upaman.com/age-calculator",
             "description": "Free age calculator with exact age calculation, life milestones, and zodiac sign detection by Upaman",
             "applicationCategory": "UtilityApplication",

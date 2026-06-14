@@ -306,7 +306,7 @@ const SalaryCalculator = () => {
   ];
 
   const softwareSchema = buildSoftwareApplicationSchema({
-    name: 'Salary Calculator India 2025',
+    name: 'Salary Calculator India',
     url: 'https://upaman.com/salary-calculator',
     description: 'Calculate CTC to in-hand salary with deduction estimates and compare offers across city contexts.',
     featureList: [
@@ -329,27 +329,27 @@ const SalaryCalculator = () => {
       <style>{slideInAnimation}</style>
       
       <Head>
-        <title>Free Salary Calculator India 2025 | CTC to In-Hand Salary Calculator with PF, Tax & ESI | Upaman</title>
-        <meta name="description" content="Free salary calculator India 2025 - Convert CTC to in-hand salary with accurate PF, income tax, professional tax & ESI deductions. Compare salaries across cities Mumbai, Delhi, Bangalore, Pune. Calculate take-home salary, employer contributions, gratuity & more." />
-        <meta name="keywords" content="salary calculator India 2025, CTC to in hand salary calculator, take home salary calculator, salary comparison tool, PF calculator, income tax calculator salary, professional tax calculator, ESI calculator, salary calculator Mumbai Delhi Bangalore, CTC breakdown calculator, employer contribution calculator, gratuity calculator, net salary calculator India, gross salary calculator, salary comparison cities, job offer comparison tool, pay scale calculator India, compensation calculator" />
+        <title>Free Salary Calculator India | CTC to In-Hand Salary Calculator with PF, Tax & ESI | Upaman</title>
+        <meta name="description" content="Free salary calculator India. Convert CTC to in-hand salary with accurate PF, income tax, professional tax & ESI deductions. Compare salaries across cities Mumbai, Delhi, Bangalore, Pune. Calculate take-home salary, employer contributions, gratuity & more." />
+        <meta name="keywords" content="salary calculator India, CTC to in hand salary calculator, take home salary calculator, salary comparison tool, PF calculator, income tax calculator salary, professional tax calculator, ESI calculator, salary calculator Mumbai Delhi Bangalore, CTC breakdown calculator, employer contribution calculator, gratuity calculator, net salary calculator India, gross salary calculator, salary comparison cities, job offer comparison tool, pay scale calculator India, compensation calculator" />
         <link rel="canonical" href="https://upaman.com/salary-calculator" />
         
         {/* Open Graph Tags */}
-        <meta property="og:title" content="Free Salary Calculator India 2025 | CTC to In-Hand Calculator | Upaman" />
+        <meta property="og:title" content="Free Salary Calculator India | CTC to In-Hand Calculator | Upaman" />
         <meta property="og:description" content="Calculate exact take-home salary from CTC with accurate PF, tax, ESI deductions. Compare salaries across Indian cities. Free salary calculator with city-wise cost adjustments." />
         <meta property="og:url" content="https://upaman.com/salary-calculator" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://upaman.com/images/salary-calculator-og.jpg" />
-        <meta property="og:image:alt" content="Free Salary Calculator India 2025 - CTC to In-Hand Calculator" />
+        <meta property="og:image:alt" content="Free Salary Calculator India - CTC to In-Hand Calculator" />
         <meta property="og:site_name" content="Upaman Financial Tools" />
         <meta property="og:locale" content="en_IN" />
         
         {/* Twitter Cards */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Free Salary Calculator India 2025 | CTC to In-Hand Calculator" />
+        <meta name="twitter:title" content="Free Salary Calculator India | CTC to In-Hand Calculator" />
         <meta name="twitter:description" content="Calculate exact take-home salary from CTC with accurate PF, tax, ESI deductions. Compare salaries across Indian cities." />
         <meta name="twitter:image" content="https://upaman.com/images/salary-calculator-twitter.jpg" />
-        <meta name="twitter:image:alt" content="Free Salary Calculator India 2025" />
+        <meta name="twitter:image:alt" content="Free Salary Calculator India" />
         
         {/* Additional SEO Meta Tags */}
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />

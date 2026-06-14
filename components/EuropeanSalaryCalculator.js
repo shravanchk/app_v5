@@ -21,7 +21,7 @@ const EuropeanSalaryCalculator = ({
   const [frequency, setFrequency] = useState('annual'); // annual, monthly
   const [results, setResults] = useState(null);
 
-  // European salary tax systems and rates for 2025
+  // European salary tax systems and rates configured for this calculator
   const SALARY_SYSTEMS = {
     'UK': {
       country: 'United Kingdom',
@@ -509,14 +509,14 @@ const EuropeanSalaryCalculator = ({
   const selectedCountryName = selectedCountry.country;
   const canonicalUrl = `https://upaman.com${canonicalPath}`;
   const resolvedTitle = seoTitle || (forcedCountry
-    ? `${selectedCountryName} Salary Calculator 2026 | Net Salary After Tax | Upaman`
-    : 'European Salary Calculator 2025 | UK Germany France Switzerland | Net Salary Calculator | Upaman');
+    ? `${selectedCountryName} Salary Calculator | Net Salary After Tax | Upaman`
+    : 'European Salary Calculator | UK Germany France Switzerland | Net Salary Calculator | Upaman');
   const resolvedDescription = seoDescription || (forcedCountry
     ? `Calculate ${selectedCountryName} net salary after tax and social contributions. Get annual and monthly take-home pay with effective deduction estimates.`
-    : 'Calculate net salary after taxes for European countries 2025. UK, Germany, France, Netherlands, Switzerland salary calculator with tax rates and social security deductions.');
+    : 'Calculate net salary after taxes for European countries. UK, Germany, France, Netherlands, Switzerland salary calculator with tax rates and social security deductions.');
   const resolvedKeywords = seoKeywords || (forcedCountry
     ? `${selectedCountryName} salary calculator, ${selectedCountryName} net salary calculator, ${selectedCountryName} tax calculator, take home pay ${selectedCountryName}`
-    : 'European salary calculator 2025, UK salary calculator, Germany salary calculator, France salary calculator, Switzerland salary calculator, net salary calculator, European tax calculator, after tax salary');
+    : 'European salary calculator, UK salary calculator, Germany salary calculator, France salary calculator, Switzerland salary calculator, net salary calculator, European tax calculator, after tax salary');
   const resolvedHeading = pageHeading || (forcedCountry ? `${selectedCountryName} Salary Calculator` : 'European Salary Calculator');
   const resolvedSubheading = pageSubheading || (forcedCountry
     ? `Calculate your net salary after tax in ${selectedCountryName}`
@@ -551,7 +551,7 @@ const EuropeanSalaryCalculator = ({
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": forcedCountry ? `${selectedCountryName} Salary Calculator` : "European Salary Calculator 2025",
+            "name": forcedCountry ? `${selectedCountryName} Salary Calculator` : "European Salary Calculator",
             "description": resolvedDescription,
             "url": canonicalUrl,
             "applicationCategory": "FinanceApplication",
@@ -1083,7 +1083,7 @@ const EuropeanSalaryCalculator = ({
                   How accurate are these salary calculations?
                 </summary>
                 <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  These calculations use current 2025 tax rates and standard deductions. Actual take-home pay may vary based on 
+                  These calculations use the tax rates and standard deductions configured in this calculator. Actual take-home pay may vary based on 
                   personal circumstances, allowances, and local variations. Consult a tax professional for precise calculations.
                 </p>
               </details>

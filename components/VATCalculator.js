@@ -87,19 +87,19 @@ const VATCalculator = ({ onBack }) => {
       fontFamily: 'var(--app-font)'
     }}>
       <Head>
-        <title>EU VAT Calculator 2025 | Free VAT Calculator for Europe | UK Germany France | Upaman</title>
-        <meta name="description" content="Free VAT Calculator for European countries 2025. Calculate VAT for UK (20%), Germany (19%), France (20%), and all EU nations. VAT inclusive and exclusive calculations." />
-        <meta name="keywords" content="VAT calculator Europe 2025, UK VAT calculator 20%, Germany VAT calculator 19%, France VAT calculator, EU VAT rates, value added tax calculator, business VAT calculator" />
+        <title>EU VAT Calculator | Free VAT Calculator for Europe | UK Germany France | Upaman</title>
+        <meta name="description" content="Free VAT Calculator for European countries. Calculate VAT for the UK, Germany, France, and other supported European countries with inclusive and exclusive calculations." />
+        <meta name="keywords" content="VAT calculator Europe, UK VAT calculator, Germany VAT calculator, France VAT calculator, EU VAT rates, value added tax calculator, business VAT calculator" />
         <link rel="canonical" href="https://upaman.com/eu-vat-calculator" />
         
         {/* Open Graph Tags */}
-        <meta property="og:title" content="EU VAT Calculator 2025 | Free VAT Calculator for Europe" />
+        <meta property="og:title" content="EU VAT Calculator | Free VAT Calculator for Europe" />
         <meta property="og:description" content="Calculate VAT for all European countries. UK 20%, Germany 19%, France 20%. Free VAT inclusive/exclusive calculator." />
         <meta property="og:url" content="https://upaman.com/eu-vat-calculator" />
         <meta property="og:type" content="website" />
         
         {/* Twitter Cards */}
-        <meta name="twitter:title" content="EU VAT Calculator 2025 | Free European VAT Calculator" />
+        <meta name="twitter:title" content="EU VAT Calculator | Free European VAT Calculator" />
         <meta name="twitter:description" content="Calculate VAT for UK, Germany, France and all European countries. Free VAT calculator with latest rates." />
         <meta name="twitter:card" content="summary_large_image" />
 
@@ -108,8 +108,8 @@ const VATCalculator = ({ onBack }) => {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "European VAT Calculator 2025",
-            "description": "Calculate Value Added Tax (VAT) for all European countries with current rates",
+            "name": "European VAT Calculator",
+            "description": "Calculate Value Added Tax (VAT) for supported European countries with configured rates",
             "url": "https://upaman.com/eu-vat-calculator",
             "applicationCategory": "FinanceApplication",
             "operatingSystem": "Web",
@@ -121,7 +121,7 @@ const VATCalculator = ({ onBack }) => {
             "featureList": [
               "VAT calculation for 15 European countries",
               "VAT inclusive and exclusive calculations",
-              "Current VAT rates for 2025",
+              "Configured VAT rates by country",
               "Multi-currency support (EUR, GBP, CHF, DKK, SEK, NOK)",
               "Business VAT calculator",
               "Real-time VAT calculations"
@@ -137,10 +137,10 @@ const VATCalculator = ({ onBack }) => {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "What is the VAT rate in the UK for 2025?",
+                "name": "What VAT rate does this calculator use for the UK?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "The standard VAT rate in the UK for 2025 is 20%. There are also reduced rates of 5% and 0% for certain goods and services."
+                  "text": "This calculator uses a standard UK VAT rate of 20%. Reduced rates such as 5% and 0% may apply for specific goods and services."
                 }
               },
               {
@@ -190,7 +190,7 @@ const VATCalculator = ({ onBack }) => {
               marginBottom: '0',
               fontWeight: '500'
             }}>
-              Calculate VAT for 15+ European Countries - 2025 Rates
+              Calculate VAT for 15+ European Countries
             </p>
           </div>
         </div>
@@ -535,7 +535,7 @@ const VATCalculator = ({ onBack }) => {
             border: '1px solid #dbe2eb'
           }}>
             <h2 style={{ fontSize: '1.75rem', fontWeight: '700', marginBottom: '1.5rem', color: '#1e293b' }}>
-              European VAT Rates 2025
+              European VAT Rates by Country
             </h2>
             
             <div style={{ 

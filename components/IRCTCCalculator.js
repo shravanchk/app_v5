@@ -484,7 +484,7 @@ const IRCTCCalculator = () => {
     }
   ];
   const softwareSchema = buildSoftwareApplicationSchema({
-    name: 'IRCTC Advance Booking Calculator 2025',
+    name: 'IRCTC Advance Booking Calculator',
     url: 'https://upaman.com/irctc-calculator',
     description: 'Calculate IRCTC booking window dates and timing guidance for regular and Tatkal bookings.',
     applicationCategory: 'TravelApplication',
@@ -505,18 +505,18 @@ const IRCTCCalculator = () => {
   return (
     <div className={`calculator-container irctc-container ${isDarkMode ? 'dark' : ''}`}>
       <Head>
-    <title>IRCTC Booking Charges Calculator 2025 | Train Ticket Fee Tool | Upaman</title>
-    <meta name="description" content="IRCTC Booking Charges Calculator 2025. Compute convenience fees & payment gateway charges for train ticket classes (Sleeper, 3A, 2A, CC, etc)." />
-    <meta name="keywords" content="IRCTC calculator 2025, train booking charges, railway ticket fees, IRCTC convenience fee" />
+    <title>IRCTC Booking Charges Calculator | Train Ticket Fee Tool | Upaman</title>
+    <meta name="description" content="IRCTC Booking Charges Calculator. Compute convenience fees & payment gateway charges for train ticket classes (Sleeper, 3A, 2A, CC, etc)." />
+    <meta name="keywords" content="IRCTC calculator, train booking charges, railway ticket fees, IRCTC convenience fee" />
     <link rel="canonical" href="https://upaman.com/irctc-calculator" />
-    <meta property="og:title" content="IRCTC Booking Charges Calculator 2025 | Upaman" />
+    <meta property="og:title" content="IRCTC Booking Charges Calculator | Upaman" />
     <meta property="og:description" content="Calculate IRCTC booking & payment gateway charges for all classes." />
     <meta property="og:url" content="https://upaman.com/irctc-calculator" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
     <meta property="og:image:alt" content="IRCTC Booking Charges Calculator" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="IRCTC Booking Charges Calculator 2025 | Upaman" />
+    <meta name="twitter:title" content="IRCTC Booking Charges Calculator | Upaman" />
     <meta name="twitter:description" content="IRCTC train ticket booking fee & convenience charge calculator." />
     <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />

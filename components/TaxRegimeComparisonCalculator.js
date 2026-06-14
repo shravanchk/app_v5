@@ -5,6 +5,7 @@ import SearchLandingSections from './calculator/SearchLandingSections';
 import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
+const { calculateIndianIncomeTax } = require('../utils/taxCalculations');
 
 const oldSlabs = [
   { min: 0, max: 250000, rate: 0 },
@@ -22,17 +23,6 @@ const newSlabs = [
   { min: 2000000, max: 2400000, rate: 25 },
   { min: 2400000, max: Number.POSITIVE_INFINITY, rate: 30 }
 ];
-
-const calculateSlabTax = (income, slabs) => {
-  let tax = 0;
-  for (const slab of slabs) {
-    if (income > slab.min) {
-      const taxable = Math.min(income, slab.max) - slab.min;
-      tax += (taxable * slab.rate) / 100;
-    }
-  }
-  return tax;
-};
 
 const TaxRegimeComparisonCalculator = () => {
   const [salary, setSalary] = useState(1500000);
@@ -57,20 +47,8 @@ const TaxRegimeComparisonCalculator = () => {
     const oldTaxable = Math.max(0, salary - oldDeductions);
     const newTaxable = Math.max(0, salary - newStandardDeduction);
 
-    const oldBase = calculateSlabTax(oldTaxable, oldSlabs);
-    const newBase = calculateSlabTax(newTaxable, newSlabs);
-
-    const oldCess = oldBase * 0.04;
-    const newCess = newBase * 0.04;
-
-    const oldTotalBeforeRebate = oldBase + oldCess;
-    const newTotalBeforeRebate = newBase + newCess;
-
-    const oldRebate = oldTaxable <= 500000 ? Math.min(12500, oldTotalBeforeRebate) : 0;
-    const newRebate = newTaxable <= 1200000 ? Math.min(60000, newTotalBeforeRebate) : 0;
-
-    const oldTotalTax = Math.max(0, oldTotalBeforeRebate - oldRebate);
-    const newTotalTax = Math.max(0, newTotalBeforeRebate - newRebate);
+    const oldTotalTax = calculateIndianIncomeTax(oldTaxable, 'old').totalTax;
+    const newTotalTax = calculateIndianIncomeTax(newTaxable, 'new').totalTax;
 
     const savings = Math.abs(oldTotalTax - newTotalTax);
     const betterRegime = oldTotalTax <= newTotalTax ? 'Old Regime' : 'New Regime';
@@ -108,7 +86,7 @@ const TaxRegimeComparisonCalculator = () => {
   const eeatSources = [
     { label: 'Income Tax Department', url: 'https://www.incometax.gov.in/' },
     { label: 'CBDT', url: 'https://incometaxindia.gov.in/' },
-    { label: 'Ministry of Finance', url: 'https://www.finmin.gov.in/' }
+    { label: 'Union Budget 2026', url: 'https://www.indiabudget.gov.in/' }
   ];
   const faqItems = [
     {
@@ -125,6 +103,7 @@ const TaxRegimeComparisonCalculator = () => {
     }
   ];
   const relatedLinks = [
+    { label: 'FY 2026-27 Income Tax Slabs Guide', href: '/guides/india-income-tax-2026-27' },
     { label: 'Income Tax Calculator India', href: '/income-tax-calculator' },
     { label: 'Salary Calculator (CTC to In-hand)', href: '/salary-calculator' },
     { label: 'PPF Calculator for 80C planning', href: '/ppf-calculator' },
@@ -134,10 +113,10 @@ const TaxRegimeComparisonCalculator = () => {
   return (
     <div className="calculator-container" style={{ background: 'linear-gradient(135deg, #f6f4ef 0%, #e7edf4 100%)' }}>
       <Head>
-        <title>Tax Regime Comparison Tool India (FY 2025-26) | Upaman</title>
+        <title>Tax Regime Comparison Tool India (FY 2026-27) | Upaman</title>
         <meta
           name="description"
-          content="Compare old vs new tax regime in India with salary, deductions, and rebate logic to identify which regime saves more tax."
+          content="Compare old vs new tax regime for India FY 2026-27 (AY 2027-28) with deductions, section 87A rebate, marginal relief, and cess."
         />
         <link rel="canonical" href="https://upaman.com/tax-regime-comparison" />
         <script
@@ -252,8 +231,8 @@ const TaxRegimeComparisonCalculator = () => {
           <EEATPanel
             author="Upaman Research Team"
             reviewer="Tax Policy Review Desk (Upaman)"
-            reviewedOn="March 7, 2026"
-            scope="This tool compares old vs new Indian tax regime using slab math, standard deductions, cess, and rebate checks."
+            reviewedOn="June 14, 2026"
+            scope="This tool compares old vs new Indian tax regime for FY 2026-27 using slab math, standard deductions, cess, rebate, and marginal-relief checks."
             sources={eeatSources}
           />
 

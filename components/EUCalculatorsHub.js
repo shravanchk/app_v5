@@ -36,10 +36,10 @@ const EUCalculatorsHub = () => {
       },
       {
         title: 'UK Income Tax Calculator',
-        description: 'Estimate UK income tax for 2025-26 with Scottish rates and National Insurance.',
+        description: 'Estimate UK income tax for 2026-27 with Scottish rates and National Insurance.',
         icon: Landmark,
         path: '/uk-income-tax-calculator',
-        tags: ['2025-26 tax year', 'Scottish rates', 'NI included']
+        tags: ['2026-27 tax year', 'Scottish rates', 'NI included']
       },
       {
         title: 'Germany Salary Calculator',

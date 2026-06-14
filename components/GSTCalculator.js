@@ -168,25 +168,25 @@ const GSTCalculator = () => {
   return (
     <div className="calculator-container gst-container">
       <Head>
-    <title>GST Calculator India 2025 | Free GST Calculator Online | Upaman</title>
-    <meta name="description" content="Free GST Calculator India 2025 by Upaman. Calculate GST online - add, remove, reverse GST with CGST, SGST, IGST breakdown. All GST rates 5%, 12%, 18%, 28%. Business GST compliance tool." />
-    <meta name="keywords" content="GST calculator India 2025, GST calculator upaman, free GST calculator online, add GST calculator, remove GST calculator, reverse GST calculator, GST breakdown, CGST SGST IGST calculator, business GST tool, GST compliance calculator" />
+    <title>GST Calculator India | Free GST Calculator Online | Upaman</title>
+    <meta name="description" content="Free GST Calculator India by Upaman. Calculate GST online - add, remove, reverse GST with CGST, SGST, IGST breakdown. All GST rates 5%, 12%, 18%, 28%. Business GST compliance tool." />
+    <meta name="keywords" content="GST calculator India, GST calculator upaman, free GST calculator online, add GST calculator, remove GST calculator, reverse GST calculator, GST breakdown, CGST SGST IGST calculator, business GST tool, GST compliance calculator" />
     <link rel="canonical" href="https://upaman.com/gst-calculator" />
-    <meta property="og:title" content="Free GST Calculator India 2025 | Upaman" />
+    <meta property="og:title" content="Free GST Calculator India | Upaman" />
     <meta property="og:description" content="Free GST Calculator by Upaman - Add, remove & reverse GST with complete CGST, SGST, IGST breakdown. Business tax compliance made easy." />
     <meta property="og:url" content="https://upaman.com/gst-calculator" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
     <meta property="og:image:alt" content="GST Calculator - Upaman" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Free GST Calculator India 2025 | Upaman" />
+    <meta name="twitter:title" content="Free GST Calculator India | Upaman" />
     <meta name="twitter:description" content="Free GST calculator by Upaman with add, remove & reverse GST functions. Complete CGST, SGST, IGST breakdown." />
     <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebApplication",
-      "name": "Free GST Calculator India 2025 - Upaman",
+      "name": "Free GST Calculator India - Upaman",
             "url": "https://upaman.com/gst-calculator",
             "description": "Free online GST calculator by Upaman for India with add GST, remove GST, and reverse GST calculations including complete CGST, SGST, IGST breakdown for business compliance",
             "applicationCategory": "Finance & Taxation",
@@ -219,7 +219,7 @@ const GSTCalculator = () => {
               className="header-logo"
             />
             <h2 className="header-title">
-              Free GST Calculator India 2025 - Upaman
+              Free GST Calculator India - Upaman
             </h2>
             <p style={{ 
               textAlign: 'center', 
@@ -661,7 +661,7 @@ const GSTCalculator = () => {
               fontSize: '1.5rem',
               fontWeight: '600'
             }}>
-              About Upaman GST Calculator India 2025
+              About Upaman GST Calculator India
             </h2>
             <div style={{ 
               display: 'grid', 
@@ -687,7 +687,7 @@ const GSTCalculator = () => {
               <div>
                 <h3 style={{ color: '#374151', marginBottom: '1rem' }}>GST Rates Supported</h3>
                 <p>
-                  Calculate GST for all applicable rates in India 2025. Our GST calculator supports all current GST slabs 
+                  Calculate GST for all applicable rates in India. Our GST calculator supports all current GST slabs 
                   as per Indian GST laws. Use this tool for accurate GST calculations in business transactions.
                 </p>
                 <ul style={{ paddingLeft: '1.5rem' }}>

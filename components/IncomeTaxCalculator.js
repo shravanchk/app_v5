@@ -10,6 +10,7 @@ import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { buildFaqSchema } from '../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
+const { calculateIndianIncomeTax } = require('../utils/taxCalculations');
 
 const IncomeTaxCalculator = () => {
   const [activeTab, setActiveTab] = useState('salary-tax');
@@ -47,7 +48,7 @@ const IncomeTaxCalculator = () => {
   const [salaryTaxResult, setSalaryTaxResult] = useState(null);
   const [businessTaxResult, setBusinessTaxResult] = useState(null);
 
-  // Tax slabs for FY 2025-26 (AY 2026-27) - Updated as per ClearTax and Government notification
+  // FY 2026-27 (AY 2027-28). Budget 2026 retained the prior-year slab structure.
   const taxSlabs = useMemo(() => ({
     old: [
       { min: 0, max: 250000, rate: 0, description: "No tax" },
@@ -76,32 +77,6 @@ const IncomeTaxCalculator = () => {
     }).format(amount);
   };
 
-  // Calculate tax based on slabs
-  const calculateTaxOnIncome = useCallback((income, regime) => {
-    const slabs = taxSlabs[regime];
-    let tax = 0;
-    let breakdown = [];
-
-    for (const slab of slabs) {
-      if (income > slab.min) {
-        const taxableInThisSlab = Math.min(income, slab.max) - slab.min;
-        const taxInThisSlab = (taxableInThisSlab * slab.rate) / 100;
-        tax += taxInThisSlab;
-        
-        if (taxableInThisSlab > 0) {
-          breakdown.push({
-            range: `₹${slab.min.toLocaleString('en-IN')} - ₹${slab.max === Infinity ? '∞' : slab.max.toLocaleString('en-IN')}`,
-            rate: slab.rate,
-            taxableAmount: taxableInThisSlab,
-            tax: taxInThisSlab
-          });
-        }
-      }
-    }
-
-    return { tax, breakdown };
-  }, [taxSlabs]);
-
   // Salary Tax Calculation
   const calculateSalaryTax = useCallback(() => {
     const { annualSalary, regime, hra, rentPaid, section80C, section80D, nps, homeLoanInterest, otherDeductions } = salaryParams;
@@ -112,7 +87,7 @@ const IncomeTaxCalculator = () => {
     let deductions = 0;
 
     if (regime === 'old') {
-      // Standard deduction for old regime (AY 2026-27)
+      // Standard deduction for old regime (AY 2027-28)
       const standardDeduction = Math.min(50000, annualSalary);
       deductions += standardDeduction;
 
@@ -141,46 +116,31 @@ const IncomeTaxCalculator = () => {
       // Other deductions
       deductions += otherDeductions;
     } else {
-      // New regime - standard deduction for AY 2026-27 is ₹75,000
+      // New regime standard deduction for AY 2027-28 is ₹75,000.
       const standardDeduction = Math.min(75000, annualSalary);
       deductions += standardDeduction;
     }
 
     taxableIncome = Math.max(0, annualSalary - deductions);
     
-    const { tax: incomeTax, breakdown } = calculateTaxOnIncome(taxableIncome, regime);
-    
-    // Health and Education Cess (4%)
-    const cess = incomeTax * 0.04;
-    const totalTax = incomeTax + cess;
-    
-    // Rebate under section 87A (Updated for AY 2026-27)
-    let rebate = 0;
-    if (regime === 'new') {
-      // For AY 2026-27, new regime has rebate of ₹60,000 for taxable income up to ₹12 lakh
-      if (taxableIncome <= 1200000) {
-        rebate = Math.min(totalTax, 60000);
-      }
-    } else if (regime === 'old' && taxableIncome <= 500000) {
-      rebate = Math.min(totalTax, 12500);
-    }
-    
-    const finalTax = Math.max(0, totalTax - rebate);
+    const taxResult = calculateIndianIncomeTax(taxableIncome, regime);
+    const finalTax = taxResult.totalTax;
 
     setSalaryTaxResult({
       grossSalary: annualSalary,
       totalDeductions: deductions,
       taxableIncome: taxableIncome,
-      incomeTax: incomeTax,
-      cess: cess,
-      rebate: rebate,
+      incomeTax: taxResult.slabTax,
+      cess: taxResult.cess,
+      rebate: taxResult.rebate,
+      marginalRelief: taxResult.marginalRelief,
       totalTax: finalTax,
       netSalary: annualSalary - finalTax,
-      breakdown: breakdown,
+      breakdown: taxResult.breakdown,
       regime: regime,
       effectiveRate: annualSalary > 0 ? (finalTax / annualSalary) * 100 : 0
     });
-  }, [salaryParams, calculateTaxOnIncome]);
+  }, [salaryParams]);
 
   // Business Tax Calculation
   const calculateBusinessTax = useCallback(() => {
@@ -192,27 +152,23 @@ const IncomeTaxCalculator = () => {
     const netProfit = Math.max(0, grossIncome - totalExpenses);
     const taxableIncome = netProfit;
     
-    const { tax: incomeTax, breakdown } = calculateTaxOnIncome(taxableIncome, 'old');
-    
-    // Health and Education Cess (4%)
-    const cess = incomeTax * 0.04;
-    const totalTax = incomeTax + cess;
-    const balanceTax = Math.max(0, totalTax - advanceTax);
+    const taxResult = calculateIndianIncomeTax(taxableIncome, 'old');
+    const balanceTax = Math.max(0, taxResult.totalTax - advanceTax);
 
     setBusinessTaxResult({
       grossIncome: grossIncome,
       totalExpenses: totalExpenses,
       netProfit: netProfit,
       taxableIncome: taxableIncome,
-      incomeTax: incomeTax,
-      cess: cess,
-      totalTax: totalTax,
+      incomeTax: taxResult.slabTax,
+      cess: taxResult.cess,
+      totalTax: taxResult.totalTax,
       advanceTax: advanceTax,
       balanceTax: balanceTax,
-      breakdown: breakdown,
-      effectiveRate: grossIncome > 0 ? (totalTax / grossIncome) * 100 : 0
+      breakdown: taxResult.breakdown,
+      effectiveRate: grossIncome > 0 ? (taxResult.totalTax / grossIncome) * 100 : 0
     });
-  }, [businessParams, calculateTaxOnIncome]);
+  }, [businessParams]);
 
   // Calculate tax comparison
   const calculateTaxComparison = useCallback(() => {
@@ -231,32 +187,10 @@ const IncomeTaxCalculator = () => {
     const newRegimeStandardDeduction = Math.min(75000, annualIncome);
     const newRegimeTaxableIncome = Math.max(0, annualIncome - newRegimeStandardDeduction);
 
-    // Calculate base tax
-    const oldRegimeBaseTax = calculateTaxOnIncome(oldRegimeTaxableIncome, 'old').tax;
-    const newRegimeBaseTax = calculateTaxOnIncome(newRegimeTaxableIncome, 'new').tax;
-    
-    // Add health and education cess (4%)
-    const oldRegimeCess = oldRegimeBaseTax * 0.04;
-    const newRegimeCess = newRegimeBaseTax * 0.04;
-    
-    const oldRegimeTotalTax = oldRegimeBaseTax + oldRegimeCess;
-    const newRegimeTotalTax = newRegimeBaseTax + newRegimeCess;
-    
-    // Apply rebates
-    let oldRegimeRebate = 0;
-    let newRegimeRebate = 0;
-    
-    if (oldRegimeTaxableIncome <= 500000) {
-      oldRegimeRebate = Math.min(oldRegimeTotalTax, 12500);
-    }
-    
-    // New regime rebate of ₹60,000 for AY 2026-27 for taxable income up to ₹12 lakh
-    if (newRegimeTaxableIncome <= 1200000) {
-      newRegimeRebate = Math.min(newRegimeTotalTax, 60000);
-    }
-    
-    const oldRegimeFinalTax = Math.max(0, oldRegimeTotalTax - oldRegimeRebate);
-    const newRegimeFinalTax = Math.max(0, newRegimeTotalTax - newRegimeRebate);
+    const oldTaxResult = calculateIndianIncomeTax(oldRegimeTaxableIncome, 'old');
+    const newTaxResult = calculateIndianIncomeTax(newRegimeTaxableIncome, 'new');
+    const oldRegimeFinalTax = oldTaxResult.totalTax;
+    const newRegimeFinalTax = newTaxResult.totalTax;
 
     const taxDifference = Math.abs(oldRegimeFinalTax - newRegimeFinalTax);
     const betterRegime = oldRegimeFinalTax < newRegimeFinalTax ? 'old' : 'new';
@@ -269,7 +203,7 @@ const IncomeTaxCalculator = () => {
       oldRegimeTakeHome: annualIncome - oldRegimeFinalTax,
       newRegimeTakeHome: annualIncome - newRegimeFinalTax
     });
-  }, [comparisonParams, calculateTaxOnIncome]);
+  }, [comparisonParams]);
 
   // Auto-calculate when params change
   useEffect(() => {
@@ -291,14 +225,14 @@ const IncomeTaxCalculator = () => {
   }, [activeTab, calculateTaxComparison]);
 
   const jsonLdData = buildSoftwareApplicationSchema({
-    name: 'Income Tax Calculator India FY 2025-26',
+    name: 'Income Tax Calculator India FY 2026-27',
     url: 'https://upaman.com/income-tax-calculator',
-    description: 'Free online income tax calculator for India FY 2025-26. Calculate salary tax, business tax with both old and new tax regimes. Compare tax slabs and get detailed breakdown.',
+    description: 'Free online income tax calculator for India FY 2026-27. Calculate salary tax and compare old and new tax regimes with rebate, marginal relief, and cess.',
     featureList: [
       'Salary Tax Calculator',
       'Business Income Tax Calculator',
       'Old vs New Tax Regime Comparison',
-      'Tax Slabs FY 2025-26',
+      'Tax Slabs FY 2026-27',
       'Section 80C, 80D Deductions',
       'HRA Exemption Calculator'
     ]
@@ -354,6 +288,7 @@ const IncomeTaxCalculator = () => {
   ]);
 
   const relatedGuides = [
+    { label: 'FY 2026-27 income tax slabs guide', href: '/guides/india-income-tax-2026-27' },
     { label: 'Old vs new tax regime guide', href: '/guide-income-tax-regime-choice.html' },
     { label: 'CTC to in-hand breakdown guide', href: '/guide-ctc-inhand-breakdown.html' },
     { label: 'SIP step-up planning guide', href: '/guide-sip-step-up-planning.html' }
@@ -369,24 +304,24 @@ const IncomeTaxCalculator = () => {
   const eeatSources = [
     { label: 'Income Tax Department', url: 'https://www.incometax.gov.in/' },
     { label: 'CBDT', url: 'https://incometaxindia.gov.in/' },
-    { label: 'Ministry of Finance', url: 'https://www.finmin.gov.in/' }
+    { label: 'Union Budget 2026', url: 'https://www.indiabudget.gov.in/' }
   ];
 
   return (
     <div className="calculator-container tax-container">
       <Head>
-  <title>Income Tax Calculator India FY 2025-26 | Old vs New Regime | Upaman</title>
-  <meta name="description" content="Income Tax Calculator India FY 2025-26. Compare old vs new regime, calculate salary & business tax with deductions (80C, 80D, HRA, home loan) and detailed slab breakdown." />
-  <meta name="keywords" content="income tax calculator India FY 2025-26, old vs new regime, salary tax, business tax, tax slabs, 80C 80D HRA deductions" />
+  <title>Income Tax Calculator India FY 2026-27 | Old vs New Regime | Upaman</title>
+  <meta name="description" content="Income Tax Calculator India FY 2026-27 (AY 2027-28). Compare old vs new regime with deductions, section 87A rebate, marginal relief, and cess." />
+  <meta name="keywords" content="income tax calculator India FY 2026-27, AY 2027-28, old vs new regime, section 87A rebate, tax slabs, 80C 80D HRA deductions" />
   <link rel="canonical" href="https://upaman.com/income-tax-calculator" />
-  <meta property="og:title" content="Income Tax Calculator FY 2025-26 India | Upaman" />
+  <meta property="og:title" content="Income Tax Calculator FY 2026-27 India | Upaman" />
   <meta property="og:description" content="Compare old vs new regime and compute tax with deductions & slab breakdown." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://upaman.com/income-tax-calculator" />
   <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
-  <meta property="og:image:alt" content="Income Tax Calculator FY 2025-26" />
+  <meta property="og:image:alt" content="Income Tax Calculator FY 2026-27" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Income Tax Calculator FY 2025-26 India | Upaman" />
+  <meta name="twitter:title" content="Income Tax Calculator FY 2026-27 India | Upaman" />
   <meta name="twitter:description" content="Old vs new regime tax comparison with deductions & slab details." />
   <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ 
@@ -801,7 +736,7 @@ const IncomeTaxCalculator = () => {
               <div className="tax-comparison-container">
                 <h3 className="section-title">
                   <Info size={24} />
-                  Tax Comparison & Slabs for FY 2025-26
+                  Tax Comparison & Slabs for FY 2026-27
                 </h3>
                 
                 {/* Quick Comparison Calculator */}
@@ -886,7 +821,7 @@ const IncomeTaxCalculator = () => {
                   <h4 className="subsection-title">Tax Slabs Comparison</h4>
                   
                   <div className="slab-section new-regime">
-                    <h5 className="slab-title">New Tax Regime (AY 2026-27)</h5>
+                    <h5 className="slab-title">New Tax Regime (AY 2027-28)</h5>
                     <div className="slab-table">
                       <div className="slab-header">
                         <span>Income Range</span>
@@ -909,7 +844,7 @@ const IncomeTaxCalculator = () => {
                   </div>
 
                   <div className="slab-section old-regime">
-                    <h5 className="slab-title">Old Tax Regime (AY 2026-27)</h5>
+                    <h5 className="slab-title">Old Tax Regime (AY 2027-28)</h5>
                     <div className="slab-table">
                       <div className="slab-header">
                         <span>Income Range</span>
@@ -975,12 +910,13 @@ const IncomeTaxCalculator = () => {
               'Section 87A rebate logic applied where eligible'
             ]}
             assumptions={[
-              'Rates and slab structures are modeled for FY 2025-26 / AY 2026-27 configuration in this app',
+              'Rates and slab structures are modeled for FY 2026-27 / AY 2027-28; Budget 2026 retained the prior-year slabs',
               'Surcharge, special incomes, and complex exemptions are not fully modeled',
               'Use results for planning; file taxes using official utilities or a qualified advisor'
             ]}
             sources={[
               { label: 'Income Tax Department (India)', url: 'https://www.incometax.gov.in/' },
+              { label: 'Union Budget 2026', url: 'https://www.indiabudget.gov.in/' },
               { label: 'CBDT notifications and circulars', url: 'https://incometaxindia.gov.in/' }
             ]}
             guideLinks={[
@@ -997,7 +933,7 @@ const IncomeTaxCalculator = () => {
             <div className="disclaimer-content">
               <p>
                 <strong>Information Purpose Only:</strong> This Income Tax calculator is provided for informational and educational purposes only. 
-                The calculations are based on current tax slabs and rates as per Indian Income Tax laws for FY 2025-26.
+                The calculations are based on current tax slabs and rates for FY 2026-27 (AY 2027-28).
               </p>
               <p>
                 <strong>Not Financial Advice:</strong> The results should not be considered as professional tax advice or official tax calculations. 
@@ -1019,7 +955,7 @@ const IncomeTaxCalculator = () => {
         </div>
       </div>
       <CalculatorArticleLayout
-        title="Income Tax Calculator India (FY 2025-26): Old vs New Regime With Worked Examples"
+        title="Income Tax Calculator India (FY 2026-27): Old vs New Regime With Worked Examples"
         summary={(
           <p style={{ margin: 0 }}>
             Estimate salary and business tax, compare old vs new regime, and review take-home impact quickly. Use the
@@ -1030,8 +966,8 @@ const IncomeTaxCalculator = () => {
           <EEATPanel
             author="Upaman Research Team"
             reviewer="Tax Policy Review Desk (Upaman)"
-            reviewedOn="March 7, 2026"
-            scope="Covers slab-based tax planning estimates for salaried and business users under FY 2025-26 / AY 2026-27 assumptions."
+            reviewedOn="June 14, 2026"
+            scope="Covers slab-based tax planning estimates for salaried and business users under FY 2026-27 / AY 2027-28 assumptions."
             sources={eeatSources}
           />
         )}
@@ -1045,7 +981,8 @@ const IncomeTaxCalculator = () => {
               This page is built with that exact goal.
             </p>
             <p>
-              The Indian tax framework for FY 2025-26 (AY 2026-27) uses slab-based marginal taxation. That means each
+              The Indian tax framework for FY 2026-27 (AY 2027-28) uses slab-based marginal taxation. Budget 2026
+              retained the prior-year slab structure. That means each
               slab of income is taxed at a different rate, not your full income at the top slab. Many taxpayers
               overestimate their liability because they assume crossing a slab pushes all income into the higher rate.
               The correct method is incremental and this calculator follows that approach. After base tax, cess is
@@ -1140,7 +1077,7 @@ const IncomeTaxCalculator = () => {
               expenses and deductions, then applies tax logic and advance-tax offset for balance payable estimate.
             </p>
             <p>
-              Assumptions: rates and regime rules in this app are modeled for FY 2025-26 / AY 2026-27 configuration.
+              Assumptions: rates and regime rules in this app are modeled for FY 2026-27 / AY 2027-28 configuration.
               Special incomes, surcharge edge cases, and rare exemptions are intentionally simplified for planning use.
               For return filing, validate with official sources and professional advice where required.
             </p>

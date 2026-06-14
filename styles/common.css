@@ -2347,6 +2347,120 @@ body.dark-theme .table td {
   font-weight: 600;
 }
 
+.saved-scenarios {
+  margin-top: 1rem;
+  border-top: 1px solid #dbe2eb;
+  padding-top: 0.9rem;
+}
+
+.saved-scenarios-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 0.7rem;
+}
+
+.saved-scenarios-header h4 {
+  margin: 0;
+  color: #0f2a43;
+  font-size: 0.95rem;
+}
+
+.saved-scenarios-header p {
+  margin: 0.25rem 0 0;
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.saved-scenarios-save-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.saved-scenarios-input {
+  min-width: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0f172a;
+  padding: 0.48rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.saved-scenarios-input:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.saved-scenarios-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 34px;
+}
+
+.saved-scenarios-icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.saved-scenarios-list {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+}
+
+.saved-scenarios-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  padding: 0.7rem;
+}
+
+.saved-scenarios-copy {
+  min-width: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.saved-scenarios-copy strong,
+.saved-scenarios-copy span,
+.saved-scenarios-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saved-scenarios-copy strong {
+  color: #0f2a43;
+  font-size: 0.84rem;
+}
+
+.saved-scenarios-copy span {
+  color: #475569;
+  font-size: 0.78rem;
+}
+
+.saved-scenarios-copy small {
+  color: #64748b;
+  font-size: 0.72rem;
+}
+
+.saved-scenarios-controls {
+  display: flex;
+  gap: 0.4rem;
+}
+
 .calculator-info-panel {
   margin-top: 1.25rem;
   border: 1px solid #bfdbfe;
@@ -2419,6 +2533,10 @@ body.dark-theme .result-actions {
   border-top-color: #334155;
 }
 
+body.dark-theme .saved-scenarios {
+  border-top-color: #334155;
+}
+
 body.dark-theme .result-action-button {
   border-color: #475569;
   background: #0f172a;
@@ -2431,6 +2549,36 @@ body.dark-theme .result-action-button:hover {
 
 body.dark-theme .result-actions-status {
   color: #5eead4;
+}
+
+body.dark-theme .saved-scenarios-header h4,
+body.dark-theme .saved-scenarios-copy strong {
+  color: #cbd5e1;
+}
+
+body.dark-theme .saved-scenarios-header p,
+body.dark-theme .saved-scenarios-copy small {
+  color: #94a3b8;
+}
+
+body.dark-theme .saved-scenarios-input {
+  border-color: #475569;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+body.dark-theme .saved-scenarios-input:disabled {
+  background: #111827;
+  color: #64748b;
+}
+
+body.dark-theme .saved-scenarios-item {
+  border-color: #334155;
+  background: #0f172a;
+}
+
+body.dark-theme .saved-scenarios-copy span {
+  color: #cbd5e1;
 }
 
 body.dark-theme .calculator-info-panel {

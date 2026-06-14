@@ -27,6 +27,9 @@ export const getAutoUpdatedLabel = () => {
 
 export const getDataFreshnessLabel = () => {
   const latest = buildMeta?.dataFreshness?.latestAvailable;
+  const parsed = latest ? new Date(latest) : null;
+  const staleAfterMs = 180 * 24 * 60 * 60 * 1000;
+  if (!parsed || Number.isNaN(parsed.getTime()) || Date.now() - parsed.getTime() > staleAfterMs) return null;
   const label = formatDateLabel(latest);
   return label ? `Data snapshot: ${label}` : null;
 };
