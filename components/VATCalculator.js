@@ -22,13 +22,13 @@ const VATCalculator = ({ onBack }) => {
     'NL': { standard: 21, reduced: [9, 0], country: 'Netherlands', currency: '€', symbol: 'EUR' },
     'BE': { standard: 21, reduced: [12, 6, 0], country: 'Belgium', currency: '€', symbol: 'EUR' },
     'AT': { standard: 20, reduced: [13, 10, 0], country: 'Austria', currency: '€', symbol: 'EUR' },
-    'CH': { standard: 7.7, reduced: [3.7, 2.5, 0], country: 'Switzerland', currency: 'CHF', symbol: 'CHF' },
+    'CH': { standard: 8.1, reduced: [3.8, 2.6, 0], country: 'Switzerland', currency: 'CHF', symbol: 'CHF' },
     'IE': { standard: 23, reduced: [13.5, 9, 4.8, 0], country: 'Ireland', currency: '€', symbol: 'EUR' },
     'PT': { standard: 23, reduced: [13, 6, 0], country: 'Portugal', currency: '€', symbol: 'EUR' },
     'DK': { standard: 25, reduced: [0], country: 'Denmark', currency: 'DKK', symbol: 'DKK' },
     'SE': { standard: 25, reduced: [12, 6, 0], country: 'Sweden', currency: 'SEK', symbol: 'SEK' },
     'NO': { standard: 25, reduced: [15, 12, 0], country: 'Norway', currency: 'NOK', symbol: 'NOK' },
-    'FI': { standard: 24, reduced: [14, 10, 0], country: 'Finland', currency: '€', symbol: 'EUR' }
+    'FI': { standard: 25.5, reduced: [13.5, 10, 0], country: 'Finland', currency: '€', symbol: 'EUR' }
   };
 
   const calculateVAT = () => {
@@ -617,8 +617,8 @@ const VATCalculator = ({ onBack }) => {
                   Which European country has the highest VAT rate?
                 </summary>
                 <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  Denmark, Sweden, and Norway have the highest standard VAT rates at 25%. Ireland and Portugal 
-                  follow with 23%, while Switzerland has the lowest at 7.7%.
+                  Finland has the highest standard VAT rate at 25.5%, followed by Denmark, Sweden, and Norway at 25%.
+                  Ireland and Portugal follow with 23%, while Switzerland has the lowest at 8.1%.
                 </p>
               </details>
 

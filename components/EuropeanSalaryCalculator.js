@@ -45,12 +45,17 @@ const EuropeanSalaryCalculator = ({
       country: 'Germany',
       currency: '€',
       symbol: 'EUR',
+      // 2026 Einkommensteuer zones (§32a EStG). Grundfreibetrag €12,348;
+      // 42% top-of-progression starts at €69,878; 45% Reichensteuer above €277,825.
       taxBands: [
-        { min: 0, max: 11604, rate: 0 },
-        { min: 11604, max: 66760, rate: 14 },
-        { min: 66760, max: 277825, rate: 42 },
+        { min: 0, max: 12348, rate: 0 },
+        { min: 12348, max: 69878, rate: 14 },
+        { min: 69878, max: 277825, rate: 42 },
         { min: 277825, max: Infinity, rate: 45 }
       ],
+      // Employee shares, 2026. NOTE: health excludes the fund-specific average
+      // additional contribution (~1.45% employee share of the 2.9% Zusatzbeitrag);
+      // care base 1.7% excludes the +0.6% childless surcharge.
       socialSecurity: {
         pension: 9.3,
         unemployment: 1.3,
@@ -64,12 +69,13 @@ const EuropeanSalaryCalculator = ({
       country: 'France',
       currency: '€',
       symbol: 'EUR',
+      // 2026 barème de l'impôt sur le revenu (2026 Finance Act, thresholds +0.9%).
       taxBands: [
-        { min: 0, max: 11294, rate: 0 },
-        { min: 11294, max: 28797, rate: 11 },
-        { min: 28797, max: 82341, rate: 30 },
-        { min: 82341, max: 177106, rate: 41 },
-        { min: 177106, max: Infinity, rate: 45 }
+        { min: 0, max: 11600, rate: 0 },
+        { min: 11600, max: 29579, rate: 11 },
+        { min: 29579, max: 84577, rate: 30 },
+        { min: 84577, max: 181917, rate: 41 },
+        { min: 181917, max: Infinity, rate: 45 }
       ],
       socialSecurity: {
         generalSocial: 9.7,
@@ -82,12 +88,16 @@ const EuropeanSalaryCalculator = ({
       country: 'Netherlands',
       currency: '€',
       symbol: 'EUR',
+      // 2026 Box 1 brackets (three-band structure). Bracket 1 includes national
+      // insurance (combined rate 35.70%; one source cites 35.75%).
       taxBands: [
-        { min: 0, max: 75518, rate: 37.07 },
-        { min: 75518, max: Infinity, rate: 49.5 }
+        { min: 0, max: 38883, rate: 35.70 },
+        { min: 38883, max: 78426, rate: 37.56 },
+        { min: 78426, max: Infinity, rate: 49.50 }
       ],
-      generalCredit: 3362,
-      laborCredit: 4426,
+      // 2026 maxima (flat approximation; both credits phase out with income).
+      generalCredit: 3115,
+      laborCredit: 5685,
       flag: '🇳🇱'
     },
     'CH': {

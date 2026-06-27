@@ -112,12 +112,13 @@ const GSTCalculator = () => {
     calculateReverseGST();
   }, [calculateReverseGST]);
 
+  // GST 2.0 rate structure effective 22 September 2025: two main slabs (5%, 18%)
+  // plus a 40% rate for sin/luxury goods. The 12% and 28% slabs were abolished.
   const commonGSTRates = [
-    { rate: 0, label: '0% - Essential goods' },
-    { rate: 5, label: '5% - Basic necessities' },
-    { rate: 12, label: '12% - Standard goods' },
-    { rate: 18, label: '18% - Most goods/services' },
-    { rate: 28, label: '28% - Luxury items' }
+    { rate: 0, label: '0% - Nil-rated / exempt' },
+    { rate: 5, label: '5% - Merit / essential goods' },
+    { rate: 18, label: '18% - Standard rate (most goods/services)' },
+    { rate: 40, label: '40% - Sin / luxury goods' }
   ];
 
   const addShareLines = addGSTResult ? [
@@ -169,7 +170,7 @@ const GSTCalculator = () => {
     <div className="calculator-container gst-container">
       <Head>
     <title>GST Calculator India | Free GST Calculator Online | Upaman</title>
-    <meta name="description" content="Free GST Calculator India by Upaman. Calculate GST online - add, remove, reverse GST with CGST, SGST, IGST breakdown. All GST rates 5%, 12%, 18%, 28%. Business GST compliance tool." />
+    <meta name="description" content="Free GST Calculator India by Upaman. Calculate GST online - add, remove, reverse GST with CGST, SGST, IGST breakdown. Current GST 2.0 rates 5%, 18% and 40%. Business GST compliance tool." />
     <meta name="keywords" content="GST calculator India, GST calculator upaman, free GST calculator online, add GST calculator, remove GST calculator, reverse GST calculator, GST breakdown, CGST SGST IGST calculator, business GST tool, GST compliance calculator" />
     <link rel="canonical" href="https://upaman.com/gst-calculator" />
     <meta property="og:title" content="Free GST Calculator India | Upaman" />
@@ -227,7 +228,7 @@ const GSTCalculator = () => {
               color: '#6b7280', 
               fontSize: '0.95rem' 
             }}>
-              Calculate GST online for free. Add, remove, or reverse GST with complete CGST, SGST, IGST breakdown for all rates (5%, 12%, 18%, 28%). Perfect for business compliance and tax planning.
+              Calculate GST online for free. Add, remove, or reverse GST with complete CGST, SGST, IGST breakdown for current GST 2.0 rates (5%, 18%, 40%). Perfect for business compliance and tax planning.
             </p>
           </div>
         </div>
@@ -597,6 +598,7 @@ const GSTCalculator = () => {
         <div className="calculator-content" style={{ paddingTop: 0 }}>
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
+            reviewedOn="June 28, 2026"
             inputs={[
               'Base amount or GST-inclusive amount and selected GST rate',
               'Breakdown shows CGST/SGST split for intra-state and IGST reference for inter-state'
@@ -691,10 +693,10 @@ const GSTCalculator = () => {
                   as per Indian GST laws. Use this tool for accurate GST calculations in business transactions.
                 </p>
                 <ul style={{ paddingLeft: '1.5rem' }}>
-                  <li>5% GST - Essential goods and services</li>
-                  <li>12% GST - Standard rate items</li>
-                  <li>18% GST - Most goods and services</li>
-                  <li>28% GST - Luxury and sin goods</li>
+                  <li>0% GST - Nil-rated / exempt items</li>
+                  <li>5% GST - Merit / essential goods and services</li>
+                  <li>18% GST - Standard rate (most goods and services)</li>
+                  <li>40% GST - Sin and luxury goods</li>
                 </ul>
               </div>
             </div>

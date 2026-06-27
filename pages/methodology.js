@@ -31,6 +31,11 @@ export default function MethodologyPage() {
           methodology review date is shown in calculator trust panels where available.
         </p>
         <p>
+          <strong>Last reviewed:</strong> June 28, 2026 — India FY 2026-27 income-tax slabs, Section 87A rebate,
+          and PPF rate reverified against official sources; GST rates updated to the GST 2.0 structure (5%, 18%, 40%)
+          effective 22 September 2025; EU VAT and France/Germany/Netherlands income-tax brackets refreshed to 2026.
+        </p>
+        <p>
           <a href="/about">About Upaman</a> {'\u2022'} <a href="/editorial-policy">Editorial Policy</a> {'\u2022'}{' '}
           <a href="/corrections-policy">Corrections Policy</a>
         </p>

@@ -966,7 +966,7 @@ const IncomeTaxCalculator = () => {
           <EEATPanel
             author="Upaman Research Team"
             reviewer="Tax Policy Review Desk (Upaman)"
-            reviewedOn="June 14, 2026"
+            reviewedOn="June 28, 2026"
             scope="Covers slab-based tax planning estimates for salaried and business users under FY 2026-27 / AY 2027-28 assumptions."
             sources={eeatSources}
           />

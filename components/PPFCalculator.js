@@ -354,6 +354,7 @@ const PPFCalculator = () => {
 
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
+            reviewedOn="June 28, 2026"
             inputs={[
               'Annual contribution, annual interest rate, tenure, contribution mode, and optional annual step-up',
               'Contribution cap applied as per current PPF annual limit'

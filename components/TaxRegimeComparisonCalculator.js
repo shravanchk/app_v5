@@ -231,7 +231,7 @@ const TaxRegimeComparisonCalculator = () => {
           <EEATPanel
             author="Upaman Research Team"
             reviewer="Tax Policy Review Desk (Upaman)"
-            reviewedOn="June 14, 2026"
+            reviewedOn="June 28, 2026"
             scope="This tool compares old vs new Indian tax regime for FY 2026-27 using slab math, standard deductions, cess, rebate, and marginal-relief checks."
             sources={eeatSources}
           />

@@ -10,6 +10,7 @@ import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizat
 import SearchLandingSections from './calculator/SearchLandingSections';
 import { buildFaqSchema } from '../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
+const { calculateIndianIncomeTax } = require('../utils/taxCalculations');
 
 const SalaryCalculator = () => {
   const [activeTab, setActiveTab] = useState('ctc-breakdown');
@@ -120,30 +121,20 @@ const SalaryCalculator = () => {
     // Gratuity (employer contribution)
     const gratuity = gratuityApplicable ? Math.round(basicSalary * 0.0481) : 0; // 4.81% of basic
     
-    // Tax calculation (simplified - basic tax slabs)
-    const taxableIncome = basicSalary + hraAmount + specialAllowance - pfEmployee;
-    let incomeTax = 0;
-    
-    // New tax regime calculation (simplified)
-    if (taxableIncome > 250000) {
-      if (taxableIncome <= 500000) {
-        incomeTax += (taxableIncome - 250000) * 0.05;
-      } else if (taxableIncome <= 750000) {
-        incomeTax += 250000 * 0.05 + (taxableIncome - 500000) * 0.10;
-      } else if (taxableIncome <= 1000000) {
-        incomeTax += 250000 * 0.05 + 250000 * 0.10 + (taxableIncome - 750000) * 0.15;
-      } else if (taxableIncome <= 1250000) {
-        incomeTax += 250000 * 0.05 + 250000 * 0.10 + 250000 * 0.15 + (taxableIncome - 1000000) * 0.20;
-      } else if (taxableIncome <= 1500000) {
-        incomeTax += 250000 * 0.05 + 250000 * 0.10 + 250000 * 0.15 + 250000 * 0.20 + (taxableIncome - 1250000) * 0.25;
-      } else {
-        incomeTax += 250000 * 0.05 + 250000 * 0.10 + 250000 * 0.15 + 250000 * 0.20 + 250000 * 0.25 + (taxableIncome - 1500000) * 0.30;
-      }
-    }
-    
+    // Tax calculation — FY 2026-27 new regime (default regime, Section 115BAC).
+    // Uses the shared engine so slabs, the Section 87A rebate (up to ₹60,000 for
+    // taxable income ≤ ₹12L), marginal relief, and 4% cess stay consistent
+    // with the dedicated Income Tax calculator.
+    const NEW_REGIME_STANDARD_DEDUCTION = 75000;
+    const grossTaxableSalary = basicSalary + hraAmount + specialAllowance - pfEmployee;
+    const taxableIncome = Math.max(0, grossTaxableSalary - NEW_REGIME_STANDARD_DEDUCTION);
+
+    const taxResult = calculateIndianIncomeTax(taxableIncome, 'new');
+    const incomeTax = Math.round(taxResult.slabTax - taxResult.rebate - taxResult.marginalRelief);
+
     // Health and education cess
-    const cess = Math.round(incomeTax * 0.04);
-    const totalTax = Math.round(incomeTax + cess);
+    const cess = Math.round(taxResult.cess);
+    const totalTax = Math.round(taxResult.totalTax);
     
     // Total deductions
     const totalDeductions = pfEmployee + totalTax + professionalTaxAmount + esic;
@@ -1046,7 +1037,7 @@ const SalaryCalculator = () => {
           <EEATPanel
             author="Upaman Research Team"
             reviewer="Compensation and Payroll Review Desk (Upaman)"
-            reviewedOn="March 7, 2026"
+            reviewedOn="June 28, 2026"
             scope="Salary outputs are planning estimates based on modeled structure, deduction assumptions, and city normalization."
             sources={[
               { label: 'EPFO', url: 'https://www.epfindia.gov.in/' },
