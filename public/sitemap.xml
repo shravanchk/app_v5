@@ -369,12 +369,6 @@
     <priority>0.66</priority>
   </url>
   <url>
-    <loc>https://upaman.com/guide-ctc-inhand-breakdown.html</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.66</priority>
-  </url>
-  <url>
     <loc>https://upaman.com/guide-irctc-booking-strategy.html</loc>
     <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -421,6 +415,36 @@
     <lastmod>2026-06-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guides/tax-on-12-lakh-salary-fy-2026-27</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guides/old-vs-new-regime-breakeven-fy-2026-27</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guides/marginal-relief-new-regime-fy-2026-27</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guides/standard-deduction-fy-2026-27</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/guides/ctc-to-in-hand-salary</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://upaman.com/guides/uk-tax-rates-2026-27</loc>

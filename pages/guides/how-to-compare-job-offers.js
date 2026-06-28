@@ -60,7 +60,7 @@ export default function JobOfferGuidePage() {
         Open the <a href="/job-offer-workflow">Job Offer Decision Workflow</a> to compare current and new offers side by
         side. If you want to understand how annual package turns into actual monthly pay, use the{' '}
         <a href="/salary-calculator">Salary Calculator</a> and the existing{' '}
-        <a href="/guide-ctc-inhand-breakdown.html">CTC to In-hand Breakdown Guide</a>.
+        <a href="/guides/ctc-to-in-hand-salary">CTC to In-hand Breakdown Guide</a>.
       </p>
     </GuidePageLayout>
   );

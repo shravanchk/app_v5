@@ -65,7 +65,6 @@ Allow: /guide-emi-prepayment-strategy.html
 Allow: /guide-income-tax-regime-choice.html
 Allow: /guide-sip-step-up-planning.html
 Allow: /guide-credit-card-minimum-due-trap.html
-Allow: /guide-ctc-inhand-breakdown.html
 Allow: /guide-ppf-vs-sip-choice.html
 Allow: /guide-irctc-booking-strategy.html
 Allow: /guide-prepay-vs-invest-decision.html
@@ -75,6 +74,7 @@ Allow: /guides/how-much-emi-is-safe
 Allow: /guides/car-ownership-cost-guide
 Allow: /guides/india-income-tax-2026-27
 Allow: /guides/uk-tax-rates-2026-27
+Allow: /guides/ctc-to-in-hand-salary
 
 # Known non-content or legacy areas
 Disallow: /build/

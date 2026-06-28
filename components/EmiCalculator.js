@@ -255,7 +255,7 @@ const ComprehensiveLoanCalculator = React.memo(() => {
 
   const relatedGuides = [
     { label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' },
-    { label: 'CTC to in-hand breakdown guide', href: '/guide-ctc-inhand-breakdown.html' },
+    { label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' },
     { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' }
   ];
 

@@ -458,7 +458,7 @@ const MainLandingPage = () => {
     {
       title: 'CTC to In-hand Breakdown',
       description: 'Understand what usually gets deducted between offer CTC and monthly take-home.',
-      href: '/guide-ctc-inhand-breakdown.html'
+      href: '/guides/ctc-to-in-hand-salary'
     },
     {
       title: 'PPF vs SIP Selection',
@@ -2058,7 +2058,7 @@ const MainLandingPage = () => {
             <a href="/guide-emi-prepayment-strategy.html" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>EMI Guide</a>
             <a href="/guide-income-tax-regime-choice.html" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>Tax Regime Guide</a>
             <a href="/guide-sip-step-up-planning.html" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>SIP Guide</a>
-            <a href="/guide-ctc-inhand-breakdown.html" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>Salary Guide</a>
+            <a href="/guides/ctc-to-in-hand-salary" style={{ color: '#93c5fd', textDecoration: 'none', margin: '0 0.6rem' }}>Salary Guide</a>
           </div>
           
           <p style={{

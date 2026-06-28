@@ -720,7 +720,7 @@ const JobOfferWorkflow = () => {
             relatedLinks={[
               { label: 'How to Compare Job Offers Guide', href: '/guides/how-to-compare-job-offers' },
               { label: 'Salary Calculator', href: '/salary-calculator' },
-              { label: 'CTC to In-hand Breakdown Guide', href: '/guide-ctc-inhand-breakdown.html' }
+              { label: 'CTC to In-hand Breakdown Guide', href: '/guides/ctc-to-in-hand-salary' }
             ]}
           />
         </div>

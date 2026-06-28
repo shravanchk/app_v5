@@ -178,10 +178,12 @@ const Footer = () => {
               <a href="/guide-income-tax-regime-choice.html" style={linkStyle}>Tax Regime Guide</a><br/>
               <a href="/guide-sip-step-up-planning.html" style={linkStyle}>SIP Step-up Guide</a><br/>
               <a href="/guide-credit-card-minimum-due-trap.html" style={linkStyle}>Credit Card Trap Guide</a><br/>
-              <a href="/guide-ctc-inhand-breakdown.html" style={linkStyle}>CTC to In-hand Guide</a><br/>
+              <a href="/guides/ctc-to-in-hand-salary" style={linkStyle}>CTC to In-hand Guide</a><br/>
               <a href="/guides/how-to-compare-job-offers" style={linkStyle}>Job Offer Guide</a><br/>
               <a href="/guides/how-much-emi-is-safe" style={linkStyle}>Safe EMI Guide</a><br/>
-              <a href="/guides/car-ownership-cost-guide" style={linkStyle}>Car Cost Guide</a>
+              <a href="/guides/car-ownership-cost-guide" style={linkStyle}>Car Cost Guide</a><br/>
+              <a href="/guides/tax-on-12-lakh-salary-fy-2026-27" style={linkStyle}>Tax on ₹12 Lakh Salary</a><br/>
+              <a href="/guides/old-vs-new-regime-breakeven-fy-2026-27" style={linkStyle}>Old vs New Regime Breakeven</a>
             </div>
           </div>
         </div>

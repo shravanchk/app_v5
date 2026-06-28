@@ -289,9 +289,11 @@ const IncomeTaxCalculator = () => {
 
   const relatedGuides = [
     { label: 'FY 2026-27 income tax slabs guide', href: '/guides/india-income-tax-2026-27' },
-    { label: 'Old vs new tax regime guide', href: '/guide-income-tax-regime-choice.html' },
-    { label: 'CTC to in-hand breakdown guide', href: '/guide-ctc-inhand-breakdown.html' },
-    { label: 'SIP step-up planning guide', href: '/guide-sip-step-up-planning.html' }
+    { label: 'Tax on ₹12 lakh salary (why it is ₹0)', href: '/guides/tax-on-12-lakh-salary-fy-2026-27' },
+    { label: 'Old vs new regime breakeven', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' },
+    { label: 'Marginal relief explained', href: '/guides/marginal-relief-new-regime-fy-2026-27' },
+    { label: 'Standard deduction ₹75,000 vs ₹50,000', href: '/guides/standard-deduction-fy-2026-27' },
+    { label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' }
   ];
 
   const nextStepTools = [
@@ -921,7 +923,7 @@ const IncomeTaxCalculator = () => {
             ]}
             guideLinks={[
               { label: 'Old vs new regime guide', href: '/guide-income-tax-regime-choice.html' },
-              { label: 'CTC to in-hand breakdown guide', href: '/guide-ctc-inhand-breakdown.html' }
+              { label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' }
             ]}
           />
         </div>

@@ -108,18 +108,22 @@ const SalaryCalculator = () => {
     // HRA calculation
     const hraAmount = hasHRA ? Math.round(basicSalary * 0.5) : 0;
     
-    // Special allowances
-    const specialAllowance = Math.round(annualCTC - basicSalary - hraAmount - (annualCTC * 0.12)); // Remaining after basic, HRA, and employer contributions
-    
-    // Deductions
-    const pfEmployee = Math.round(Math.min(basicSalary * (pfContribution / 100), 21600)); // Max PF limit
-    const pfEmployer = pfEmployee; // Employer contribution equals employee
-    
+    // Provident fund — employer and employee each contribute the same
+    // percentage of basic (statutory default 12%).
+    const pfEmployee = Math.round(basicSalary * (pfContribution / 100));
+    const pfEmployer = pfEmployee; // Employer contribution matches employee
+
     const esic = annualCTC <= 250000 ? Math.round(annualCTC * 0.0075) : 0; // ESIC for salary <= 25k/month
+    const employerEsic = esic > 0 ? Math.round(annualCTC * 0.0325) : 0; // Employer's ESIC share
     const professionalTaxAmount = professionalTax ? cityInfo.professionalTax : 0;
-    
-    // Gratuity (employer contribution)
-    const gratuity = gratuityApplicable ? Math.round(basicSalary * 0.0481) : 0; // 4.81% of basic
+
+    // Gratuity (employer contribution, 4.81% of basic)
+    const gratuity = gratuityApplicable ? Math.round(basicSalary * 0.0481) : 0;
+
+    // Special allowance is the balancing figure: CTC minus the salary components
+    // above and the employer's own contributions (PF, gratuity, ESIC). Those
+    // contributions are part of CTC but are not paid out as monthly salary.
+    const specialAllowance = Math.round(annualCTC - basicSalary - hraAmount - pfEmployer - gratuity - employerEsic);
     
     // Tax calculation — FY 2026-27 new regime (default regime, Section 115BAC).
     // Uses the shared engine so slabs, the Section 87A rebate (up to ₹60,000 for
@@ -166,8 +170,8 @@ const SalaryCalculator = () => {
       employerContributions: {
         pfEmployer,
         gratuity,
-        esic: esic > 0 ? Math.round(annualCTC * 0.0325) : 0, // Employer ESIC
-        total: pfEmployer + gratuity + (esic > 0 ? Math.round(annualCTC * 0.0325) : 0)
+        esic: employerEsic,
+        total: pfEmployer + gratuity + employerEsic
       },
       takeHomePercentage,
       cityInfo
@@ -1066,8 +1070,10 @@ const SalaryCalculator = () => {
               { label: 'Income Tax Department (India)', url: 'https://www.incometax.gov.in/' }
             ]}
             guideLinks={[
-              { label: 'CTC to in-hand breakdown guide', href: '/guide-ctc-inhand-breakdown.html' },
-              { label: 'Old vs new tax regime guide', href: '/guide-income-tax-regime-choice.html' }
+              { label: 'CTC to in-hand salary breakdown', href: '/guides/ctc-to-in-hand-salary' },
+              { label: 'Tax on ₹12 lakh salary (why it is ₹0)', href: '/guides/tax-on-12-lakh-salary-fy-2026-27' },
+              { label: 'Standard deduction ₹75,000 vs ₹50,000', href: '/guides/standard-deduction-fy-2026-27' },
+              { label: 'Old vs new regime breakeven', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' }
             ]}
           />
           <SearchLandingSections
@@ -1104,7 +1110,7 @@ const SalaryCalculator = () => {
             relatedLinks={[
               { label: 'Income Tax Calculator (India)', href: '/income-tax-calculator' },
               { label: 'Tax Regime Comparison Tool', href: '/tax-regime-comparison' },
-              { label: 'CTC to In-hand Salary Guide', href: '/guide-ctc-inhand-breakdown.html' }
+              { label: 'CTC to In-hand Salary Guide', href: '/guides/ctc-to-in-hand-salary' }
             ]}
           />
         </div>
