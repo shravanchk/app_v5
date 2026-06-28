@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import { DEFAULT_REVIEW_DATE } from '../../utils/siteMeta';
 
 const pageStyle = {
   minHeight: '100vh',
@@ -48,7 +49,7 @@ const LegalPageLayout = ({
   title,
   description,
   canonicalPath,
-  reviewedOn = 'March 5, 2026',
+  reviewedOn = DEFAULT_REVIEW_DATE,
   children
 }) => {
   return (

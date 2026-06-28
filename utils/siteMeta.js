@@ -1,5 +1,10 @@
 import buildMeta from '../generated/buildMeta.json';
 
+// Single source of truth for the "Last reviewed" date shown across calculators
+// and legal pages that do not pass an explicit, page-specific review date.
+// Update this one constant to refresh every defaulting page at once.
+export const DEFAULT_REVIEW_DATE = 'June 28, 2026';
+
 const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
   month: 'short',

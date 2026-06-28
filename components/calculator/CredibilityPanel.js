@@ -1,4 +1,5 @@
 import React from 'react';
+import { DEFAULT_REVIEW_DATE } from '../../utils/siteMeta';
 
 const defaultSources = [
   { label: 'Methodology', href: '/methodology' },
@@ -9,7 +10,7 @@ const defaultSources = [
 ];
 
 const CredibilityPanel = ({
-  reviewedOn = 'March 5, 2026',
+  reviewedOn = DEFAULT_REVIEW_DATE,
   scope = 'This calculator provides planning estimates based on the assumptions shown on this page.',
   sources = defaultSources
 }) => {
