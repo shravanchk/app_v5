@@ -11,7 +11,8 @@ const inr = (n) => new Intl.NumberFormat('en-IN', { style: 'currency', currency:
 const slugFor = (lakh) => `${lakh}-lakh`;
 
 const wrap = { maxWidth: '820px', margin: '0 auto', padding: '24px 20px 64px', fontFamily: "'Source Sans 3','Segoe UI',sans-serif", color: '#1f2937', lineHeight: 1.7 };
-const tableStyle = { width: '100%', borderCollapse: 'collapse', margin: '16px 0', fontSize: '0.95rem' };
+const scrollWrap = { overflowX: 'auto', WebkitOverflowScrolling: 'touch', margin: '16px 0' };
+const tableStyle = { width: '100%', minWidth: '420px', borderCollapse: 'collapse', fontSize: '0.95rem' };
 const thStyle = { textAlign: 'left', padding: '8px 10px', background: '#eff6ff', border: '1px solid #dbe2eb', color: '#0f2a43' };
 const tdStyle = { padding: '8px 10px', border: '1px solid #dbe2eb' };
 const heroBox = { padding: '18px', borderRadius: '12px', background: 'linear-gradient(135deg,#eff6ff,#f0fdf4)', border: '1px solid #dbe2eb', margin: '12px 0' };
@@ -119,6 +120,7 @@ export default function TaxOnSalaryPage(props) {
         </p>
 
         <h2 style={{ color: '#1e40af' }}>Slab-by-slab breakdown (new regime)</h2>
+        <div style={scrollWrap}>
         <table style={tableStyle}>
           <tbody>
             <tr><th style={thStyle}>Income slab</th><th style={thStyle}>Rate</th><th style={thStyle}>Tax</th></tr>
@@ -136,6 +138,7 @@ export default function TaxOnSalaryPage(props) {
             <tr><td style={{ ...tdStyle, fontWeight: 700 }}>Total tax</td><td style={tdStyle}></td><td style={{ ...tdStyle, fontWeight: 700 }}>{inr(newTax)}</td></tr>
           </tbody>
         </table>
+        </div>
 
         <h2 style={{ color: '#1e40af' }}>New vs old regime</h2>
         <p>

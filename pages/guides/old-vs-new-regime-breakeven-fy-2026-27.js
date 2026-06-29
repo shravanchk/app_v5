@@ -1,6 +1,7 @@
 import GuidePageLayout, { sectionTitleStyle } from '../../components/guides/GuidePageLayout';
 
-const tableStyle = { width: '100%', borderCollapse: 'collapse', margin: '16px 0', fontSize: '0.95rem' };
+const scrollWrap = { overflowX: 'auto', WebkitOverflowScrolling: 'touch', margin: '16px 0' };
+const tableStyle = { width: '100%', minWidth: '480px', borderCollapse: 'collapse', fontSize: '0.95rem' };
 const thStyle = { textAlign: 'left', padding: '8px 10px', background: '#eff6ff', border: '1px solid #dbe2eb', color: '#0f2a43' };
 const tdStyle = { padding: '8px 10px', border: '1px solid #dbe2eb' };
 
@@ -66,6 +67,7 @@ export default function OldVsNewRegimeBreakevenGuide() {
         equal tax bill. If your real, documentable deductions exceed the &ldquo;deductions needed&rdquo; figure, the old regime
         is cheaper; otherwise stay on the new regime.
       </p>
+      <div style={scrollWrap}>
       <table style={tableStyle}>
         <tbody>
           <tr>
@@ -79,6 +81,7 @@ export default function OldVsNewRegimeBreakevenGuide() {
           <tr><td style={tdStyle}>₹25,00,000</td><td style={tdStyle}>₹3,19,800</td><td style={tdStyle}>≈ ₹8,50,000</td></tr>
         </tbody>
       </table>
+      </div>
       <p>
         The pattern is clear: the more you earn, the larger the deduction pile you need before the old regime is worth it. That
         is because the new regime&rsquo;s rate advantage grows with income.
@@ -88,6 +91,7 @@ export default function OldVsNewRegimeBreakevenGuide() {
       <p>
         Add up what a typical salaried person can actually claim under the old regime:
       </p>
+      <div style={scrollWrap}>
       <table style={tableStyle}>
         <tbody>
           <tr><th style={thStyle}>Deduction</th><th style={thStyle}>Typical maximum</th></tr>
@@ -99,6 +103,7 @@ export default function OldVsNewRegimeBreakevenGuide() {
           <tr><td style={tdStyle}><strong>Subtotal (without HRA)</strong></td><td style={tdStyle}><strong>₹4,75,000</strong></td></tr>
         </tbody>
       </table>
+      </div>
       <p>
         Without HRA, most people top out around ₹4.75 lakh — below the breakeven at every salary in the table. The taxpayers
         for whom the old regime still wins almost always have <strong>two things together</strong>: a home loan (₹2 lakh

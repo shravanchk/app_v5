@@ -1,18 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import Head from 'next/head';
-import HomeButton from './HomeButton';
+import { Receipt } from 'lucide-react';
 import ResultActions from './ResultActions';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
+import CalcShell, { fieldStyles as f, resultStyles as r } from './calculator/CalcShell';
 import { buildFaqSchema } from '../utils/faqSchema';
 import { formatINR } from '../utils/calculations';
-
-const wrap = { maxWidth: '860px', margin: '0 auto', padding: '24px 20px 64px', fontFamily: "'Source Sans 3','Segoe UI',sans-serif", color: '#1f2937' };
-const card = { background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '14px', padding: '20px', boxShadow: '0 2px 10px rgba(15,42,67,0.05)' };
-const label = { display: 'block', fontWeight: 600, fontSize: '0.9rem', margin: '12px 0 6px', color: '#0f2a43' };
-const input = { width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', boxSizing: 'border-box' };
-const compareWrap = { display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap' };
-const compareCol = { flex: '1 1 200px', padding: '16px', borderRadius: '12px', border: '1px solid #dbe2eb' };
-const big = { fontSize: '1.5rem', fontWeight: 700, color: '#0f2a43' };
 
 const OLD_RATES = [5, 12, 18, 28];
 const NEW_RATES = [0, 5, 18, 40];
@@ -21,7 +14,6 @@ const compute = ({ amount, mode, oldRate, newRate }) => {
   const amt = Math.max(0, Number(amount) || 0);
   const o = Number(oldRate) || 0;
   const n = Number(newRate) || 0;
-  // Derive the base (pre-tax) price depending on what the user entered.
   const base = mode === 'inclusive' ? amt / (1 + o / 100) : amt;
   const oldTotal = base * (1 + o / 100);
   const newTotal = base * (1 + n / 100);
@@ -29,6 +21,8 @@ const compute = ({ amount, mode, oldRate, newRate }) => {
   const pctChange = oldTotal > 0 ? (savings / oldTotal) * 100 : 0;
   return { base, oldTotal, newTotal, oldTax: base * (o / 100), newTax: base * (n / 100), savings, pctChange };
 };
+
+const comparePanel = (accent) => ({ flex: '1 1 200px', minWidth: 0, padding: '14px 16px', borderRadius: '10px', border: '1px solid #e2e8f0', borderLeft: `3px solid ${accent}`, background: '#fff' });
 
 const faqItems = [
   { question: 'What changed in GST in 2025?', answer: 'Effective 22 September 2025, India moved to a simplified GST structure with two main slabs of 5% and 18%, a 40% rate for sin and luxury goods, and nil-rated essentials. The earlier 12% and 28% slabs were removed, with most items shifting down to 5% or 18%.' },
@@ -38,19 +32,19 @@ const faqItems = [
 
 const GSTReformCalculator = () => {
   const [inputs, setInputs] = useState({ amount: 1000, mode: 'base', oldRate: 28, newRate: 18 });
-  const r = useMemo(() => compute(inputs), [inputs]);
+  const res = useMemo(() => compute(inputs), [inputs]);
   const set = (k, v) => setInputs((p) => ({ ...p, [k]: v }));
-  const cheaper = r.savings >= 0;
+  const cheaper = res.savings >= 0;
 
   const shareLines = [
-    `Base price: ${formatINR(r.base)}`,
-    `Old price (GST ${inputs.oldRate}%): ${formatINR(r.oldTotal)}`,
-    `New price (GST ${inputs.newRate}%): ${formatINR(r.newTotal)}`,
-    `${cheaper ? 'You save' : 'Extra cost'}: ${formatINR(Math.abs(r.savings))} (${Math.abs(r.pctChange).toFixed(1)}%)`
+    `Base price: ${formatINR(res.base)}`,
+    `Old price (GST ${inputs.oldRate}%): ${formatINR(res.oldTotal)}`,
+    `New price (GST ${inputs.newRate}%): ${formatINR(res.newTotal)}`,
+    `${cheaper ? 'You save' : 'Extra cost'}: ${formatINR(Math.abs(res.savings))} (${Math.abs(res.pctChange).toFixed(1)}%)`
   ];
 
   return (
-    <div>
+    <>
       <Head>
         <title>GST 2.0 Price Calculator | Old vs New GST Rate (5/18/40) | Upaman</title>
         <meta name="description" content="Compare an item's price before and after the September 2025 GST 2.0 reform. Enter the price and old/new GST rates to see how much cheaper or costlier it is under the new 5%, 18%, and 40% slabs." />
@@ -67,58 +61,54 @@ const GSTReformCalculator = () => {
         }) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(faqItems)) }} />
       </Head>
-      <HomeButton />
 
-      <div style={wrap}>
-        <h1 style={{ color: '#2563eb', marginBottom: '4px' }}>GST 2.0 Price Calculator</h1>
-        <p style={{ color: '#6b7280', marginTop: 0 }}>See how the 22 September 2025 GST reform changed an item&rsquo;s price — compare the old and new slabs side by side.</p>
-
-        <div style={card}>
-          <label style={label}>Amount</label>
-          <input style={input} type="number" min="0" value={inputs.amount} onChange={(e) => set('amount', e.target.value)} />
-
-          <label style={label}>This amount is…</label>
-          <select style={input} value={inputs.mode} onChange={(e) => set('mode', e.target.value)}>
+      <CalcShell icon={Receipt} title="GST 2.0 Price Calculator" subtitle="How the 22 September 2025 GST reform changed an item’s price — old and new slabs side by side.">
+        <div style={f.group}>
+          <label style={f.label} htmlFor="g2-amount">Amount</label>
+          <input style={f.input} id="g2-amount" type="number" min="0" value={inputs.amount} onChange={(e) => set('amount', e.target.value)} />
+        </div>
+        <div style={f.group}>
+          <label style={f.label} htmlFor="g2-mode">This amount is…</label>
+          <select style={f.input} id="g2-mode" value={inputs.mode} onChange={(e) => set('mode', e.target.value)}>
             <option value="base">Base price (before GST)</option>
             <option value="inclusive">Old MRP (including old GST)</option>
           </select>
-
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <div style={{ flex: 1 }}>
-              <label style={label}>Old GST rate</label>
-              <select style={input} value={inputs.oldRate} onChange={(e) => set('oldRate', e.target.value)}>
-                {OLD_RATES.map((rt) => <option key={rt} value={rt}>{rt}%</option>)}
-              </select>
-            </div>
-            <div style={{ flex: 1 }}>
-              <label style={label}>New GST rate</label>
-              <select style={input} value={inputs.newRate} onChange={(e) => set('newRate', e.target.value)}>
-                {NEW_RATES.map((rt) => <option key={rt} value={rt}>{rt}%</option>)}
-              </select>
-            </div>
-          </div>
-
-          <div style={compareWrap}>
-            <div style={{ ...compareCol, background: '#fef2f2' }}>
-              <div style={{ fontSize: '0.8rem', color: '#991b1b' }}>Old price (GST {inputs.oldRate}%)</div>
-              <div style={big}>{formatINR(r.oldTotal)}</div>
-              <div style={{ fontSize: '0.8rem', color: '#475569', marginTop: '6px' }}>incl. tax {formatINR(r.oldTax)}</div>
-            </div>
-            <div style={{ ...compareCol, background: '#f0fdf4' }}>
-              <div style={{ fontSize: '0.8rem', color: '#166534' }}>New price (GST {inputs.newRate}%)</div>
-              <div style={big}>{formatINR(r.newTotal)}</div>
-              <div style={{ fontSize: '0.8rem', color: '#475569', marginTop: '6px' }}>incl. tax {formatINR(r.newTax)}</div>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '14px', padding: '14px', borderRadius: '10px', background: cheaper ? '#ecfdf5' : '#fff7ed', border: '1px solid #dbe2eb', fontWeight: 600, color: '#0f2a43' }}>
-            {cheaper
-              ? `Cheaper by ${formatINR(r.savings)} (${r.pctChange.toFixed(1)}% lower)`
-              : `Costlier by ${formatINR(Math.abs(r.savings))} (${Math.abs(r.pctChange).toFixed(1)}% higher)`}
-          </div>
-
-          <ResultActions title="GST 2.0 price comparison" summaryLines={shareLines} />
         </div>
+        <div style={{ ...f.row, ...f.group }}>
+          <div style={f.col}>
+            <label style={f.label} htmlFor="g2-old">Old GST rate</label>
+            <select style={f.input} id="g2-old" value={inputs.oldRate} onChange={(e) => set('oldRate', e.target.value)}>
+              {OLD_RATES.map((rt) => <option key={rt} value={rt}>{rt}%</option>)}
+            </select>
+          </div>
+          <div style={f.col}>
+            <label style={f.label} htmlFor="g2-new">New GST rate</label>
+            <select style={f.input} id="g2-new" value={inputs.newRate} onChange={(e) => set('newRate', e.target.value)}>
+              {NEW_RATES.map((rt) => <option key={rt} value={rt}>{rt}%</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div className="result-card" style={r.card}>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <div style={comparePanel('#94a3b8')}>
+              <p style={r.kicker}>Old price · GST {inputs.oldRate}%</p>
+              <p style={{ ...r.figure, fontSize: '1.4rem' }}>{formatINR(res.oldTotal)}</p>
+              <p style={r.note}>incl. tax {formatINR(res.oldTax)}</p>
+            </div>
+            <div style={comparePanel('#1d4e89')}>
+              <p style={r.kicker}>New price · GST {inputs.newRate}%</p>
+              <p style={{ ...r.figure, fontSize: '1.4rem' }}>{formatINR(res.newTotal)}</p>
+              <p style={r.note}>incl. tax {formatINR(res.newTax)}</p>
+            </div>
+          </div>
+          <div style={{ ...r.rowLast, marginTop: '12px', borderTop: '1px solid #e7edf3', paddingTop: '12px' }}>
+            <span>{cheaper ? 'Cheaper by' : 'Costlier by'}</span>
+            <span>{formatINR(Math.abs(res.savings))} ({Math.abs(res.pctChange).toFixed(1)}%)</span>
+          </div>
+        </div>
+
+        <ResultActions title="GST 2.0 price comparison" summaryLines={shareLines} />
 
         <CalculatorInfoPanel
           title="Methodology, assumptions, and source references"
@@ -130,11 +120,9 @@ const GSTReformCalculator = () => {
           guideLinks={[{ label: 'GST calculator (add/remove/reverse)', href: '/gst-calculator' }]}
         />
 
-        <p style={{ color: '#6b7280', fontSize: '0.85rem', marginTop: '20px' }}>
-          Estimate for comparison only. Final invoice prices depend on item classification and seller pricing.
-        </p>
-      </div>
-    </div>
+        <p style={r.note}>Estimate for comparison only. Final invoice prices depend on item classification and seller pricing.</p>
+      </CalcShell>
+    </>
   );
 };
 

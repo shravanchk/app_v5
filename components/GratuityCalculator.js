@@ -1,17 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import Head from 'next/head';
-import HomeButton from './HomeButton';
+import { Wallet } from 'lucide-react';
 import ResultActions from './ResultActions';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
+import CalcShell, { fieldStyles as f, resultStyles as r } from './calculator/CalcShell';
 import { buildFaqSchema } from '../utils/faqSchema';
 import { formatINR } from '../utils/calculations';
-
-const wrap = { maxWidth: '860px', margin: '0 auto', padding: '24px 20px 64px', fontFamily: "'Source Sans 3','Segoe UI',sans-serif", color: '#1f2937' };
-const card = { background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '14px', padding: '20px', boxShadow: '0 2px 10px rgba(15,42,67,0.05)' };
-const label = { display: 'block', fontWeight: 600, fontSize: '0.9rem', margin: '12px 0 6px', color: '#0f2a43' };
-const input = { width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', boxSizing: 'border-box' };
-const resultBox = { marginTop: '16px', padding: '18px', borderRadius: '12px', background: 'linear-gradient(135deg,#eff6ff,#f0fdf4)', border: '1px solid #dbe2eb' };
-const big = { fontSize: '1.8rem', fontWeight: 700, color: '#0f2a43' };
 
 const GRATUITY_CAP = 2000000;
 
@@ -19,7 +13,6 @@ const computeGratuity = ({ lastSalary, years, months, coveredByAct }) => {
   const salary = Math.max(0, Number(lastSalary) || 0);
   const y = Math.max(0, Number(years) || 0);
   const m = Math.max(0, Math.min(11, Number(months) || 0));
-  // Payment of Gratuity Act rounding: service of > 6 months counts as a full year.
   const roundedYears = coveredByAct ? (m > 6 ? y + 1 : y) : y + (m >= 6 ? 1 : 0);
   const divisor = coveredByAct ? 26 : 30;
   const raw = (15 * salary * roundedYears) / divisor;
@@ -37,7 +30,6 @@ const faqItems = [
 const GratuityCalculator = () => {
   const [inputs, setInputs] = useState({ lastSalary: 80000, years: 10, months: 7, coveredByAct: true });
   const result = useMemo(() => computeGratuity(inputs), [inputs]);
-
   const set = (k, v) => setInputs((p) => ({ ...p, [k]: v }));
 
   const shareLines = [
@@ -47,7 +39,7 @@ const GratuityCalculator = () => {
   ];
 
   return (
-    <div>
+    <>
       <Head>
         <title>Gratuity Calculator India 2026 | Estimate Your Gratuity | Upaman</title>
         <meta name="description" content="Free gratuity calculator for India. Estimate your gratuity using the Payment of Gratuity Act formula (15/26 rule), with the ₹20 lakh tax-free ceiling and service rounding." />
@@ -64,49 +56,39 @@ const GratuityCalculator = () => {
         }) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(faqItems)) }} />
       </Head>
-      <HomeButton />
 
-      <div style={wrap}>
-        <h1 style={{ color: '#2563eb', marginBottom: '4px' }}>Gratuity Calculator (India)</h1>
-        <p style={{ color: '#6b7280', marginTop: 0 }}>Estimate gratuity using the Payment of Gratuity Act formula, with the ₹20 lakh tax-free ceiling.</p>
-
-        <div style={card}>
-          <label style={label}>Last drawn monthly salary (Basic + DA)</label>
-          <input style={input} type="number" min="0" value={inputs.lastSalary}
-            onChange={(e) => set('lastSalary', e.target.value)} />
-
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <div style={{ flex: 1 }}>
-              <label style={label}>Completed years of service</label>
-              <input style={input} type="number" min="0" value={inputs.years}
-                onChange={(e) => set('years', e.target.value)} />
-            </div>
-            <div style={{ flex: 1 }}>
-              <label style={label}>Additional months</label>
-              <input style={input} type="number" min="0" max="11" value={inputs.months}
-                onChange={(e) => set('months', e.target.value)} />
-            </div>
-          </div>
-
-          <label style={{ ...label, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-            <input type="checkbox" checked={inputs.coveredByAct}
-              onChange={(e) => set('coveredByAct', e.target.checked)} />
-            Covered by the Payment of Gratuity Act (divisor 26)
-          </label>
-
-          <div style={resultBox}>
-            <div style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '4px' }}>Estimated gratuity</div>
-            <div style={big}>{formatINR(result.capped)}</div>
-            <div style={{ fontSize: '0.85rem', color: '#475569', marginTop: '10px', lineHeight: 1.6 }}>
-              Formula: (15 × {formatINR(result.salary)} × {result.roundedYears} years) ÷ {result.divisor} = {formatINR(result.raw)}
-              {result.exceedsCap && (
-                <><br /><strong>Capped at the ₹20,00,000 statutory ceiling</strong> for tax-free gratuity.</>
-              )}
-            </div>
-          </div>
-
-          <ResultActions title="Gratuity estimate" summaryLines={shareLines} />
+      <CalcShell icon={Wallet} title="Gratuity Calculator" subtitle="Estimate gratuity under the Payment of Gratuity Act, with the ₹20 lakh tax-free ceiling.">
+        <div style={f.group}>
+          <label style={f.label} htmlFor="g-salary">Last drawn monthly salary (Basic + DA)</label>
+          <input style={f.input} id="g-salary" type="number" min="0" value={inputs.lastSalary} onChange={(e) => set('lastSalary', e.target.value)} />
         </div>
+
+        <div style={{ ...f.row, ...f.group }}>
+          <div style={f.col}>
+            <label style={f.label} htmlFor="g-years">Completed years of service</label>
+            <input style={f.input} id="g-years" type="number" min="0" value={inputs.years} onChange={(e) => set('years', e.target.value)} />
+          </div>
+          <div style={f.col}>
+            <label style={f.label} htmlFor="g-months">Additional months</label>
+            <input style={f.input} id="g-months" type="number" min="0" max="11" value={inputs.months} onChange={(e) => set('months', e.target.value)} />
+          </div>
+        </div>
+
+        <label style={f.checkboxRow} htmlFor="g-act">
+          <input id="g-act" type="checkbox" checked={inputs.coveredByAct} onChange={(e) => set('coveredByAct', e.target.checked)} />
+          Covered by the Payment of Gratuity Act (divisor 26)
+        </label>
+
+        <div className="result-card" style={r.card}>
+          <p style={r.kicker}>Estimated gratuity</p>
+          <p style={r.figure}>{formatINR(result.capped)}</p>
+          <p style={r.note}>
+            (15 × {formatINR(result.salary)} × {result.roundedYears} years) ÷ {result.divisor} = {formatINR(result.raw)}
+            {result.exceedsCap && <><br /><strong>Capped at the ₹20,00,000 statutory tax-free ceiling.</strong></>}
+          </p>
+        </div>
+
+        <ResultActions title="Gratuity estimate" summaryLines={shareLines} />
 
         <CalculatorInfoPanel
           title="Methodology, assumptions, and source references"
@@ -118,11 +100,9 @@ const GratuityCalculator = () => {
           guideLinks={[{ label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' }, { label: 'Standard deduction FY 2026-27', href: '/guides/standard-deduction-fy-2026-27' }]}
         />
 
-        <p style={{ color: '#6b7280', fontSize: '0.85rem', marginTop: '20px' }}>
-          This is a planning estimate, not legal or tax advice. Actual gratuity depends on your employment terms and statutory rules.
-        </p>
-      </div>
-    </div>
+        <p style={r.note}>This is a planning estimate, not legal or tax advice. Actual gratuity depends on your employment terms and statutory rules.</p>
+      </CalcShell>
+    </>
   );
 };
 

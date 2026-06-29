@@ -1,6 +1,7 @@
 import GuidePageLayout, { sectionTitleStyle } from '../../components/guides/GuidePageLayout';
 
-const tableStyle = { width: '100%', borderCollapse: 'collapse', margin: '16px 0', fontSize: '0.95rem' };
+const scrollWrap = { overflowX: 'auto', WebkitOverflowScrolling: 'touch', margin: '16px 0' };
+const tableStyle = { width: '100%', minWidth: '520px', borderCollapse: 'collapse', fontSize: '0.95rem' };
 const thStyle = { textAlign: 'left', padding: '8px 10px', background: '#eff6ff', border: '1px solid #dbe2eb', color: '#0f2a43' };
 const tdStyle = { padding: '8px 10px', border: '1px solid #dbe2eb' };
 
@@ -80,6 +81,7 @@ export default function MarginalReliefGuide() {
       </p>
 
       <h2 style={sectionTitleStyle}>Worked table inside the relief band</h2>
+      <div style={scrollWrap}>
       <table style={tableStyle}>
         <tbody>
           <tr>
@@ -95,6 +97,7 @@ export default function MarginalReliefGuide() {
           <tr><td style={tdStyle}>₹12,70,000</td><td style={tdStyle}>₹70,000</td><td style={tdStyle}>₹70,000</td><td style={tdStyle}>₹2,800</td><td style={tdStyle}>₹72,800</td></tr>
         </tbody>
       </table>
+      </div>
       <p>
         Notice the &ldquo;tax after relief&rdquo; column simply mirrors the excess column — that is the whole mechanism. Once
         taxable income passes ≈ ₹12,70,588, the normal slab tax (which keeps rising at 15%) becomes the lower figure and relief
