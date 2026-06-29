@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
-import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField } from './ui/Field';
+import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
 
 const getMonthlyPayment = (principal, annualRate, months) => {
@@ -28,12 +30,6 @@ const USMortgageCalculator = () => {
     pmiRate: 0.6,
     monthlyGrossIncome: 9000
   });
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.body.classList.toggle('dark-theme', localStorage.getItem('theme') === 'dark');
-    }
-  }, []);
 
   const results = useMemo(() => {
     const homePrice = Math.max(0, Number(inputs.homePrice) || 0);
@@ -86,12 +82,10 @@ const USMortgageCalculator = () => {
     `Housing ratio (payment / gross income): ${results.housingRatio.toFixed(1)}%`
   ];
 
-  const handleInputChange = (field, value) => {
-    setInputs((prev) => ({ ...prev, [field]: value }));
-  };
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
 
   return (
-    <div className="calculator-container emi-container">
+    <>
       <Head>
         <title>US Mortgage Calculator | Monthly Payment, PMI, Tax & Insurance | Upaman</title>
         <meta
@@ -136,106 +130,65 @@ const USMortgageCalculator = () => {
         />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header emi-header">
-          <div className="header-nav">
-            <HomeButton />
-            <div className="flex-spacer"></div>
+      <CalcLayout
+        eyebrow="United States"
+        title="US Mortgage Calculator"
+        subtitle="Estimate your monthly payment with principal, interest, property tax, insurance, HOA, and PMI."
+      >
+        <div className="grid gap-5 lg:grid-cols-5">
+          <Card className="p-5 lg:col-span-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <NumberField id="m-price" label="Home price" prefix="$" value={inputs.homePrice} onChange={(v) => set('homePrice', v)} />
+              <NumberField id="m-down" label="Down payment" prefix="$" value={inputs.downPayment} onChange={(v) => set('downPayment', v)} />
+              <NumberField id="m-rate" label="Interest rate (APR)" suffix="%" step={0.01} value={inputs.interestRate} onChange={(v) => set('interestRate', v)} />
+              <NumberField id="m-term" label="Loan term" suffix="yrs" min={1} max={40} value={inputs.loanTermYears} onChange={(v) => set('loanTermYears', v)} />
+              <NumberField id="m-tax" label="Property tax rate" suffix="%/yr" step={0.01} value={inputs.propertyTaxRate} onChange={(v) => set('propertyTaxRate', v)} />
+              <NumberField id="m-ins" label="Home insurance" prefix="$" suffix="/yr" value={inputs.homeInsuranceAnnual} onChange={(v) => set('homeInsuranceAnnual', v)} />
+              <NumberField id="m-hoa" label="HOA" prefix="$" suffix="/mo" value={inputs.hoaMonthly} onChange={(v) => set('hoaMonthly', v)} />
+              <NumberField id="m-pmi" label="PMI rate (if <20% down)" suffix="%/yr" step={0.01} value={inputs.pmiRate} onChange={(v) => set('pmiRate', v)} />
+              <NumberField id="m-income" label="Gross income" prefix="$" suffix="/mo" value={inputs.monthlyGrossIncome} onChange={(v) => set('monthlyGrossIncome', v)} />
+            </div>
+          </Card>
+
+          <div className="space-y-5 lg:col-span-3">
+            <div className="grid grid-cols-2 gap-3">
+              <ResultStat label="Total monthly" value={formatUSD(results.totalMonthlyPayment)} emphasis tone="positive" />
+              <ResultStat label="Principal & interest" value={formatUSD(results.principalAndInterest)} />
+              <ResultStat label="Property tax + insurance" value={formatUSD(results.propertyTaxMonthly + results.insuranceMonthly)} />
+              <ResultStat label="PMI + HOA" value={formatUSD(results.pmiMonthly + results.hoaMonthly)} />
+            </div>
+
+            <Card className="p-5">
+              <div className="space-y-1.5 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+                <p><strong className="font-semibold text-ink dark:text-white">Loan amount:</strong> {formatUSD(results.loanAmount)}</p>
+                <p><strong className="font-semibold text-ink dark:text-white">Estimated total interest:</strong> {formatUSD(results.totalInterest)}</p>
+                <p><strong className="font-semibold text-ink dark:text-white">First-month split:</strong> Principal {formatUSD(results.firstMonthPrincipal)} · Interest {formatUSD(results.firstMonthInterest)}</p>
+                <p>
+                  <strong className="font-semibold text-ink dark:text-white">Housing ratio:</strong> {results.housingRatio.toFixed(1)}%
+                  {results.housingRatio > 28 ? ' (above common 28% guideline)' : ' (within common 28% guideline)'}
+                </p>
+              </div>
+            </Card>
+
+            <Card className="p-5">
+              <PieBreakdownChart
+                title="Monthly payment composition"
+                items={[
+                  { label: 'Principal & interest', value: results.principalAndInterest, color: '#3b82f6' },
+                  { label: 'Property tax', value: results.propertyTaxMonthly, color: '#f59e0b' },
+                  { label: 'Insurance', value: results.insuranceMonthly, color: '#10b981' },
+                  { label: 'HOA', value: results.hoaMonthly, color: '#8b5cf6' },
+                  { label: 'PMI', value: results.pmiMonthly, color: '#ef4444' }
+                ]}
+                formatter={formatUSD}
+              />
+            </Card>
+
+            <ResultActions title="US Mortgage Calculator Summary" summaryLines={summaryLines} fileName="us-mortgage-calculator-summary.txt" />
           </div>
-          <h1 className="header-title">US Mortgage Calculator</h1>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Estimate monthly payment with principal, interest, taxes, insurance, HOA, and PMI.
-          </p>
         </div>
 
-        <div className="mobile-card-content">
-          <div className="input-section" style={{ marginBottom: '1.5rem' }}>
-            <h2 className="section-title">Mortgage Inputs</h2>
-            <div className="responsive-grid" style={{ alignItems: 'end' }}>
-              <div>
-                <label className="input-label">Home Price ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.homePrice} onChange={(e) => handleInputChange('homePrice', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Down Payment ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.downPayment} onChange={(e) => handleInputChange('downPayment', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Interest Rate (% APR)</label>
-                <input className="calculator-input" type="number" min="0" step="0.01" value={inputs.interestRate} onChange={(e) => handleInputChange('interestRate', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Loan Term (Years)</label>
-                <input className="calculator-input" type="number" min="1" max="40" value={inputs.loanTermYears} onChange={(e) => handleInputChange('loanTermYears', Number(e.target.value) || 30)} />
-              </div>
-              <div>
-                <label className="input-label">Property Tax Rate (% yearly)</label>
-                <input className="calculator-input" type="number" min="0" step="0.01" value={inputs.propertyTaxRate} onChange={(e) => handleInputChange('propertyTaxRate', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Home Insurance ($ / year)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.homeInsuranceAnnual} onChange={(e) => handleInputChange('homeInsuranceAnnual', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">HOA ($ / month)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.hoaMonthly} onChange={(e) => handleInputChange('hoaMonthly', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">PMI Rate (% yearly, if &lt;20% down)</label>
-                <input className="calculator-input" type="number" min="0" step="0.01" value={inputs.pmiRate} onChange={(e) => handleInputChange('pmiRate', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Gross Income ($ / month)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.monthlyGrossIncome} onChange={(e) => handleInputChange('monthlyGrossIncome', Number(e.target.value) || 0)} />
-              </div>
-            </div>
-          </div>
-
-          <div className="results-container" style={{ borderColor: '#1d4e89', background: 'linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%)' }}>
-            <h2 className="results-title" style={{ color: '#0f2a43' }}>Estimated Monthly Payment</h2>
-            <div className="responsive-grid">
-              <div className="result-item">
-                <div className="result-label">Total Monthly</div>
-                <div className="result-value emi">{formatUSD(results.totalMonthlyPayment)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Principal & Interest</div>
-                <div className="result-value total">{formatUSD(results.principalAndInterest)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Property Tax + Insurance</div>
-                <div className="result-value interest">{formatUSD(results.propertyTaxMonthly + results.insuranceMonthly)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">PMI + HOA</div>
-                <div className="result-value principal">{formatUSD(results.pmiMonthly + results.hoaMonthly)}</div>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#334155', lineHeight: 1.55 }}>
-              <p style={{ margin: '0 0 0.35rem 0' }}><strong>Loan amount:</strong> {formatUSD(results.loanAmount)}</p>
-              <p style={{ margin: '0 0 0.35rem 0' }}><strong>Estimated total interest:</strong> {formatUSD(results.totalInterest)}</p>
-              <p style={{ margin: '0 0 0.35rem 0' }}><strong>First-month split:</strong> Principal {formatUSD(results.firstMonthPrincipal)} | Interest {formatUSD(results.firstMonthInterest)}</p>
-              <p style={{ margin: 0 }}>
-                <strong>Housing ratio:</strong> {results.housingRatio.toFixed(1)}%
-                {results.housingRatio > 28 ? ' (above common 28% guideline)' : ' (within common 28% guideline)'}
-              </p>
-            </div>
-            <PieBreakdownChart
-              title="Monthly payment composition"
-              items={[
-                { label: 'Principal & interest', value: results.principalAndInterest, color: '#3b82f6' },
-                { label: 'Property tax', value: results.propertyTaxMonthly, color: '#f59e0b' },
-                { label: 'Insurance', value: results.insuranceMonthly, color: '#10b981' },
-                { label: 'HOA', value: results.hoaMonthly, color: '#8b5cf6' },
-                { label: 'PMI', value: results.pmiMonthly, color: '#ef4444' }
-              ]}
-              formatter={formatUSD}
-            />
-          </div>
-
-          <ResultActions title="US Mortgage Calculator Summary" summaryLines={summaryLines} fileName="us-mortgage-calculator-summary.txt" />
-
+        <div className="mt-8">
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
             inputs={[
@@ -259,8 +212,8 @@ const USMortgageCalculator = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

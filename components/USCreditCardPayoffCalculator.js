@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
-import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { ComparisonBars } from './calculator/ResultVisualizations';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField } from './ui/Field';
+import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
 
 const MAX_MONTHS = 1200;
@@ -92,12 +94,6 @@ const USCreditCardPayoffCalculator = () => {
     fixedPayment: 350
   });
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.body.classList.toggle('dark-theme', localStorage.getItem('theme') === 'dark');
-    }
-  }, []);
-
   const minimumPlan = useMemo(
     () =>
       simulatePayoff({
@@ -128,14 +124,12 @@ const USCreditCardPayoffCalculator = () => {
     `Time saved: ${formatDuration(monthsSaved)}`
   ];
 
-  const handleInputChange = (field, value) => {
-    setInputs((prev) => ({ ...prev, [field]: value }));
-  };
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
 
   const previewRows = fixedPlan.schedule.slice(0, 24);
 
   return (
-    <div className="calculator-container credit-trap-container">
+    <>
       <Head>
         <title>US Credit Card Payoff Calculator | Minimum vs Fixed Payment | Upaman</title>
         <meta
@@ -162,123 +156,95 @@ const USCreditCardPayoffCalculator = () => {
         />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header credit-trap-header">
-          <div className="header-nav">
-            <HomeButton />
-            <div className="flex-spacer"></div>
+      <CalcLayout
+        eyebrow="United States"
+        title="US Credit Card Payoff Calculator"
+        subtitle="Compare the minimum payment with a fixed monthly payment plan to clear card debt faster."
+      >
+        <div className="grid gap-5 lg:grid-cols-5">
+          <Card className="p-5 lg:col-span-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <NumberField id="c-bal" label="Current balance" prefix="$" value={inputs.balance} onChange={(v) => set('balance', v)} />
+              <NumberField id="c-apr" label="APR" suffix="%" step={0.1} value={inputs.apr} onChange={(v) => set('apr', v)} />
+              <NumberField id="c-minp" label="Minimum payment" suffix="%" step={0.1} value={inputs.minPercent} onChange={(v) => set('minPercent', v)} />
+              <NumberField id="c-floor" label="Minimum payment floor" prefix="$" step={1} value={inputs.minFloor} onChange={(v) => set('minFloor', v)} />
+              <NumberField id="c-fixed" label="Your fixed monthly payment" prefix="$" step={1} value={inputs.fixedPayment} onChange={(v) => set('fixedPayment', v)} />
+            </div>
+          </Card>
+
+          <div className="space-y-5 lg:col-span-3">
+            <div className="grid grid-cols-2 gap-3">
+              <ResultStat label="Fixed payment timeline" value={formatDuration(fixedPlan.months)} emphasis tone="positive" />
+              <ResultStat label="Minimum payment timeline" value={formatDuration(minimumPlan.months)} />
+              <ResultStat label="Interest saved" value={formatUSD(interestSaved)} tone="positive" />
+              <ResultStat label="Time saved" value={formatDuration(monthsSaved)} />
+            </div>
+
+            <Card className="p-5">
+              <div className="space-y-1.5 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+                <p><strong className="font-semibold text-ink dark:text-white">Total interest (minimum plan):</strong> {formatUSD(minimumPlan.totalInterest)}</p>
+                <p><strong className="font-semibold text-ink dark:text-white">Total interest (fixed plan):</strong> {formatUSD(fixedPlan.totalInterest)}</p>
+              </div>
+            </Card>
+
+            <Card className="p-5">
+              <ComparisonBars
+                title="Total interest by payoff strategy"
+                items={[
+                  { label: 'Minimum plan', value: minimumPlan.totalInterest, color: '#ef4444' },
+                  { label: 'Fixed plan', value: fixedPlan.totalInterest, color: '#10b981' }
+                ]}
+                formatter={formatUSD}
+              />
+            </Card>
+
+            <Card className="p-5">
+              <ComparisonBars
+                title="Payoff timeline by strategy"
+                items={[
+                  { label: 'Minimum plan', value: minimumPlan.months, color: '#f97316' },
+                  { label: 'Fixed plan', value: fixedPlan.months, color: '#3b82f6' }
+                ]}
+                formatter={(value) => `${Math.round(value)} mo`}
+              />
+            </Card>
+
+            {!!previewRows.length && (
+              <Card className="overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-slate-50 text-xs uppercase tracking-wide text-ink-muted dark:bg-slate-800 dark:text-slate-400">
+                      <tr>
+                        <th className="px-3 py-2 font-semibold">Month</th>
+                        <th className="px-3 py-2 font-semibold">Opening</th>
+                        <th className="px-3 py-2 font-semibold">Payment</th>
+                        <th className="px-3 py-2 font-semibold">Interest</th>
+                        <th className="px-3 py-2 font-semibold">Principal</th>
+                        <th className="px-3 py-2 font-semibold">Closing</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-ink-soft dark:divide-slate-700 dark:text-slate-300">
+                      {previewRows.map((row) => (
+                        <tr key={row.month}>
+                          <td className="px-3 py-2">{row.month}</td>
+                          <td className="px-3 py-2">{formatUSD(row.openingBalance)}</td>
+                          <td className="px-3 py-2">{formatUSD(row.payment)}</td>
+                          <td className="px-3 py-2">{formatUSD(row.interest)}</td>
+                          <td className="px-3 py-2">{formatUSD(row.principal)}</td>
+                          <td className="px-3 py-2 font-medium text-ink dark:text-white">{formatUSD(row.closingBalance)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            )}
+
+            <ResultActions title="US Credit Card Payoff Summary" summaryLines={summaryLines} fileName="us-credit-card-payoff-summary.txt" />
           </div>
-          <h1 className="header-title">US Credit Card Payoff Calculator</h1>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Compare minimum payment with a fixed monthly payment plan to reduce debt faster.
-          </p>
         </div>
 
-        <div className="mobile-card-content">
-          <div className="input-section" style={{ marginBottom: '1.5rem' }}>
-            <h2 className="section-title">Card Debt Inputs</h2>
-            <div className="responsive-grid" style={{ alignItems: 'end' }}>
-              <div>
-                <label className="input-label">Current Balance ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.balance} onChange={(e) => handleInputChange('balance', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">APR (%)</label>
-                <input className="calculator-input" type="number" min="0" step="0.1" value={inputs.apr} onChange={(e) => handleInputChange('apr', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Minimum Payment (% of balance)</label>
-                <input className="calculator-input" type="number" min="0" step="0.1" value={inputs.minPercent} onChange={(e) => handleInputChange('minPercent', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Minimum Payment Floor ($)</label>
-                <input className="calculator-input" type="number" min="0" step="1" value={inputs.minFloor} onChange={(e) => handleInputChange('minFloor', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Your Fixed Monthly Payment ($)</label>
-                <input className="calculator-input" type="number" min="0" step="1" value={inputs.fixedPayment} onChange={(e) => handleInputChange('fixedPayment', Number(e.target.value) || 0)} />
-              </div>
-            </div>
-          </div>
-
-          <div className="results-container" style={{ borderColor: '#0f766e', background: 'linear-gradient(135deg, #ecfeff 0%, #f0fdfa 100%)' }}>
-            <h2 className="results-title" style={{ color: '#0f2a43' }}>Payoff Comparison</h2>
-            <div className="responsive-grid" style={{ marginBottom: '1.2rem' }}>
-              <div className="result-item">
-                <div className="result-label">Minimum Payment Timeline</div>
-                <div className="result-value total">{formatDuration(minimumPlan.months)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Fixed Payment Timeline</div>
-                <div className="result-value emi">{formatDuration(fixedPlan.months)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Interest Saved</div>
-                <div className="result-value interest">{formatUSD(interestSaved)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Time Saved</div>
-                <div className="result-value principal">{formatDuration(monthsSaved)}</div>
-              </div>
-            </div>
-
-            <div style={{ fontSize: '0.9rem', color: '#334155', lineHeight: 1.55 }}>
-              <p style={{ margin: '0 0 0.35rem 0' }}>
-                <strong>Total interest (minimum plan):</strong> {formatUSD(minimumPlan.totalInterest)}
-              </p>
-              <p style={{ margin: 0 }}>
-                <strong>Total interest (fixed plan):</strong> {formatUSD(fixedPlan.totalInterest)}
-              </p>
-            </div>
-            <ComparisonBars
-              title="Total interest by payoff strategy"
-              items={[
-                { label: 'Minimum plan', value: minimumPlan.totalInterest, color: '#ef4444' },
-                { label: 'Fixed plan', value: fixedPlan.totalInterest, color: '#10b981' }
-              ]}
-              formatter={formatUSD}
-            />
-            <ComparisonBars
-              title="Payoff timeline by strategy"
-              items={[
-                { label: 'Minimum plan', value: minimumPlan.months, color: '#f97316' },
-                { label: 'Fixed plan', value: fixedPlan.months, color: '#3b82f6' }
-              ]}
-              formatter={(value) => `${Math.round(value)} mo`}
-            />
-          </div>
-
-          {!!previewRows.length && (
-            <div className="responsive-table-container" style={{ marginBottom: '1.5rem' }}>
-              <table className="responsive-table">
-                <thead>
-                  <tr>
-                    <th>Month</th>
-                    <th>Opening</th>
-                    <th>Payment</th>
-                    <th>Interest</th>
-                    <th>Principal</th>
-                    <th>Closing</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {previewRows.map((row) => (
-                    <tr key={row.month}>
-                      <td>{row.month}</td>
-                      <td>{formatUSD(row.openingBalance)}</td>
-                      <td>{formatUSD(row.payment)}</td>
-                      <td>{formatUSD(row.interest)}</td>
-                      <td>{formatUSD(row.principal)}</td>
-                      <td>{formatUSD(row.closingBalance)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          <ResultActions title="US Credit Card Payoff Summary" summaryLines={summaryLines} fileName="us-credit-card-payoff-summary.txt" />
-
+        <div className="mt-8">
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
             inputs={[
@@ -301,8 +267,8 @@ const USCreditCardPayoffCalculator = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

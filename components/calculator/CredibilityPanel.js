@@ -6,44 +6,27 @@ const defaultSources = [
   { label: 'Editorial policy', href: '/editorial-policy' },
   { label: 'Publisher standards', href: '/publisher-standards' },
   { label: 'About Upaman', href: '/about' },
-  { label: 'Contact', href: '/contact' }
+  { label: 'Contact', href: '/contact' },
 ];
 
 const CredibilityPanel = ({
   reviewedOn = DEFAULT_REVIEW_DATE,
   scope = 'This calculator provides planning estimates based on the assumptions shown on this page.',
-  sources = defaultSources
+  sources = defaultSources,
 }) => {
   return (
     <section
-      style={{
-        marginTop: '1rem',
-        border: '1px solid #dbe2eb',
-        background: 'linear-gradient(135deg, #f8fafc, #eef2ff)',
-        borderRadius: '0.9rem',
-        padding: '0.9rem 1rem'
-      }}
+      className="mt-4 rounded-xl border border-slate-200/70 bg-slate-50 p-4 dark:border-slate-700/70 dark:bg-slate-800/60"
       aria-label="Trust and methodology details"
     >
-      <h4 style={{ margin: '0 0 0.5rem', color: '#0f2a43', fontSize: '0.95rem' }}>Trust and methodology</h4>
-      <p style={{ margin: 0, color: '#334155', fontSize: '0.84rem', lineHeight: 1.55 }}>
+      <h4 className="mb-2 text-[0.95rem] font-semibold text-ink dark:text-white">Trust and methodology</h4>
+      <p className="text-[0.84rem] leading-relaxed text-ink-soft dark:text-slate-300">
         <strong>Last reviewed:</strong> {reviewedOn}
       </p>
-      <p style={{ margin: '0.35rem 0 0', color: '#334155', fontSize: '0.84rem', lineHeight: 1.55 }}>
-        {scope}
-      </p>
-      <div style={{ marginTop: '0.55rem', display: 'flex', flexWrap: 'wrap', gap: '0.45rem 0.8rem' }}>
+      <p className="mt-1.5 text-[0.84rem] leading-relaxed text-ink-soft dark:text-slate-300">{scope}</p>
+      <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-2">
         {sources.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            style={{
-              color: '#1d4e89',
-              textDecoration: 'none',
-              fontSize: '0.82rem',
-              fontWeight: 600
-            }}
-          >
+          <a key={item.href} href={item.href} className="text-[0.82rem] font-semibold text-brand-700 hover:text-brand-800 dark:text-brand-300 dark:hover:text-brand-200">
             {item.label}
           </a>
         ))}

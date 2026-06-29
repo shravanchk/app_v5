@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import Footer from '../components/Footer';
+import SiteFooter from '../components/home/SiteFooter';
+import Navbar from '../components/home/Navbar';
 import '../styles/globals.css';
 import '../styles/common.css';
 import '../styles/adsense.css';
@@ -48,7 +49,10 @@ const AD_ELIGIBLE_ROUTES = new Set([
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
-  const hideFooter = router.pathname === '/' || router.pathname.startsWith('/embed');
+  const isEmbed = router.pathname.startsWith('/embed');
+  const isHome = router.pathname === '/';
+  // Global sticky navbar + unified footer everywhere except the embeddable iframe widget.
+  const hideChrome = isEmbed;
 
   useEffect(() => {
     if (!AD_ELIGIBLE_ROUTES.has(router.pathname)) return;
@@ -72,9 +76,10 @@ export default function App({ Component, pageProps }) {
   }, [router.pathname]);
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div style={{ minHeight: '100vh' }} className={!isHome && !isEmbed ? 'bg-slate-50 dark:bg-slate-950' : undefined}>
+      {!hideChrome && <Navbar />}
       <Component {...pageProps} />
-      {!hideFooter && <Footer />}
+      {!hideChrome && <SiteFooter />}
     </div>
   );
 }

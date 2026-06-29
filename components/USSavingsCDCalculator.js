@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
-import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField } from './ui/Field';
+import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
@@ -48,12 +50,6 @@ const USSavingsCDCalculator = () => {
     cdTermMonths: 12
   });
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.body.classList.toggle('dark-theme', localStorage.getItem('theme') === 'dark');
-    }
-  }, []);
-
   const savingsResult = useMemo(
     () =>
       projectSavings(
@@ -77,12 +73,10 @@ const USSavingsCDCalculator = () => {
     `CD interest earned: ${formatUSD(cdResult.interestEarned)}`
   ];
 
-  const handleInputChange = (field, value) => {
-    setInputs((prev) => ({ ...prev, [field]: value }));
-  };
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
 
   return (
-    <div className="calculator-container sip-container">
+    <>
       <Head>
         <title>US Savings & CD Calculator | APY Growth and Maturity | Upaman</title>
         <meta
@@ -109,116 +103,82 @@ const USSavingsCDCalculator = () => {
         />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header sip-header">
-          <div className="header-nav">
-            <HomeButton />
-            <div className="flex-spacer"></div>
+      <CalcLayout
+        eyebrow="United States"
+        title="US Savings & CD Calculator"
+        subtitle="Project high-yield savings growth and CD maturity outcomes side by side."
+      >
+        <div className="grid gap-5 lg:grid-cols-5">
+          <Card className="p-5 lg:col-span-2">
+            <p className="mb-3 text-xs font-bold uppercase tracking-wide text-ink-muted dark:text-slate-400">Savings projection</p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <NumberField id="s-init" label="Initial deposit" prefix="$" value={inputs.savingsInitialDeposit} onChange={(v) => set('savingsInitialDeposit', v)} />
+              <NumberField id="s-mon" label="Monthly contribution" prefix="$" value={inputs.savingsMonthlyContribution} onChange={(v) => set('savingsMonthlyContribution', v)} />
+              <NumberField id="s-apy" label="Savings APY" suffix="%" step={0.01} value={inputs.savingsApy} onChange={(v) => set('savingsApy', v)} />
+              <NumberField id="s-yrs" label="Horizon" suffix="yrs" min={1} max={40} value={inputs.savingsYears} onChange={(v) => set('savingsYears', v)} />
+            </div>
+            <p className="mb-3 mt-5 text-xs font-bold uppercase tracking-wide text-ink-muted dark:text-slate-400">Certificate of deposit</p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <NumberField id="cd-dep" label="CD deposit" prefix="$" value={inputs.cdDeposit} onChange={(v) => set('cdDeposit', v)} />
+              <NumberField id="cd-apy" label="CD APY" suffix="%" step={0.01} value={inputs.cdApy} onChange={(v) => set('cdApy', v)} />
+              <NumberField id="cd-term" label="CD term" suffix="mo" min={1} max={120} value={inputs.cdTermMonths} onChange={(v) => set('cdTermMonths', v)} />
+            </div>
+          </Card>
+
+          <div className="space-y-5 lg:col-span-3">
+            <div className="grid grid-cols-2 gap-3">
+              <ResultStat label="Savings ending balance" value={formatUSD(savingsResult.endingBalance)} emphasis tone="positive" />
+              <ResultStat label="Savings interest earned" value={formatUSD(savingsResult.interestEarned)} />
+              <ResultStat label="CD maturity value" value={formatUSD(cdResult.maturityValue)} />
+              <ResultStat label="CD interest earned" value={formatUSD(cdResult.interestEarned)} />
+            </div>
+
+            <Card className="p-5">
+              <div className="space-y-1.5 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+                <p><strong className="font-semibold text-ink dark:text-white">Total savings contributions:</strong> {formatUSD(savingsResult.totalContributed)}</p>
+                <p><strong className="font-semibold text-ink dark:text-white">Savings projection period:</strong> {savingsResult.months} months</p>
+              </div>
+            </Card>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Card className="p-5">
+                <PieBreakdownChart
+                  title="Savings growth composition"
+                  items={[
+                    { label: 'Total contributed', value: savingsResult.totalContributed, color: '#3b82f6' },
+                    { label: 'Interest earned', value: savingsResult.interestEarned, color: '#10b981' }
+                  ]}
+                  formatter={formatUSD}
+                />
+              </Card>
+              <Card className="p-5">
+                <PieBreakdownChart
+                  title="CD maturity composition"
+                  items={[
+                    { label: 'CD principal', value: Math.max(0, Number(inputs.cdDeposit) || 0), color: '#8b5cf6' },
+                    { label: 'CD interest', value: cdResult.interestEarned, color: '#f97316' }
+                  ]}
+                  formatter={formatUSD}
+                />
+              </Card>
+            </div>
+
+            <Card className="p-5">
+              <ComparisonBars
+                title="Ending value comparison"
+                items={[
+                  { label: 'Savings ending balance', value: savingsResult.endingBalance, color: '#3b82f6' },
+                  { label: 'CD maturity value', value: cdResult.maturityValue, color: '#8b5cf6' }
+                ]}
+                formatter={formatUSD}
+              />
+            </Card>
+
+            <ResultActions title="US Savings & CD Calculator Summary" summaryLines={summaryLines} fileName="us-savings-cd-calculator-summary.txt" />
           </div>
-          <h1 className="header-title">US Savings & CD Calculator</h1>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Project high-yield savings growth and CD maturity outcomes in one view.
-          </p>
         </div>
 
-        <div className="mobile-card-content">
-          <div className="input-section" style={{ marginBottom: '1.5rem' }}>
-            <h2 className="section-title">Savings Projection Inputs</h2>
-            <div className="responsive-grid" style={{ alignItems: 'end' }}>
-              <div>
-                <label className="input-label">Initial Deposit ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.savingsInitialDeposit} onChange={(e) => handleInputChange('savingsInitialDeposit', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Monthly Contribution ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.savingsMonthlyContribution} onChange={(e) => handleInputChange('savingsMonthlyContribution', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Savings APY (%)</label>
-                <input className="calculator-input" type="number" min="0" step="0.01" value={inputs.savingsApy} onChange={(e) => handleInputChange('savingsApy', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Projection Horizon (Years)</label>
-                <input className="calculator-input" type="number" min="1" max="40" step="1" value={inputs.savingsYears} onChange={(e) => handleInputChange('savingsYears', Number(e.target.value) || 1)} />
-              </div>
-            </div>
-          </div>
-
-          <div className="input-section" style={{ marginBottom: '1.5rem' }}>
-            <h2 className="section-title">CD Inputs</h2>
-            <div className="responsive-grid" style={{ alignItems: 'end' }}>
-              <div>
-                <label className="input-label">CD Deposit ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.cdDeposit} onChange={(e) => handleInputChange('cdDeposit', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">CD APY (%)</label>
-                <input className="calculator-input" type="number" min="0" step="0.01" value={inputs.cdApy} onChange={(e) => handleInputChange('cdApy', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">CD Term (Months)</label>
-                <input className="calculator-input" type="number" min="1" max="120" value={inputs.cdTermMonths} onChange={(e) => handleInputChange('cdTermMonths', Number(e.target.value) || 1)} />
-              </div>
-            </div>
-          </div>
-
-          <div className="results-container" style={{ borderColor: '#7c3aed', background: 'linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%)' }}>
-            <h2 className="results-title" style={{ color: '#4c1d95' }}>Projected Outcomes</h2>
-            <div className="responsive-grid">
-              <div className="result-item">
-                <div className="result-label">Savings Ending Balance</div>
-                <div className="result-value total">{formatUSD(savingsResult.endingBalance)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Savings Interest Earned</div>
-                <div className="result-value interest">{formatUSD(savingsResult.interestEarned)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">CD Maturity Value</div>
-                <div className="result-value emi">{formatUSD(cdResult.maturityValue)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">CD Interest Earned</div>
-                <div className="result-value principal">{formatUSD(cdResult.interestEarned)}</div>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#4c1d95', lineHeight: 1.55 }}>
-              <p style={{ margin: '0 0 0.35rem 0' }}>
-                <strong>Total savings contributions:</strong> {formatUSD(savingsResult.totalContributed)}
-              </p>
-              <p style={{ margin: 0 }}>
-                <strong>Savings projection period:</strong> {savingsResult.months} months
-              </p>
-            </div>
-            <PieBreakdownChart
-              title="Savings growth composition"
-              items={[
-                { label: 'Total contributed', value: savingsResult.totalContributed, color: '#3b82f6' },
-                { label: 'Interest earned', value: savingsResult.interestEarned, color: '#10b981' }
-              ]}
-              formatter={formatUSD}
-            />
-            <PieBreakdownChart
-              title="CD maturity composition"
-              items={[
-                { label: 'CD principal', value: Math.max(0, Number(inputs.cdDeposit) || 0), color: '#8b5cf6' },
-                { label: 'CD interest', value: cdResult.interestEarned, color: '#f97316' }
-              ]}
-              formatter={formatUSD}
-            />
-            <ComparisonBars
-              title="Ending value comparison"
-              items={[
-                { label: 'Savings ending balance', value: savingsResult.endingBalance, color: '#3b82f6' },
-                { label: 'CD maturity value', value: cdResult.maturityValue, color: '#8b5cf6' }
-              ]}
-              formatter={formatUSD}
-            />
-          </div>
-
-          <ResultActions title="US Savings & CD Calculator Summary" summaryLines={summaryLines} fileName="us-savings-cd-calculator-summary.txt" />
-
+        <div className="mt-8">
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
             inputs={[
@@ -241,8 +201,8 @@ const USSavingsCDCalculator = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

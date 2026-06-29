@@ -2,97 +2,53 @@ import React from 'react';
 import Head from 'next/head';
 import { buildFaqSchema } from '../../utils/faqSchema';
 
-const cardStyle = {
-  background: '#ffffff',
-  border: '1px solid #dbe2eb',
-  borderRadius: '1rem',
-  padding: '1rem 1.1rem',
-  marginBottom: '0.85rem'
-};
+const cardCls = 'mb-3.5 rounded-2xl border border-slate-200/70 bg-white p-4 sm:p-5 dark:border-slate-700/70 dark:bg-slate-800/70';
+const headingCls = 'font-display text-lg font-semibold text-ink dark:text-white';
+const bodyCls = 'mt-2.5 text-[0.92rem] leading-relaxed text-ink-soft dark:text-slate-300 space-y-3';
+const linkCls = 'font-semibold text-brand-700 hover:text-brand-800 dark:text-brand-300 dark:hover:text-brand-200';
 
-const headingStyle = {
-  margin: '0 0 0.5rem',
-  color: '#0f2a43',
-  fontSize: '1.02rem'
-};
+const Section = ({ heading, children, defaultOpen = false }) => (
+  <details className={cardCls} {...(defaultOpen ? { open: true } : {})}>
+    <summary className="cursor-pointer select-none"><span className={headingCls}>{heading}</span></summary>
+    <div className={bodyCls}>{children}</div>
+  </details>
+);
 
-const bodyStyle = {
-  color: '#334155',
-  lineHeight: 1.65,
-  fontSize: '0.92rem'
-};
-
-const SearchLandingSections = ({
-  intro,
-  example,
-  formula,
-  faqItems = [],
-  relatedLinks = [],
-  softwareSchema = null
-}) => {
+const SearchLandingSections = ({ intro, example, formula, faqItems = [], relatedLinks = [], softwareSchema = null }) => {
   const faqSchema = faqItems.length ? buildFaqSchema(faqItems) : null;
   const shouldOpenInNewTab = (href = '') => href.startsWith('http') || href.endsWith('.html');
 
   return (
-    <div style={{ marginTop: '1rem' }}>
+    <div className="mt-4">
       {softwareSchema || faqSchema ? (
         <Head>
-          {softwareSchema ? (
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
-            />
-          ) : null}
-          {faqSchema ? (
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-            />
-          ) : null}
+          {softwareSchema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} /> : null}
+          {faqSchema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
         </Head>
       ) : null}
 
-      <section style={cardStyle}>
-        <h2 style={headingStyle}>Intro</h2>
-        <div style={bodyStyle}>{intro}</div>
-      </section>
-
-      <section style={cardStyle}>
-        <h2 style={headingStyle}>Example Calculation</h2>
-        <div style={bodyStyle}>{example}</div>
-      </section>
-
-      <section style={cardStyle}>
-        <h2 style={headingStyle}>How the Formula Works</h2>
-        <div style={bodyStyle}>{formula}</div>
-      </section>
+      <Section heading="Overview" defaultOpen>{intro}</Section>
+      <Section heading="Example calculation">{example}</Section>
+      <Section heading="How the formula works">{formula}</Section>
 
       {faqItems.length ? (
-        <section style={cardStyle}>
-          <h2 style={headingStyle}>FAQ</h2>
-          <div style={bodyStyle}>
-            {faqItems.map((item) => (
-              <div key={item.question} style={{ marginBottom: '0.55rem' }}>
-                <h3 style={{ margin: '0 0 0.18rem', fontSize: '0.92rem', color: '#0f2a43' }}>{item.question}</h3>
-                <p style={{ margin: 0 }}>{item.answer}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <Section heading="Frequently asked questions">
+          {faqItems.map((item) => (
+            <div key={item.question} className="mb-2.5">
+              <h3 className="text-[0.95rem] font-semibold text-ink dark:text-slate-100">{item.question}</h3>
+              <p className="mt-0.5">{item.answer}</p>
+            </div>
+          ))}
+        </Section>
       ) : null}
 
       {relatedLinks.length ? (
-        <section style={cardStyle}>
-          <h2 style={headingStyle}>Related Tools</h2>
-          <ul style={{ margin: 0, paddingLeft: '1rem', ...bodyStyle }}>
+        <section className={cardCls}>
+          <h2 className={headingCls}>Related tools</h2>
+          <ul className="mt-2.5 list-disc space-y-1.5 pl-5 text-[0.92rem] text-ink-soft dark:text-slate-300">
             {relatedLinks.map((link) => (
-              <li key={link.href} style={{ marginBottom: '0.3rem' }}>
-                <a
-                  href={link.href}
-                  style={{ color: '#1d4e89', fontWeight: 600 }}
-                  target={shouldOpenInNewTab(link.href) ? '_blank' : undefined}
-                  rel={shouldOpenInNewTab(link.href) ? 'noopener noreferrer' : undefined}
-                >
+              <li key={link.href}>
+                <a href={link.href} className={linkCls} target={shouldOpenInNewTab(link.href) ? '_blank' : undefined} rel={shouldOpenInNewTab(link.href) ? 'noopener noreferrer' : undefined}>
                   {link.label}
                 </a>
               </li>

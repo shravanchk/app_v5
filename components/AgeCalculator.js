@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import { Calendar, Clock, Heart, Star, Gift, Target, TrendingUp, Info } from 'lucide-react';
 import AffiliateRecommendations from './AffiliateRecommendations';
-import HomeButton from './HomeButton';
+import { CalcLayout } from './calculator/CalcLayout';
 
 const AgeCalculator = () => {
   const [activeTab, setActiveTab] = useState('age-calculator');
@@ -700,9 +700,9 @@ const AgeCalculator = () => {
   };
 
   return (
-    <div className="calculator-container age-container">
+    <>
       <style>{animations}</style>
-      
+
       <Head>
         <title>Age Calculator | Free Age Calculator India | Years Months Days | Upaman</title>
         <meta name="description" content="Free Age Calculator India. Calculate exact age in years, months, days with life milestones, zodiac sign, next birthday countdown. Unique face animation by Upaman." />
@@ -861,41 +861,32 @@ const AgeCalculator = () => {
         }} />
       </Head>
 
-      <div className="calculator-card" style={{
-        animation: 'fadeInUp 0.6s ease-out'
-      }}>
-        <div className="calculator-header age-header">
-          <div className="header-nav">
-            <HomeButton />
-            <div className="flex-spacer"></div>
-          </div>
-          
-          <h1 className="header-title" style={{
-            background: 'linear-gradient(135deg, #0f2a43, #1d4e89, #0f766e)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>
-            <Calendar size={28} style={{ color: '#0f766e' }} />
-            Age Calculator & Life Timeline
-          </h1>
-          
-          <div className="mobile-tabs">
-            <button
-              className={`mobile-tab-button ${activeTab === 'age-calculator' ? 'active' : ''}`}
-              onClick={() => setActiveTab('age-calculator')}
-            >
-              <Clock size={16} />
-              Age Calculator
-            </button>
-            <button
-              className={`mobile-tab-button ${activeTab === 'life-events' ? 'active' : ''}`}
-              onClick={() => setActiveTab('life-events')}
-            >
-              <Target size={16} />
-              Life Milestones
-            </button>
-          </div>
+      <CalcLayout
+        eyebrow="Everyday Tools"
+        title="Age Calculator & Life Timeline"
+        subtitle="Calculate your exact age in years, months and days — with life milestones, zodiac sign, and a birthday countdown."
+      >
+        <div className="mb-6 inline-flex flex-wrap gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 dark:border-slate-700 dark:bg-slate-800/60" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'age-calculator'}
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-medium transition ${activeTab === 'age-calculator' ? 'bg-white text-brand-700 shadow-sm dark:bg-slate-700 dark:text-white' : 'text-ink-muted hover:text-ink dark:text-slate-400'}`}
+            onClick={() => setActiveTab('age-calculator')}
+          >
+            <Clock size={16} />
+            Age Calculator
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'life-events'}
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-medium transition ${activeTab === 'life-events' ? 'bg-white text-brand-700 shadow-sm dark:bg-slate-700 dark:text-white' : 'text-ink-muted hover:text-ink dark:text-slate-400'}`}
+            onClick={() => setActiveTab('life-events')}
+          >
+            <Target size={16} />
+            Life Milestones
+          </button>
         </div>
 
         <div className="mobile-card-content">
@@ -1529,8 +1520,8 @@ const AgeCalculator = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

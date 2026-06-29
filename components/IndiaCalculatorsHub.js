@@ -1,273 +1,81 @@
-import React, { useMemo, useState } from 'react';
-import { Train, Calculator, TrendingUp, PiggyBank, Target, Banknote, Wallet, Home, Car } from 'lucide-react';
-import { useRouter } from 'next/router';
-import HomeButton from './HomeButton';
+import React from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
+import {
+  Train, Calculator, TrendingUp, PiggyBank, Target, Wallet, Home, Car,
+  Landmark, Repeat, Receipt, Percent, LineChart, ArrowLeftRight, ShieldCheck, CreditCard,
+} from 'lucide-react';
+import { CalcLayout } from './calculator/CalcLayout';
+
+const T = {
+  brand: 'bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-300',
+  emerald: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-300',
+  violet: 'bg-violet-50 text-violet-600 dark:bg-violet-900/30 dark:text-violet-300',
+  amber: 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-300',
+  sky: 'bg-sky-50 text-sky-600 dark:bg-sky-900/30 dark:text-sky-300',
+  rose: 'bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-300',
+  teal: 'bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-300',
+  indigo: 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-300',
+};
+
+const cards = [
+  { title: 'Loan & EMI Calculator', description: 'Calculate EMI, prepayment impact, and amortization for home, car, and personal loans.', icon: Calculator, path: '/loan-calculator', tint: T.brand, tags: ['EMI breakdown', 'Prepayment', 'Amortization'] },
+  { title: 'Income Tax Calculator', description: 'Estimate income tax for FY 2026-27 with old/new regime comparison.', icon: Landmark, path: '/income-tax-calculator', tint: T.violet, tags: ['FY 2026-27', 'Old vs new', 'Tax estimate'] },
+  { title: 'Tax Regime Comparison', description: 'Check which regime saves more tax using salary and deduction-aware inputs.', icon: Repeat, path: '/tax-regime-comparison', tint: T.violet, tags: ['Old vs new', 'Savings view', 'Decision support'] },
+  { title: 'GST Calculator', description: 'Add/remove/reverse GST with CGST, SGST, and IGST split.', icon: Receipt, path: '/gst-calculator', tint: T.amber, tags: ['Inclusive/exclusive', 'CGST/SGST/IGST', 'Rate-wise'] },
+  { title: 'GST 2.0 Price Calculator', description: 'Compare an item’s price before and after the Sept 2025 GST reform (5/18/40).', icon: Percent, path: '/gst-reform-calculator', tint: T.amber, tags: ['Old vs new GST', 'Price change', 'GST 2.0'] },
+  { title: 'HRA Exemption Calculator', description: 'Find your tax-exempt House Rent Allowance using the least-of-three rule (old regime).', icon: Home, path: '/hra-calculator', tint: T.indigo, tags: ['Old regime', 'Metro/non-metro', 'Rent receipts'] },
+  { title: 'Capital Gains Tax Calculator', description: 'LTCG/STCG on equity, mutual funds, and property for FY 2026-27.', icon: LineChart, path: '/capital-gains-calculator', tint: T.teal, tags: ['LTCG 12.5%', 'STCG 20%', '₹1.25L exemption'] },
+  { title: 'Gratuity Calculator', description: 'Estimate gratuity using the 15/26 formula with the ₹20 lakh tax-free ceiling.', icon: Wallet, path: '/gratuity-calculator', tint: T.emerald, tags: ['Gratuity Act', '15/26 rule', 'Tax-free limit'] },
+  { title: 'Tax on Salary (₹5L–₹50L)', description: 'New-regime income tax for every salary level with full slab breakdown.', icon: Target, path: '/tax-on-salary', tint: T.violet, tags: ['FY 2026-27', 'By salary', 'Take-home'] },
+  { title: 'SIP Calculator', description: 'Estimate SIP corpus with expected returns and goal-based planning.', icon: TrendingUp, path: '/sip-calculator', tint: T.emerald, tags: ['Future value', 'Goal planning', 'Step-up'] },
+  { title: 'PPF Calculator', description: 'Project PPF maturity with year-wise contribution and interest assumptions.', icon: PiggyBank, path: '/ppf-calculator', tint: T.rose, tags: ['15-year plan', 'Year-wise table', 'Maturity'] },
+  { title: 'Salary Calculator', description: 'Convert CTC to in-hand salary with key deduction estimates.', icon: Wallet, path: '/salary-calculator', tint: T.sky, tags: ['CTC to net', 'Deduction view', 'Take-home'] },
+  { title: 'IRCTC Booking Calculator', description: 'Get exact booking date/timing windows for regular and Tatkal booking.', icon: Train, path: '/irctc-calculator', tint: T.brand, tags: ['Booking date', 'Tatkal timing', 'Quick planning'] },
+  { title: 'Buy vs Rent Calculator', description: 'Estimate break-even timeline for buying vs renting using EMI and rent growth.', icon: Home, path: '/buy-vs-rent-calculator', tint: T.indigo, tags: ['Break-even', 'EMI vs rent', 'Home decision'] },
+  { title: 'Prepay vs Invest Workflow', description: 'Compare whether monthly surplus should prepay debt or be invested for growth.', icon: ArrowLeftRight, path: '/prepay-vs-invest-workflow', tint: T.violet, tags: ['Debt vs investing', 'Risk-adjusted', 'Surplus'] },
+  { title: 'Emergency Fund Readiness', description: 'Find your target runway, current gap, and monthly plan to build a safer corpus.', icon: ShieldCheck, path: '/emergency-fund-readiness-workflow', tint: T.emerald, tags: ['Runway target', 'Gap to target', 'Milestones'] },
+  { title: 'Rent vs Buy Decision', description: 'Compare renting versus buying with break-even year, affordability, and cash buffer.', icon: ArrowLeftRight, path: '/rent-vs-buy-workflow', tint: T.sky, tags: ['Break-even', 'Cash buffer', 'Housing'] },
+  { title: 'Car Ownership Cost', description: 'Estimate fuel, toll, parking, EMI, and upkeep cost of running a car.', icon: Car, path: '/car-ownership-cost-workflow', tint: T.rose, tags: ['Fuel expense', 'Transport budget', 'Running cost'] },
+  { title: 'Credit Card Trap Calculator', description: 'Compare minimum due vs fixed payment and estimate payoff time.', icon: CreditCard, path: '/credit-card-trap-calculator', tint: T.rose, tags: ['Debt payoff', 'Interest saved', 'Strategy'] },
+];
 
 const IndiaCalculatorsHub = () => {
-  const router = useRouter();
-  const [isDarkMode] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('theme') === 'dark';
-  });
-  const baseCardShadow = isDarkMode
-    ? '0 8px 20px -8px rgba(0, 0, 0, 0.5)'
-    : '0 10px 24px -10px rgba(9, 30, 66, 0.22)';
-  const hoverCardShadow = isDarkMode
-    ? '0 16px 32px -8px rgba(0, 0, 0, 0.62)'
-    : '0 18px 30px -10px rgba(9, 30, 66, 0.3)';
-  const baseBorderColor = isDarkMode ? '#34516e' : '#d4deea';
-  const hoverBorderColor = isDarkMode ? '#3f556f' : '#bfccd8';
-
-  const cards = useMemo(
-    () => [
-      {
-        title: 'Loan & EMI Calculator',
-        description: 'Calculate EMI, prepayment impact, and amortization for home, car, and personal loans.',
-        icon: Calculator,
-        path: '/loan-calculator',
-        tags: ['EMI breakdown', 'Prepayment savings', 'Amortization']
-      },
-      {
-        title: 'Income Tax Calculator',
-        description: 'Estimate income tax for FY 2026-27 with old/new regime comparison.',
-        icon: Target,
-        path: '/income-tax-calculator',
-        tags: ['FY 2026-27', 'Old vs new regime', 'Tax estimate']
-      },
-      {
-        title: 'Tax Regime Comparison Tool',
-        description: 'Check which regime saves more tax using salary and deduction-aware inputs.',
-        icon: Target,
-        path: '/tax-regime-comparison',
-        tags: ['Old vs new', 'Savings view', 'Decision support']
-      },
-      {
-        title: 'GST Calculator',
-        description: 'Add/remove/reverse GST with CGST, SGST, and IGST split.',
-        icon: Calculator,
-        path: '/gst-calculator',
-        tags: ['Inclusive/exclusive', 'CGST/SGST/IGST', 'Rate-wise']
-      },
-      {
-        title: 'GST 2.0 Price Calculator',
-        description: 'Compare an item’s price before and after the Sept 2025 GST reform (5/18/40).',
-        icon: Calculator,
-        path: '/gst-reform-calculator',
-        tags: ['Old vs new GST', 'Price change', 'GST 2.0']
-      },
-      {
-        title: 'HRA Exemption Calculator',
-        description: 'Find your tax-exempt House Rent Allowance using the least-of-three rule (old regime).',
-        icon: Home,
-        path: '/hra-calculator',
-        tags: ['Old regime', 'Metro/non-metro', 'Rent receipts']
-      },
-      {
-        title: 'Capital Gains Tax Calculator',
-        description: 'LTCG/STCG on equity, mutual funds, and property for FY 2026-27.',
-        icon: TrendingUp,
-        path: '/capital-gains-calculator',
-        tags: ['LTCG 12.5%', 'STCG 20%', '₹1.25L exemption']
-      },
-      {
-        title: 'Gratuity Calculator',
-        description: 'Estimate gratuity using the 15/26 formula with the ₹20 lakh tax-free ceiling.',
-        icon: Wallet,
-        path: '/gratuity-calculator',
-        tags: ['Payment of Gratuity Act', '15/26 rule', 'Tax-free limit']
-      },
-      {
-        title: 'Tax on Salary (₹5L–₹50L)',
-        description: 'New-regime income tax for every salary level with full slab breakdown.',
-        icon: Target,
-        path: '/tax-on-salary',
-        tags: ['FY 2026-27', 'By salary', 'Take-home']
-      },
-      {
-        title: 'SIP Calculator',
-        description: 'Estimate SIP corpus with expected returns and goal-based planning.',
-        icon: TrendingUp,
-        path: '/sip-calculator',
-        tags: ['Future value', 'Goal planning', 'Return assumptions']
-      },
-      {
-        title: 'PPF Calculator',
-        description: 'Project PPF maturity with year-wise contribution and interest assumptions.',
-        icon: PiggyBank,
-        path: '/ppf-calculator',
-        tags: ['15-year plan', 'Year-wise table', 'Maturity estimate']
-      },
-      {
-        title: 'Salary Calculator',
-        description: 'Convert CTC to in-hand salary with key deduction estimates.',
-        icon: Banknote,
-        path: '/salary-calculator',
-        tags: ['CTC to net', 'Deduction view', 'Monthly take-home']
-      },
-      {
-        title: 'IRCTC Booking Calculator',
-        description: 'Get exact booking date/timing windows for regular and Tatkal booking.',
-        icon: Train,
-        path: '/irctc-calculator',
-        tags: ['Booking date', 'Tatkal timing', 'Quick planning']
-      },
-      {
-        title: 'Buy vs Rent Calculator',
-        description: 'Estimate break-even timeline for buying vs renting using EMI and rent growth assumptions.',
-        icon: Home,
-        path: '/buy-vs-rent-calculator',
-        tags: ['Break-even year', 'EMI vs rent', 'Home decision']
-      },
-      {
-        title: 'Prepay vs Invest Workflow',
-        description: 'Compare whether monthly surplus should prepay debt or be invested for long-term growth.',
-        icon: Wallet,
-        path: '/prepay-vs-invest-workflow',
-        tags: ['Debt vs investing', 'Risk-adjusted', 'Surplus strategy']
-      },
-      {
-        title: 'Emergency Fund Readiness Workflow',
-        description: 'Find your target runway, current gap, and monthly plan to build a safer emergency corpus.',
-        icon: PiggyBank,
-        path: '/emergency-fund-readiness-workflow',
-        tags: ['Runway target', 'Gap to target', 'Milestone plan']
-      },
-      {
-        title: 'Rent vs Buy Decision Workflow',
-        description: 'Compare renting versus buying with break-even year, affordability, and monthly cash-buffer guidance.',
-        icon: Home,
-        path: '/rent-vs-buy-workflow',
-        tags: ['Break-even year', 'Cash buffer', 'Housing decision']
-      },
-      {
-        title: 'Car Ownership Cost Workflow',
-        description: 'Estimate fuel, toll, parking, EMI, and upkeep cost before treating your car budget as manageable.',
-        icon: Car,
-        path: '/car-ownership-cost-workflow',
-        tags: ['Fuel expense', 'Transport budget', 'Cheaper commute check']
-      },
-      {
-        title: 'Credit Card Trap Calculator',
-        description: 'Compare minimum due vs fixed payment and estimate payoff time.',
-        icon: Wallet,
-        path: '/credit-card-trap-calculator',
-        tags: ['Debt payoff', 'Interest saved', 'Monthly strategy']
-      }
-    ],
-    []
-  );
-
   return (
-    <div
-      className="calculator-container hub-landing-container"
-      style={{
-        background: isDarkMode
-          ? 'radial-gradient(circle at 10% 15%, rgba(180, 83, 9, 0.22), transparent 34%), linear-gradient(135deg, #081424 0%, #10243a 100%)'
-          : 'radial-gradient(circle at 10% 15%, rgba(180, 83, 9, 0.14), transparent 34%), linear-gradient(135deg, #f6f4ef 0%, #f0ece1 100%)'
-      }}
-    >
-      <div className="hub-landing-shell" style={{ maxWidth: '1160px', margin: '0 auto', padding: '0.4rem clamp(0.55rem, 2.6vw, 0.9rem) 2.4rem' }}>
-        <div className="calculator-card">
-          <div className="calculator-header emi-header">
-            <div className="header-nav">
-              <HomeButton style={{ position: 'static', top: 'auto', left: 'auto', zIndex: 'auto' }} />
-              <div className="flex-spacer"></div>
-            </div>
-            <h1 className="header-title">India Calculators Hub</h1>
-            <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-              Start with high-intent India tools for tax, borrowing, investing, salary, and booking decisions.
-            </p>
-          </div>
+    <>
+      <Head>
+        <title>India Calculators Hub | Tax, Loans, Investing &amp; Salary | Upaman</title>
+        <meta name="description" content="All Upaman India calculators in one place — income tax, EMI, SIP, PPF, GST, capital gains, salary, and decision workflows. Free and updated for FY 2026-27." />
+        <link rel="canonical" href="https://upaman.com/india-calculators" />
+        <meta property="og:title" content="India Calculators Hub | Upaman" />
+        <meta property="og:description" content="Tax, loan, investing, salary and decision tools for India — free and current for FY 2026-27." />
+        <meta property="og:url" content="https://upaman.com/india-calculators" />
+        <meta property="og:type" content="website" />
+      </Head>
 
-          <div className="mobile-card-content">
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
-                gap: '1rem'
-              }}
+      <CalcLayout eyebrow="India" title="India Calculators Hub" subtitle="High-intent India tools for tax, borrowing, investing, salary, and decision workflows — all free and current for FY 2026-27.">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map(({ title, description, icon: Icon, path, tint, tags }) => (
+            <Link
+              key={path}
+              href={path}
+              className="group flex flex-col rounded-2xl border border-slate-200/70 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-card dark:border-slate-700/70 dark:bg-slate-800/70"
             >
-              {cards.map((card) => {
-                const Icon = card.icon;
-                return (
-                  <button
-                    key={card.path}
-                    type="button"
-                    onClick={() => router.push(card.path)}
-                    style={{
-                      textAlign: 'left',
-                      borderRadius: '1rem',
-                      border: `1px solid ${baseBorderColor}`,
-                      background: isDarkMode ? 'rgba(18, 37, 56, 0.8)' : 'rgba(255, 255, 255, 0.88)',
-                      padding: '1rem',
-                      cursor: 'pointer',
-                      color: isDarkMode ? '#e2e8f0' : '#1e293b',
-                      transition: 'transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease',
-                      boxShadow: baseCardShadow
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = hoverCardShadow;
-                      e.currentTarget.style.borderColor = hoverBorderColor;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = baseCardShadow;
-                      e.currentTarget.style.borderColor = baseBorderColor;
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = hoverCardShadow;
-                      e.currentTarget.style.borderColor = hoverBorderColor;
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = baseCardShadow;
-                      e.currentTarget.style.borderColor = baseBorderColor;
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: '46px',
-                        height: '46px',
-                        borderRadius: '0.75rem',
-                        background: 'linear-gradient(135deg, #0f2a43, #b45309)',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '0.75rem'
-                      }}
-                    >
-                      <Icon size={22} color="#fff" />
-                    </div>
-                    <h2 style={{ margin: '0 0 0.45rem 0', fontSize: '1.02rem', fontWeight: 700 }}>{card.title}</h2>
-                    <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.87rem', lineHeight: 1.5, color: isDarkMode ? '#94a3b8' : '#64748b' }}>
-                      {card.description}
-                    </p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                      {card.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          style={{
-                            fontSize: '0.72rem',
-                            padding: '0.2rem 0.56rem',
-                            borderRadius: '999px',
-                            background: isDarkMode ? 'rgba(180, 83, 9, 0.24)' : 'rgba(254, 243, 199, 0.95)',
-                            color: isDarkMode ? '#fdba74' : '#9a3412'
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+              <span className={`inline-flex h-12 w-12 items-center justify-center rounded-xl ${tint}`}>
+                <Icon className="h-6 w-6" strokeWidth={1.8} />
+              </span>
+              <h2 className="mt-4 font-display text-base font-semibold text-ink group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">{title}</h2>
+              <p className="mt-1 flex-1 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{description}</p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {tags.map((tag) => (
+                  <span key={tag} className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-ink-soft dark:bg-slate-700 dark:text-slate-300">{tag}</span>
+                ))}
+              </div>
+            </Link>
+          ))}
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

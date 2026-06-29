@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
-import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { ComparisonBars } from './calculator/ResultVisualizations';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField } from './ui/Field';
+import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
 
 const getMonthlyPayment = (principal, annualRate, months) => {
@@ -35,12 +37,6 @@ const USRefinanceCalculator = () => {
     newTermMonths: 300,
     closingCosts: 5500
   });
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.body.classList.toggle('dark-theme', localStorage.getItem('theme') === 'dark');
-    }
-  }, []);
 
   const results = useMemo(() => {
     const currentBalance = Math.max(0, Number(inputs.currentBalance) || 0);
@@ -78,12 +74,10 @@ const USRefinanceCalculator = () => {
     `Lifetime savings after costs: ${formatUSD(results.lifetimeSavingsAfterCosts)}`
   ];
 
-  const handleInputChange = (field, value) => {
-    setInputs((prev) => ({ ...prev, [field]: value }));
-  };
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
 
   return (
-    <div className="calculator-container emi-container">
+    <>
       <Head>
         <title>US Refinance Break-even Calculator | Mortgage Refi Savings | Upaman</title>
         <meta
@@ -110,103 +104,66 @@ const USRefinanceCalculator = () => {
         />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header emi-header">
-          <div className="header-nav">
-            <HomeButton />
-            <div className="flex-spacer"></div>
+      <CalcLayout
+        eyebrow="United States"
+        title="US Refinance Break-even Calculator"
+        subtitle="Compare your current mortgage with a refinance offer and estimate when the closing costs are recovered."
+      >
+        <div className="grid gap-5 lg:grid-cols-5">
+          <Card className="p-5 lg:col-span-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <NumberField id="r-bal" label="Current loan balance" prefix="$" value={inputs.currentBalance} onChange={(v) => set('currentBalance', v)} />
+              <NumberField id="r-crate" label="Current rate (APR)" suffix="%" step={0.01} value={inputs.currentRate} onChange={(v) => set('currentRate', v)} />
+              <NumberField id="r-cterm" label="Remaining term" suffix="mo" min={1} value={inputs.remainingTermMonths} onChange={(v) => set('remainingTermMonths', v)} />
+              <NumberField id="r-nrate" label="New refinance rate (APR)" suffix="%" step={0.01} value={inputs.newRate} onChange={(v) => set('newRate', v)} />
+              <NumberField id="r-nterm" label="New loan term" suffix="mo" min={1} value={inputs.newTermMonths} onChange={(v) => set('newTermMonths', v)} />
+              <NumberField id="r-close" label="Closing costs" prefix="$" value={inputs.closingCosts} onChange={(v) => set('closingCosts', v)} />
+            </div>
+          </Card>
+
+          <div className="space-y-5 lg:col-span-3">
+            <div className="grid grid-cols-2 gap-3">
+              <ResultStat label="New payment" value={formatUSD(results.newPayment)} emphasis tone={results.monthlySavings > 0 ? 'positive' : 'default'} />
+              <ResultStat label="Current payment" value={formatUSD(results.currentPayment)} />
+              <ResultStat label="Monthly savings" value={formatUSD(results.monthlySavings)} tone={results.monthlySavings > 0 ? 'positive' : 'default'} />
+              <ResultStat label="Break-even" value={results.breakEvenMonths ? formatMonths(results.breakEvenMonths) : 'No break-even'} />
+            </div>
+
+            <Card className="p-5">
+              <div className="space-y-1.5 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+                <p><strong className="font-semibold text-ink dark:text-white">Current remaining interest:</strong> {formatUSD(results.interestRemainingCurrent)}</p>
+                <p><strong className="font-semibold text-ink dark:text-white">New loan interest:</strong> {formatUSD(results.interestNewLoan)}</p>
+                <p><strong className="font-semibold text-ink dark:text-white">Lifetime savings after costs:</strong> {formatUSD(results.lifetimeSavingsAfterCosts)}</p>
+              </div>
+            </Card>
+
+            <Card className="p-5">
+              <ComparisonBars
+                title="Current vs refinance payment"
+                items={[
+                  { label: 'Current payment', value: results.currentPayment, color: '#ef4444' },
+                  { label: 'Refinance payment', value: results.newPayment, color: '#10b981' }
+                ]}
+                formatter={formatUSD}
+              />
+            </Card>
+
+            <Card className="p-5">
+              <ComparisonBars
+                title="Remaining interest comparison"
+                items={[
+                  { label: 'Current remaining interest', value: results.interestRemainingCurrent, color: '#f97316' },
+                  { label: 'Refinance interest', value: results.interestNewLoan, color: '#3b82f6' }
+                ]}
+                formatter={formatUSD}
+              />
+            </Card>
+
+            <ResultActions title="US Refinance Calculator Summary" summaryLines={summaryLines} fileName="us-refinance-calculator-summary.txt" />
           </div>
-          <h1 className="header-title">US Refinance Break-even Calculator</h1>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Compare your current mortgage with a refinance offer and estimate when costs are recovered.
-          </p>
         </div>
 
-        <div className="mobile-card-content">
-          <div className="input-section" style={{ marginBottom: '1.5rem' }}>
-            <h2 className="section-title">Refinance Inputs</h2>
-            <div className="responsive-grid" style={{ alignItems: 'end' }}>
-              <div>
-                <label className="input-label">Current Loan Balance ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.currentBalance} onChange={(e) => handleInputChange('currentBalance', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Current Interest Rate (% APR)</label>
-                <input className="calculator-input" type="number" min="0" step="0.01" value={inputs.currentRate} onChange={(e) => handleInputChange('currentRate', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Remaining Term (Months)</label>
-                <input className="calculator-input" type="number" min="1" value={inputs.remainingTermMonths} onChange={(e) => handleInputChange('remainingTermMonths', Number(e.target.value) || 1)} />
-              </div>
-              <div>
-                <label className="input-label">New Refinance Rate (% APR)</label>
-                <input className="calculator-input" type="number" min="0" step="0.01" value={inputs.newRate} onChange={(e) => handleInputChange('newRate', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">New Loan Term (Months)</label>
-                <input className="calculator-input" type="number" min="1" value={inputs.newTermMonths} onChange={(e) => handleInputChange('newTermMonths', Number(e.target.value) || 1)} />
-              </div>
-              <div>
-                <label className="input-label">Closing Costs ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.closingCosts} onChange={(e) => handleInputChange('closingCosts', Number(e.target.value) || 0)} />
-              </div>
-            </div>
-          </div>
-
-          <div className="results-container" style={{ borderColor: '#b45309', background: 'linear-gradient(135deg, #fff7ed 0%, #fffbeb 100%)' }}>
-            <h2 className="results-title" style={{ color: '#7c2d12' }}>Refinance Comparison</h2>
-            <div className="responsive-grid">
-              <div className="result-item">
-                <div className="result-label">Current Payment</div>
-                <div className="result-value total">{formatUSD(results.currentPayment)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">New Payment</div>
-                <div className="result-value emi">{formatUSD(results.newPayment)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Monthly Savings</div>
-                <div className="result-value interest">{formatUSD(results.monthlySavings)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Break-even</div>
-                <div className="result-value principal" style={{ fontSize: '1rem' }}>
-                  {results.breakEvenMonths ? formatMonths(results.breakEvenMonths) : 'No break-even'}
-                </div>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#7c2d12', lineHeight: 1.55 }}>
-              <p style={{ margin: '0 0 0.35rem 0' }}>
-                <strong>Current remaining interest:</strong> {formatUSD(results.interestRemainingCurrent)}
-              </p>
-              <p style={{ margin: '0 0 0.35rem 0' }}>
-                <strong>New loan interest:</strong> {formatUSD(results.interestNewLoan)}
-              </p>
-              <p style={{ margin: 0 }}>
-                <strong>Lifetime savings after costs:</strong> {formatUSD(results.lifetimeSavingsAfterCosts)}
-              </p>
-            </div>
-            <ComparisonBars
-              title="Current vs refinance payment"
-              items={[
-                { label: 'Current payment', value: results.currentPayment, color: '#ef4444' },
-                { label: 'Refinance payment', value: results.newPayment, color: '#10b981' }
-              ]}
-              formatter={formatUSD}
-            />
-            <ComparisonBars
-              title="Remaining interest comparison"
-              items={[
-                { label: 'Current remaining interest', value: results.interestRemainingCurrent, color: '#f97316' },
-                { label: 'Refinance interest', value: results.interestNewLoan, color: '#3b82f6' }
-              ]}
-              formatter={formatUSD}
-            />
-          </div>
-
-          <ResultActions title="US Refinance Calculator Summary" summaryLines={summaryLines} fileName="us-refinance-calculator-summary.txt" />
-
+        <div className="mt-8">
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
             inputs={[
@@ -229,8 +186,8 @@ const USRefinanceCalculator = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

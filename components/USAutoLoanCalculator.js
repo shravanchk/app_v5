@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
-import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField } from './ui/Field';
+import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
 
 const getMonthlyPayment = (principal, annualRate, months) => {
@@ -33,12 +35,6 @@ const USAutoLoanCalculator = () => {
     apr: 6.5,
     termMonths: 60
   });
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.body.classList.toggle('dark-theme', localStorage.getItem('theme') === 'dark');
-    }
-  }, []);
 
   const results = useMemo(() => {
     const vehiclePrice = Math.max(0, Number(inputs.vehiclePrice) || 0);
@@ -77,12 +73,10 @@ const USAutoLoanCalculator = () => {
     `Estimated payoff date: ${results.payoffDate}`
   ];
 
-  const handleInputChange = (field, value) => {
-    setInputs((prev) => ({ ...prev, [field]: value }));
-  };
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
 
   return (
-    <div className="calculator-container emi-container">
+    <>
       <Head>
         <title>US Auto Loan Calculator | Payment, Interest & Total Cost | Upaman</title>
         <meta
@@ -109,96 +103,61 @@ const USAutoLoanCalculator = () => {
         />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header emi-header">
-          <div className="header-nav">
-            <HomeButton />
-            <div className="flex-spacer"></div>
+      <CalcLayout
+        eyebrow="United States"
+        title="US Auto Loan Calculator"
+        subtitle="Estimate your car loan payment with sales tax, trade-in credit, and dealer fees."
+      >
+        <div className="grid gap-5 lg:grid-cols-5">
+          <Card className="p-5 lg:col-span-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <NumberField id="a-price" label="Vehicle price" prefix="$" value={inputs.vehiclePrice} onChange={(v) => set('vehiclePrice', v)} />
+              <NumberField id="a-down" label="Down payment" prefix="$" value={inputs.downPayment} onChange={(v) => set('downPayment', v)} />
+              <NumberField id="a-trade" label="Trade-in value" prefix="$" value={inputs.tradeInValue} onChange={(v) => set('tradeInValue', v)} />
+              <NumberField id="a-tax" label="Sales tax rate" suffix="%" step={0.01} value={inputs.salesTaxRate} onChange={(v) => set('salesTaxRate', v)} />
+              <NumberField id="a-fees" label="Dealer fees" prefix="$" value={inputs.dealerFees} onChange={(v) => set('dealerFees', v)} />
+              <NumberField id="a-apr" label="Loan APR" suffix="%" step={0.01} value={inputs.apr} onChange={(v) => set('apr', v)} />
+              <NumberField id="a-term" label="Loan term" suffix="mo" min={1} max={96} value={inputs.termMonths} onChange={(v) => set('termMonths', v)} />
+            </div>
+          </Card>
+
+          <div className="space-y-5 lg:col-span-3">
+            <div className="grid grid-cols-2 gap-3">
+              <ResultStat label="Monthly payment" value={formatUSD(results.monthlyPayment)} emphasis tone="positive" />
+              <ResultStat label="Amount financed" value={formatUSD(results.financedAmount)} />
+              <ResultStat label="Total interest" value={formatUSD(results.totalInterest)} />
+              <ResultStat label="Payoff date" value={results.payoffDate} />
+            </div>
+
+            <Card className="p-5">
+              <div className="space-y-1.5 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+                <p><strong className="font-semibold text-ink dark:text-white">Taxable amount:</strong> {formatUSD(results.taxableAmount)}</p>
+                <p><strong className="font-semibold text-ink dark:text-white">Sales tax estimate:</strong> {formatUSD(results.salesTax)}</p>
+                <p><strong className="font-semibold text-ink dark:text-white">Total out-of-pocket cost:</strong> {formatUSD(results.totalOutOfPocketCost)}</p>
+              </div>
+            </Card>
+
+            <Card className="p-5">
+              <PieBreakdownChart
+                title="Out-of-pocket cost composition"
+                items={[
+                  {
+                    label: 'Upfront (down + trade-in)',
+                    value: Math.max(0, Number(inputs.downPayment) || 0) + Math.max(0, Number(inputs.tradeInValue) || 0),
+                    color: '#0f766e'
+                  },
+                  { label: 'Loan principal', value: results.financedAmount, color: '#3b82f6' },
+                  { label: 'Loan interest', value: results.totalInterest, color: '#f97316' }
+                ]}
+                formatter={formatUSD}
+              />
+            </Card>
+
+            <ResultActions title="US Auto Loan Calculator Summary" summaryLines={summaryLines} fileName="us-auto-loan-calculator-summary.txt" />
           </div>
-          <h1 className="header-title">US Auto Loan Calculator</h1>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Estimate car loan payment with sales tax, trade-in credit, and dealer fees.
-          </p>
         </div>
 
-        <div className="mobile-card-content">
-          <div className="input-section" style={{ marginBottom: '1.5rem' }}>
-            <h2 className="section-title">Vehicle Financing Inputs</h2>
-            <div className="responsive-grid" style={{ alignItems: 'end' }}>
-              <div>
-                <label className="input-label">Vehicle Price ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.vehiclePrice} onChange={(e) => handleInputChange('vehiclePrice', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Down Payment ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.downPayment} onChange={(e) => handleInputChange('downPayment', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Trade-in Value ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.tradeInValue} onChange={(e) => handleInputChange('tradeInValue', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Sales Tax Rate (%)</label>
-                <input className="calculator-input" type="number" min="0" step="0.01" value={inputs.salesTaxRate} onChange={(e) => handleInputChange('salesTaxRate', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Dealer Fees ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.dealerFees} onChange={(e) => handleInputChange('dealerFees', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Loan APR (%)</label>
-                <input className="calculator-input" type="number" min="0" step="0.01" value={inputs.apr} onChange={(e) => handleInputChange('apr', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Loan Term (Months)</label>
-                <input className="calculator-input" type="number" min="1" max="96" value={inputs.termMonths} onChange={(e) => handleInputChange('termMonths', Number(e.target.value) || 60)} />
-              </div>
-            </div>
-          </div>
-
-          <div className="results-container" style={{ borderColor: '#0f766e', background: 'linear-gradient(135deg, #ecfeff 0%, #f0fdfa 100%)' }}>
-            <h2 className="results-title" style={{ color: '#0f2a43' }}>Estimated Loan Summary</h2>
-            <div className="responsive-grid">
-              <div className="result-item">
-                <div className="result-label">Monthly Payment</div>
-                <div className="result-value emi">{formatUSD(results.monthlyPayment)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Amount Financed</div>
-                <div className="result-value total">{formatUSD(results.financedAmount)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Total Interest</div>
-                <div className="result-value interest">{formatUSD(results.totalInterest)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Payoff Date</div>
-                <div className="result-value principal" style={{ fontSize: '1rem' }}>{results.payoffDate}</div>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#334155', lineHeight: 1.55 }}>
-              <p style={{ margin: '0 0 0.35rem 0' }}><strong>Taxable amount:</strong> {formatUSD(results.taxableAmount)}</p>
-              <p style={{ margin: '0 0 0.35rem 0' }}><strong>Sales tax estimate:</strong> {formatUSD(results.salesTax)}</p>
-              <p style={{ margin: 0 }}><strong>Total out-of-pocket cost:</strong> {formatUSD(results.totalOutOfPocketCost)}</p>
-            </div>
-            <PieBreakdownChart
-              title="Out-of-pocket cost composition"
-              items={[
-                {
-                  label: 'Upfront (down + trade-in)',
-                  value: Math.max(0, Number(inputs.downPayment) || 0) + Math.max(0, Number(inputs.tradeInValue) || 0),
-                  color: '#0f766e'
-                },
-                { label: 'Loan principal', value: results.financedAmount, color: '#3b82f6' },
-                { label: 'Loan interest', value: results.totalInterest, color: '#f97316' }
-              ]}
-              formatter={formatUSD}
-            />
-          </div>
-
-          <ResultActions title="US Auto Loan Calculator Summary" summaryLines={summaryLines} fileName="us-auto-loan-calculator-summary.txt" />
-
+        <div className="mt-8">
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
             inputs={[
@@ -221,8 +180,8 @@ const USAutoLoanCalculator = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

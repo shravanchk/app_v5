@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
-import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 
 const SAMPLE_SNIPPETS = {
@@ -899,9 +898,6 @@ const JsonTools = () => {
     <div
       className="calculator-container"
       style={{
-        background: isDarkMode
-          ? 'radial-gradient(circle at 12% 10%, rgba(15, 118, 110, 0.28), transparent 36%), radial-gradient(circle at 85% 85%, rgba(180, 83, 9, 0.2), transparent 30%), linear-gradient(135deg, #081424 0%, #0f2133 100%)'
-          : 'radial-gradient(circle at 12% 10%, rgba(15, 118, 110, 0.18), transparent 40%), radial-gradient(circle at 85% 85%, rgba(180, 83, 9, 0.16), transparent 34%), linear-gradient(135deg, #f5f4ef 0%, #e6edf5 100%)',
         paddingTop: isCompactLayout ? '1rem' : isTabletLayout ? '1.2rem' : '1.5rem'
       }}
     >
@@ -992,20 +988,6 @@ const JsonTools = () => {
               color: '#f8fafc'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.55rem' }}>
-              <HomeButton
-                style={{
-                  position: 'static',
-                  top: 'auto',
-                  left: 'auto',
-                  zIndex: 'auto',
-                  width: '42px',
-                  height: '42px',
-                  padding: '10px'
-                }}
-              />
-              <div />
-            </div>
             <h1 style={{ margin: 0, fontSize: 'clamp(1.4rem, 3.2vw, 2rem)', letterSpacing: '0.01em' }}>
               JSON Tools Studio
             </h1>

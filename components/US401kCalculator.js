@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import CalculatorInfoPanel from './CalculatorInfoPanel';
-import HomeButton from './HomeButton';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField } from './ui/Field';
+import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
@@ -22,12 +24,6 @@ const US401kCalculator = () => {
   });
 
   const [showFullProjection, setShowFullProjection] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.body.classList.toggle('dark-theme', localStorage.getItem('theme') === 'dark');
-    }
-  }, []);
 
   const results = useMemo(() => {
     const currentAge = Math.max(18, Math.floor(Number(inputs.currentAge) || 18));
@@ -101,12 +97,10 @@ const US401kCalculator = () => {
 
   const rows = showFullProjection ? results.projection : results.projection.slice(0, 12);
 
-  const handleInputChange = (field, value) => {
-    setInputs((prev) => ({ ...prev, [field]: value }));
-  };
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
 
   return (
-    <div className="calculator-container sip-container">
+    <>
       <Head>
         <title>US 401(k) Calculator | Retirement Projection with Employer Match | Upaman</title>
         <meta
@@ -133,144 +127,98 @@ const US401kCalculator = () => {
         />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header sip-header">
-          <div className="header-nav">
-            <HomeButton />
-            <div className="flex-spacer"></div>
+      <CalcLayout
+        eyebrow="United States"
+        title="US 401(k) Calculator"
+        subtitle="Project your retirement balance with employee contributions, employer match, and long-term growth assumptions."
+      >
+        <div className="grid gap-5 lg:grid-cols-5">
+          <Card className="p-5 lg:col-span-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <NumberField id="k-cage" label="Current age" min={18} max={80} value={inputs.currentAge} onChange={(v) => set('currentAge', v)} />
+              <NumberField id="k-rage" label="Retirement age" min={19} max={85} value={inputs.retirementAge} onChange={(v) => set('retirementAge', v)} />
+              <NumberField id="k-bal" label="Current 401(k) balance" prefix="$" value={inputs.currentBalance} onChange={(v) => set('currentBalance', v)} />
+              <NumberField id="k-sal" label="Annual salary" prefix="$" value={inputs.annualSalary} onChange={(v) => set('annualSalary', v)} />
+              <NumberField id="k-econ" label="Your contribution" suffix="%" step={0.1} value={inputs.employeeContributionPercent} onChange={(v) => set('employeeContributionPercent', v)} />
+              <NumberField id="k-match" label="Employer match (of your %)" suffix="%" step={1} value={inputs.employerMatchPercent} onChange={(v) => set('employerMatchPercent', v)} />
+              <NumberField id="k-cap" label="Employer match cap" suffix="%" step={0.1} value={inputs.employerMatchCapPercent} onChange={(v) => set('employerMatchCapPercent', v)} />
+              <NumberField id="k-ret" label="Expected annual return" suffix="%" step={0.1} value={inputs.annualReturn} onChange={(v) => set('annualReturn', v)} />
+              <NumberField id="k-grow" label="Salary growth" suffix="%/yr" step={0.1} value={inputs.annualSalaryGrowth} onChange={(v) => set('annualSalaryGrowth', v)} />
+            </div>
+          </Card>
+
+          <div className="space-y-5 lg:col-span-3">
+            <div className="grid grid-cols-2 gap-3">
+              <ResultStat label="Projected balance" value={formatUSD(results.projectedBalance)} emphasis tone="positive" />
+              <ResultStat label="Your contributions" value={formatUSD(results.totalEmployeeContrib)} />
+              <ResultStat label="Employer contributions" value={formatUSD(results.totalEmployerContrib)} />
+              <ResultStat label="Estimated growth" value={formatUSD(results.investmentGrowth)} />
+            </div>
+
+            <Card className="p-5">
+              <PieBreakdownChart
+                title="Projected balance composition"
+                items={[
+                  { label: 'Starting balance', value: Math.max(0, Number(inputs.currentBalance) || 0), color: '#334155' },
+                  { label: 'Your contributions', value: results.totalEmployeeContrib, color: '#3b82f6' },
+                  { label: 'Employer contributions', value: results.totalEmployerContrib, color: '#14b8a6' },
+                  { label: 'Investment growth', value: results.investmentGrowth, color: '#f97316' }
+                ]}
+                formatter={formatUSD}
+              />
+              <div className="mt-4 space-y-1.5 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+                <p><strong className="font-semibold text-ink dark:text-white">4% rule estimate:</strong> {formatUSD(results.fourPercentRuleAnnual)} per year</p>
+                <p><strong className="font-semibold text-ink dark:text-white">4% rule monthly equivalent:</strong> {formatUSD(results.fourPercentRuleMonthly)}</p>
+              </div>
+            </Card>
+
+            {!!rows.length && (
+              <Card className="overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-slate-50 text-xs uppercase tracking-wide text-ink-muted dark:bg-slate-800 dark:text-slate-400">
+                      <tr>
+                        <th className="px-3 py-2 font-semibold">Age</th>
+                        <th className="px-3 py-2 font-semibold">Salary</th>
+                        <th className="px-3 py-2 font-semibold">Employee</th>
+                        <th className="px-3 py-2 font-semibold">Employer</th>
+                        <th className="px-3 py-2 font-semibold">Growth</th>
+                        <th className="px-3 py-2 font-semibold">Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-ink-soft dark:divide-slate-700 dark:text-slate-300">
+                      {rows.map((row) => (
+                        <tr key={row.age}>
+                          <td className="px-3 py-2">{row.age}</td>
+                          <td className="px-3 py-2">{formatUSD(row.salary)}</td>
+                          <td className="px-3 py-2">{formatUSD(row.employeeContrib)}</td>
+                          <td className="px-3 py-2">{formatUSD(row.employerContrib)}</td>
+                          <td className="px-3 py-2">{formatUSD(row.growth)}</td>
+                          <td className="px-3 py-2 font-medium text-ink dark:text-white">{formatUSD(row.closingBalance)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {results.projection.length > 12 && (
+                  <div className="border-t border-slate-100 p-3 dark:border-slate-700">
+                    <button
+                      type="button"
+                      onClick={() => setShowFullProjection((prev) => !prev)}
+                      className="text-sm font-semibold text-brand-700 hover:text-brand-800 dark:text-brand-300"
+                    >
+                      {showFullProjection ? 'Show first 12 years' : `Show full ${results.projection.length}-year projection`}
+                    </button>
+                  </div>
+                )}
+              </Card>
+            )}
+
+            <ResultActions title="US 401(k) Calculator Summary" summaryLines={summaryLines} fileName="us-401k-calculator-summary.txt" />
           </div>
-          <h1 className="header-title">US 401(k) Calculator</h1>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Project retirement balance with employee contribution, employer match, and long-term growth assumptions.
-          </p>
         </div>
 
-        <div className="mobile-card-content">
-          <div className="input-section" style={{ marginBottom: '1.5rem' }}>
-            <h2 className="section-title">Retirement Inputs</h2>
-            <div className="responsive-grid" style={{ alignItems: 'end' }}>
-              <div>
-                <label className="input-label">Current Age</label>
-                <input className="calculator-input" type="number" min="18" max="80" value={inputs.currentAge} onChange={(e) => handleInputChange('currentAge', Number(e.target.value) || 18)} />
-              </div>
-              <div>
-                <label className="input-label">Retirement Age</label>
-                <input className="calculator-input" type="number" min="19" max="85" value={inputs.retirementAge} onChange={(e) => handleInputChange('retirementAge', Number(e.target.value) || 65)} />
-              </div>
-              <div>
-                <label className="input-label">Current 401(k) Balance ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.currentBalance} onChange={(e) => handleInputChange('currentBalance', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Annual Salary ($)</label>
-                <input className="calculator-input" type="number" min="0" value={inputs.annualSalary} onChange={(e) => handleInputChange('annualSalary', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Your Contribution (% of salary)</label>
-                <input className="calculator-input" type="number" min="0" step="0.1" value={inputs.employeeContributionPercent} onChange={(e) => handleInputChange('employeeContributionPercent', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Employer Match (% of your contribution)</label>
-                <input className="calculator-input" type="number" min="0" step="1" value={inputs.employerMatchPercent} onChange={(e) => handleInputChange('employerMatchPercent', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Employer Match Cap (% salary)</label>
-                <input className="calculator-input" type="number" min="0" step="0.1" value={inputs.employerMatchCapPercent} onChange={(e) => handleInputChange('employerMatchCapPercent', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Expected Annual Return (%)</label>
-                <input className="calculator-input" type="number" min="0" step="0.1" value={inputs.annualReturn} onChange={(e) => handleInputChange('annualReturn', Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Expected Salary Growth (%/year)</label>
-                <input className="calculator-input" type="number" min="0" step="0.1" value={inputs.annualSalaryGrowth} onChange={(e) => handleInputChange('annualSalaryGrowth', Number(e.target.value) || 0)} />
-              </div>
-            </div>
-          </div>
-
-          <div className="results-container" style={{ borderColor: '#1d4e89', background: 'linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%)' }}>
-            <h2 className="results-title" style={{ color: '#0f2a43' }}>Retirement Projection</h2>
-            <div className="responsive-grid" style={{ marginBottom: '1.2rem' }}>
-              <div className="result-item">
-                <div className="result-label">Projected Balance</div>
-                <div className="result-value total">{formatUSD(results.projectedBalance)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Your Contributions</div>
-                <div className="result-value emi">{formatUSD(results.totalEmployeeContrib)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Employer Contributions</div>
-                <div className="result-value principal">{formatUSD(results.totalEmployerContrib)}</div>
-              </div>
-              <div className="result-item">
-                <div className="result-label">Estimated Growth</div>
-                <div className="result-value interest">{formatUSD(results.investmentGrowth)}</div>
-              </div>
-            </div>
-            <PieBreakdownChart
-              title="Projected balance composition"
-              items={[
-                { label: 'Starting balance', value: Math.max(0, Number(inputs.currentBalance) || 0), color: '#334155' },
-                { label: 'Your contributions', value: results.totalEmployeeContrib, color: '#3b82f6' },
-                { label: 'Employer contributions', value: results.totalEmployerContrib, color: '#14b8a6' },
-                { label: 'Investment growth', value: results.investmentGrowth, color: '#f97316' }
-              ]}
-              formatter={formatUSD}
-            />
-
-            <div style={{ fontSize: '0.9rem', color: '#334155', lineHeight: 1.55 }}>
-              <p style={{ margin: '0 0 0.35rem 0' }}>
-                <strong>4% rule estimate:</strong> {formatUSD(results.fourPercentRuleAnnual)} per year
-              </p>
-              <p style={{ margin: 0 }}>
-                <strong>4% rule monthly equivalent:</strong> {formatUSD(results.fourPercentRuleMonthly)}
-              </p>
-            </div>
-          </div>
-
-          {!!rows.length && (
-            <div className="responsive-table-container" style={{ marginBottom: '1.5rem' }}>
-              <table className="responsive-table">
-                <thead>
-                  <tr>
-                    <th>Age</th>
-                    <th>Salary</th>
-                    <th>Employee</th>
-                    <th>Employer</th>
-                    <th>Growth</th>
-                    <th>Balance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row) => (
-                    <tr key={row.age}>
-                      <td>{row.age}</td>
-                      <td>{formatUSD(row.salary)}</td>
-                      <td>{formatUSD(row.employeeContrib)}</td>
-                      <td>{formatUSD(row.employerContrib)}</td>
-                      <td>{formatUSD(row.growth)}</td>
-                      <td>{formatUSD(row.closingBalance)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {results.projection.length > 12 && (
-            <button
-              type="button"
-              className="result-action-button"
-              onClick={() => setShowFullProjection((prev) => !prev)}
-              style={{ marginBottom: '1rem' }}
-            >
-              {showFullProjection ? 'Show first 12 years' : `Show full ${results.projection.length}-year projection`}
-            </button>
-          )}
-
-          <ResultActions title="US 401(k) Calculator Summary" summaryLines={summaryLines} fileName="us-401k-calculator-summary.txt" />
-
+        <div className="mt-8">
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
             inputs={[
@@ -293,8 +241,8 @@ const US401kCalculator = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

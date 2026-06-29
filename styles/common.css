@@ -875,25 +875,12 @@ body.dark-theme .header-logo {
   flex: 1;
 }
 
-.text-center {
-  text-align: center;
-}
-
-.hidden {
-  display: none;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+/* NOTE: .text-center, .hidden and .sr-only were removed — they duplicated
+   Tailwind's own utilities. Because common.css loads after globals.css
+   (which emits Tailwind utilities), these legacy copies won out over
+   Tailwind's responsive variants (e.g. `.hidden md:flex` stayed hidden at
+   all widths, breaking the navbar menu). Tailwind provides identical
+   utilities, so removing them is a no-op for existing markup. */
 
 /* Responsive utilities */
 @media (max-width: 767px) {
@@ -2527,6 +2514,27 @@ body.dark-theme .table td {
 
 .calculator-info-section a:hover {
   text-decoration: underline;
+}
+
+/* Dark mode for the methodology / source-notes panel. */
+body.dark-theme .calculator-info-panel {
+  background: #1b2b3e;
+  border-color: #334155;
+}
+body.dark-theme .calculator-info-summary {
+  color: #e2e8f0;
+}
+body.dark-theme .calculator-info-meta {
+  color: #94a3b8;
+}
+body.dark-theme .calculator-info-section h4 {
+  color: #5eead4;
+}
+body.dark-theme .calculator-info-section ul {
+  color: #cbd5e1;
+}
+body.dark-theme .calculator-info-section a {
+  color: #93c5fd;
 }
 
 body.dark-theme .result-actions {
