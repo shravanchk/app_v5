@@ -15,6 +15,10 @@ const AD_ELIGIBLE_ROUTES = new Set([
   '/france-salary-calculator',
   '/germany-salary-calculator',
   '/gst-calculator',
+  '/gst-reform-calculator',
+  '/hra-calculator',
+  '/capital-gains-calculator',
+  '/gratuity-calculator',
   '/income-tax-calculator',
   '/irctc-calculator',
   '/json-tools',
@@ -44,7 +48,7 @@ const AD_ELIGIBLE_ROUTES = new Set([
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
-  const hideFooter = router.pathname === '/';
+  const hideFooter = router.pathname === '/' || router.pathname.startsWith('/embed');
 
   useEffect(() => {
     if (!AD_ELIGIBLE_ROUTES.has(router.pathname)) return;

@@ -49,6 +49,41 @@ const IndiaCalculatorsHub = () => {
         tags: ['Inclusive/exclusive', 'CGST/SGST/IGST', 'Rate-wise']
       },
       {
+        title: 'GST 2.0 Price Calculator',
+        description: 'Compare an item’s price before and after the Sept 2025 GST reform (5/18/40).',
+        icon: Calculator,
+        path: '/gst-reform-calculator',
+        tags: ['Old vs new GST', 'Price change', 'GST 2.0']
+      },
+      {
+        title: 'HRA Exemption Calculator',
+        description: 'Find your tax-exempt House Rent Allowance using the least-of-three rule (old regime).',
+        icon: Home,
+        path: '/hra-calculator',
+        tags: ['Old regime', 'Metro/non-metro', 'Rent receipts']
+      },
+      {
+        title: 'Capital Gains Tax Calculator',
+        description: 'LTCG/STCG on equity, mutual funds, and property for FY 2026-27.',
+        icon: TrendingUp,
+        path: '/capital-gains-calculator',
+        tags: ['LTCG 12.5%', 'STCG 20%', '₹1.25L exemption']
+      },
+      {
+        title: 'Gratuity Calculator',
+        description: 'Estimate gratuity using the 15/26 formula with the ₹20 lakh tax-free ceiling.',
+        icon: Wallet,
+        path: '/gratuity-calculator',
+        tags: ['Payment of Gratuity Act', '15/26 rule', 'Tax-free limit']
+      },
+      {
+        title: 'Tax on Salary (₹5L–₹50L)',
+        description: 'New-regime income tax for every salary level with full slab breakdown.',
+        icon: Target,
+        path: '/tax-on-salary',
+        tags: ['FY 2026-27', 'By salary', 'Take-home']
+      },
+      {
         title: 'SIP Calculator',
         description: 'Estimate SIP corpus with expected returns and goal-based planning.',
         icon: TrendingUp,
