@@ -50,9 +50,26 @@ module.exports = {
           '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        // Subtle motion for the homepage guide-card illustrations.
+        'gc-float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
+        },
+        'gc-grow': {
+          '0%, 100%': { transform: 'scaleY(0.8)' },
+          '50%': { transform: 'scaleY(1)' },
+        },
+        'gc-drop': {
+          '0%': { transform: 'translateY(-14px)', opacity: '0' },
+          '15%, 70%': { opacity: '1' },
+          '100%': { transform: 'translateY(22px)', opacity: '0' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.5s ease-out both',
+        'gc-float': 'gc-float 3.4s ease-in-out infinite',
+        'gc-grow': 'gc-grow 3s ease-in-out infinite',
+        'gc-drop': 'gc-drop 2.8s ease-in infinite',
       },
     },
   },
