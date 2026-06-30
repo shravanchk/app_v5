@@ -2,9 +2,13 @@ import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import { ArrowRightLeft, TrendingUp, ShieldCheck, PiggyBank, CheckCircle2 } from 'lucide-react';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
-import HomeButton from './HomeButton';
 import EEATPanel from './calculator/EEATPanel';
 import SearchLandingSections from './calculator/SearchLandingSections';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField, SelectField } from './ui/Field';
+import Button from './ui/Button';
+import Card from './ui/Card';
+import { WorkflowSteps, HowToNote, DecisionBanner, ActionList } from './workflow/WorkflowKit';
 import { buildBreadcrumbSchema } from '../utils/schema';
 import { editorialProfiles } from '../utils/editorialProfiles';
 
@@ -118,7 +122,7 @@ const recommendationFor = ({ prepayCorpus, investCorpus, loanRate, adjustedRetur
   if (prepayCorpus > investCorpus * 1.1 || loanRate - adjustedReturn >= 2) {
     return {
       label: 'Prepay first, then invest',
-      color: '#059669',
+      tone: 'positive',
       reason: 'Your debt cost is high relative to expected risk-adjusted return. Reducing guaranteed interest drag is stronger.'
     };
   }
@@ -126,14 +130,14 @@ const recommendationFor = ({ prepayCorpus, investCorpus, loanRate, adjustedRetur
   if (investCorpus > prepayCorpus * 1.1 && adjustedReturn > loanRate) {
     return {
       label: 'Invest surplus first',
-      color: '#1d4ed8',
+      tone: 'info',
       reason: 'Expected risk-adjusted portfolio growth is stronger than loan-cost savings in this setup.'
     };
   }
 
   return {
     label: 'Use a hybrid split',
-    color: '#d97706',
+    tone: 'warning',
     reason: 'Both options are close. Split surplus between loan prepayment and disciplined investing to balance certainty and growth.'
   };
 };
@@ -148,6 +152,9 @@ const PrepayVsInvestWorkflow = () => {
   });
 
   const regionConfig = regionSettings[inputs.region];
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
+  const fmt = (value) => formatCurrency(value, regionConfig);
+
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', item: 'https://upaman.com/' },
     { name: 'Prepay Loan vs Invest Workflow', item: 'https://upaman.com/prepay-vs-invest-workflow' }
@@ -218,372 +225,202 @@ const PrepayVsInvestWorkflow = () => {
     };
   }, [inputs]);
 
-  const stepStyle = (active) => ({
-    background: active ? '#0f766e' : '#e2e8f0',
-    color: active ? '#fff' : '#334155',
-    border: 'none',
-    borderRadius: '999px',
-    padding: '0.5rem 1rem',
-    fontWeight: 600,
-    cursor: 'pointer'
-  });
-  const stepPrimaryCtaStyle = {
-    marginTop: '1.1rem',
-    width: 'auto',
-    minWidth: '220px',
-    padding: '0.58rem 0.95rem',
-    fontSize: '0.88rem',
-    lineHeight: 1.2
-  };
-  const stepInlineCtaStyle = {
-    width: 'auto',
-    minWidth: '200px',
-    padding: '0.56rem 0.9rem',
-    fontSize: '0.86rem',
-    lineHeight: 1.2
-  };
-  const helperBoxStyle = {
-    background: '#eff6ff',
-    border: '1px solid #bfdbfe',
-    borderRadius: '0.75rem',
-    padding: '0.85rem',
-    marginBottom: '1rem',
-    color: '#1e3a8a'
-  };
-  const hintStyle = {
-    margin: '0.25rem 0 0',
-    fontSize: '0.8rem',
-    color: '#64748b'
-  };
-  const tipIconStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '16px',
-    height: '16px',
-    borderRadius: '999px',
-    border: '1px solid #94a3b8',
-    color: '#475569',
-    fontSize: '0.68rem',
-    lineHeight: 1,
-    cursor: 'help',
-    background: '#f8fafc'
-  };
-  const withTipLabel = (text, tip) => (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-      <span>{text}</span>
-      <span style={tipIconStyle} title={tip} aria-label={tip}>i</span>
-    </span>
-  );
-
   return (
-    <div className="calculator-container emi-container">
+    <>
       <Head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
-      <div className="calculator-card">
-        <div className="calculator-header emi-header">
-          <div className="header-nav">
-            <HomeButton style={{ position: 'static' }} />
-            <div style={{ flex: 1 }} />
-          </div>
-          <h1 className="header-title">Prepay Loan vs Invest Surplus Workflow</h1>
-          <p style={{ margin: 0, opacity: 0.95 }}>
-            Compare debt prepayment versus investing monthly surplus with a risk-adjusted view.
-          </p>
+
+      <CalcLayout
+        eyebrow="Decision workflow"
+        title="Prepay Loan vs Invest Surplus Workflow"
+        subtitle="Compare debt prepayment versus investing your monthly surplus with a risk-adjusted view."
+      >
+        <EEATPanel
+          author={editorialProfiles.researchTeam}
+          reviewer={editorialProfiles.financeReviewDesk}
+          reviewedOn="June 28, 2026"
+          scope="This workflow compares guaranteed interest savings from loan prepayment with a risk-adjusted investment path using the same time horizon."
+          sources={[
+            { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+            { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/' }
+          ]}
+        />
+
+        <div className="mt-6">
+          <WorkflowSteps steps={['Inputs', 'Comparison', 'Action Plan']} active={step} onChange={setStep} />
         </div>
 
-        <div className="mobile-card-content">
-          <EEATPanel
-            author={editorialProfiles.researchTeam}
-            reviewer={editorialProfiles.financeReviewDesk}
-            reviewedOn="March 14, 2026"
-            scope="This workflow compares guaranteed interest savings from loan prepayment with a risk-adjusted investment path using the same time horizon."
-            sources={[
-              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
-              { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/' }
-            ]}
-          />
-
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-            <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
-              1. Inputs
-            </button>
-            <button type="button" style={stepStyle(step === 2)} onClick={() => setStep(2)}>
-              2. Comparison
-            </button>
-            <button type="button" style={stepStyle(step === 3)} onClick={() => setStep(3)}>
-              3. Action Plan
-            </button>
+        {step === 1 && (
+          <div className="mt-6 space-y-5">
+            <HowToNote
+              title="How to fill this quickly"
+              items={[
+                'Use the current outstanding principal from your latest loan statement.',
+                'Use realistic return expectations, not best-case returns.',
+                'Enter only repeatable monthly surplus, not one-time windfalls.'
+              ]}
+            />
+            <Card className="p-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <SelectField
+                  id="pi-region"
+                  label="Region"
+                  value={inputs.region}
+                  onChange={(v) => setInputs((prev) => ({ ...prev, region: v, ...getRegionDefaults(v) }))}
+                  options={[
+                    { value: 'india', label: 'India' },
+                    { value: 'us', label: 'United States' },
+                    { value: 'eu', label: 'EU/UK (Generic)' }
+                  ]}
+                />
+                <NumberField
+                  id="pi-loan"
+                  label={`Outstanding Loan (${regionConfig.currency})`}
+                  value={inputs.outstandingLoan}
+                  onChange={(v) => set('outstandingLoan', v)}
+                  hint="Use current principal, not the original sanction amount."
+                />
+                <NumberField
+                  id="pi-rate"
+                  label="Loan Interest Rate"
+                  suffix="%/yr"
+                  step={0.1}
+                  value={inputs.annualLoanRate}
+                  onChange={(v) => set('annualLoanRate', v)}
+                  hint="Use the effective current rate after any reset."
+                />
+                <NumberField
+                  id="pi-years"
+                  label="Remaining Tenure"
+                  suffix="yrs"
+                  step={0.1}
+                  min={0.5}
+                  value={inputs.remainingYears}
+                  onChange={(v) => set('remainingYears', v)}
+                  hint="Remaining duration on the current loan, not original tenure."
+                />
+                <NumberField
+                  id="pi-surplus"
+                  label={`Monthly Surplus (${regionConfig.currency})`}
+                  value={inputs.monthlySurplus}
+                  onChange={(v) => set('monthlySurplus', v)}
+                  hint="Enter an amount you can sustain every month comfortably."
+                />
+                <NumberField
+                  id="pi-return"
+                  label="Expected Return"
+                  suffix="%/yr"
+                  step={0.1}
+                  value={inputs.expectedReturn}
+                  onChange={(v) => set('expectedReturn', v)}
+                  hint="Use a long-term conservative expectation, not a peak return."
+                />
+                <SelectField
+                  id="pi-risk"
+                  label="Risk Profile"
+                  value={inputs.riskProfile}
+                  onChange={(v) => set('riskProfile', v)}
+                  options={[
+                    { value: 'conservative', label: 'Conservative (higher return haircut)' },
+                    { value: 'balanced', label: 'Balanced' },
+                    { value: 'aggressive', label: 'Aggressive' }
+                  ]}
+                />
+              </div>
+            </Card>
+            <Button onClick={() => setStep(2)}>Continue to Comparison</Button>
           </div>
+        )}
 
-          {step === 1 && (
-            <div className="input-section">
-              <h2 className="section-title">Step 1: Loan and surplus assumptions</h2>
-              <div style={helperBoxStyle}>
-                <strong>How to fill this quickly:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Use current outstanding principal from latest loan statement.</li>
-                  <li>Use realistic return expectations, not best-case returns.</li>
-                  <li>Enter only repeatable monthly surplus, not one-time windfalls.</li>
-                </ul>
-              </div>
-              <div className="responsive-grid">
-                <div>
-                  <label className="input-label">{withTipLabel('Region', 'Changes currency and default assumptions for rates/amounts.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.region}
-                    onChange={(e) => {
-                      const nextRegion = e.target.value;
-                      setInputs((prev) => ({
-                        ...prev,
-                        region: nextRegion,
-                        ...getRegionDefaults(nextRegion)
-                      }));
-                    }}
-                  >
-                    <option value="india">India</option>
-                    <option value="us">United States</option>
-                    <option value="eu">EU/UK (Generic)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Outstanding Loan (${regionConfig.currency})`, 'Use current principal from latest loan statement.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.outstandingLoan}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, outstandingLoan: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Use current principal, not original sanction amount.</p>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Loan Interest Rate (% yearly)', 'Current effective borrowing rate after resets, if any.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    value={inputs.annualLoanRate}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, annualLoanRate: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Use effective current rate after reset.</p>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Remaining Tenure (years)', 'Remaining duration on current loan, not original tenure.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    step="0.1"
-                    min="0.5"
-                    value={inputs.remainingYears}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, remainingYears: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Round to nearest 0.5 years if exact months are not handy.</p>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Monthly Surplus (${regionConfig.currency})`, 'Only include surplus you can consistently maintain.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.monthlySurplus}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, monthlySurplus: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Enter amount you can sustain every month comfortably.</p>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Expected Return (% yearly)', 'Use conservative long-term expectation, not short-term peak return.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    value={inputs.expectedReturn}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, expectedReturn: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Use long-term conservative expectation for planning.</p>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Risk Profile', 'Applies return haircut before comparison to reduce optimism bias.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.riskProfile}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, riskProfile: e.target.value }))}
-                  >
-                    <option value="conservative">Conservative (higher return haircut)</option>
-                    <option value="balanced">Balanced</option>
-                    <option value="aggressive">Aggressive</option>
-                  </select>
-                </div>
-              </div>
-              <button
-                className="calculator-button primary-button"
-                type="button"
-                style={stepPrimaryCtaStyle}
-                onClick={() => setStep(2)}
-              >
-                Continue to Comparison
-              </button>
+        {step === 2 && (
+          <div className="mt-6 space-y-5">
+            <HowToNote
+              title="How to read this step"
+              items={[
+                '"Interest saved" and "months saved" show the certainty benefit of prepayment.',
+                '"Corpus at baseline horizon" compares the wealth outcome at the same time point.',
+                'If values are close, prefer a hybrid split over an all-or-nothing choice.'
+              ]}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <ResultStat label="Current baseline EMI" value={fmt(output.baselineEmi)} />
+              <ResultStat label="Interest saved with prepayment" value={fmt(output.interestSaved)} emphasis tone="positive" />
+              <ResultStat label="Loan closes earlier by" value={`${output.monthsSaved} months`} />
+              <ResultStat label="Risk-adjusted return used" value={`${output.adjustedReturn.toFixed(1)}%`} />
             </div>
-          )}
-
-          {step === 2 && (
-            <div className="results-container">
-              <h2 className="results-title">Step 2: Outcome comparison at current tenure horizon</h2>
-              <div style={helperBoxStyle}>
-                <strong>How to read this step:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>"Interest saved" and "months saved" show certainty benefit of prepayment.</li>
-                  <li>"Corpus at baseline horizon" compares wealth outcome at same time point.</li>
-                  <li>If values are close, prefer hybrid split over all-or-nothing choice.</li>
-                </ul>
-              </div>
-              <div className="responsive-grid">
-                <div className="result-item">
-                  <p className="result-label">
-                    <ShieldCheck size={16} /> Current baseline EMI
-                  </p>
-                  <p className="result-value">{formatCurrency(output.baselineEmi, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <PiggyBank size={16} /> Interest saved with prepayment
-                  </p>
-                  <p className="result-value">{formatCurrency(output.interestSaved, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <ArrowRightLeft size={16} /> Loan closes earlier by
-                  </p>
-                  <p className="result-value">{output.monthsSaved} months</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <TrendingUp size={16} /> Risk-adjusted return used
-                  </p>
-                  <p className="result-value">{output.adjustedReturn.toFixed(1)}%</p>
-                </div>
-              </div>
-
+            <Card className="p-5">
               <ComparisonBars
                 title="Corpus at baseline horizon"
                 items={[
                   { label: 'Invest surplus monthly', value: output.investOnlyCorpus, color: '#1d4ed8' },
                   { label: 'Prepay then invest post-closure', value: output.prepayThenInvestCorpus, color: '#059669' }
                 ]}
-                formatter={(value) => formatCurrency(value, regionConfig)}
+                formatter={fmt}
               />
-
+            </Card>
+            <Card className="p-5">
               <PieBreakdownChart
                 title="Invest option: contributions vs gains"
                 items={[
-                  {
-                    label: 'Total contributions',
-                    value: output.monthlySurplus * output.remainingMonths,
-                    color: '#3b82f6'
-                  },
+                  { label: 'Total contributions', value: output.monthlySurplus * output.remainingMonths, color: '#3b82f6' },
                   {
                     label: 'Projected gains',
                     value: Math.max(0, output.investOnlyCorpus - output.monthlySurplus * output.remainingMonths),
                     color: '#10b981'
                   }
                 ]}
-                formatter={(value) => formatCurrency(value, regionConfig)}
+                formatter={fmt}
               />
-
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <button className="calculator-button" type="button" onClick={() => setStep(1)}>
-                  Back to Inputs
-                </button>
-                <button
-                  className="calculator-button success-button"
-                  type="button"
-                  style={stepInlineCtaStyle}
-                  onClick={() => setStep(3)}
-                >
-                  Continue to Action Plan
-                </button>
-              </div>
+            </Card>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(1)}>Back to Inputs</Button>
+              <Button onClick={() => setStep(3)}>Continue to Action Plan</Button>
             </div>
-          )}
+          </div>
+        )}
 
-          {step === 3 && (
-            <div className="results-container">
-              <h2 className="results-title">Step 3: Recommendation and plan</h2>
-              <div
-                style={{
-                  borderLeft: `6px solid ${output.recommendation.color}`,
-                  background: '#f8fafc',
-                  borderRadius: '0.75rem',
-                  padding: '1rem',
-                  marginBottom: '1rem'
-                }}
-              >
-                <p style={{ margin: 0, fontWeight: 700, color: output.recommendation.color }}>
-                  <CheckCircle2 size={16} style={{ verticalAlign: 'middle' }} /> {output.recommendation.label}
-                </p>
-                <p style={{ margin: '0.4rem 0 0 0', color: '#334155' }}>{output.recommendation.reason}</p>
-              </div>
-
-              <div style={helperBoxStyle}>
-                <strong>How to use this recommendation:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>
-                    {output.corpusDelta >= 0
-                      ? 'Prepay-first route has higher projected corpus in current assumptions.'
-                      : 'Invest-first route has higher projected corpus in current assumptions.'}
-                  </li>
-                  <li>Re-run this workflow when rates, income, or risk profile changes.</li>
-                  <li>Do not allocate full surplus until emergency runway is secure.</li>
-                </ul>
-              </div>
-
-              <div className="responsive-grid">
-                <div className="result-item">
-                  <p className="result-label">Invest option corpus</p>
-                  <p className="result-value">{formatCurrency(output.investOnlyCorpus, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">Prepay-first corpus</p>
-                  <p className="result-value">{formatCurrency(output.prepayThenInvestCorpus, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">Corpus difference</p>
-                  <p className="result-value">{formatCurrency(output.corpusDelta, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">Post-closure investing window</p>
-                  <p className="result-value">{output.postCloseMonths} months</p>
-                </div>
-              </div>
-
-              <div style={{ marginTop: '1rem' }}>
-                <p style={{ marginBottom: '0.4rem', fontWeight: 600 }}>Action checklist</p>
-                <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#334155' }}>
-                  <li>Keep emergency fund intact before aggressive prepayment or equity-heavy investing.</li>
-                  <li>Review this decision at every rate reset or yearly portfolio expectation change.</li>
-                  <li>If unsure, split surplus (for example 60:40) between prepayment and investing.</li>
-                </ul>
-              </div>
-
-              <div style={{ marginTop: '1rem' }}>
-                <p style={{ marginBottom: '0.4rem', fontWeight: 600 }}>Related guides</p>
-                <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#334155' }}>
-                  <li><a href="/guide-prepay-vs-invest-decision.html" target="_blank" rel="noopener noreferrer">Prepay vs Invest Decision Guide</a></li>
-                  <li><a href="/guide-emergency-fund-readiness.html" target="_blank" rel="noopener noreferrer">Emergency Fund Readiness Guide</a></li>
-                  <li><a href="/guide-emi-prepayment-strategy.html" target="_blank" rel="noopener noreferrer">EMI Prepayment Strategy Guide</a></li>
-                </ul>
-              </div>
-
-              <button className="calculator-button" type="button" onClick={() => setStep(2)}>
-                Back to Comparison
-              </button>
+        {step === 3 && (
+          <div className="mt-6 space-y-5">
+            <DecisionBanner
+              tone={output.recommendation.tone}
+              label={output.recommendation.label}
+              reason={output.recommendation.reason}
+              icon={<CheckCircle2 size={18} />}
+            />
+            <HowToNote
+              title="How to use this recommendation"
+              items={[
+                output.corpusDelta >= 0
+                  ? 'Prepay-first route has the higher projected corpus under current assumptions.'
+                  : 'Invest-first route has the higher projected corpus under current assumptions.',
+                'Re-run this workflow when rates, income, or risk profile changes.',
+                'Do not allocate full surplus until your emergency runway is secure.'
+              ]}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <ResultStat label="Invest option corpus" value={fmt(output.investOnlyCorpus)} />
+              <ResultStat label="Prepay-first corpus" value={fmt(output.prepayThenInvestCorpus)} />
+              <ResultStat label="Corpus difference" value={fmt(output.corpusDelta)} />
+              <ResultStat label="Post-closure investing window" value={`${output.postCloseMonths} months`} />
             </div>
-          )}
+            <Card className="p-5">
+              <ActionList
+                title="Action checklist"
+                items={[
+                  'Keep your emergency fund intact before aggressive prepayment or equity-heavy investing.',
+                  'Review this decision at every rate reset or yearly portfolio expectation change.',
+                  'If unsure, split surplus (for example 60:40) between prepayment and investing.'
+                ]}
+              />
+            </Card>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(2)}>Back to Comparison</Button>
+            </div>
+          </div>
+        )}
 
+        <div className="mt-8">
           <SearchLandingSections
             intro={(
               <>
@@ -620,8 +457,8 @@ const PrepayVsInvestWorkflow = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

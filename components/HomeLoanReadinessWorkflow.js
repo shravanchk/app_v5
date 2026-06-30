@@ -1,9 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import { Home, Wallet, ShieldCheck, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import HomeButton from './HomeButton';
 import EEATPanel from './calculator/EEATPanel';
 import SearchLandingSections from './calculator/SearchLandingSections';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField, SelectField } from './ui/Field';
+import Button from './ui/Button';
+import Card from './ui/Card';
+import { WorkflowSteps, HowToNote, DecisionBanner, Panel, PanelRow } from './workflow/WorkflowKit';
 import { buildBreadcrumbSchema } from '../utils/schema';
 import { editorialProfiles } from '../utils/editorialProfiles';
 
@@ -134,6 +138,9 @@ const HomeLoanReadinessWorkflow = () => {
   });
 
   const regionConfig = regionSettings[inputs.region];
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
+  const fmt = (value) => formatCurrency(value, regionConfig);
+
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', item: 'https://upaman.com/' },
     { name: 'Home Loan Readiness Workflow', item: 'https://upaman.com/home-loan-readiness-workflow' }
@@ -189,18 +196,18 @@ const HomeLoanReadinessWorkflow = () => {
       loanGap <= 0 && monthlyStress >= minPostPaymentBuffer
         ? {
             label: 'Ready to proceed',
-            color: '#059669',
+            tone: 'positive',
             reason: 'Your current budget supports the target property at the selected tenure.'
           }
         : emiGap <= almostReadyGapMonthly && monthlyStress >= 0
           ? {
               label: 'Almost ready',
-              color: '#d97706',
+              tone: 'warning',
               reason: 'You are close. Slightly higher down payment or lower property budget will make this comfortable.'
             }
           : {
               label: 'Not ready yet',
-              color: '#dc2626',
+              tone: 'danger',
               reason: 'Current affordability is below the required EMI. Improve savings or reduce target budget.'
             };
 
@@ -231,396 +238,217 @@ const HomeLoanReadinessWorkflow = () => {
     };
   }, [inputs, regionConfig]);
 
-  const stepStyle = (active) => ({
-    background: active ? '#0f766e' : '#e2e8f0',
-    color: active ? '#fff' : '#334155',
-    border: 'none',
-    borderRadius: '999px',
-    padding: '0.5rem 1rem',
-    fontWeight: 600,
-    cursor: 'pointer'
-  });
-  const stepPrimaryCtaStyle = {
-    marginTop: '1.1rem',
-    width: 'auto',
-    minWidth: '220px',
-    padding: '0.58rem 0.95rem',
-    fontSize: '0.88rem',
-    lineHeight: 1.2
-  };
-  const stepInlineCtaStyle = {
-    width: 'auto',
-    minWidth: '200px',
-    padding: '0.56rem 0.9rem',
-    fontSize: '0.86rem',
-    lineHeight: 1.2
-  };
-  const helperBoxStyle = {
-    background: '#eff6ff',
-    border: '1px solid #bfdbfe',
-    borderRadius: '0.75rem',
-    padding: '0.85rem',
-    marginBottom: '1rem',
-    color: '#1e3a8a'
-  };
-  const hintStyle = {
-    margin: '0.25rem 0 0',
-    fontSize: '0.8rem',
-    color: '#64748b'
-  };
-  const tipIconStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '16px',
-    height: '16px',
-    borderRadius: '999px',
-    border: '1px solid #94a3b8',
-    color: '#475569',
-    fontSize: '0.68rem',
-    lineHeight: 1,
-    cursor: 'help',
-    background: '#f8fafc'
-  };
-  const withTipLabel = (text, tip) => (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-      <span>{text}</span>
-      <span style={tipIconStyle} title={tip} aria-label={tip}>i</span>
-    </span>
-  );
-
   return (
-    <div className="calculator-container ppf-container">
+    <>
       <Head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
-      <div className="calculator-card">
-        <div className="calculator-header ppf-header">
-          <div className="header-nav">
-            <HomeButton style={{ position: 'static' }} />
-            <div style={{ flex: 1 }} />
-          </div>
-          <h1 className="header-title">Home Loan Readiness Workflow</h1>
-          <p style={{ margin: 0, opacity: 0.95 }}>
-            Validate affordability before you commit to a property budget.
-          </p>
+
+      <CalcLayout
+        eyebrow="Decision workflow"
+        title="Home Loan Readiness Workflow"
+        subtitle="Validate affordability before you commit to a property budget — across India, US, and EU/UK assumptions."
+      >
+        <EEATPanel
+          author={editorialProfiles.researchTeam}
+          reviewer={editorialProfiles.financeReviewDesk}
+          reviewedOn="June 28, 2026"
+          scope="This workflow estimates a safe home-loan budget using in-hand income, fixed obligations, tenure assumptions, and a buffer-aware affordability model."
+          sources={[
+            { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+            { label: 'National Housing Bank', url: 'https://nhb.org.in/' },
+            { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/owning-a-home/' }
+          ]}
+        />
+
+        <div className="mt-6">
+          <WorkflowSteps steps={['Inputs', 'Affordability', 'Action Plan']} active={step} onChange={setStep} />
         </div>
 
-        <div className="mobile-card-content">
-          <EEATPanel
-            author={editorialProfiles.researchTeam}
-            reviewer={editorialProfiles.financeReviewDesk}
-            reviewedOn="March 14, 2026"
-            scope="This workflow estimates a safe home-loan budget using in-hand income, fixed obligations, tenure assumptions, and a buffer-aware affordability model."
-            sources={[
-              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
-              { label: 'National Housing Bank', url: 'https://nhb.org.in/' },
-              { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/owning-a-home/' }
-            ]}
-          />
-
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-            <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
-              1. Inputs
-            </button>
-            <button type="button" style={stepStyle(step === 2)} onClick={() => setStep(2)}>
-              2. Affordability
-            </button>
-            <button type="button" style={stepStyle(step === 3)} onClick={() => setStep(3)}>
-              3. Action Plan
-            </button>
-          </div>
-
-          {step === 1 && (
-            <div className="input-section">
-              <h2 className="section-title">Step 1: Household and loan assumptions</h2>
-              <div style={helperBoxStyle}>
-                <strong>How to use this step:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Enter only reliable monthly net income and essential fixed costs.</li>
-                  <li>Use realistic interest rate and tenure from lender terms.</li>
-                  <li>This step checks affordability, not loan approval guarantee.</li>
-                </ul>
+        {step === 1 && (
+          <div className="mt-6 space-y-5">
+            <HowToNote
+              items={[
+                'Enter only reliable monthly net income and essential fixed costs.',
+                'Use realistic interest rate and tenure from lender terms.',
+                'This step checks affordability, not loan approval guarantee.'
+              ]}
+            />
+            <Card className="p-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <SelectField
+                  id="hl-region"
+                  label="Region"
+                  value={inputs.region}
+                  onChange={(v) => {
+                    const defaults = regionSettings[v];
+                    setInputs((prev) => ({
+                      ...prev,
+                      region: v,
+                      ...getRegionDefaults(v),
+                      annualInterestRate: defaults.defaultInterestRate,
+                      tenureYears: defaults.defaultTenureYears
+                    }));
+                  }}
+                  options={[
+                    { value: 'india', label: 'India' },
+                    { value: 'us', label: 'United States' },
+                    { value: 'eu', label: 'EU/UK (Generic)' }
+                  ]}
+                />
+                <NumberField
+                  id="hl-income"
+                  label={`${regionConfig.monthlyIncomeLabel} (${regionConfig.currency})`}
+                  value={inputs.monthlyInHand}
+                  onChange={(v) => set('monthlyInHand', v)}
+                  hint="Use after-tax monthly income, not gross salary."
+                />
+                <NumberField
+                  id="hl-expenses"
+                  label={`${regionConfig.monthlyExpensesLabel} (${regionConfig.currency})`}
+                  value={inputs.monthlyFixedExpenses}
+                  onChange={(v) => set('monthlyFixedExpenses', v)}
+                  hint="Include only unavoidable expenses and subscriptions."
+                />
+                <NumberField
+                  id="hl-debt"
+                  label={`${regionConfig.existingDebtLabel} (${regionConfig.currency})`}
+                  value={inputs.existingEMI}
+                  onChange={(v) => set('existingEMI', v)}
+                  hint="Existing EMIs reduce your safe room for a new housing payment."
+                />
+                <NumberField
+                  id="hl-down"
+                  label={`${regionConfig.downPaymentLabel} (${regionConfig.currency})`}
+                  value={inputs.downPayment}
+                  onChange={(v) => set('downPayment', v)}
+                  hint="A higher down payment lowers the required loan size."
+                />
+                <NumberField
+                  id="hl-property"
+                  label={`${regionConfig.propertyCostLabel} (${regionConfig.currency})`}
+                  value={inputs.targetPropertyCost}
+                  onChange={(v) => set('targetPropertyCost', v)}
+                  hint="Used to test whether your target property fits a safe budget."
+                />
+                <NumberField
+                  id="hl-rate"
+                  label="Interest Rate"
+                  suffix="%/yr"
+                  step={0.1}
+                  value={inputs.annualInterestRate}
+                  onChange={(v) => set('annualInterestRate', v)}
+                  hint="Current effective borrowing rate expected for your loan."
+                />
+                <NumberField
+                  id="hl-tenure"
+                  label="Loan Tenure"
+                  suffix="yrs"
+                  min={1}
+                  value={inputs.tenureYears}
+                  onChange={(v) => set('tenureYears', v)}
+                  hint="Longer tenure lowers EMI but increases total interest paid."
+                />
+                <SelectField
+                  id="hl-risk"
+                  label="Risk Profile"
+                  value={inputs.riskProfile}
+                  onChange={(v) => set('riskProfile', v)}
+                  options={[
+                    { value: 'conservative', label: 'Conservative' },
+                    { value: 'balanced', label: 'Balanced' },
+                    { value: 'aggressive', label: 'Aggressive' }
+                  ]}
+                />
               </div>
-              <div className="responsive-grid">
-                <div>
-                  <label className="input-label">{withTipLabel('Region', 'Changes currency and market assumptions for affordability model.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.region}
-                    onChange={(e) => {
-                      const nextRegion = e.target.value;
-                      const defaults = regionSettings[nextRegion];
-                      setInputs((prev) => ({
-                        ...prev,
-                        region: nextRegion,
-                        ...getRegionDefaults(nextRegion),
-                        annualInterestRate: defaults.defaultInterestRate,
-                        tenureYears: defaults.defaultTenureYears
-                      }));
-                    }}
-                  >
-                    <option value="india">India</option>
-                    <option value="us">United States</option>
-                    <option value="eu">EU/UK (Generic)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="input-label">
-                    {withTipLabel(`${regionConfig.monthlyIncomeLabel} (${regionConfig.currency})`, 'Monthly net income used for safe EMI budgeting.')}
-                  </label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.monthlyInHand}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, monthlyInHand: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Use after-tax monthly income, not gross salary.</p>
-                </div>
-                <div>
-                  <label className="input-label">
-                    {withTipLabel(`${regionConfig.monthlyExpensesLabel} (${regionConfig.currency})`, 'Essential recurring spend deducted before housing capacity is calculated.')}
-                  </label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.monthlyFixedExpenses}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, monthlyFixedExpenses: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Include only unavoidable expenses and subscriptions.</p>
-                </div>
-                <div>
-                  <label className="input-label">
-                    {withTipLabel(`${regionConfig.existingDebtLabel} (${regionConfig.currency})`, 'Existing EMIs reduce your safe room for a new housing payment.')}
-                  </label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.existingEMI}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, existingEMI: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">
-                    {withTipLabel(`${regionConfig.downPaymentLabel} (${regionConfig.currency})`, 'Higher down payment improves affordability and lowers required loan size.')}
-                  </label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.downPayment}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, downPayment: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">
-                    {withTipLabel(`${regionConfig.propertyCostLabel} (${regionConfig.currency})`, 'Used to test whether your target property fits safe budget.') }
-                  </label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.targetPropertyCost}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, targetPropertyCost: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Interest Rate (% per year)', 'Current effective borrowing rate expected for your loan.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    value={inputs.annualInterestRate}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, annualInterestRate: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Loan Tenure (years)', 'Longer tenure lowers EMI but increases total interest paid.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="1"
-                    value={inputs.tenureYears}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, tenureYears: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Risk Profile', 'Controls safety buffer and allowed EMI intensity in model.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.riskProfile}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, riskProfile: e.target.value }))}
-                  >
-                    <option value="conservative">Conservative</option>
-                    <option value="balanced">Balanced</option>
-                    <option value="aggressive">Aggressive</option>
-                  </select>
-                </div>
-              </div>
-              <div style={{ marginTop: '0.75rem', color: '#475569', fontSize: '0.92rem' }}>
+              <p className="mt-4 text-sm text-ink-muted dark:text-slate-400">
                 Model assumptions: {regionConfig.assumptions}
-              </div>
-              <button
-                className="calculator-button primary-button"
-                type="button"
-                style={stepPrimaryCtaStyle}
-                onClick={() => setStep(2)}
-              >
-                Continue to Affordability
-              </button>
+              </p>
+            </Card>
+            <Button onClick={() => setStep(2)}>Continue to Affordability</Button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="mt-6 space-y-5">
+            <HowToNote
+              title="How to read this step"
+              items={[
+                'Safe EMI and housing budget represent a conservative comfort zone.',
+                'Compare required housing payment vs safe budget to see stress risk.',
+                'Use this before committing to a down payment or booking amount.'
+              ]}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <ResultStat label="Safe new EMI" value={fmt(output.safeNewEmi)} emphasis tone="positive" />
+              <ResultStat label="Safe total housing budget" value={fmt(output.safeHousingBudget)} />
+              <ResultStat label="Max affordable loan" value={fmt(output.maxAffordableLoan)} />
+              <ResultStat label="Max property budget (incl. down payment)" value={fmt(output.maxPropertyBudget)} />
+              <ResultStat label="Required EMI for target" value={fmt(output.requiredEmi)} />
+              <ResultStat label="Required total housing payment" value={fmt(output.requiredHousingPayment)} />
             </div>
-          )}
-
-          {step === 2 && (
-            <div className="results-container">
-              <h2 className="results-title">Step 2: Affordability snapshot</h2>
-              <div style={helperBoxStyle}>
-                <strong>How to read this step:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Safe EMI and housing budget represent conservative comfort zone.</li>
-                  <li>Compare required housing payment vs safe budget to see stress risk.</li>
-                  <li>Use this before committing to down payment or booking amount.</li>
-                </ul>
-              </div>
-              <div className="responsive-grid">
-                <div className="result-item">
-                  <p className="result-label">
-                    <ShieldCheck size={16} /> Safe new EMI
-                  </p>
-                  <p className="result-value">{formatCurrency(output.safeNewEmi, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <Wallet size={16} /> Safe total housing budget
-                  </p>
-                  <p className="result-value">{formatCurrency(output.safeHousingBudget, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <Home size={16} /> Max affordable loan
-                  </p>
-                  <p className="result-value">{formatCurrency(output.maxAffordableLoan, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <Wallet size={16} /> Max property budget (incl. down payment)
-                  </p>
-                  <p className="result-value">{formatCurrency(output.maxPropertyBudget, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <AlertTriangle size={16} /> Required EMI for target
-                  </p>
-                  <p className="result-value">{formatCurrency(output.requiredEmi, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <AlertTriangle size={16} /> Required total housing payment
-                  </p>
-                  <p className="result-value">{formatCurrency(output.requiredHousingPayment, regionConfig)}</p>
-                </div>
-              </div>
-
-              <div style={{ marginTop: '1rem', background: '#f8fafc', padding: '1rem', borderRadius: '0.75rem' }}>
+            <Panel>
+              <p className="text-sm text-ink-soft dark:text-slate-300">
                 Monthly balance after required housing payment:{' '}
-                <strong>{formatCurrency(output.monthlyStress, regionConfig)}</strong>
-                <div style={{ marginTop: '0.4rem', color: '#64748b', fontSize: '0.9rem' }}>
-                  Effective FIOR cap used: {(output.effectiveFiorCap * 100).toFixed(0)}% | Estimated overhead:{' '}
-                  {(output.housingOverheadRate * 100).toFixed(0)}%
-                </div>
-              </div>
-
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <button className="calculator-button" type="button" onClick={() => setStep(1)}>
-                  Back to Inputs
-                </button>
-                <button
-                  className="calculator-button success-button"
-                  type="button"
-                  style={stepInlineCtaStyle}
-                  onClick={() => setStep(3)}
-                >
-                  Continue to Action Plan
-                </button>
-              </div>
+                <strong className="font-semibold text-ink dark:text-white">{fmt(output.monthlyStress)}</strong>
+              </p>
+              <p className="mt-1 text-xs text-ink-muted dark:text-slate-400">
+                Effective FIOR cap used: {(output.effectiveFiorCap * 100).toFixed(0)}% · Estimated overhead:{' '}
+                {(output.housingOverheadRate * 100).toFixed(0)}%
+              </p>
+            </Panel>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(1)}>Back to Inputs</Button>
+              <Button onClick={() => setStep(3)}>Continue to Action Plan</Button>
             </div>
-          )}
+          </div>
+        )}
 
-          {step === 3 && (
-            <div className="results-container">
-              <h2 className="results-title">Step 3: Readiness and action plan</h2>
-              <div
-                style={{
-                  borderLeft: `6px solid ${output.readiness.color}`,
-                  background: '#f8fafc',
-                  borderRadius: '0.75rem',
-                  padding: '1rem',
-                  marginBottom: '1rem'
-                }}
-              >
-                <p style={{ margin: 0, fontWeight: 700, color: output.readiness.color }}>
-                  <CheckCircle2 size={16} style={{ verticalAlign: 'middle' }} /> {output.readiness.label}
-                </p>
-                <p style={{ margin: '0.4rem 0 0 0', color: '#334155' }}>{output.readiness.reason}</p>
-              </div>
-
-              <div style={helperBoxStyle}>
-                <strong>How to use this plan:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>If labeled "Almost ready", close the smallest gap first (EMI or down payment).</li>
-                  <li>Check tenure sensitivity cards before final tenure selection.</li>
-                  <li>Re-run with lender-confirmed rate before final agreement.</li>
-                </ul>
-              </div>
-
-              <div className="responsive-grid">
-                <div className="result-item">
-                  <p className="result-label">Required loan</p>
-                  <p className="result-value">{formatCurrency(output.neededLoan, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">Loan affordability gap</p>
-                  <p className="result-value">{formatCurrency(output.loanGap, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">Housing payment gap</p>
-                  <p className="result-value">{formatCurrency(output.emiGap, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">Extra down payment needed</p>
-                  <p className="result-value">{formatCurrency(output.extraDownPaymentNeeded, regionConfig)}</p>
-                </div>
-              </div>
-
-              <h3 style={{ marginTop: '1.2rem', marginBottom: '0.8rem', color: '#1e293b' }}>Tenure sensitivity</h3>
-              <div className="responsive-grid">
+        {step === 3 && (
+          <div className="mt-6 space-y-5">
+            <DecisionBanner
+              tone={output.readiness.tone}
+              label={output.readiness.label}
+              reason={output.readiness.reason}
+              icon={<CheckCircle2 size={18} />}
+            />
+            <HowToNote
+              title="How to use this plan"
+              items={[
+                'If labeled "Almost ready", close the smallest gap first (EMI or down payment).',
+                'Check the tenure sensitivity cards before final tenure selection.',
+                'Re-run with a lender-confirmed rate before final agreement.'
+              ]}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <ResultStat label="Required loan" value={fmt(output.neededLoan)} />
+              <ResultStat label="Loan affordability gap" value={fmt(output.loanGap)} />
+              <ResultStat label="Housing payment gap" value={fmt(output.emiGap)} />
+              <ResultStat label="Extra down payment needed" value={fmt(output.extraDownPaymentNeeded)} />
+            </div>
+            <div>
+              <h3 className="mb-3 flex items-center gap-2 font-display text-base font-bold text-ink dark:text-white">
+                <Home size={18} /> Tenure sensitivity
+              </h3>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {output.tenureScenarios.map((scenario) => (
-                  <div key={scenario.years} className="result-item">
-                    <p className="result-label">{scenario.years}-year tenure</p>
-                    <p style={{ marginBottom: '0.35rem', color: '#334155' }}>
-                      Affordable loan: <strong>{formatCurrency(scenario.affordableLoan, regionConfig)}</strong>
-                    </p>
-                    <p style={{ color: '#334155' }}>
-                      Required EMI: <strong>{formatCurrency(scenario.requiredEmi, regionConfig)}</strong>
-                    </p>
-                    <p style={{ color: '#334155' }}>
-                      Total housing payment:{' '}
-                      <strong>{formatCurrency(scenario.requiredHousingPayment, regionConfig)}</strong>
-                    </p>
-                  </div>
+                  <Panel key={scenario.years} title={`${scenario.years}-year tenure`}>
+                    <div className="space-y-1">
+                      <PanelRow label="Affordable loan" value={fmt(scenario.affordableLoan)} />
+                      <PanelRow label="Required EMI" value={fmt(scenario.requiredEmi)} />
+                      <PanelRow label="Total housing payment" value={fmt(scenario.requiredHousingPayment)} />
+                    </div>
+                  </Panel>
                 ))}
               </div>
-
-              <button className="calculator-button" type="button" onClick={() => setStep(2)}>
-                Back to Affordability
-              </button>
             </div>
-          )}
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(2)}>Back to Affordability</Button>
+            </div>
+          </div>
+        )}
 
+        <div className="mt-8">
           <SearchLandingSections
             intro={(
               <>
@@ -656,8 +484,8 @@ const HomeLoanReadinessWorkflow = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

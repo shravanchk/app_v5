@@ -1,9 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import { Briefcase, TrendingUp, PiggyBank, Wallet, CheckCircle2 } from 'lucide-react';
-import HomeButton from './HomeButton';
 import EEATPanel from './calculator/EEATPanel';
 import SearchLandingSections from './calculator/SearchLandingSections';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField, SelectField } from './ui/Field';
+import Button from './ui/Button';
+import Card from './ui/Card';
+import { WorkflowSteps, HowToNote, DecisionBanner, Panel, ActionList } from './workflow/WorkflowKit';
 import { buildBreadcrumbSchema } from '../utils/schema';
 import { editorialProfiles } from '../utils/editorialProfiles';
 
@@ -233,7 +237,7 @@ const recommendationFor = (monthlyGain, realGain, monthlySurplus, thresholds) =>
     return {
       label: 'Do not switch yet',
       reason: 'Your estimated monthly in-hand does not improve after deductions.',
-      color: '#dc2626'
+      tone: 'danger'
     };
   }
 
@@ -241,7 +245,7 @@ const recommendationFor = (monthlyGain, realGain, monthlySurplus, thresholds) =>
     return {
       label: 'Negotiate before accepting',
       reason: 'Offer improves cash flow, but cost-of-living adjusted gain is still limited.',
-      color: '#d97706'
+      tone: 'warning'
     };
   }
 
@@ -249,14 +253,14 @@ const recommendationFor = (monthlyGain, realGain, monthlySurplus, thresholds) =>
     return {
       label: 'Accept with a tighter budget',
       reason: 'Income improves, but discretionary headroom remains tight after fixed costs.',
-      color: '#2563eb'
+      tone: 'info'
     };
   }
 
   return {
     label: 'Accept offer',
     reason: 'The offer improves both take-home and monthly planning flexibility.',
-    color: '#059669'
+    tone: 'positive'
   };
 };
 
@@ -270,6 +274,9 @@ const JobOfferWorkflow = () => {
   });
 
   const regionConfig = regionConfigs[inputs.region];
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
+  const fmt = (value) => formatCurrency(value, regionConfig);
+
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', item: 'https://upaman.com/' },
     { name: 'Job Offer Decision Workflow', item: 'https://upaman.com/job-offer-workflow' }
@@ -288,7 +295,10 @@ const JobOfferWorkflow = () => {
       answer: 'That usually means you should negotiate harder, delay the switch, or compare non-cash factors more carefully before deciding.'
     }
   ];
-  const locationOptions = Object.entries(regionConfig.locationTiers);
+  const locationOptions = Object.entries(regionConfig.locationTiers).map(([key, config]) => ({
+    value: key,
+    label: config.label
+  }));
 
   const current = useMemo(
     () => calculateTakeHome(Number(inputs.currentCTC) || 0, regionConfig, inputs.currentCity),
@@ -325,370 +335,180 @@ const JobOfferWorkflow = () => {
     };
   }, [offer, current, inputs.monthlyFixedCosts, inputs.riskProfile, regionConfig.decisionThresholds]);
 
-  const stepStyle = (active) => ({
-    background: active ? '#1d4ed8' : '#e2e8f0',
-    color: active ? '#fff' : '#334155',
-    border: 'none',
-    borderRadius: '999px',
-    padding: '0.5rem 1rem',
-    fontWeight: 600,
-    cursor: 'pointer'
-  });
-  const stepPrimaryCtaStyle = {
-    marginTop: '1.1rem',
-    width: 'auto',
-    minWidth: '220px',
-    padding: '0.58rem 0.95rem',
-    fontSize: '0.88rem',
-    lineHeight: 1.2
-  };
-  const stepInlineCtaStyle = {
-    width: 'auto',
-    minWidth: '200px',
-    padding: '0.56rem 0.9rem',
-    fontSize: '0.86rem',
-    lineHeight: 1.2
-  };
-  const helperBoxStyle = {
-    background: '#eff6ff',
-    border: '1px solid #bfdbfe',
-    borderRadius: '0.75rem',
-    padding: '0.85rem',
-    marginBottom: '1rem',
-    color: '#1e3a8a'
-  };
-  const hintStyle = {
-    margin: '0.25rem 0 0',
-    fontSize: '0.8rem',
-    color: '#64748b'
-  };
-  const tipIconStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '16px',
-    height: '16px',
-    borderRadius: '999px',
-    border: '1px solid #94a3b8',
-    color: '#475569',
-    fontSize: '0.68rem',
-    lineHeight: 1,
-    cursor: 'help',
-    background: '#f8fafc'
-  };
-  const withTipLabel = (text, tip) => (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-      <span>{text}</span>
-      <span style={tipIconStyle} title={tip} aria-label={tip}>i</span>
-    </span>
-  );
-
   return (
-    <div className="calculator-container salary-container">
+    <>
       <Head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
-      <div className="calculator-card">
-        <div className="calculator-header salary-header">
-          <div className="header-nav">
-            <HomeButton style={{ position: 'static' }} />
-            <div style={{ flex: 1 }} />
-          </div>
-          <h1 className="header-title">Job Offer Decision Workflow</h1>
-          <p style={{ margin: 0, opacity: 0.95 }}>
-            One flow: compare take-home, stress-test monthly budget, then decide.
-          </p>
+
+      <CalcLayout
+        eyebrow="Decision workflow"
+        title="Job Offer Decision Workflow"
+        subtitle="One flow: compare take-home, stress-test your monthly budget, then decide."
+      >
+        <EEATPanel
+          author={editorialProfiles.researchTeam}
+          reviewer={editorialProfiles.financeReviewDesk}
+          reviewedOn="June 28, 2026"
+          scope="This workflow compares modeled take-home impact, city-adjusted spending power, and monthly surplus guidance. It supports planning, not formal compensation advice."
+          sources={[
+            { label: 'Income Tax Department of India', url: 'https://incometaxindia.gov.in/' },
+            { label: 'IRS', url: 'https://www.irs.gov/' },
+            { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' }
+          ]}
+        />
+
+        <div className="mt-6">
+          <WorkflowSteps steps={['Inputs', 'In-hand Impact', 'Decision Plan']} active={step} onChange={setStep} />
         </div>
 
-        <div className="mobile-card-content">
-          <EEATPanel
-            author={editorialProfiles.researchTeam}
-            reviewer={editorialProfiles.financeReviewDesk}
-            reviewedOn="March 14, 2026"
-            scope="This workflow compares modeled take-home impact, city-adjusted spending power, and monthly surplus guidance. It supports planning, not formal compensation advice."
-            sources={[
-              { label: 'Income Tax Department of India', url: 'https://incometaxindia.gov.in/' },
-              { label: 'IRS', url: 'https://www.irs.gov/' },
-              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' }
-            ]}
-          />
-
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-            <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
-              1. Inputs
-            </button>
-            <button type="button" style={stepStyle(step === 2)} onClick={() => setStep(2)}>
-              2. In-hand Impact
-            </button>
-            <button type="button" style={stepStyle(step === 3)} onClick={() => setStep(3)}>
-              3. Decision Plan
-            </button>
-          </div>
-
-          {step === 1 && (
-            <div className="input-section">
-              <h2 className="section-title">Step 1: Enter current vs new offer</h2>
-              <div style={helperBoxStyle}>
-                <strong>How to use this step:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Enter current and new package values from actual offer letters.</li>
-                  <li>Choose location types honestly to avoid inflated gain estimates.</li>
-                  <li>Keep fixed costs realistic so monthly surplus calculation is useful.</li>
-                </ul>
+        {step === 1 && (
+          <div className="mt-6 space-y-5">
+            <HowToNote
+              items={[
+                'Enter current and new package values from actual offer letters.',
+                'Choose location types honestly to avoid inflated gain estimates.',
+                'Keep fixed costs realistic so the monthly surplus calculation is useful.'
+              ]}
+            />
+            <Card className="p-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <SelectField
+                  id="jo-region"
+                  label="Region"
+                  value={inputs.region}
+                  onChange={(v) => setInputs((prev) => ({ ...prev, region: v, ...getRegionDefaults(v) }))}
+                  options={[
+                    { value: 'india', label: 'India' },
+                    { value: 'us', label: 'United States' },
+                    { value: 'eu', label: 'EU/UK (Generic)' }
+                  ]}
+                />
+                <NumberField
+                  id="jo-current"
+                  label={`Current ${regionConfig.annualCompLabel} (${regionConfig.currency})`}
+                  value={inputs.currentCTC}
+                  onChange={(v) => set('currentCTC', v)}
+                  hint="Use your current effective annual package, not an outdated salary."
+                />
+                <NumberField
+                  id="jo-new"
+                  label={`New ${regionConfig.annualCompLabel} (${regionConfig.currency})`}
+                  value={inputs.newCTC}
+                  onChange={(v) => set('newCTC', v)}
+                  hint="If the offer has variable pay, use a conservative expected value."
+                />
+                <SelectField
+                  id="jo-curcity"
+                  label="Current Location Type"
+                  value={inputs.currentCity}
+                  onChange={(v) => set('currentCity', v)}
+                  options={locationOptions}
+                />
+                <SelectField
+                  id="jo-newcity"
+                  label="New Location Type"
+                  value={inputs.newCity}
+                  onChange={(v) => set('newCity', v)}
+                  options={locationOptions}
+                />
+                <NumberField
+                  id="jo-fixed"
+                  label={`${regionConfig.fixedCostLabel} (${regionConfig.currency})`}
+                  value={inputs.monthlyFixedCosts}
+                  onChange={(v) => set('monthlyFixedCosts', v)}
+                  hint="Include rent, EMIs, and recurring essentials only."
+                />
+                <SelectField
+                  id="jo-risk"
+                  label="Risk Profile"
+                  value={inputs.riskProfile}
+                  onChange={(v) => set('riskProfile', v)}
+                  options={[
+                    { value: 'conservative', label: 'Conservative' },
+                    { value: 'balanced', label: 'Balanced' },
+                    { value: 'aggressive', label: 'Aggressive' }
+                  ]}
+                />
               </div>
-              <div className="responsive-grid">
-                <div>
-                  <label className="input-label">{withTipLabel('Region', 'Changes tax and cost-of-living model assumptions.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.region}
-                    onChange={(e) => {
-                      const nextRegion = e.target.value;
-                      setInputs((prev) => ({
-                        ...prev,
-                        region: nextRegion,
-                        ...getRegionDefaults(nextRegion)
-                      }));
-                    }}
-                  >
-                    <option value="india">India</option>
-                    <option value="us">United States</option>
-                    <option value="eu">EU/UK (Generic)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="input-label">
-                    {withTipLabel(`Current ${regionConfig.annualCompLabel} (${regionConfig.currency})`, 'Use your current total annual package before deductions.')}
-                  </label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.currentCTC}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, currentCTC: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Use current effective annual package, not outdated salary.</p>
-                </div>
-                <div>
-                  <label className="input-label">
-                    {withTipLabel(`New ${regionConfig.annualCompLabel} (${regionConfig.currency})`, 'Enter the offered annual package to compare against current pay.')}
-                  </label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.newCTC}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, newCTC: e.target.value }))}
-                  />
-                  <p style={hintStyle}>If offer has variable pay, use conservative expected value.</p>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Current Location Type', 'Used for cost-of-living adjustment in real-gain comparison.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.currentCity}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, currentCity: e.target.value }))}
-                  >
-                    {locationOptions.map(([key, config]) => (
-                      <option key={key} value={key}>
-                        {config.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('New Location Type', 'Higher-cost location can reduce real benefit even with higher pay.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.newCity}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, newCity: e.target.value }))}
-                  >
-                    {locationOptions.map(([key, config]) => (
-                      <option key={key} value={key}>
-                        {config.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="input-label">
-                    {withTipLabel(`${regionConfig.fixedCostLabel} (${regionConfig.currency})`, 'Used to estimate post-switch free monthly surplus.')}
-                  </label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.monthlyFixedCosts}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, monthlyFixedCosts: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Include rent, EMIs, and recurring essentials only.</p>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Risk Profile', 'Controls suggested split between investing, emergency fund, and EMI cap.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.riskProfile}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, riskProfile: e.target.value }))}
-                  >
-                    <option value="conservative">Conservative</option>
-                    <option value="balanced">Balanced</option>
-                    <option value="aggressive">Aggressive</option>
-                  </select>
-                </div>
-              </div>
-              <div style={{ marginTop: '0.75rem', color: '#475569', fontSize: '0.92rem' }}>
+              <p className="mt-4 text-sm text-ink-muted dark:text-slate-400">
                 Model assumptions: {regionConfig.taxModelLabel}
-              </div>
-              <button
-                className="calculator-button primary-button"
-                type="button"
-                style={stepPrimaryCtaStyle}
-                onClick={() => setStep(2)}
-              >
-                Continue to In-hand Impact
-              </button>
+              </p>
+            </Card>
+            <Button onClick={() => setStep(2)}>Continue to In-hand Impact</Button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="mt-6 space-y-5">
+            <HowToNote
+              title="How to read this step"
+              items={[
+                'Monthly gain is the raw cash difference after modeled deductions.',
+                'Cost-of-living adjusted gain shows the real spending-power change.',
+                'If adjusted gain is low, negotiate or revise expectations before switching.'
+              ]}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <ResultStat label="Current in-hand (monthly)" value={fmt(current.monthlyNet)} />
+              <ResultStat label="New in-hand (monthly)" value={fmt(offer.monthlyNet)} emphasis tone="positive" />
+              <ResultStat label="Monthly gain (actual)" value={fmt(deltas.monthlyGain)} />
+              <ResultStat label="Annual tax difference" value={fmt(deltas.taxDelta)} />
+              <ResultStat label="Employee contribution difference" value={fmt(deltas.contributionDelta)} />
+              <ResultStat label="Local deduction difference" value={fmt(deltas.localChargeDelta)} />
             </div>
-          )}
-
-          {step === 2 && (
-            <div className="results-container">
-              <h2 className="results-title">Step 2: What changes if you switch?</h2>
-              <div style={helperBoxStyle}>
-                <strong>How to read this step:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Monthly gain is raw cash difference after modeled deductions.</li>
-                  <li>Cost-of-living adjusted gain shows real spending-power change.</li>
-                  <li>If adjusted gain is low, negotiate or revise expectations before switching.</li>
-                </ul>
-              </div>
-              <div className="responsive-grid">
-                <div className="result-item">
-                  <p className="result-label">
-                    <Briefcase size={16} /> Current in-hand (monthly)
-                  </p>
-                  <p className="result-value">{formatCurrency(current.monthlyNet, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <TrendingUp size={16} /> New in-hand (monthly)
-                  </p>
-                  <p className="result-value">{formatCurrency(offer.monthlyNet, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <TrendingUp size={16} /> Monthly gain (actual)
-                  </p>
-                  <p className="result-value">{formatCurrency(deltas.monthlyGain, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <Wallet size={16} /> Annual tax difference
-                  </p>
-                  <p className="result-value">{formatCurrency(deltas.taxDelta, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <Wallet size={16} /> Employee contribution difference
-                  </p>
-                  <p className="result-value">{formatCurrency(deltas.contributionDelta, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <Wallet size={16} /> Local deduction difference
-                  </p>
-                  <p className="result-value">{formatCurrency(deltas.localChargeDelta, regionConfig)}</p>
-                </div>
-              </div>
-
-              <div style={{ marginTop: '1.25rem', background: '#f8fafc', padding: '1rem', borderRadius: '0.75rem' }}>
-                Cost-of-living adjusted monthly gain: <strong>{formatCurrency(deltas.realGain, regionConfig)}</strong>
-              </div>
-
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <button className="calculator-button" type="button" onClick={() => setStep(1)}>
-                  Back to Inputs
-                </button>
-                <button
-                  className="calculator-button success-button"
-                  type="button"
-                  style={stepInlineCtaStyle}
-                  onClick={() => setStep(3)}
-                >
-                  Continue to Decision Plan
-                </button>
-              </div>
+            <Panel>
+              <p className="text-sm text-ink-soft dark:text-slate-300">
+                Cost-of-living adjusted monthly gain:{' '}
+                <strong className="font-semibold text-ink dark:text-white">{fmt(deltas.realGain)}</strong>
+              </p>
+            </Panel>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(1)}>Back to Inputs</Button>
+              <Button onClick={() => setStep(3)}>Continue to Decision Plan</Button>
             </div>
-          )}
+          </div>
+        )}
 
-          {step === 3 && (
-            <div className="results-container">
-              <h2 className="results-title">Step 3: Suggested monthly plan</h2>
-              <div
-                style={{
-                  borderLeft: `6px solid ${deltas.recommendation.color}`,
-                  background: '#f8fafc',
-                  borderRadius: '0.75rem',
-                  padding: '1rem',
-                  marginBottom: '1rem'
-                }}
-              >
-                <p style={{ margin: 0, fontWeight: 700, color: deltas.recommendation.color }}>
-                  <CheckCircle2 size={16} style={{ verticalAlign: 'middle' }} /> {deltas.recommendation.label}
-                </p>
-                <p style={{ margin: '0.4rem 0 0 0', color: '#334155' }}>{deltas.recommendation.reason}</p>
-              </div>
-
-              <div style={helperBoxStyle}>
-                <strong>How to use this plan:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Treat this as first-month allocation guidance after switching.</li>
-                  <li>Protect emergency runway first, then scale investing and EMI commitments.</li>
-                  <li>Re-run after 2-3 salary cycles with actual cash-flow data.</li>
-                </ul>
-              </div>
-
-              <div className="responsive-grid">
-                <div className="result-item">
-                  <p className="result-label">
-                    <Wallet size={16} /> Free monthly surplus
-                  </p>
-                  <p className="result-value">{formatCurrency(deltas.monthlySurplus, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <PiggyBank size={16} /> Suggested monthly investing
-                  </p>
-                  <p className="result-value">{formatCurrency(deltas.sipSuggestion, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <Wallet size={16} /> Emergency fund bucket
-                  </p>
-                  <p className="result-value">{formatCurrency(deltas.emergencySuggestion, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label">
-                    <Briefcase size={16} /> Max EMI cap (profile-based)
-                  </p>
-                  <p className="result-value">{formatCurrency(deltas.emiCap, regionConfig)}</p>
-                </div>
-              </div>
-
-              <div style={{ marginTop: '1rem' }}>
-                <p style={{ marginBottom: '0.4rem', fontWeight: 600 }}>Action checklist</p>
-                <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#334155' }}>
-                  <li>Keep total EMIs under the suggested cap before accepting bigger liabilities.</li>
-                  <li>Automate monthly investing on salary day to maintain discipline.</li>
-                  <li>Build 4-6 months emergency runway from the monthly emergency bucket.</li>
-                </ul>
-              </div>
-
-              <button className="calculator-button" type="button" onClick={() => setStep(2)}>
-                Back to In-hand Impact
-              </button>
+        {step === 3 && (
+          <div className="mt-6 space-y-5">
+            <DecisionBanner
+              tone={deltas.recommendation.tone}
+              label={deltas.recommendation.label}
+              reason={deltas.recommendation.reason}
+              icon={<CheckCircle2 size={18} />}
+            />
+            <HowToNote
+              title="How to use this plan"
+              items={[
+                'Treat this as first-month allocation guidance after switching.',
+                'Protect emergency runway first, then scale investing and EMI commitments.',
+                'Re-run after 2-3 salary cycles with actual cash-flow data.'
+              ]}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <ResultStat label="Free monthly surplus" value={fmt(deltas.monthlySurplus)} />
+              <ResultStat label="Suggested monthly investing" value={fmt(deltas.sipSuggestion)} />
+              <ResultStat label="Emergency fund bucket" value={fmt(deltas.emergencySuggestion)} />
+              <ResultStat label="Max EMI cap (profile-based)" value={fmt(deltas.emiCap)} />
             </div>
-          )}
+            <Card className="p-5">
+              <ActionList
+                title="Action checklist"
+                items={[
+                  'Keep total EMIs under the suggested cap before accepting bigger liabilities.',
+                  'Automate monthly investing on salary day to maintain discipline.',
+                  'Build 4-6 months emergency runway from the monthly emergency bucket.'
+                ]}
+              />
+            </Card>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(2)}>Back to In-hand Impact</Button>
+            </div>
+          </div>
+        )}
 
+        <div className="mt-8">
           <SearchLandingSections
             intro={(
               <>
@@ -724,8 +544,8 @@ const JobOfferWorkflow = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

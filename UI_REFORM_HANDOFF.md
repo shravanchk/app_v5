@@ -82,8 +82,13 @@ These were explicitly deferred/skipped in session 2 — resume here:
 ### Other UI-reform items (from session 1, still open)
 1. **Colourise homepage Start-Here + Workflow card icons** (`components/home/StartHere.tsx`,
    `WorkflowCards.tsx`) using the tint map, for consistency with the calculator grid.
-4. **Workflow pages** (home-loan-readiness, rent-vs-buy, prepay-vs-invest, job-offer,
-   emergency-fund, car-ownership) — onto the new design + dark mode.
+4. ~~**Workflow pages** (home-loan-readiness, rent-vs-buy, prepay-vs-invest, job-offer,
+   emergency-fund, car-ownership) — onto the new design + dark mode.~~ **DONE** — all 6
+   migrated to `CalcLayout` + new shared `components/workflow/WorkflowKit.tsx` (`WorkflowSteps`,
+   `HowToNote`, `DecisionBanner`, `Panel`/`PanelRow`, `ActionList`). Decision logic now returns
+   a `tone` (`positive`/`warning`/`danger`/`info`) instead of a hex `color`. Field tips folded
+   into `NumberField`/`SelectField` `hint`s. Logic/JSON-LD/EEAT/SearchLandingSections preserved.
+   `HomeButton` dropped. Verified tsc + build + dark mode in preview.
 5. **Guide pages**: make `components/guides/GuidePageLayout.js` dark-aware Tailwind (currently
    light inline styles). Also the programmatic `pages/tax-on-salary/[slug].js` + `index.js`.
 6. **Create `/workflows` and `/guides` index pages** — the navbar's Workflows/Guides/Tools items
@@ -91,6 +96,11 @@ These were explicitly deferred/skipped in session 2 — resume here:
    repoint the nav (`components/home/Navbar.tsx`).
 7. **Legal pages**: verify `components/legal/LegalPageLayout.js` dark mode.
 8. Final dark-mode audit across all inner pages.
+9. **HowTo SEO (queued)**: only `AgeCalculator.js` currently emits `HowTo` JSON-LD. ~30 calculator
+   pages have neither a visible "How to use this calculator" step list nor HowTo structured data.
+   Plan: shared `HowToSection` component (numbered, dark-aware) + `buildHowToSchema` helper (copy
+   AgeCalculator's pattern), then add 3-6 concrete steps per calculator. Workflows already show
+   visible how-to notes (could also get HowTo schema).
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's

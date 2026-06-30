@@ -2,9 +2,13 @@ import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import { Car, Fuel, Wallet, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
-import HomeButton from './HomeButton';
 import EEATPanel from './calculator/EEATPanel';
 import SearchLandingSections from './calculator/SearchLandingSections';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField, SelectField } from './ui/Field';
+import Button from './ui/Button';
+import Card from './ui/Card';
+import { WorkflowSteps, HowToNote, DecisionBanner, Panel, ActionList } from './workflow/WorkflowKit';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 import { editorialProfiles } from '../utils/editorialProfiles';
 
@@ -130,6 +134,8 @@ const CarOwnershipCostWorkflow = () => {
   });
 
   const regionConfig = regionSettings[inputs.region];
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
+  const fmt = (value) => formatCurrency(value, regionConfig);
 
   const output = useMemo(() => {
     const monthlyInHand = Math.max(0, Number(inputs.monthlyInHand) || 0);
@@ -189,25 +195,25 @@ const CarOwnershipCostWorkflow = () => {
     if (postOwnershipBuffer < 0 || trueOwnershipCost > monthlyInHand * 0.25) {
       recommendation = {
         label: 'Car cost is too heavy',
-        color: '#dc2626',
+        tone: 'danger',
         reason: 'Transport is consuming too much of monthly income after essential expenses.'
       };
     } else if (trueOwnershipCost > transportBudgetTarget || postOwnershipBuffer < regionConfig.safetyBuffer) {
       recommendation = {
         label: 'Manageable, but tight',
-        color: '#d97706',
+        tone: 'warning',
         reason: 'You can carry this cost, but it leaves less room for savings, emergencies, and future goals.'
       };
     } else if (alternativeCommuteMonthly > 0 && monthlyGapVsAlternative > transportBudgetTarget * 0.35) {
       recommendation = {
         label: 'Use a hybrid commute',
-        color: '#2563eb',
+        tone: 'info',
         reason: 'Owning and driving is workable, but the cheaper commute option saves enough to matter.'
       };
     } else {
       recommendation = {
         label: 'Current car budget is reasonable',
-        color: '#059669',
+        tone: 'positive',
         reason: 'Your monthly transport cost fits the modeled budget without stressing cash flow.'
       };
     }
@@ -278,233 +284,185 @@ const CarOwnershipCostWorkflow = () => {
     }
   ];
 
-  const stepStyle = (active) => ({
-    background: active ? '#0f766e' : '#e2e8f0',
-    color: active ? '#fff' : '#334155',
-    border: 'none',
-    borderRadius: '999px',
-    padding: '0.5rem 1rem',
-    fontWeight: 600,
-    cursor: 'pointer'
-  });
-
-  const helperBoxStyle = {
-    background: '#eff6ff',
-    border: '1px solid #bfdbfe',
-    borderRadius: '0.75rem',
-    padding: '0.85rem',
-    marginBottom: '1rem',
-    color: '#1e3a8a'
-  };
-
-  const tipIconStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '16px',
-    height: '16px',
-    borderRadius: '999px',
-    border: '1px solid #94a3b8',
-    color: '#475569',
-    fontSize: '0.68rem',
-    lineHeight: 1,
-    cursor: 'help',
-    background: '#f8fafc'
-  };
-
-  const withTipLabel = (text, tip) => (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-      <span>{text}</span>
-      <span style={tipIconStyle} title={tip} aria-label={tip}>i</span>
-    </span>
-  );
-
   return (
-    <div className="calculator-container emi-container">
+    <>
       <Head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
-      <div className="calculator-card">
-        <div className="calculator-header emi-header">
-          <div className="header-nav">
-            <HomeButton style={{ position: 'static' }} />
-            <div style={{ flex: 1 }} />
-          </div>
-          <h1 className="header-title">Car Ownership Cost Workflow</h1>
-          <p style={{ margin: 0, opacity: 0.95 }}>
-            Estimate true monthly driving cost with fuel, EMI, insurance, upkeep, and a cheaper-commute comparison.
-          </p>
+
+      <CalcLayout
+        eyebrow="Decision workflow"
+        title="Car Ownership Cost Workflow"
+        subtitle="Estimate the true monthly driving cost with fuel, EMI, insurance, upkeep, and a cheaper-commute comparison."
+      >
+        <EEATPanel
+          author={editorialProfiles.researchTeam}
+          reviewer={editorialProfiles.financeReviewDesk}
+          reviewedOn="June 28, 2026"
+          scope="This workflow estimates transport affordability using user-entered driving, loan, and upkeep assumptions. It is for planning, not insurer or lender validation."
+          sources={[
+            { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+            { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/' },
+            { label: 'NHTSA Vehicle Ownership Resources', url: 'https://www.nhtsa.gov/road-safety' }
+          ]}
+        />
+
+        <div className="mt-6">
+          <WorkflowSteps steps={['Inputs', 'Cost View', 'Action Plan']} active={step} onChange={setStep} />
         </div>
 
-        <div className="mobile-card-content">
-          <EEATPanel
-            author={editorialProfiles.researchTeam}
-            reviewer={editorialProfiles.financeReviewDesk}
-            reviewedOn="March 14, 2026"
-            scope="This workflow estimates transport affordability using user-entered driving, loan, and upkeep assumptions. It is for planning, not insurer or lender validation."
-            sources={[
-              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
-              { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/' },
-              { label: 'NHTSA Vehicle Ownership Resources', url: 'https://www.nhtsa.gov/road-safety' }
-            ]}
-          />
-
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-            <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
-              1. Inputs
-            </button>
-            <button type="button" style={stepStyle(step === 2)} onClick={() => setStep(2)}>
-              2. Cost View
-            </button>
-            <button type="button" style={stepStyle(step === 3)} onClick={() => setStep(3)}>
-              3. Action Plan
-            </button>
+        {step === 1 && (
+          <div className="mt-6 space-y-5">
+            <HowToNote
+              items={[
+                'Use net monthly income and only essential fixed expenses.',
+                'Enter realistic commute distance and office days, not best-case estimates.',
+                'Include EMI and upkeep even if fuel feels like the main expense — that is where transport budgets usually get distorted.'
+              ]}
+            />
+            <Card className="p-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <SelectField
+                  id="co-region"
+                  label="Region"
+                  value={inputs.region}
+                  onChange={(v) => setInputs((prev) => ({ ...prev, region: v, ...getRegionDefaults(v) }))}
+                  options={[
+                    { value: 'india', label: 'India' },
+                    { value: 'us', label: 'United States' },
+                    { value: 'eu', label: 'EU/UK (Generic)' }
+                  ]}
+                />
+                <NumberField
+                  id="co-income"
+                  label={`Monthly in-hand income (${regionConfig.currency})`}
+                  value={inputs.monthlyInHand}
+                  onChange={(v) => set('monthlyInHand', v)}
+                  hint="Use post-tax income available for actual spending."
+                />
+                <NumberField
+                  id="co-expenses"
+                  label={`Monthly fixed expenses (${regionConfig.currency})`}
+                  value={inputs.monthlyFixedExpenses}
+                  onChange={(v) => set('monthlyFixedExpenses', v)}
+                  hint="Rent, EMIs, groceries, utilities, and other non-negotiable bills."
+                />
+                <NumberField
+                  id="co-emi"
+                  label={`Car EMI (${regionConfig.currency})`}
+                  value={inputs.carEmi}
+                  onChange={(v) => set('carEmi', v)}
+                  hint="Set to zero if the vehicle is already fully paid off."
+                />
+                <NumberField
+                  id="co-distance"
+                  label={`Daily round-trip commute (${regionConfig.distanceUnit})`}
+                  value={inputs.roundTripDistance}
+                  onChange={(v) => set('roundTripDistance', v)}
+                  hint="Distance for one workday there-and-back travel."
+                />
+                <NumberField
+                  id="co-days"
+                  label="Office days per month"
+                  value={inputs.officeDays}
+                  onChange={(v) => set('officeDays', v)}
+                  hint="Use expected office or driving days, not calendar days."
+                />
+                <NumberField
+                  id="co-eff"
+                  label={regionConfig.efficiencyLabel}
+                  value={inputs.fuelEfficiency}
+                  onChange={(v) => set('fuelEfficiency', v)}
+                  hint="Average real-world efficiency is better than brochure numbers."
+                />
+                <NumberField
+                  id="co-fuel"
+                  label={`${regionConfig.fuelPriceLabel} (${regionConfig.currency})`}
+                  value={inputs.fuelPrice}
+                  onChange={(v) => set('fuelPrice', v)}
+                  hint="Use the regular fuel price you actually pay."
+                />
+                <NumberField
+                  id="co-tolls"
+                  label={`Monthly tolls (${regionConfig.currency})`}
+                  value={inputs.monthlyTolls}
+                  onChange={(v) => set('monthlyTolls', v)}
+                  hint="Fastag, toll roads, congestion charges, or similar recurring charges."
+                />
+                <NumberField
+                  id="co-parking"
+                  label={`Monthly parking (${regionConfig.currency})`}
+                  value={inputs.monthlyParking}
+                  onChange={(v) => set('monthlyParking', v)}
+                  hint="Office parking, building parking, or public parking passes."
+                />
+                <NumberField
+                  id="co-maint"
+                  label={`Monthly maintenance reserve (${regionConfig.currency})`}
+                  value={inputs.monthlyMaintenance}
+                  onChange={(v) => set('monthlyMaintenance', v)}
+                  hint="Tyres, servicing, minor repairs, washing, and misc upkeep reserve."
+                />
+                <NumberField
+                  id="co-ins"
+                  label={`Annual insurance (${regionConfig.currency})`}
+                  value={inputs.annualInsurance}
+                  onChange={(v) => set('annualInsurance', v)}
+                  hint="Full-year premium; the model converts this to monthly cost."
+                />
+                <NumberField
+                  id="co-value"
+                  label={`Current car value (${regionConfig.currency})`}
+                  value={inputs.carValue}
+                  onChange={(v) => set('carValue', v)}
+                  hint="Approximate resale or current market value for depreciation estimate."
+                />
+                <NumberField
+                  id="co-dep"
+                  label="Annual depreciation"
+                  suffix="%"
+                  value={inputs.annualDepreciationPct}
+                  onChange={(v) => set('annualDepreciationPct', v)}
+                  hint="Approximate annual drop in car value. Use a conservative estimate."
+                />
+                <NumberField
+                  id="co-alt"
+                  label={`Alternative monthly commute cost (${regionConfig.currency})`}
+                  value={inputs.alternativeCommuteMonthly}
+                  onChange={(v) => set('alternativeCommuteMonthly', v)}
+                  hint="Public transport, car-pool, taxi budget, or hybrid commute benchmark."
+                />
+              </div>
+            </Card>
+            <Button onClick={() => setStep(2)}>Continue to Cost View</Button>
           </div>
+        )}
 
-          {step === 1 && (
-            <div className="input-section">
-              <h2 className="section-title">Step 1: Car and commute assumptions</h2>
-              <div style={helperBoxStyle}>
-                <strong>How to use this step:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Use net monthly income and only essential fixed expenses.</li>
-                  <li>Enter realistic commute distance and office days, not best-case estimates.</li>
-                  <li>Include EMI and upkeep even if fuel feels like the main expense. That is where transport budgets usually get distorted.</li>
-                </ul>
-              </div>
-              <div className="responsive-grid">
-                <div>
-                  <label className="input-label">{withTipLabel('Region', 'Changes defaults, labels, currency, and budget assumptions.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.region}
-                    onChange={(e) => {
-                      const nextRegion = e.target.value;
-                      setInputs((prev) => ({
-                        ...prev,
-                        region: nextRegion,
-                        ...getRegionDefaults(nextRegion)
-                      }));
-                    }}
-                  >
-                    <option value="india">India</option>
-                    <option value="us">United States</option>
-                    <option value="eu">EU/UK (Generic)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Monthly in-hand income (${regionConfig.currency})`, 'Use post-tax income available for actual spending.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.monthlyInHand} onChange={(e) => setInputs((prev) => ({ ...prev, monthlyInHand: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Monthly fixed expenses (${regionConfig.currency})`, 'Rent, EMIs, groceries, utilities, school fees, and other non-negotiable bills.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.monthlyFixedExpenses} onChange={(e) => setInputs((prev) => ({ ...prev, monthlyFixedExpenses: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Car EMI (${regionConfig.currency})`, 'Set to zero if the vehicle is already fully paid off.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.carEmi} onChange={(e) => setInputs((prev) => ({ ...prev, carEmi: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Daily round-trip commute (${regionConfig.distanceUnit})`, 'Distance for one workday there-and-back travel.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.roundTripDistance} onChange={(e) => setInputs((prev) => ({ ...prev, roundTripDistance: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Office days per month', 'Use expected office or driving days, not calendar days.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.officeDays} onChange={(e) => setInputs((prev) => ({ ...prev, officeDays: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(regionConfig.efficiencyLabel, 'Average real-world efficiency is better than brochure numbers.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.fuelEfficiency} onChange={(e) => setInputs((prev) => ({ ...prev, fuelEfficiency: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`${regionConfig.fuelPriceLabel} (${regionConfig.currency})`, 'Use the regular fuel price you actually pay.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.fuelPrice} onChange={(e) => setInputs((prev) => ({ ...prev, fuelPrice: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Monthly tolls (${regionConfig.currency})`, 'Fastag, toll roads, congestion charges, or similar recurring commute charges.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.monthlyTolls} onChange={(e) => setInputs((prev) => ({ ...prev, monthlyTolls: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Monthly parking (${regionConfig.currency})`, 'Office parking, building parking, or public parking passes.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.monthlyParking} onChange={(e) => setInputs((prev) => ({ ...prev, monthlyParking: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Monthly maintenance reserve (${regionConfig.currency})`, 'Tyres, servicing, minor repairs, washing, and misc upkeep reserve.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.monthlyMaintenance} onChange={(e) => setInputs((prev) => ({ ...prev, monthlyMaintenance: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Annual insurance (${regionConfig.currency})`, 'Full-year insurance premium; the model converts this to monthly cost.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.annualInsurance} onChange={(e) => setInputs((prev) => ({ ...prev, annualInsurance: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Current car value (${regionConfig.currency})`, 'Approximate resale or current market value for depreciation estimate.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.carValue} onChange={(e) => setInputs((prev) => ({ ...prev, carValue: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Annual depreciation (%)', 'Approximate annual drop in car value. Use a conservative estimate.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.annualDepreciationPct} onChange={(e) => setInputs((prev) => ({ ...prev, annualDepreciationPct: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Alternative monthly commute cost (${regionConfig.currency})`, 'Public transport, car-pool, taxi budget, or hybrid commute benchmark.')}</label>
-                  <input className="calculator-input" type="number" value={inputs.alternativeCommuteMonthly} onChange={(e) => setInputs((prev) => ({ ...prev, alternativeCommuteMonthly: e.target.value }))} />
-                </div>
-              </div>
-
-              <button
-                type="button"
-                className="calculator-button success-button"
-                style={{ marginTop: '1.1rem', width: 'auto', minWidth: '220px' }}
-                onClick={() => setStep(2)}
-              >
-                Continue to Cost View
-              </button>
+        {step === 2 && (
+          <div className="mt-6 space-y-5">
+            <HowToNote
+              title="How to read this"
+              items={[
+                'Fuel cost is only one part of total transport spending.',
+                'The all-in car number is what matters for budgeting decisions.',
+                'Compare car cost with the cheaper commute option before treating driving as a fixed necessity.'
+              ]}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <ResultStat label="Monthly fuel cost" value={fmt(output.monthlyFuelCost)} />
+              <ResultStat label="Commute distance / month" value={`${output.monthlyDistance} ${regionConfig.distanceUnit}`} />
+              <ResultStat label="Commute-only cost" value={fmt(output.commuteOnlyCost)} />
+              <ResultStat label="True car ownership cost" value={fmt(output.trueOwnershipCost)} emphasis />
+              <ResultStat label="Suggested transport budget" value={fmt(output.transportBudgetTarget)} />
+              <ResultStat label="Cost vs alternative" value={fmt(output.monthlyGapVsAlternative)} />
             </div>
-          )}
-
-          {step === 2 && (
-            <div className="results-container">
-              <h2 className="results-title">Step 2: True monthly car cost</h2>
-
-              <div style={helperBoxStyle}>
-                <strong>How to read this:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Fuel cost is only one part of total transport spending.</li>
-                  <li>The all-in car number is what matters for budgeting decisions.</li>
-                  <li>Compare car cost with the cheaper commute option before treating driving as a fixed necessity.</li>
-                </ul>
-              </div>
-
-              <div className="responsive-grid">
-                <div className="result-item">
-                  <p className="result-label"><Fuel size={16} /> Monthly fuel cost</p>
-                  <p className="result-value">{formatCurrency(output.monthlyFuelCost, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label"><Car size={16} /> Commute distance / month</p>
-                  <p className="result-value">{`${output.monthlyDistance} ${regionConfig.distanceUnit}`}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label"><Wallet size={16} /> Commute-only cost</p>
-                  <p className="result-value">{formatCurrency(output.commuteOnlyCost, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label"><Car size={16} /> True car ownership cost</p>
-                  <p className="result-value">{formatCurrency(output.trueOwnershipCost, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label"><ShieldCheck size={16} /> Suggested transport budget</p>
-                  <p className="result-value">{formatCurrency(output.transportBudgetTarget, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label"><Wallet size={16} /> Cost vs alternative</p>
-                  <p className="result-value">{formatCurrency(output.monthlyGapVsAlternative, regionConfig)}</p>
-                </div>
-              </div>
-
-              <div style={{ marginTop: '1rem', background: '#f8fafc', padding: '1rem', borderRadius: '0.75rem' }}>
-                Transport cost share of income: <strong>{output.costSharePct.toFixed(1)}%</strong>
-              </div>
-
+            <Panel>
+              <p className="text-sm text-ink-soft dark:text-slate-300">
+                Transport cost share of income:{' '}
+                <strong className="font-semibold text-ink dark:text-white">{output.costSharePct.toFixed(1)}%</strong>
+              </p>
+            </Panel>
+            <Card className="p-5">
               <ComparisonBars
                 title="Monthly transport comparison"
                 items={[
@@ -514,9 +472,10 @@ const CarOwnershipCostWorkflow = () => {
                   { label: 'Alternative commute', value: Number(inputs.alternativeCommuteMonthly) || 0, color: '#7c3aed' },
                   { label: 'Suggested budget', value: output.transportBudgetTarget, color: '#475569' }
                 ]}
-                formatter={(value) => formatCurrency(value, regionConfig)}
+                formatter={fmt}
               />
-
+            </Card>
+            <Card className="p-5">
               <PieBreakdownChart
                 title="Where the car budget goes"
                 items={[
@@ -527,108 +486,55 @@ const CarOwnershipCostWorkflow = () => {
                   { label: 'Insurance', value: output.insuranceMonthly, color: '#14b8a6' },
                   { label: 'Depreciation', value: output.monthlyDepreciation, color: '#f97316' }
                 ]}
-                formatter={(value) => formatCurrency(value, regionConfig)}
+                formatter={fmt}
               />
-
-              <button
-                type="button"
-                className="calculator-button success-button"
-                style={{ marginTop: '1.1rem', width: 'auto', minWidth: '220px' }}
-                onClick={() => setStep(3)}
-              >
-                Continue to Action Plan
-              </button>
+            </Card>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(1)}>Back to Inputs</Button>
+              <Button onClick={() => setStep(3)}>Continue to Action Plan</Button>
             </div>
-          )}
+          </div>
+        )}
 
-          {step === 3 && (
-            <div className="results-container">
-              <h2 className="results-title">Step 3: Recommendation and next step</h2>
-              <div
-                style={{
-                  borderLeft: `6px solid ${output.recommendation.color}`,
-                  background: '#f8fafc',
-                  borderRadius: '0.75rem',
-                  padding: '1rem',
-                  marginBottom: '1rem'
-                }}
-              >
-                <p style={{ margin: 0, fontWeight: 700, color: output.recommendation.color }}>
-                  <CheckCircle2 size={16} style={{ verticalAlign: 'middle' }} /> {output.recommendation.label}
-                </p>
-                <p style={{ margin: '0.4rem 0 0 0', color: '#334155' }}>{output.recommendation.reason}</p>
-              </div>
-
-              <div style={helperBoxStyle}>
-                <strong>How to use this plan:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Focus on all-in monthly cost, not just fuel savings.</li>
-                  <li>If the budget is tight, first attack the commute pattern before changing the car itself.</li>
-                  <li>Re-run this when fuel price, office frequency, or EMI changes.</li>
-                </ul>
-              </div>
-
-              <div className="responsive-grid">
-                <div className="result-item">
-                  <p className="result-label"><Wallet size={16} /> Buffer after car cost</p>
-                  <p className="result-value">{formatCurrency(output.postOwnershipBuffer, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label"><Wallet size={16} /> Buffer with cheaper commute</p>
-                  <p className="result-value">{formatCurrency(output.postAlternativeBuffer, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label"><Fuel size={16} /> One office-day driving cost</p>
-                  <p className="result-value">{formatCurrency(output.oneOfficeDayDriveCost, regionConfig)}</p>
-                </div>
-                <div className="result-item">
-                  <p className="result-label"><ShieldCheck size={16} /> 4-day hybrid saving</p>
-                  <p className="result-value">{formatCurrency(output.fourDaysHybridSavings, regionConfig)}</p>
-                </div>
-              </div>
-
-              <div style={{ marginTop: '1rem' }}>
-                <p style={{ marginBottom: '0.4rem', fontWeight: 600 }}>Action checklist</p>
-                <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#334155', lineHeight: 1.6 }}>
-                  {output.actionItems.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#ffffff', padding: '1rem', marginTop: '1rem' }}>
-                <h3 style={{ marginTop: 0, color: '#0f2a43' }}>Annual view</h3>
-                <div className="responsive-grid">
-                  <div className="result-item">
-                    <p className="result-label">Annual car cost</p>
-                    <p className="result-value">{formatCurrency(output.annualOwnershipCost, regionConfig)}</p>
-                  </div>
-                  <div className="result-item">
-                    <p className="result-label">Annual alternative cost</p>
-                    <p className="result-value">{formatCurrency(output.annualAlternativeCost, regionConfig)}</p>
-                  </div>
-                  <div className="result-item">
-                    <p className="result-label">Annual saving if you switch</p>
-                    <p className="result-value">{formatCurrency(output.annualSavingsWithAlternative, regionConfig)}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ marginTop: '1rem' }}>
-                <p style={{ marginBottom: '0.4rem', fontWeight: 600 }}>Next-step tools</p>
-                <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#334155', lineHeight: 1.6 }}>
-                  <li><a href="/job-offer-workflow">Job offer decision workflow</a></li>
-                  <li><a href="/emergency-fund-readiness-workflow">Emergency fund readiness workflow</a></li>
-                  <li><a href="/loan-calculator">Loan and EMI calculator</a></li>
-                </ul>
-              </div>
-
-              <button className="calculator-button" type="button" onClick={() => setStep(2)}>
-                Back to Cost View
-              </button>
+        {step === 3 && (
+          <div className="mt-6 space-y-5">
+            <DecisionBanner
+              tone={output.recommendation.tone}
+              label={output.recommendation.label}
+              reason={output.recommendation.reason}
+              icon={<CheckCircle2 size={18} />}
+            />
+            <HowToNote
+              title="How to use this plan"
+              items={[
+                'Focus on all-in monthly cost, not just fuel savings.',
+                'If the budget is tight, first attack the commute pattern before changing the car itself.',
+                'Re-run this when fuel price, office frequency, or EMI changes.'
+              ]}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <ResultStat label="Buffer after car cost" value={fmt(output.postOwnershipBuffer)} />
+              <ResultStat label="Buffer with cheaper commute" value={fmt(output.postAlternativeBuffer)} />
+              <ResultStat label="One office-day driving cost" value={fmt(output.oneOfficeDayDriveCost)} />
+              <ResultStat label="4-day hybrid saving" value={fmt(output.fourDaysHybridSavings)} />
             </div>
-          )}
+            <Card className="p-5">
+              <ActionList title="Action checklist" items={output.actionItems} />
+            </Card>
+            <Panel title="Annual view">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <ResultStat label="Annual car cost" value={fmt(output.annualOwnershipCost)} />
+                <ResultStat label="Annual alternative cost" value={fmt(output.annualAlternativeCost)} />
+                <ResultStat label="Annual saving if you switch" value={fmt(output.annualSavingsWithAlternative)} tone="positive" />
+              </div>
+            </Panel>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(2)}>Back to Cost View</Button>
+            </div>
+          </div>
+        )}
 
+        <div className="mt-8">
           <SearchLandingSections
             intro={(
               <>
@@ -669,8 +575,8 @@ const CarOwnershipCostWorkflow = () => {
             softwareSchema={softwareSchema}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

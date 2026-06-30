@@ -1,10 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
-import { Home, Wallet, ShieldCheck, CheckCircle2, Clock } from 'lucide-react';
+import { Wallet, ShieldCheck, CheckCircle2, Clock } from 'lucide-react';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
-import HomeButton from './HomeButton';
 import EEATPanel from './calculator/EEATPanel';
 import SearchLandingSections from './calculator/SearchLandingSections';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField, SelectField } from './ui/Field';
+import Button from './ui/Button';
+import Card from './ui/Card';
+import { WorkflowSteps, HowToNote, DecisionBanner, Panel, PanelRow } from './workflow/WorkflowKit';
 import { buildBreadcrumbSchema } from '../utils/schema';
 import { editorialProfiles } from '../utils/editorialProfiles';
 
@@ -126,6 +130,9 @@ const RentVsBuyWorkflow = () => {
   });
 
   const regionConfig = regionSettings[inputs.region];
+  const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
+  const fmt = (value) => formatCurrency(value, regionConfig);
+
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', item: 'https://upaman.com/' },
     { name: 'Rent vs Buy Decision Workflow', item: 'https://upaman.com/rent-vs-buy-workflow' }
@@ -236,19 +243,19 @@ const RentVsBuyWorkflow = () => {
     if (monthlyBufferIfBuy < regionConfig.safetyBuffer || affordabilityGap > 0) {
       decision = {
         label: 'Rent for now',
-        color: '#dc2626',
+        tone: 'danger',
         reason: 'Buying strains your monthly cash buffer under current assumptions.'
       };
     } else if (breakEvenYear && breakEvenYear <= plannedStayYears) {
       decision = {
         label: 'Buying looks stronger',
-        color: '#059669',
+        tone: 'positive',
         reason: 'Your planned stay is long enough for buying to beat renting on effective cost.'
       };
     } else {
       decision = {
         label: 'Renting fits better',
-        color: '#d97706',
+        tone: 'warning',
         reason: 'Your planned stay is shorter than the financial break-even timeline.'
       };
     }
@@ -291,289 +298,167 @@ const RentVsBuyWorkflow = () => {
     };
   }, [inputs, regionConfig]);
 
-  const stepStyle = (active) => ({
-    background: active ? '#0f766e' : '#e2e8f0',
-    color: active ? '#fff' : '#334155',
-    border: 'none',
-    borderRadius: '999px',
-    padding: '0.5rem 1rem',
-    fontWeight: 600,
-    cursor: 'pointer'
-  });
-
-  const helperBoxStyle = {
-    background: '#eff6ff',
-    border: '1px solid #bfdbfe',
-    borderRadius: '0.75rem',
-    padding: '0.85rem',
-    marginBottom: '1rem',
-    color: '#1e3a8a'
-  };
-
-  const hintStyle = {
-    margin: '0.25rem 0 0',
-    fontSize: '0.8rem',
-    color: '#64748b'
-  };
-
-  const tipIconStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '16px',
-    height: '16px',
-    borderRadius: '999px',
-    border: '1px solid #94a3b8',
-    color: '#475569',
-    fontSize: '0.68rem',
-    lineHeight: 1,
-    cursor: 'help',
-    background: '#f8fafc'
-  };
-
-  const withTipLabel = (text, tip) => (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-      <span>{text}</span>
-      <span style={tipIconStyle} title={tip} aria-label={tip}>i</span>
-    </span>
-  );
-
   return (
-    <div className="calculator-container emi-container">
+    <>
       <Head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
-      <div className="calculator-card">
-        <div className="calculator-header emi-header">
-          <div className="header-nav">
-            <HomeButton style={{ position: 'static' }} />
-            <div style={{ flex: 1 }} />
-          </div>
-          <h1 className="header-title">Rent vs Buy Decision Workflow</h1>
-          <p style={{ margin: 0, opacity: 0.95 }}>
-            Compare monthly affordability, break-even timeline, and flexibility before committing to buying a home.
-          </p>
+
+      <CalcLayout
+        eyebrow="Decision workflow"
+        title="Rent vs Buy Decision Workflow"
+        subtitle="Compare monthly affordability, break-even timeline, and flexibility before committing to buying a home."
+      >
+        <EEATPanel
+          author={editorialProfiles.researchTeam}
+          reviewer={editorialProfiles.financeReviewDesk}
+          reviewedOn="June 28, 2026"
+          scope="This workflow compares renting and buying using affordability, effective cost, ownership overhead, and planned stay assumptions."
+          sources={[
+            { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
+            { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/owning-a-home/' },
+            { label: 'National Housing Bank', url: 'https://nhb.org.in/' }
+          ]}
+        />
+
+        <div className="mt-6">
+          <WorkflowSteps steps={['Inputs', 'Comparison', 'Action Plan']} active={step} onChange={setStep} />
         </div>
 
-        <div className="mobile-card-content">
-          <EEATPanel
-            author={editorialProfiles.researchTeam}
-            reviewer={editorialProfiles.financeReviewDesk}
-            reviewedOn="March 14, 2026"
-            scope="This workflow compares renting and buying using affordability, effective cost, ownership overhead, and planned stay assumptions."
-            sources={[
-              { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' },
-              { label: 'Consumer Financial Protection Bureau', url: 'https://www.consumerfinance.gov/owning-a-home/' },
-              { label: 'National Housing Bank', url: 'https://nhb.org.in/' }
-            ]}
-          />
-
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-            <button type="button" style={stepStyle(step === 1)} onClick={() => setStep(1)}>
-              1. Inputs
-            </button>
-            <button type="button" style={stepStyle(step === 2)} onClick={() => setStep(2)}>
-              2. Comparison
-            </button>
-            <button type="button" style={stepStyle(step === 3)} onClick={() => setStep(3)}>
-              3. Action Plan
-            </button>
+        {step === 1 && (
+          <div className="mt-6 space-y-5">
+            <HowToNote
+              items={[
+                'Use in-hand or net monthly income, not gross salary.',
+                'Keep only non-negotiable expenses in fixed expenses.',
+                'Enter a realistic stay duration. This matters more than most people assume.'
+              ]}
+            />
+            <Card className="p-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <SelectField
+                  id="rb-region"
+                  label="Region"
+                  value={inputs.region}
+                  onChange={(v) => setInputs((prev) => ({ ...prev, region: v, ...getRegionDefaults(v) }))}
+                  options={[
+                    { value: 'india', label: 'India' },
+                    { value: 'us', label: 'United States' },
+                    { value: 'eu', label: 'EU/UK (Generic)' }
+                  ]}
+                />
+                <NumberField
+                  id="rb-income"
+                  label={`Monthly In-hand Income (${regionConfig.currency})`}
+                  value={inputs.monthlyInHand}
+                  onChange={(v) => set('monthlyInHand', v)}
+                  hint="Use post-tax income available for actual spending."
+                />
+                <NumberField
+                  id="rb-expenses"
+                  label={`Monthly Fixed Expenses (${regionConfig.currency})`}
+                  value={inputs.monthlyFixedExpenses}
+                  onChange={(v) => set('monthlyFixedExpenses', v)}
+                  hint="Exclude current rent here; rent is entered separately."
+                />
+                <NumberField
+                  id="rb-price"
+                  label={`Target Home Price (${regionConfig.currency})`}
+                  value={inputs.homePrice}
+                  onChange={(v) => set('homePrice', v)}
+                  hint="The purchase price you are seriously considering."
+                />
+                <NumberField
+                  id="rb-down"
+                  label="Down Payment"
+                  suffix="%"
+                  max={100}
+                  value={inputs.downPaymentPct}
+                  onChange={(v) => set('downPaymentPct', v)}
+                  hint="Percent of home price you can put down immediately."
+                />
+                <NumberField
+                  id="rb-rate"
+                  label="Loan Rate"
+                  suffix="%"
+                  step={0.1}
+                  value={inputs.loanRate}
+                  onChange={(v) => set('loanRate', v)}
+                  hint="Use a realistic borrowing rate, not a best-case quote."
+                />
+                <NumberField
+                  id="rb-years"
+                  label="Loan Tenure"
+                  suffix="yrs"
+                  min={1}
+                  value={inputs.loanYears}
+                  onChange={(v) => set('loanYears', v)}
+                  hint="Longer tenure lowers EMI but can delay break-even."
+                />
+                <NumberField
+                  id="rb-rent"
+                  label={`Current Monthly Rent (${regionConfig.currency})`}
+                  value={inputs.monthlyRent}
+                  onChange={(v) => set('monthlyRent', v)}
+                  hint="Your realistic current or expected rent for a similar home."
+                />
+                <NumberField
+                  id="rb-rentinc"
+                  label="Annual Rent Increase"
+                  suffix="%"
+                  step={0.1}
+                  value={inputs.rentIncrease}
+                  onChange={(v) => set('rentIncrease', v)}
+                  hint="Use a conservative rent growth assumption."
+                />
+                <NumberField
+                  id="rb-appr"
+                  label="Home Appreciation"
+                  suffix="%"
+                  step={0.1}
+                  value={inputs.homeAppreciation}
+                  onChange={(v) => set('homeAppreciation', v)}
+                  hint="Expected annual property value growth, not a guaranteed return."
+                />
+                <NumberField
+                  id="rb-stay"
+                  label="Planned Stay"
+                  suffix="yrs"
+                  min={1}
+                  value={inputs.plannedStayYears}
+                  onChange={(v) => set('plannedStayYears', v)}
+                  hint="Critical input. Buying often fails for short holding periods."
+                />
+              </div>
+            </Card>
+            <Button onClick={() => setStep(2)}>Continue to comparison</Button>
           </div>
+        )}
 
-          {step === 1 && (
-            <div className="input-section">
-              <h2 className="section-title">Step 1: Housing decision inputs</h2>
-              <div style={helperBoxStyle}>
-                <strong>How to use this:</strong>
-                <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.1rem' }}>
-                  <li>Use in-hand or net monthly income, not gross salary.</li>
-                  <li>Keep only non-negotiable expenses in fixed expenses.</li>
-                  <li>Enter realistic stay duration. This matters more than most people assume.</li>
-                </ul>
-              </div>
-              <div className="responsive-grid">
-                <div>
-                  <label className="input-label">{withTipLabel('Region', 'Changes defaults, currency, and ownership cost assumptions.')}</label>
-                  <select
-                    className="calculator-input"
-                    value={inputs.region}
-                    onChange={(e) => {
-                      const nextRegion = e.target.value;
-                      setInputs((prev) => ({
-                        ...prev,
-                        region: nextRegion,
-                        ...getRegionDefaults(nextRegion)
-                      }));
-                    }}
-                  >
-                    <option value="india">India</option>
-                    <option value="us">United States</option>
-                    <option value="eu">EU/UK (Generic)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Monthly In-hand Income (${regionConfig.currency})`, 'Use post-tax income available for actual spending.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.monthlyInHand}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, monthlyInHand: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Monthly Fixed Expenses (${regionConfig.currency})`, 'Include essentials and existing commitments before housing choice.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.monthlyFixedExpenses}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, monthlyFixedExpenses: e.target.value }))}
-                  />
-                  <p style={hintStyle}>Exclude current rent from this field; rent is entered separately.</p>
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Target Home Price (${regionConfig.currency})`, 'The purchase price you are seriously considering.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.homePrice}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, homePrice: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Down Payment (%)', 'Percent of home price you can put down immediately.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={inputs.downPaymentPct}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, downPaymentPct: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Loan Rate (%)', 'Use realistic borrowing rate, not an ideal best-case quote.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    value={inputs.loanRate}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, loanRate: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Loan Tenure (Years)', 'Longer tenure lowers EMI but can delay break-even.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="1"
-                    value={inputs.loanYears}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, loanYears: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel(`Current Monthly Rent (${regionConfig.currency})`, 'Your realistic current or expected rent for a similar home.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    value={inputs.monthlyRent}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, monthlyRent: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Annual Rent Increase (%)', 'Use conservative rent growth assumption.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    value={inputs.rentIncrease}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, rentIncrease: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Home Appreciation (%)', 'Expected annual property value growth, not a guaranteed return.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    value={inputs.homeAppreciation}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, homeAppreciation: e.target.value }))}
-                  />
-                </div>
-                <div>
-                  <label className="input-label">{withTipLabel('Planned Stay (Years)', 'Critical decision input. Buying often fails for short holding periods.')}</label>
-                  <input
-                    className="calculator-input"
-                    type="number"
-                    min="1"
-                    value={inputs.plannedStayYears}
-                    onChange={(e) => setInputs((prev) => ({ ...prev, plannedStayYears: e.target.value }))}
-                  />
-                </div>
-              </div>
-              <button type="button" className="calculator-button" style={{ marginTop: '1.1rem', width: 'auto', minWidth: '220px' }} onClick={() => setStep(2)}>
-                Continue to comparison
-              </button>
+        {step === 2 && (
+          <div className="mt-6 space-y-5">
+            <DecisionBanner tone={output.decision.tone} label={output.decision.label} reason={output.decision.reason} />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <ResultStat label="Estimated EMI" value={fmt(output.emi)} />
+              <ResultStat label="Monthly buy cost" value={fmt(output.totalBuyMonthly)} emphasis />
+              <ResultStat label="Monthly rent cost" value={fmt(Number(inputs.monthlyRent) || 0)} />
+              <ResultStat label="Break-even" value={output.breakEvenYear ? `Year ${output.breakEvenYear}` : 'Not reached'} />
             </div>
-          )}
-
-          {step === 2 && (
-            <div>
-              <div className="results-container" style={{ marginBottom: '1rem' }}>
-                <h2 className="results-title">Step 2: Financial comparison</h2>
-                <p style={{ marginTop: 0, color: '#475569' }}>
-                  <strong style={{ color: output.decision.color }}>{output.decision.label}</strong>:
-                  {' '}{output.decision.reason}
-                </p>
-                <div className="results-grid">
-                  <div className="result-item">
-                    <div className="result-label">Estimated EMI</div>
-                    <div className="result-value principal">{formatCurrency(output.emi, regionConfig)}</div>
-                  </div>
-                  <div className="result-item">
-                    <div className="result-label">Monthly Buy Cost</div>
-                    <div className="result-value total">{formatCurrency(output.totalBuyMonthly, regionConfig)}</div>
-                  </div>
-                  <div className="result-item">
-                    <div className="result-label">Monthly Rent Cost</div>
-                    <div className="result-value emi">{formatCurrency(Number(inputs.monthlyRent) || 0, regionConfig)}</div>
-                  </div>
-                  <div className="result-item">
-                    <div className="result-label">Break-even</div>
-                    <div className="result-value interest">
-                      {output.breakEvenYear ? `Year ${output.breakEvenYear}` : 'Not reached'}
-                    </div>
-                  </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Panel title="Monthly flexibility" icon={<Wallet size={18} />}>
+                <div className="space-y-1">
+                  <PanelRow label="Renting buffer" value={fmt(output.monthlyBufferIfRent)} />
+                  <PanelRow label="Buying buffer" value={fmt(output.monthlyBufferIfBuy)} />
                 </div>
-              </div>
-
-              <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', marginBottom: '1rem' }}>
-                <div style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#ffffff', padding: '1rem' }}>
-                  <h3 style={{ marginTop: 0, color: '#0f2a43', fontSize: '1rem' }}>Monthly flexibility</h3>
-                  <p style={{ margin: '0 0 0.4rem', color: '#334155' }}>
-                    Renting buffer: <strong>{formatCurrency(output.monthlyBufferIfRent, regionConfig)}</strong>
-                  </p>
-                  <p style={{ margin: 0, color: '#334155' }}>
-                    Buying buffer: <strong>{formatCurrency(output.monthlyBufferIfBuy, regionConfig)}</strong>
-                  </p>
+              </Panel>
+              <Panel title="Affordability check" icon={<ShieldCheck size={18} />}>
+                <div className="space-y-1">
+                  <PanelRow label="Comfortable housing budget" value={fmt(output.comfortableHousingBudget)} />
+                  <PanelRow label="Extra down payment needed" value={fmt(output.additionalDownPaymentNeeded)} />
                 </div>
-                <div style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#ffffff', padding: '1rem' }}>
-                  <h3 style={{ marginTop: 0, color: '#0f2a43', fontSize: '1rem' }}>Affordability check</h3>
-                  <p style={{ margin: '0 0 0.4rem', color: '#334155' }}>
-                    Comfortable housing budget: <strong>{formatCurrency(output.comfortableHousingBudget, regionConfig)}</strong>
-                  </p>
-                  <p style={{ margin: 0, color: '#334155' }}>
-                    Extra down payment needed: <strong>{formatCurrency(output.additionalDownPaymentNeeded, regionConfig)}</strong>
-                  </p>
-                </div>
-              </div>
-
+              </Panel>
+            </div>
+            <Card className="p-5">
               <ComparisonBars
                 title="Monthly housing comparison"
                 items={[
@@ -581,124 +466,105 @@ const RentVsBuyWorkflow = () => {
                   { label: 'Buy monthly cost', value: output.totalBuyMonthly, color: '#1d4e89' },
                   { label: 'Comfortable housing budget', value: output.comfortableHousingBudget, color: '#b45309' }
                 ]}
-                formatter={(value) => formatCurrency(value, regionConfig)}
+                formatter={fmt}
               />
-
+            </Card>
+            <Card className="p-5">
               <ComparisonBars
                 title={`Effective cost over planned ${output.plannedStayYears}-year stay`}
                 items={[
                   { label: 'Rent total outflow', value: output.plannedRentOutflow, color: '#0f766e' },
                   { label: 'Buy effective cost', value: output.plannedBuyEffectiveCost, color: '#1d4e89' }
                 ]}
-                formatter={(value) => formatCurrency(value, regionConfig)}
+                formatter={fmt}
               />
-
+            </Card>
+            <Card className="p-5">
               <PieBreakdownChart
                 title="Buying path at planned stay end"
                 items={[
                   { label: 'Home equity built', value: output.plannedEquity, color: '#22c55e' },
                   { label: 'Net buy cost', value: output.plannedBuyEffectiveCost, color: '#f97316' }
                 ]}
-                formatter={(value) => formatCurrency(value, regionConfig)}
+                formatter={fmt}
               />
-
-              <button type="button" className="calculator-button" style={{ marginTop: '1.1rem', width: 'auto', minWidth: '220px' }} onClick={() => setStep(3)}>
-                Continue to action plan
-              </button>
+            </Card>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(1)}>Back to Inputs</Button>
+              <Button onClick={() => setStep(3)}>Continue to action plan</Button>
             </div>
-          )}
+          </div>
+        )}
 
-          {step === 3 && (
-            <div>
-              <div
-                style={{
-                  borderRadius: '1rem',
-                  border: `1px solid ${output.decision.color}`,
-                  background: `${output.decision.color}12`,
-                  padding: '1rem',
-                  marginBottom: '1rem'
-                }}
-              >
-                <h2 style={{ marginTop: 0, color: output.decision.color, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <CheckCircle2 size={20} />
-                  Recommended direction: {output.decision.label}
-                </h2>
-                <p style={{ margin: '0 0 0.8rem', color: '#334155' }}>{output.decision.reason}</p>
-                <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#334155', lineHeight: 1.6 }}>
-                  {output.actionItems.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
+        {step === 3 && (
+          <div className="mt-6 space-y-5">
+            <DecisionBanner
+              tone={output.decision.tone}
+              label={`Recommended direction: ${output.decision.label}`}
+              reason={output.decision.reason}
+              icon={<CheckCircle2 size={18} />}
+            >
+              <ul className="mt-2.5 list-disc space-y-1 pl-5 text-sm leading-relaxed text-ink-soft marker:text-slate-400 dark:text-slate-300">
+                {output.actionItems.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </DecisionBanner>
 
-              <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', marginBottom: '1rem' }}>
-                <div style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#ffffff', padding: '1rem' }}>
-                  <h3 style={{ marginTop: 0, color: '#0f2a43', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    <Wallet size={18} />
-                    Cash readiness
-                  </h3>
-                  <p style={{ margin: '0 0 0.4rem', color: '#334155' }}>
-                    Down payment: <strong>{formatCurrency(output.downPayment, regionConfig)}</strong>
-                  </p>
-                  <p style={{ margin: '0 0 0.4rem', color: '#334155' }}>
-                    Closing costs: <strong>{formatCurrency(output.closingCosts, regionConfig)}</strong>
-                  </p>
-                  <p style={{ margin: 0, color: '#334155' }}>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Panel title="Cash readiness" icon={<Wallet size={18} />}>
+                <div className="space-y-1">
+                  <PanelRow label="Down payment" value={fmt(output.downPayment)} />
+                  <PanelRow label="Closing costs" value={fmt(output.closingCosts)} />
+                  <p className="mt-1 text-xs text-ink-muted dark:text-slate-400">
                     If buying, keep separate emergency cash beyond these amounts.
                   </p>
                 </div>
-                <div style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#ffffff', padding: '1rem' }}>
-                  <h3 style={{ marginTop: 0, color: '#0f2a43', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    <Clock size={18} />
-                    Stay-duration rule
-                  </h3>
-                  <p style={{ margin: '0 0 0.4rem', color: '#334155' }}>
-                    Planned stay: <strong>{output.plannedStayYears} years</strong>
-                  </p>
-                  <p style={{ margin: 0, color: '#334155' }}>
-                    Break-even: <strong>{output.breakEvenYear ? `Year ${output.breakEvenYear}` : 'Not reached in model'}</strong>
-                  </p>
+              </Panel>
+              <Panel title="Stay-duration rule" icon={<Clock size={18} />}>
+                <div className="space-y-1">
+                  <PanelRow label="Planned stay" value={`${output.plannedStayYears} years`} />
+                  <PanelRow label="Break-even" value={output.breakEvenYear ? `Year ${output.breakEvenYear}` : 'Not reached in model'} />
                 </div>
-                <div style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#ffffff', padding: '1rem' }}>
-                  <h3 style={{ marginTop: 0, color: '#0f2a43', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    <ShieldCheck size={18} />
-                    Buffer protection
-                  </h3>
-                  <p style={{ margin: '0 0 0.4rem', color: '#334155' }}>
-                    Safe monthly buffer target: <strong>{formatCurrency(regionConfig.safetyBuffer, regionConfig)}</strong>
-                  </p>
-                  <p style={{ margin: 0, color: '#334155' }}>
-                    Buy-path buffer after fixed costs: <strong>{formatCurrency(output.monthlyBufferIfBuy, regionConfig)}</strong>
-                  </p>
+              </Panel>
+              <Panel title="Buffer protection" icon={<ShieldCheck size={18} />}>
+                <div className="space-y-1">
+                  <PanelRow label="Safe monthly buffer target" value={fmt(regionConfig.safetyBuffer)} />
+                  <PanelRow label="Buy-path buffer after fixed costs" value={fmt(output.monthlyBufferIfBuy)} />
                 </div>
-              </div>
-
-              <div style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#ffffff', padding: '1rem' }}>
-                <h3 style={{ marginTop: 0, color: '#0f2a43' }}>Year-by-year effective cost checkpoints</h3>
-                <div className="responsive-table-container">
-                  <table className="responsive-table">
-                    <thead>
-                      <tr>
-                        <th>Year</th>
-                        <th>Rent Outflow</th>
-                        <th>Buy Effective Cost</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {output.yearlySnapshots.map((snapshot) => (
-                        <tr key={snapshot.year}>
-                          <td>{snapshot.year}</td>
-                          <td>{formatCurrency(snapshot.rentOutflow, regionConfig)}</td>
-                          <td>{formatCurrency(snapshot.buyEffectiveCost, regionConfig)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              </Panel>
             </div>
-          )}
 
+            <Panel title="Year-by-year effective cost checkpoints">
+              <div className="-mx-1 overflow-x-auto">
+                <table className="w-full min-w-[24rem] text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-ink-muted dark:border-slate-700 dark:text-slate-400">
+                      <th className="px-2 py-2 font-semibold">Year</th>
+                      <th className="px-2 py-2 font-semibold">Rent outflow</th>
+                      <th className="px-2 py-2 font-semibold">Buy effective cost</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {output.yearlySnapshots.map((snapshot) => (
+                      <tr key={snapshot.year} className="text-ink-soft dark:text-slate-300">
+                        <td className="px-2 py-2">{snapshot.year}</td>
+                        <td className="px-2 py-2">{fmt(snapshot.rentOutflow)}</td>
+                        <td className="px-2 py-2">{fmt(snapshot.buyEffectiveCost)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Panel>
+
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setStep(2)}>Back to comparison</Button>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-8">
           <SearchLandingSections
             intro={(
               <>
@@ -733,8 +599,8 @@ const RentVsBuyWorkflow = () => {
             ]}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 
