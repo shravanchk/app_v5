@@ -95,8 +95,8 @@ These were explicitly deferred/skipped in session 2 — resume here:
   values during render → static prerender ≠ client). Pre-existing, not from the reskin. Renders fine.
 
 ### Other UI-reform items (from session 1, still open)
-1. **Colourise homepage Start-Here + Workflow card icons** (`components/home/StartHere.tsx`,
-   `WorkflowCards.tsx`) using the tint map, for consistency with the calculator grid.
+1. ~~**Colourise homepage Start-Here + Workflow card icons**~~ **DONE** — both `StartHere.tsx` and
+   `WorkflowCards.tsx` already carry distinct tints (brand/emerald/violet/amber/sky/rose).
 4. ~~**Workflow pages** (home-loan-readiness, rent-vs-buy, prepay-vs-invest, job-offer,
    emergency-fund, car-ownership) — onto the new design + dark mode.~~ **DONE** — all 6
    migrated to `CalcLayout` + new shared `components/workflow/WorkflowKit.tsx` (`WorkflowSteps`,
@@ -104,13 +104,21 @@ These were explicitly deferred/skipped in session 2 — resume here:
    a `tone` (`positive`/`warning`/`danger`/`info`) instead of a hex `color`. Field tips folded
    into `NumberField`/`SelectField` `hint`s. Logic/JSON-LD/EEAT/SearchLandingSections preserved.
    `HomeButton` dropped. Verified tsc + build + dark mode in preview.
-5. **Guide pages**: make `components/guides/GuidePageLayout.js` dark-aware Tailwind (currently
-   light inline styles). Also the programmatic `pages/tax-on-salary/[slug].js` + `index.js`.
-6. **Create `/workflows` and `/guides` index pages** — the navbar's Workflows/Guides/Tools items
-   currently point to homepage anchors (`/#workflows`, `/#guides`). Build real index pages and
-   repoint the nav (`components/home/Navbar.tsx`).
-7. **Legal pages**: verify `components/legal/LegalPageLayout.js` dark mode.
-8. Final dark-mode audit across all inner pages.
+5. ~~**Guide pages dark mode**~~ **DONE** — `GuidePageLayout.js` rewritten to dark-aware Tailwind
+   (Container + prose via `[&_h2]/[&_p]/[&_a]…` descendant classes); legacy `sectionTitleStyle`
+   export neutralized to `{}` so existing inline-styled headings adapt without per-page edits.
+   Programmatic `pages/tax-on-salary/[slug].js` + `index.js` converted to the design system (brand
+   hero + dark-aware slab table). Dropped the bespoke sticky home buttons.
+6. ~~**Create `/workflows` and `/guides` index pages**~~ **DONE** — `pages/workflows.js` and
+   `pages/guides/index.js` built on `CalcLayout` + `Card` with `ItemList` JSON-LD. Navbar (desktop +
+   mobile drawer), Hero "Explore Workflows" button, and the homepage WorkflowCards/GuideCards
+   "see all" actions all repointed from `/#workflows` / `/#guides` to `/workflows` / `/guides`.
+7. ~~**Legal pages**~~ **DONE** — `LegalPageLayout.js` rewritten dark-aware the same way
+   (neutralized `headingTwoStyle`); covers all legal + author profile pages.
+8. **Final dark-mode audit** — calculators, workflows, guides, legal, hubs, tax-on-salary, and the
+   new index pages all verified dark-aware. Remaining known light-in-dark elements (accepted, not
+   regressions): `PieBreakdownChart`/`ComparisonBars` render on white cards, and guide-page data
+   tables that use per-page inline `thStyle`/`tdStyle` (readable light islands).
 9. ~~**HowTo SEO (queued)**~~ **DONE** — built shared `components/calculator/HowToSection.tsx`
    (visible numbered steps, dark-aware) + `buildHowToSchema` helper in `utils/schema.js`. The
    component renders the visible "How to use this calculator" list AND emits matching `HowTo`

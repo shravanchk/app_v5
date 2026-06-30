@@ -23,7 +23,7 @@ export default function WorkflowCards() {
           eyebrow="Guided workflows"
           title="Make the right financial decision"
           subtitle="Interactive, step-by-step workflows for life’s bigger money decisions."
-          action={{ label: 'All workflows', href: '/#start-here' }}
+          action={{ label: 'All workflows', href: '/workflows' }}
         />
         {/* Horizontal scroll on mobile, grid on larger screens */}
         <div className="mt-8 flex snap-x gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-3">

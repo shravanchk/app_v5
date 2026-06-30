@@ -24,7 +24,7 @@ export default function Hero() {
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Button href="/india-calculators" size="lg">Explore Calculators <span aria-hidden>→</span></Button>
-              <Button href="/#workflows" variant="secondary" size="lg">Explore Workflows</Button>
+              <Button href="/workflows" variant="secondary" size="lg">Explore Workflows</Button>
             </div>
             <div className="mt-8">
               <TrustIndicators />

@@ -34,7 +34,7 @@ export default function GuideCards() {
           eyebrow="Insights & guides"
           title="Guides to improve your finances"
           subtitle="Plain-English explainers with real worked examples — no jargon."
-          action={{ label: 'All guides', href: '/#guides' }}
+          action={{ label: 'All guides', href: '/guides' }}
         />
         <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {GUIDES.map((g) => (
