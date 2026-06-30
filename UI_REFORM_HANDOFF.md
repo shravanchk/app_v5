@@ -72,10 +72,11 @@ These were explicitly deferred/skipped in session 2 — resume here:
   `european-salary`, `france-salary`, `germany-salary`, `netherlands-salary` via thin wrappers) and
   `VATCalculator.js` (`eu-vat-calculator`, ~697 lines). Linked from the EU hub.
 - **UK Rail** (`UKRailCalculator.js`, ~1500 lines) — user said skip for now.
-- **Tools** still old: `ScientificCalculator.js`, `StatisticsCalculator.js`, `UnitConverter.js`
-  (linked from `/tools`). `AgeCalculator` + `JsonTools` already reskinned.
-- India extras not yet on the full new system: `tax-regime-comparison`, `credit-card-trap-calculator`,
-  `irctc-calculator`.
+- ~~**Tools** still old: `ScientificCalculator.js`, `StatisticsCalculator.js`, `UnitConverter.js`~~
+  **DONE** — all three migrated to `CalcLayout` + Tailwind `dark:` (not the old isDarkMode pattern).
+- India extras: ~~`tax-regime-comparison`~~ **DONE**, ~~`credit-card-trap-calculator`~~ **DONE**
+  (dropped its stray `useEffect` dark-theme toggle; uses kit `DecisionBanner`/`HowToNote`/`Panel`).
+  Still old: **`irctc-calculator`** (`IRCTCCalculator.js`, ~1010 lines).
 - **Known issue**: `AgeCalculator` logs a dev-only React hydration warning (renders live current-date
   values during render → static prerender ≠ client). Pre-existing, not from the reskin. Renders fine.
 

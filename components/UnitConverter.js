@@ -1,7 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
-import { ArrowRightLeft, Ruler } from 'lucide-react';
-import HomeButton from './HomeButton';
+import { ArrowRightLeft } from 'lucide-react';
+import { CalcLayout } from './calculator/CalcLayout';
+import { NumberField, SelectField } from './ui/Field';
+import Card from './ui/Card';
+import { cn } from './ui/cn';
 
 const CATEGORIES = {
   length: {
@@ -180,8 +183,13 @@ const UnitConverter = () => {
     setToUnit(fromUnit);
   };
 
+  const unitOptions = availableUnits.map((unitKey) => ({
+    value: unitKey,
+    label: CATEGORIES[categoryKey].units[unitKey].label
+  }));
+
   return (
-    <div className="calculator-container" style={{ background: 'linear-gradient(135deg, #f6f4ef 0%, #e7edf4 100%)' }}>
+    <>
       <Head>
         <title>Unit Converter Online | Length, Area, Volume, Mass, Temp, Data | Upaman</title>
         <meta
@@ -220,201 +228,105 @@ const UnitConverter = () => {
         />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header emi-header">
-          <div className="header-nav">
-            <HomeButton style={{ position: 'static', top: 'auto', left: 'auto', zIndex: 'auto' }} />
-            <div className="flex-spacer" />
-          </div>
-          <div className="header-title-container">
-            <Ruler size={32} color="#67e8f9" aria-hidden="true" />
-            <h1 className="header-title">Engineering Unit Converter</h1>
-          </div>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Convert practical units for math, science, and engineering workflows without leaving the page.
-          </p>
-        </div>
-
-        <div className="mobile-card-content">
-          <section
-            style={{
-              marginBottom: '1.2rem',
-              border: '1px solid #dbe2eb',
-              borderRadius: '0.9rem',
-              background: '#f8fafc',
-              padding: '1rem'
-            }}
-          >
-            <h2 style={{ marginTop: 0, marginBottom: '0.55rem', color: '#0f2a43', fontSize: '1.05rem' }}>Converter setup</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.7rem' }}>
-              <div>
-                <label htmlFor="unit-category" style={{ display: 'block', marginBottom: '0.28rem', fontSize: '0.82rem', color: '#64748b' }}>
-                  Category
-                </label>
-                <select
-                  id="unit-category"
-                  value={categoryKey}
-                  onChange={(event) => handleCategoryChange(event.target.value)}
-                  style={{ width: '100%', borderRadius: '0.6rem', border: '1px solid #cbd5e1', padding: '0.5rem' }}
-                >
-                  {categoryKeys.map((key) => (
-                    <option key={key} value={key}>
-                      {CATEGORIES[key].label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="unit-value" style={{ display: 'block', marginBottom: '0.28rem', fontSize: '0.82rem', color: '#64748b' }}>
-                  Value
-                </label>
-                <input
-                  id="unit-value"
-                  type="number"
-                  value={inputValue}
-                  onChange={(event) => setInputValue(event.target.value)}
-                  style={{ width: '100%', borderRadius: '0.6rem', border: '1px solid #cbd5e1', padding: '0.5rem' }}
-                />
-              </div>
+      <CalcLayout
+        eyebrow="Everyday tool"
+        title="Engineering Unit Converter"
+        subtitle="Convert practical units for math, science, and engineering workflows without leaving the page."
+      >
+        <div className="max-w-3xl space-y-5">
+          <Card className="p-5">
+            <h2 className="mb-3 font-display text-base font-bold text-ink dark:text-white">Converter setup</h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <SelectField
+                id="unit-category"
+                label="Category"
+                value={categoryKey}
+                onChange={handleCategoryChange}
+                options={categoryKeys.map((key) => ({ value: key, label: CATEGORIES[key].label }))}
+              />
+              <NumberField id="unit-value" label="Value" value={inputValue} onChange={setInputValue} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.6rem', alignItems: 'end', marginTop: '0.7rem' }}>
-              <div>
-                <label htmlFor="from-unit" style={{ display: 'block', marginBottom: '0.28rem', fontSize: '0.82rem', color: '#64748b' }}>
-                  From
-                </label>
-                <select
-                  id="from-unit"
-                  value={fromUnit}
-                  onChange={(event) => setFromUnit(event.target.value)}
-                  style={{ width: '100%', borderRadius: '0.6rem', border: '1px solid #cbd5e1', padding: '0.5rem' }}
-                >
-                  {availableUnits.map((unitKey) => (
-                    <option key={unitKey} value={unitKey}>
-                      {CATEGORIES[categoryKey].units[unitKey].label}
-                    </option>
-                  ))}
-                </select>
+            <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-end gap-3">
+              <div className="min-w-0">
+                <SelectField id="from-unit" label="From" value={fromUnit} onChange={setFromUnit} options={unitOptions} />
               </div>
-
               <button
                 type="button"
                 onClick={swapUnits}
-                style={{
-                  borderRadius: '0.65rem',
-                  border: '1px solid #94a3b8',
-                  background: '#ffffff',
-                  color: '#1e293b',
-                  padding: '0.48rem 0.7rem',
-                  cursor: 'pointer',
-                  minHeight: '40px'
-                }}
                 title="Swap units"
                 aria-label="Swap from and to units"
+                className="grid h-[46px] w-11 place-items-center rounded-xl border border-slate-200 bg-white text-ink-soft transition hover:border-slate-300 hover:text-brand-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
               >
                 <ArrowRightLeft size={16} />
               </button>
-
-              <div>
-                <label htmlFor="to-unit" style={{ display: 'block', marginBottom: '0.28rem', fontSize: '0.82rem', color: '#64748b' }}>
-                  To
-                </label>
-                <select
-                  id="to-unit"
-                  value={toUnit}
-                  onChange={(event) => setToUnit(event.target.value)}
-                  style={{ width: '100%', borderRadius: '0.6rem', border: '1px solid #cbd5e1', padding: '0.5rem' }}
-                >
-                  {availableUnits.map((unitKey) => (
-                    <option key={unitKey} value={unitKey}>
-                      {CATEGORIES[categoryKey].units[unitKey].label}
-                    </option>
-                  ))}
-                </select>
+              <div className="min-w-0">
+                <SelectField id="to-unit" label="To" value={toUnit} onChange={setToUnit} options={unitOptions} />
               </div>
             </div>
-          </section>
+          </Card>
 
-          <section
-            style={{
-              marginBottom: '1rem',
-              border: '1px solid #dbe2eb',
-              borderRadius: '0.9rem',
-              background: '#ffffff',
-              padding: '1rem'
-            }}
-          >
-            <h2 style={{ marginTop: 0, marginBottom: '0.45rem', color: '#0f2a43', fontSize: '1.05rem' }}>Conversion result</h2>
-            <p style={{ margin: 0, color: '#0f766e', fontSize: '1.1rem', fontWeight: 700, wordBreak: 'break-word' }}>
+          <Card className="border-brand-200/70 bg-brand-50/40 p-5 dark:border-brand-800/60 dark:bg-brand-900/15">
+            <h2 className="font-display text-base font-bold text-ink dark:text-white">Conversion result</h2>
+            <p className="mt-1.5 break-words font-display text-xl font-bold text-emerald-600 dark:text-emerald-400">
               {conversion
                 ? `${formatNumber(conversion.parsedValue)} ${fromUnit} = ${formatNumber(conversion.converted)} ${toUnit}`
                 : 'Enter a valid numeric value'}
             </p>
-            <p style={{ margin: '0.6rem 0 0', color: '#64748b', fontSize: '0.84rem' }}>
+            <p className="mt-2 font-mono text-xs text-ink-muted dark:text-slate-400">
               {conversion ? conversion.formula : 'Formula will appear after valid input'}
             </p>
-          </section>
+          </Card>
 
-          <section
-            style={{
-              marginBottom: '1rem',
-              border: '1px solid #dbe2eb',
-              borderRadius: '0.9rem',
-              background: '#f8fafc',
-              padding: '1rem'
-            }}
-          >
-            <h2 style={{ marginTop: 0, marginBottom: '0.55rem', color: '#0f2a43', fontSize: '1.05rem' }}>Category coverage</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '0.5rem', color: '#334155', fontSize: '0.88rem' }}>
+          <Card className="p-5">
+            <h2 className="mb-3 font-display text-base font-bold text-ink dark:text-white">Category coverage</h2>
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
               {categoryKeys.map((key) => (
                 <div
                   key={key}
-                  style={{
-                    borderRadius: '0.7rem',
-                    border: key === categoryKey ? '1px solid #0f766e' : '1px solid #cbd5e1',
-                    background: key === categoryKey ? '#ecfdf5' : '#fff',
-                    padding: '0.55rem 0.65rem'
-                  }}
+                  className={cn(
+                    'rounded-xl border p-3',
+                    key === categoryKey
+                      ? 'border-emerald-300 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-900/20'
+                      : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800/60'
+                  )}
                 >
-                  <strong>{CATEGORIES[key].label}</strong>
-                  <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.2rem' }}>
+                  <strong className="text-sm text-ink dark:text-slate-100">{CATEGORIES[key].label}</strong>
+                  <div className="mt-0.5 text-xs text-ink-muted dark:text-slate-400">
                     {Object.keys(CATEGORIES[key].units).length} units
                   </div>
                 </div>
               ))}
             </div>
-          </section>
+          </Card>
 
-          <section style={{ marginBottom: '1rem' }}>
-            <h2 style={{ margin: '0 0 0.55rem', color: '#0f2a43', fontSize: '1.05rem' }}>Use cases</h2>
-            <div style={{ color: '#475569', fontSize: '0.9rem', lineHeight: 1.65 }}>
-              <p style={{ marginTop: 0 }}>
-                Convert speed between mph and km/h for travel planning, switch pressure between psi and bar for
-                mechanical systems, or move between bytes and GB when planning storage.
+          <Card className="p-5">
+            <h2 className="font-display text-base font-bold text-ink dark:text-white">Use cases</h2>
+            <div className="mt-1.5 space-y-2 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+              <p>
+                Convert speed between mph and km/h for travel planning, switch pressure between psi and bar for mechanical
+                systems, or move between bytes and GB when planning storage.
               </p>
-              <p style={{ marginBottom: 0 }}>
-                The tool keeps formula transparency so you can verify unit factors for assignments, specs, and reports.
+              <p>The tool keeps formula transparency so you can verify unit factors for assignments, specs, and reports.</p>
+            </div>
+          </Card>
+
+          <Card className="p-5">
+            <h2 className="font-display text-base font-bold text-ink dark:text-white">FAQ</h2>
+            <div className="mt-1.5 space-y-2 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+              <p>
+                <strong className="font-semibold text-ink dark:text-white">How are temperature conversions handled?</strong>{' '}
+                Temperature uses dedicated equations, not a single multiplication factor.
+              </p>
+              <p>
+                <strong className="font-semibold text-ink dark:text-white">Why does a value show scientific notation?</strong>{' '}
+                Very small or very large values are displayed in exponential format for readability.
               </p>
             </div>
-          </section>
-
-          <section style={{ marginBottom: '0.25rem' }}>
-            <h2 style={{ margin: '0 0 0.55rem', color: '#0f2a43', fontSize: '1.05rem' }}>FAQ</h2>
-            <div style={{ color: '#475569', fontSize: '0.9rem', lineHeight: 1.65 }}>
-              <p style={{ marginTop: 0 }}>
-                <strong>How are temperature conversions handled?</strong> Temperature uses dedicated equations, not a
-                single multiplication factor.
-              </p>
-              <p style={{ marginBottom: 0 }}>
-                <strong>Why does a value show scientific notation?</strong> Very small or very large values are
-                displayed in exponential format for readability.
-              </p>
-            </div>
-          </section>
+          </Card>
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

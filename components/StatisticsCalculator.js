@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
-import { BarChart3, Home as HomeIcon } from 'lucide-react';
-import HomeButton from './HomeButton';
+import { Info } from 'lucide-react';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField, SelectField } from './ui/Field';
+import Card from './ui/Card';
 
 const CONFIDENCE_Z = {
   90: 1.645,
@@ -131,8 +133,27 @@ const StatisticsCalculator = () => {
     };
   }, [stats, confidenceLevel]);
 
+  const statTiles = stats
+    ? [
+        ['Count', stats.count],
+        ['Sum', stats.sum],
+        ['Mean', stats.mean],
+        ['Median', stats.median],
+        ['Min', stats.min],
+        ['Max', stats.max],
+        ['Range', stats.range],
+        ['Q1', stats.q1],
+        ['Q3', stats.q3],
+        ['IQR', stats.iqr],
+        ['Population Variance', stats.variancePopulation],
+        ['Population SD', stats.stdPopulation],
+        ['Sample Variance', stats.varianceSample],
+        ['Sample SD', stats.stdSample]
+      ]
+    : [];
+
   return (
-    <div className="calculator-container" style={{ background: 'linear-gradient(135deg, #f6f4ef 0%, #e7edf4 100%)' }}>
+    <>
       <Head>
         <title>Statistics Calculator Online | Mean, Median, SD, CI, Percentile | Upaman</title>
         <meta
@@ -171,33 +192,15 @@ const StatisticsCalculator = () => {
         />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header emi-header">
-          <div className="header-nav">
-            <HomeButton style={{ position: 'static', top: 'auto', left: 'auto', zIndex: 'auto' }} />
-            <div className="flex-spacer" />
-          </div>
-          <div className="header-title-container">
-            <BarChart3 size={32} color="#22d3ee" aria-hidden="true" />
-            <h1 className="header-title">Statistics Calculator</h1>
-          </div>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Convert raw numbers into descriptive statistics, confidence intervals, and percentile insights.
-          </p>
-        </div>
-
-        <div className="mobile-card-content">
-          <section
-            style={{
-              marginBottom: '1.2rem',
-              background: '#f8fafc',
-              border: '1px solid #dbe2eb',
-              borderRadius: '0.9rem',
-              padding: '1rem'
-            }}
-          >
-            <h2 style={{ marginTop: 0, marginBottom: '0.55rem', fontSize: '1.05rem', color: '#0f2a43' }}>Input data</h2>
-            <p style={{ marginTop: 0, marginBottom: '0.6rem', color: '#475569', fontSize: '0.9rem', lineHeight: 1.6 }}>
+      <CalcLayout
+        eyebrow="Everyday tool"
+        title="Statistics Calculator"
+        subtitle="Convert raw numbers into descriptive statistics, confidence intervals, and percentile insights."
+      >
+        <div className="max-w-4xl space-y-5">
+          <Card className="p-5">
+            <h2 className="font-display text-base font-bold text-ink dark:text-white">Input data</h2>
+            <p className="mt-1 mb-3 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
               Paste values separated by commas, spaces, or line breaks. Useful for exam prep, operational metrics,
               experiment results, and report validation.
             </p>
@@ -206,182 +209,107 @@ const StatisticsCalculator = () => {
               onChange={(event) => setRawData(event.target.value)}
               rows={5}
               spellCheck={false}
-              style={{
-                width: '100%',
-                borderRadius: '0.75rem',
-                border: '1px solid #cbd5e1',
-                padding: '0.8rem',
-                fontSize: '0.95rem',
-                lineHeight: 1.5,
-                fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace'
-              }}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 font-mono text-[0.95rem] text-ink shadow-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-500/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             />
-            <p style={{ margin: '0.6rem 0 0', color: '#64748b', fontSize: '0.82rem' }}>
-              Parsed values: <strong>{values.length}</strong>
+            <p className="mt-2 text-xs text-ink-muted dark:text-slate-400">
+              Parsed values: <strong className="text-ink dark:text-slate-200">{values.length}</strong>
             </p>
-          </section>
+          </Card>
 
           {stats ? (
-            <section style={{ marginBottom: '1rem' }}>
-              <h2 style={{ margin: '0 0 0.6rem', color: '#0f2a43', fontSize: '1.05rem' }}>Descriptive statistics</h2>
-              <div className="results-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '0.65rem' }}>
-                {[
-                  ['Count', stats.count],
-                  ['Sum', stats.sum],
-                  ['Mean', stats.mean],
-                  ['Median', stats.median],
-                  ['Min', stats.min],
-                  ['Max', stats.max],
-                  ['Range', stats.range],
-                  ['Q1', stats.q1],
-                  ['Q3', stats.q3],
-                  ['IQR', stats.iqr],
-                  ['Population Variance', stats.variancePopulation],
-                  ['Population SD', stats.stdPopulation],
-                  ['Sample Variance', stats.varianceSample],
-                  ['Sample SD', stats.stdSample]
-                ].map(([label, value]) => (
-                  <div
-                    key={label}
-                    style={{
-                      background: '#ffffff',
-                      border: '1px solid #dbe2eb',
-                      borderRadius: '0.8rem',
-                      padding: '0.75rem'
-                    }}
-                  >
-                    <div style={{ fontSize: '0.78rem', color: '#64748b', marginBottom: '0.2rem' }}>{label}</div>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f2a43' }}>{formatNumber(value)}</div>
-                  </div>
+            <div>
+              <h2 className="mb-3 font-display text-base font-bold text-ink dark:text-white">Descriptive statistics</h2>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {statTiles.map(([label, value]) => (
+                  <ResultStat key={label} label={label} value={formatNumber(value)} />
                 ))}
               </div>
-              <p style={{ margin: '0.65rem 0 0', color: '#475569', fontSize: '0.86rem' }}>
+              <p className="mt-3 text-sm text-ink-soft dark:text-slate-300">
                 Mode: {stats.mode.length ? stats.mode.map((value) => formatNumber(value)).join(', ') : 'No repeated mode'}
               </p>
-            </section>
+            </div>
           ) : (
-            <section
-              style={{
-                marginBottom: '1rem',
-                borderRadius: '0.85rem',
-                border: '1px solid #fecaca',
-                background: '#fff1f2',
-                color: '#9f1239',
-                padding: '0.85rem'
-              }}
-            >
+            <Card className="border-rose-200 p-4 text-sm font-medium text-rose-700 dark:border-rose-800 dark:text-rose-300">
               Enter at least one number to compute statistics.
-            </section>
+            </Card>
           )}
 
-          <section style={{ marginBottom: '1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.7rem' }}>
-            <div style={{ border: '1px solid #dbe2eb', borderRadius: '0.85rem', background: '#fff', padding: '0.85rem' }}>
-              <h3 style={{ marginTop: 0, marginBottom: '0.5rem', fontSize: '0.98rem', color: '#0f2a43' }}>Z-score</h3>
-              <label htmlFor="z-score-input" style={{ display: 'block', fontSize: '0.82rem', color: '#64748b', marginBottom: '0.3rem' }}>
-                Value to standardize
-              </label>
-              <input
-                id="z-score-input"
-                type="number"
-                value={zInput}
-                onChange={(event) => setZInput(event.target.value)}
-                style={{ width: '100%', borderRadius: '0.6rem', border: '1px solid #cbd5e1', padding: '0.5rem' }}
-              />
-              <p style={{ margin: '0.55rem 0 0', color: '#0f766e', fontWeight: 700 }}>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Card className="p-5">
+              <h3 className="mb-2.5 font-display text-sm font-bold text-ink dark:text-white">Z-score</h3>
+              <NumberField id="z-score-input" label="Value to standardize" value={zInput} onChange={setZInput} />
+              <p className="mt-2.5 font-semibold text-emerald-600 dark:text-emerald-400">
                 {zScore === null ? 'Need valid dataset and value' : `z = ${formatNumber(zScore)}`}
               </p>
-            </div>
+            </Card>
 
-            <div style={{ border: '1px solid #dbe2eb', borderRadius: '0.85rem', background: '#fff', padding: '0.85rem' }}>
-              <h3 style={{ marginTop: 0, marginBottom: '0.5rem', fontSize: '0.98rem', color: '#0f2a43' }}>Percentile rank</h3>
-              <label htmlFor="percentile-rank-input" style={{ display: 'block', fontSize: '0.82rem', color: '#64748b', marginBottom: '0.3rem' }}>
-                Target value
-              </label>
-              <input
-                id="percentile-rank-input"
-                type="number"
-                value={percentileInput}
-                onChange={(event) => setPercentileInput(event.target.value)}
-                style={{ width: '100%', borderRadius: '0.6rem', border: '1px solid #cbd5e1', padding: '0.5rem' }}
-              />
-              <p style={{ margin: '0.55rem 0 0', color: '#0f766e', fontWeight: 700 }}>
+            <Card className="p-5">
+              <h3 className="mb-2.5 font-display text-sm font-bold text-ink dark:text-white">Percentile rank</h3>
+              <NumberField id="percentile-rank-input" label="Target value" value={percentileInput} onChange={setPercentileInput} />
+              <p className="mt-2.5 font-semibold text-emerald-600 dark:text-emerald-400">
                 {percentileRank === null ? 'Need valid dataset and value' : `${formatNumber(percentileRank)}th percentile`}
               </p>
-            </div>
-          </section>
+            </Card>
+          </div>
 
-          <section
-            style={{
-              marginBottom: '1rem',
-              border: '1px solid #dbe2eb',
-              borderRadius: '0.85rem',
-              background: '#f8fafc',
-              padding: '0.95rem'
-            }}
-          >
-            <h3 style={{ marginTop: 0, marginBottom: '0.55rem', fontSize: '0.98rem', color: '#0f2a43' }}>
-              Confidence interval for mean
-            </h3>
-            <label htmlFor="confidence-level" style={{ display: 'block', fontSize: '0.82rem', color: '#64748b', marginBottom: '0.3rem' }}>
-              Confidence level
-            </label>
-            <select
-              id="confidence-level"
-              value={confidenceLevel}
-              onChange={(event) => setConfidenceLevel(event.target.value)}
-              style={{ borderRadius: '0.6rem', border: '1px solid #cbd5e1', padding: '0.45rem 0.6rem' }}
-            >
-              <option value="90">90%</option>
-              <option value="95">95%</option>
-              <option value="99">99%</option>
-            </select>
-            <p style={{ margin: '0.6rem 0 0.25rem', color: '#334155', fontSize: '0.88rem' }}>
-              Formula: mean ± z × (sample SD / √n)
-            </p>
-            <p style={{ margin: 0, color: '#0f766e', fontWeight: 700, fontSize: '0.92rem' }}>
+          <Card className="p-5">
+            <h3 className="mb-2.5 font-display text-sm font-bold text-ink dark:text-white">Confidence interval for mean</h3>
+            <div className="max-w-xs">
+              <SelectField
+                id="confidence-level"
+                label="Confidence level"
+                value={confidenceLevel}
+                onChange={setConfidenceLevel}
+                options={[
+                  { value: '90', label: '90%' },
+                  { value: '95', label: '95%' },
+                  { value: '99', label: '99%' }
+                ]}
+              />
+            </div>
+            <p className="mt-3 text-sm text-ink-soft dark:text-slate-300">Formula: mean ± z × (sample SD / √n)</p>
+            <p className="mt-1 font-semibold text-emerald-600 dark:text-emerald-400">
               {confidenceInterval
                 ? `[${formatNumber(confidenceInterval.lower)}, ${formatNumber(confidenceInterval.upper)}] (margin ${formatNumber(confidenceInterval.margin)})`
                 : 'Need at least two data points for sample-based CI'}
             </p>
-          </section>
+          </Card>
 
-          <section style={{ marginBottom: '1rem' }}>
-            <h2 style={{ margin: '0 0 0.55rem', color: '#0f2a43', fontSize: '1.05rem' }}>Interpretation tips</h2>
-            <div style={{ color: '#475569', fontSize: '0.9rem', lineHeight: 1.65 }}>
-              <p style={{ marginTop: 0 }}>
-                Use population variance/SD when the dataset contains every observation in scope. Use sample
-                variance/SD when your list is a subset of a larger population and you want an unbiased estimate.
+          <Card className="p-5">
+            <h2 className="font-display text-base font-bold text-ink dark:text-white">Interpretation tips</h2>
+            <div className="mt-1.5 space-y-2 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+              <p>
+                Use population variance/SD when the dataset contains every observation in scope. Use sample variance/SD
+                when your list is a subset of a larger population and you want an unbiased estimate.
               </p>
-              <p style={{ marginBottom: 0 }}>
+              <p>
                 A z-score near 0 means the value is close to the mean. Larger absolute z-scores indicate more unusual
                 observations relative to the dataset spread.
               </p>
             </div>
-          </section>
+          </Card>
 
-          <section style={{ marginBottom: '0.25rem' }}>
-            <h2 style={{ margin: '0 0 0.55rem', color: '#0f2a43', fontSize: '1.05rem' }}>FAQ</h2>
-            <div style={{ color: '#475569', fontSize: '0.9rem', lineHeight: 1.65 }}>
-              <p style={{ marginTop: 0 }}>
-                <strong>Does this tool support negative and decimal values?</strong> Yes. You can mix negatives,
-                decimals, and scientific notation like 2.5e3.
+          <Card className="p-5">
+            <h2 className="font-display text-base font-bold text-ink dark:text-white">FAQ</h2>
+            <div className="mt-1.5 space-y-2 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+              <p>
+                <strong className="font-semibold text-ink dark:text-white">Does this tool support negative and decimal values?</strong>{' '}
+                Yes. You can mix negatives, decimals, and scientific notation like 2.5e3.
               </p>
-              <p style={{ marginBottom: 0 }}>
-                <strong>What if all values are unique?</strong> In that case there is no repeated mode, so the mode
-                output stays empty by design.
+              <p>
+                <strong className="font-semibold text-ink dark:text-white">What if all values are unique?</strong> In that
+                case there is no repeated mode, so the mode output stays empty by design.
               </p>
             </div>
-          </section>
+          </Card>
 
-          <div style={{ marginTop: '1.2rem', color: '#64748b', fontSize: '0.82rem', display: 'flex', gap: '0.35rem', alignItems: 'flex-start' }}>
-            <HomeIcon size={14} aria-hidden="true" style={{ marginTop: '0.1rem' }} />
-            <span>
-              For audited or regulated reporting, validate these outputs with your official statistical workflow.
-            </span>
-          </div>
+          <p className="flex items-start gap-1.5 text-xs text-ink-muted dark:text-slate-400">
+            <Info size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
+            <span>For audited or regulated reporting, validate these outputs with your official statistical workflow.</span>
+          </p>
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

@@ -1,7 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
-import { Calculator, Eraser, Delete, History, Sigma } from 'lucide-react';
-import HomeButton from './HomeButton';
+import { Eraser, Delete, History, Sigma } from 'lucide-react';
+import { CalcLayout } from './calculator/CalcLayout';
+import Card from './ui/Card';
+import Button from './ui/Button';
+import { cn } from './ui/cn';
 
 const FUNCTION_TOKENS = new Set(['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sqrt', 'log', 'ln', 'abs', 'fact']);
 
@@ -59,6 +62,14 @@ const normalizeExpression = (rawExpression) => {
 
   return expression;
 };
+
+const keyBase =
+  'rounded-xl border px-1 py-3 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40';
+const keyDefault =
+  'border-slate-200 bg-slate-50 text-ink hover:border-slate-300 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700';
+const keyEquals = 'border-brand-600 bg-brand-600 text-white hover:bg-brand-700';
+const keyClear =
+  'border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-900/30 dark:text-rose-300';
 
 const ScientificCalculator = () => {
   const [expression, setExpression] = useState('sin(30) + sqrt(16)');
@@ -154,7 +165,7 @@ const ScientificCalculator = () => {
   ];
 
   return (
-    <div className="calculator-container" style={{ background: 'linear-gradient(135deg, #f6f4ef 0%, #e7edf4 100%)' }}>
+    <>
       <Head>
         <title>Scientific Calculator Online | Trig, Log, Roots, Factorial | Upaman</title>
         <meta
@@ -193,43 +204,23 @@ const ScientificCalculator = () => {
         />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header emi-header">
-          <div className="header-nav">
-            <HomeButton style={{ position: 'static', top: 'auto', left: 'auto', zIndex: 'auto' }} />
-            <div className="flex-spacer" />
-          </div>
-          <div className="header-title-container">
-            <Calculator size={32} color="#facc15" aria-hidden="true" />
-            <h1 className="header-title">Scientific Calculator</h1>
-          </div>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Solve trig, logarithmic, root, and power expressions with degree/radian control and instant history.
-          </p>
-        </div>
-
-        <div className="mobile-card-content">
-          <section
-            style={{
-              marginBottom: '1.25rem',
-              background: '#f8fafc',
-              border: '1px solid #dbe2eb',
-              borderRadius: '0.9rem',
-              padding: '1rem'
-            }}
-          >
-            <h2 style={{ marginTop: 0, marginBottom: '0.55rem', fontSize: '1.05rem', color: '#0f2a43' }}>
-              How this calculator helps
-            </h2>
-            <p style={{ margin: 0, color: '#475569', lineHeight: 1.6, fontSize: '0.92rem' }}>
+      <CalcLayout
+        eyebrow="Everyday tool"
+        title="Scientific Calculator"
+        subtitle="Solve trig, logarithmic, root, and power expressions with degree/radian control and instant history."
+      >
+        <div className="max-w-3xl space-y-5">
+          <Card className="p-5">
+            <h2 className="font-display text-base font-bold text-ink dark:text-white">How this calculator helps</h2>
+            <p className="mt-1.5 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
               Enter a full expression in one line instead of solving each step separately. The calculator supports
               trigonometric functions, logarithms, factorials, powers, and parentheses, making it useful for school
               math, engineering prep, and quick technical checks.
             </p>
-          </section>
+          </Card>
 
-          <section style={{ marginBottom: '1rem' }}>
-            <label htmlFor="scientific-expression" style={{ display: 'block', fontWeight: 700, marginBottom: '0.45rem', color: '#1e293b' }}>
+          <Card className="p-5">
+            <label htmlFor="scientific-expression" className="mb-1.5 block text-sm font-semibold text-ink-soft dark:text-slate-300">
               Expression
             </label>
             <textarea
@@ -238,116 +229,70 @@ const ScientificCalculator = () => {
               onChange={(event) => setExpression(event.target.value)}
               rows={3}
               spellCheck={false}
-              style={{
-                width: '100%',
-                borderRadius: '0.75rem',
-                border: '1px solid #cbd5e1',
-                padding: '0.8rem',
-                fontSize: '1rem',
-                fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace'
-              }}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 font-mono text-[0.95rem] text-ink shadow-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-500/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               placeholder="Example: sin(45)^2 + cos(45)^2"
             />
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', marginTop: '0.75rem' }}>
-              <button
-                type="button"
-                onClick={() => setAngleMode('DEG')}
-                style={{
-                  padding: '0.45rem 0.9rem',
-                  borderRadius: '999px',
-                  border: '1px solid #94a3b8',
-                  background: angleMode === 'DEG' ? '#0f766e' : '#fff',
-                  color: angleMode === 'DEG' ? '#fff' : '#334155',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
-              >
-                DEG
-              </button>
-              <button
-                type="button"
-                onClick={() => setAngleMode('RAD')}
-                style={{
-                  padding: '0.45rem 0.9rem',
-                  borderRadius: '999px',
-                  border: '1px solid #94a3b8',
-                  background: angleMode === 'RAD' ? '#0f766e' : '#fff',
-                  color: angleMode === 'RAD' ? '#fff' : '#334155',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
-              >
-                RAD
-              </button>
-              <button
-                type="button"
-                onClick={evaluateExpression}
-                style={{
-                  marginLeft: 'auto',
-                  padding: '0.45rem 1rem',
-                  borderRadius: '0.7rem',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #0f2a43, #1d4e89)',
-                  color: '#fff',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
-              >
-                Evaluate
-              </button>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <div className="inline-flex gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 dark:border-slate-700 dark:bg-slate-800/60" role="group" aria-label="Angle mode">
+                {['DEG', 'RAD'].map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setAngleMode(mode)}
+                    aria-pressed={angleMode === mode}
+                    className={cn(
+                      'rounded-lg px-3.5 py-1.5 text-sm font-bold transition',
+                      angleMode === mode
+                        ? 'bg-white text-brand-700 shadow-sm dark:bg-slate-700 dark:text-white'
+                        : 'text-ink-muted hover:text-ink dark:text-slate-400'
+                    )}
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
+              <Button className="ml-auto" onClick={evaluateExpression}>Evaluate</Button>
             </div>
-          </section>
+          </Card>
 
-          <section
-            style={{
-              border: '1px solid #dbe2eb',
-              borderRadius: '0.9rem',
-              background: '#ffffff',
-              padding: '0.95rem',
-              marginBottom: '1rem'
-            }}
-          >
-            <h3 style={{ marginTop: 0, marginBottom: '0.5rem', color: '#0f2a43', fontSize: '1rem' }}>Result</h3>
-            <div style={{ fontSize: '1.12rem', fontWeight: 700, color: '#0f766e', wordBreak: 'break-word' }}>
+          <Card className="p-5">
+            <h3 className="font-display text-sm font-bold text-ink dark:text-white">Result</h3>
+            <p className="mt-1 break-words font-display text-xl font-bold text-emerald-600 dark:text-emerald-400">
               {result || 'No result yet'}
-            </div>
-            {error ? (
-              <p style={{ margin: '0.5rem 0 0', color: '#b91c1c', fontWeight: 600, fontSize: '0.88rem' }}>{error}</p>
-            ) : null}
-          </section>
+            </p>
+            {error ? <p className="mt-2 text-sm font-semibold text-rose-600 dark:text-rose-400">{error}</p> : null}
+          </Card>
 
-          <section style={{ marginBottom: '1rem' }}>
-            <h3 style={{ margin: '0 0 0.6rem', color: '#0f2a43', fontSize: '1rem' }}>Quick keypad</h3>
-            <div style={{ display: 'grid', gap: '0.5rem' }}>
+          <Card className="p-5">
+            <h3 className="mb-3 font-display text-sm font-bold text-ink dark:text-white">Quick keypad</h3>
+            <div className="grid gap-2">
               {keypadRows.map((row, rowIndex) => (
-                <div key={rowIndex} style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: '0.5rem' }}>
+                <div key={rowIndex} className="grid grid-cols-6 gap-2">
                   {row.map((token) => (
                     <button
                       key={token}
                       type="button"
                       onClick={() => appendToken(token)}
-                      style={{
-                        padding: '0.55rem 0.25rem',
-                        borderRadius: '0.6rem',
-                        border: '1px solid #cbd5e1',
-                        background: token === '=' ? '#0f766e' : token === 'C' ? '#fee2e2' : '#f8fafc',
-                        color: token === '=' ? '#fff' : token === 'C' ? '#991b1b' : '#1e293b',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
+                      className={cn(keyBase, token === '=' ? keyEquals : token === 'C' ? keyClear : keyDefault)}
                     >
-                      {token === 'DEL' ? <Delete size={16} style={{ margin: '0 auto' }} /> : token === 'C' ? <Eraser size={16} style={{ margin: '0 auto' }} /> : token}
+                      {token === 'DEL' ? (
+                        <Delete size={16} className="mx-auto" />
+                      ) : token === 'C' ? (
+                        <Eraser size={16} className="mx-auto" />
+                      ) : (
+                        token
+                      )}
                     </button>
                   ))}
                 </div>
               ))}
             </div>
-          </section>
+          </Card>
 
-          <section style={{ marginBottom: '1rem' }}>
-            <h3 style={{ margin: '0 0 0.5rem', color: '#0f2a43', fontSize: '1rem' }}>Try examples</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <Card className="p-5">
+            <h3 className="mb-2.5 font-display text-sm font-bold text-ink dark:text-white">Try examples</h3>
+            <div className="flex flex-wrap gap-2">
               {quickExamples.map((example) => (
                 <button
                   key={example}
@@ -356,50 +301,26 @@ const ScientificCalculator = () => {
                     setExpression(example);
                     setError('');
                   }}
-                  style={{
-                    borderRadius: '999px',
-                    border: '1px solid #cbd5e1',
-                    background: '#fff',
-                    color: '#334155',
-                    fontSize: '0.82rem',
-                    padding: '0.35rem 0.75rem',
-                    cursor: 'pointer'
-                  }}
+                  className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:border-slate-300 hover:text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                 >
                   {example}
                 </button>
               ))}
             </div>
-          </section>
+          </Card>
 
-          <section
-            style={{
-              border: '1px solid #dbe2eb',
-              borderRadius: '0.9rem',
-              background: '#f8fafc',
-              padding: '0.95rem',
-              marginBottom: '1rem'
-            }}
-          >
-            <h3 style={{ marginTop: 0, marginBottom: '0.5rem', color: '#0f2a43', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <History size={16} aria-hidden="true" />
-              Recent calculations
+          <Card className="p-5">
+            <h3 className="mb-2 flex items-center gap-2 font-display text-sm font-bold text-ink dark:text-white">
+              <History size={16} aria-hidden="true" /> Recent calculations
             </h3>
             {history.length ? (
-              <ul style={{ margin: 0, paddingLeft: '1rem', color: '#334155', fontSize: '0.88rem', lineHeight: 1.6 }}>
+              <ul className="space-y-1 text-sm">
                 {history.map((entry, index) => (
                   <li key={`${entry.expression}-${index}`}>
                     <button
                       type="button"
                       onClick={() => setExpression(entry.expression)}
-                      style={{
-                        border: 'none',
-                        background: 'transparent',
-                        color: '#1d4e89',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        padding: 0
-                      }}
+                      className="text-left font-mono text-brand-700 hover:underline dark:text-brand-300"
                     >
                       {entry.expression} = {entry.result}
                     </button>
@@ -407,47 +328,50 @@ const ScientificCalculator = () => {
                 ))}
               </ul>
             ) : (
-              <p style={{ margin: 0, color: '#64748b', fontSize: '0.88rem' }}>Run a few expressions to build history.</p>
+              <p className="text-sm text-ink-muted dark:text-slate-400">Run a few expressions to build history.</p>
             )}
-          </section>
+          </Card>
 
-          <section style={{ marginBottom: '1rem' }}>
-            <h2 style={{ margin: '0 0 0.6rem', color: '#0f2a43', fontSize: '1.05rem' }}>Formula notes</h2>
-            <div style={{ color: '#475569', fontSize: '0.9rem', lineHeight: 1.65 }}>
-              <p style={{ marginTop: 0 }}>
-                Core identities supported include Pythagorean trig identity <strong>sin²(x) + cos²(x) = 1</strong>,
-                change-of-base via logarithms, and factorial expansion for permutation and combinatorics checks.
+          <Card className="p-5">
+            <h2 className="font-display text-base font-bold text-ink dark:text-white">Formula notes</h2>
+            <div className="mt-1.5 space-y-2 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+              <p>
+                Core identities supported include the Pythagorean trig identity{' '}
+                <strong className="font-semibold text-ink dark:text-white">sin²(x) + cos²(x) = 1</strong>, change-of-base
+                via logarithms, and factorial expansion for permutation and combinatorics checks.
               </p>
-              <p style={{ marginBottom: 0 }}>
-                Use <strong>DEG</strong> mode for school-style angles (30, 45, 60) and <strong>RAD</strong> mode when
-                working with calculus or programming formulas.
+              <p>
+                Use <strong className="font-semibold text-ink dark:text-white">DEG</strong> mode for school-style angles
+                (30, 45, 60) and <strong className="font-semibold text-ink dark:text-white">RAD</strong> mode when working
+                with calculus or programming formulas.
               </p>
             </div>
-          </section>
+          </Card>
 
-          <section style={{ marginBottom: '0.25rem' }}>
-            <h2 style={{ margin: '0 0 0.6rem', color: '#0f2a43', fontSize: '1.05rem' }}>FAQ</h2>
-            <div style={{ color: '#475569', fontSize: '0.9rem', lineHeight: 1.65 }}>
-              <p style={{ marginTop: 0 }}>
-                <strong>Why are trig answers different from my textbook?</strong> Check the angle mode. Most textbook
-                examples use degrees.
+          <Card className="p-5">
+            <h2 className="font-display text-base font-bold text-ink dark:text-white">FAQ</h2>
+            <div className="mt-1.5 space-y-2 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+              <p>
+                <strong className="font-semibold text-ink dark:text-white">Why are trig answers different from my textbook?</strong>{' '}
+                Check the angle mode. Most textbook examples use degrees.
               </p>
-              <p style={{ marginBottom: 0 }}>
-                <strong>How do I reuse previous outputs?</strong> Use <strong>ANS</strong> in the keypad or click an item
-                from calculation history.
+              <p>
+                <strong className="font-semibold text-ink dark:text-white">How do I reuse previous outputs?</strong> Use{' '}
+                <strong className="font-semibold text-ink dark:text-white">ANS</strong> in the keypad or click an item from
+                calculation history.
               </p>
             </div>
-          </section>
+          </Card>
 
-          <div style={{ marginTop: '1.2rem', color: '#64748b', fontSize: '0.82rem', display: 'flex', gap: '0.35rem', alignItems: 'flex-start' }}>
-            <Sigma size={14} aria-hidden="true" style={{ marginTop: '0.1rem' }} />
+          <p className="flex items-start gap-1.5 text-xs text-ink-muted dark:text-slate-400">
+            <Sigma size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
             <span>
               Results are numerical approximations. Validate critical engineering and exam submissions with independent checks.
             </span>
-          </div>
+          </p>
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 

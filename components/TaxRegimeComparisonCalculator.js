@@ -1,28 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
-import HomeButton from './HomeButton';
+import { Scale } from 'lucide-react';
 import SearchLandingSections from './calculator/SearchLandingSections';
 import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField } from './ui/Field';
+import Card from './ui/Card';
+import { DecisionBanner } from './workflow/WorkflowKit';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 const { calculateIndianIncomeTax } = require('../utils/taxCalculations');
-
-const oldSlabs = [
-  { min: 0, max: 250000, rate: 0 },
-  { min: 250000, max: 500000, rate: 5 },
-  { min: 500000, max: 1000000, rate: 20 },
-  { min: 1000000, max: Number.POSITIVE_INFINITY, rate: 30 }
-];
-
-const newSlabs = [
-  { min: 0, max: 400000, rate: 0 },
-  { min: 400000, max: 800000, rate: 5 },
-  { min: 800000, max: 1200000, rate: 10 },
-  { min: 1200000, max: 1600000, rate: 15 },
-  { min: 1600000, max: 2000000, rate: 20 },
-  { min: 2000000, max: 2400000, rate: 25 },
-  { min: 2400000, max: Number.POSITIVE_INFINITY, rate: 30 }
-];
 
 const TaxRegimeComparisonCalculator = () => {
   const [salary, setSalary] = useState(1500000);
@@ -63,7 +50,6 @@ const TaxRegimeComparisonCalculator = () => {
     };
   }, [salary, deductions80C, deductions80D, hraExemption, otherDeductions]);
 
-  const maxTax = Math.max(result.oldTotalTax, result.newTotalTax, 1);
   const oldTakeHome = Math.max(0, salary - result.oldTotalTax);
   const newTakeHome = Math.max(0, salary - result.newTotalTax);
   const recommendedTax = result.betterRegime === 'Old Regime' ? result.oldTotalTax : result.newTotalTax;
@@ -112,7 +98,7 @@ const TaxRegimeComparisonCalculator = () => {
   ];
 
   return (
-    <div className="calculator-container" style={{ background: 'linear-gradient(135deg, #f6f4ef 0%, #e7edf4 100%)' }}>
+    <>
       <Head>
         <title>Tax Regime Comparison Tool India (FY 2026-27) | Upaman</title>
         <meta
@@ -120,115 +106,67 @@ const TaxRegimeComparisonCalculator = () => {
           content="Compare old vs new tax regime for India FY 2026-27 (AY 2027-28) with deductions, section 87A rebate, marginal relief, and cess."
         />
         <link rel="canonical" href="https://upaman.com/tax-regime-comparison" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(softwareSchema)
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(breadcrumbSchema)
-          }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 
-      <div className="calculator-card">
-        <div className="calculator-header tax-header">
-          <div className="header-nav">
-            <HomeButton style={{ position: 'static', top: 'auto', left: 'auto', zIndex: 'auto' }} />
-            <div className="flex-spacer" />
+      <CalcLayout
+        eyebrow="India · Tax"
+        title="Tax Regime Comparison Tool (India)"
+        subtitle="Compare old vs new regime with deduction-aware inputs and an instant tax-savings recommendation."
+      >
+        <div className="grid gap-5 lg:grid-cols-5">
+          <Card className="p-5 lg:col-span-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              <NumberField id="trc-salary" label="Annual Salary (INR)" prefix="₹" value={salary} onChange={(v) => setSalary(Number(v) || 0)} />
+              <NumberField id="trc-80c" label="80C Deductions" prefix="₹" value={deductions80C} onChange={(v) => setDeductions80C(Number(v) || 0)} />
+              <NumberField id="trc-80d" label="80D Deductions" prefix="₹" value={deductions80D} onChange={(v) => setDeductions80D(Number(v) || 0)} />
+              <NumberField id="trc-hra" label="HRA Exemption (Old Regime)" prefix="₹" value={hraExemption} onChange={(v) => setHraExemption(Number(v) || 0)} />
+              <NumberField id="trc-other" label="Other Deductions" prefix="₹" value={otherDeductions} onChange={(v) => setOtherDeductions(Number(v) || 0)} />
+            </div>
+          </Card>
+
+          <div className="space-y-5 lg:col-span-3">
+            <DecisionBanner
+              tone="positive"
+              label={`${result.betterRegime} is better`}
+              reason={`It saves you ${formatCurrency(result.savings)} based on current inputs.`}
+              icon={<Scale size={18} />}
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <ResultStat label="Old regime tax" value={formatCurrency(result.oldTotalTax)} emphasis={result.betterRegime === 'Old Regime'} />
+              <ResultStat label="New regime tax" value={formatCurrency(result.newTotalTax)} emphasis={result.betterRegime === 'New Regime'} />
+              <ResultStat label="Old taxable income" value={formatCurrency(result.oldTaxable)} />
+              <ResultStat label="New taxable income" value={formatCurrency(result.newTaxable)} />
+            </div>
+
+            <Card className="p-5">
+              <PieBreakdownChart
+                title={`${result.betterRegime}: take-home vs tax`}
+                items={[
+                  { label: 'Take-home income', value: recommendedTakeHome, color: '#10b981' },
+                  { label: 'Tax outflow', value: recommendedTax, color: '#f97316' }
+                ]}
+                formatter={formatCurrency}
+              />
+            </Card>
+
+            <Card className="p-5">
+              <ComparisonBars
+                title="Regime-wise tax and take-home comparison"
+                items={[
+                  { label: 'Old regime tax', value: result.oldTotalTax, color: '#1d4e89' },
+                  { label: 'New regime tax', value: result.newTotalTax, color: '#0f766e' },
+                  { label: 'Old regime take-home', value: oldTakeHome, color: '#60a5fa' },
+                  { label: 'New regime take-home', value: newTakeHome, color: '#34d399' }
+                ]}
+                formatter={formatCurrency}
+              />
+            </Card>
           </div>
-          <h1 className="header-title">Tax Regime Comparison Tool (India)</h1>
-          <p style={{ margin: 0, opacity: 0.92, fontSize: '0.95rem' }}>
-            Compare old vs new regime with deduction-aware inputs and instant tax savings recommendation.
-          </p>
         </div>
 
-        <div className="mobile-card-content">
-          <section style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#f8fafc', padding: '1rem', marginBottom: '1rem' }}>
-            <div className="responsive-grid">
-              <div>
-                <label className="input-label">Annual Salary (INR)</label>
-                <input className="calculator-input mobile-input" type="number" value={salary} onChange={(e) => setSalary(Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">80C Deductions</label>
-                <input className="calculator-input mobile-input" type="number" value={deductions80C} onChange={(e) => setDeductions80C(Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">80D Deductions</label>
-                <input className="calculator-input mobile-input" type="number" value={deductions80D} onChange={(e) => setDeductions80D(Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">HRA Exemption (Old Regime)</label>
-                <input className="calculator-input mobile-input" type="number" value={hraExemption} onChange={(e) => setHraExemption(Number(e.target.value) || 0)} />
-              </div>
-              <div>
-                <label className="input-label">Other Deductions</label>
-                <input className="calculator-input mobile-input" type="number" value={otherDeductions} onChange={(e) => setOtherDeductions(Number(e.target.value) || 0)} />
-              </div>
-            </div>
-          </section>
-
-          <section style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#ffffff', padding: '1rem', marginBottom: '1rem' }}>
-            <h2 style={{ marginTop: 0, color: '#0f2a43', fontSize: '1.05rem' }}>Comparison Result</h2>
-            <p style={{ marginTop: 0, color: '#334155' }}>
-              <strong>{result.betterRegime}</strong> saves you <strong>{formatCurrency(result.savings)}</strong> based on current inputs.
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
-              <div style={{ background: '#eff6ff', borderRadius: '0.75rem', padding: '0.8rem' }}>
-                <div style={{ color: '#0f2a43', fontWeight: 700, marginBottom: '0.25rem' }}>Old Regime Tax</div>
-                <div style={{ color: '#1d4e89', fontSize: '1.1rem', fontWeight: 700 }}>{formatCurrency(result.oldTotalTax)}</div>
-                <div style={{ color: '#475569', fontSize: '0.82rem' }}>Taxable: {formatCurrency(result.oldTaxable)}</div>
-              </div>
-              <div style={{ background: '#ecfeff', borderRadius: '0.75rem', padding: '0.8rem' }}>
-                <div style={{ color: '#0f766e', fontWeight: 700, marginBottom: '0.25rem' }}>New Regime Tax</div>
-                <div style={{ color: '#0f766e', fontSize: '1.1rem', fontWeight: 700 }}>{formatCurrency(result.newTotalTax)}</div>
-                <div style={{ color: '#475569', fontSize: '0.82rem' }}>Taxable: {formatCurrency(result.newTaxable)}</div>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '0.9rem' }}>
-              <div style={{ marginBottom: '0.45rem', color: '#334155', fontSize: '0.86rem' }}>Visual tax comparison</div>
-              <div style={{ display: 'grid', gap: '0.5rem' }}>
-                <div>
-                  <div style={{ fontSize: '0.82rem', color: '#475569', marginBottom: '0.2rem' }}>Old Regime</div>
-                  <div style={{ height: '12px', background: '#e2e8f0', borderRadius: '999px', overflow: 'hidden' }}>
-                    <div style={{ width: `${(result.oldTotalTax / maxTax) * 100}%`, height: '100%', background: '#1d4e89' }} />
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.82rem', color: '#475569', marginBottom: '0.2rem' }}>New Regime</div>
-                  <div style={{ height: '12px', background: '#e2e8f0', borderRadius: '999px', overflow: 'hidden' }}>
-                    <div style={{ width: `${(result.newTotalTax / maxTax) * 100}%`, height: '100%', background: '#0f766e' }} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <PieBreakdownChart
-            title={`${result.betterRegime}: take-home vs tax`}
-            items={[
-              { label: 'Take-home income', value: recommendedTakeHome, color: '#10b981' },
-              { label: 'Tax outflow', value: recommendedTax, color: '#f97316' }
-            ]}
-            formatter={formatCurrency}
-          />
-
-          <ComparisonBars
-            title="Regime-wise tax and take-home comparison"
-            items={[
-              { label: 'Old regime tax', value: result.oldTotalTax, color: '#1d4e89' },
-              { label: 'New regime tax', value: result.newTotalTax, color: '#0f766e' },
-              { label: 'Old regime take-home', value: oldTakeHome, color: '#60a5fa' },
-              { label: 'New regime take-home', value: newTakeHome, color: '#34d399' }
-            ]}
-            formatter={formatCurrency}
-          />
-
+        <div className="mt-8 space-y-6">
           <EEATPanel
             author="Upaman Research Team"
             reviewer="Tax Policy Review Desk (Upaman)"
@@ -263,8 +201,8 @@ const TaxRegimeComparisonCalculator = () => {
             relatedLinks={relatedLinks}
           />
         </div>
-      </div>
-    </div>
+      </CalcLayout>
+    </>
   );
 };
 
