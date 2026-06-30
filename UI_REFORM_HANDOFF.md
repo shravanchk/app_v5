@@ -80,7 +80,12 @@ These were explicitly deferred/skipped in session 2 — resume here:
   **DONE** — all three migrated to `CalcLayout` + Tailwind `dark:` (not the old isDarkMode pattern).
 - India extras: ~~`tax-regime-comparison`~~ **DONE**, ~~`credit-card-trap-calculator`~~ **DONE**
   (dropped its stray `useEffect` dark-theme toggle; uses kit `DecisionBanner`/`HowToNote`/`Panel`).
-  Still old: **`irctc-calculator`** (`IRCTCCalculator.js`, ~1010 lines).
+  ~~**`irctc-calculator`**~~ **DONE** — migrated to `CalcLayout` + `Card` + `SelectField` + a
+  brand booking-opens card. Removed the legacy `isDarkMode`/localStorage theme system + floating
+  theme-toggle button + `HomeButton`; **kept** the decorative moving-train SVG animation (now
+  full-width, not `100vw`). Surfaced the previously-commented `specialNotes` as an amber note.
+  All logic, JSON-LD (software/FAQ/breadcrumb), EEAT, SearchLandingSections preserved. Verified
+  tsc + build + preview (light/dark, general + Tatkal branches).
 - **Known issue**: `AgeCalculator` logs a dev-only React hydration warning (renders live current-date
   values during render → static prerender ≠ client). Pre-existing, not from the reskin. Renders fine.
 
