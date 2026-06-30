@@ -68,9 +68,13 @@ change. Set `reviewedOn="June 28, 2026"`. Use `formatINR` / Intl `en-IN`.
 
 ### Calculator pages still on the OLD design (functional + linked, NOT yet migrated)
 These were explicitly deferred/skipped in session 2 — resume here:
-- **EU/UK salary + VAT** (shared engine `EuropeanSalaryCalculator.js`, ~1183 lines, drives
-  `european-salary`, `france-salary`, `germany-salary`, `netherlands-salary` via thin wrappers) and
-  `VATCalculator.js` (`eu-vat-calculator`, ~697 lines). Linked from the EU hub.
+- ~~**EU/UK salary + VAT**~~ **DONE** — `EuropeanSalaryCalculator.js` (shared engine driving
+  `european-salary`, `france-salary`, `germany-salary`, `netherlands-salary` via thin wrappers)
+  and `VATCalculator.js` (`eu-vat-calculator`) migrated to `CalcLayout` + `Card` +
+  `NumberField`/`SelectField`/`Tabs` + `ResultStat` + `PieBreakdownChart`. Frequency / calc-type
+  radios → `Tabs`; comparison/rates tables → tinted dark-aware button cards; added `ResultActions`
+  + `CalculatorInfoPanel`; dropped `HomeButton`. All logic/JSON-LD/FAQ + the forced-country prop
+  interface preserved. Verified tsc + build + preview (light/dark, forced-country wrapper).
 - **UK Rail** (`UKRailCalculator.js`, ~1500 lines) — user said skip for now.
 - ~~**Tools** still old: `ScientificCalculator.js`, `StatisticsCalculator.js`, `UnitConverter.js`~~
   **DONE** — all three migrated to `CalcLayout` + Tailwind `dark:` (not the old isDarkMode pattern).

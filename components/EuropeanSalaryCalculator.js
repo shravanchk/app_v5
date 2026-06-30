@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Calculator, Euro, TrendingUp, Users, Info, Globe, PiggyBank } from 'lucide-react';
 import AffiliateRecommendations from './AffiliateRecommendations';
 import AdSenseAd from './AdSenseAd';
-import HomeButton from './HomeButton';
+import CalculatorInfoPanel from './CalculatorInfoPanel';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
+import ResultActions from './ResultActions';
+import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import { NumberField, SelectField, Tabs } from './ui/Field';
+import Card from './ui/Card';
+import { cn } from './ui/cn';
 
 const EuropeanSalaryCalculator = ({
   onBack,
@@ -170,7 +174,7 @@ const EuropeanSalaryCalculator = ({
 
     const annual = frequency === 'annual' ? parseFloat(grossSalary) : parseFloat(grossSalary) * 12;
     const system = SALARY_SYSTEMS[country];
-    
+
     let results = {
       grossAnnual: annual,
       grossMonthly: annual / 12,
@@ -218,7 +222,7 @@ const EuropeanSalaryCalculator = ({
     const taxableIncome = Math.max(0, annual - system.personalAllowance);
     let incomeTax = 0;
     let ni = 0;
-    
+
     // Income Tax
     for (const band of system.taxBands) {
       if (taxableIncome > band.min) {
@@ -226,7 +230,7 @@ const EuropeanSalaryCalculator = ({
         incomeTax += taxableAmount * (band.rate / 100);
       }
     }
-    
+
     // National Insurance
     for (const band of system.niEmployee) {
       if (annual > band.min) {
@@ -234,10 +238,10 @@ const EuropeanSalaryCalculator = ({
         ni += niAmount * (band.rate / 100);
       }
     }
-    
+
     const totalDeductions = incomeTax + ni;
     const netAnnual = annual - totalDeductions;
-    
+
     results.breakdown = {
       incomeTax,
       nationalInsurance: ni,
@@ -245,11 +249,11 @@ const EuropeanSalaryCalculator = ({
       personalAllowance: system.personalAllowance,
       taxableIncome
     };
-    
+
     results.netAnnual = netAnnual;
     results.netMonthly = netAnnual / 12;
     results.effectiveRate = (totalDeductions / annual) * 100;
-    
+
     return results;
   };
 
@@ -258,7 +262,7 @@ const EuropeanSalaryCalculator = ({
     let incomeTax = 0;
     let socialSec = 0;
     let solidarity = 0;
-    
+
     // Income Tax
     for (const band of system.taxBands) {
       if (annual > band.min) {
@@ -272,28 +276,28 @@ const EuropeanSalaryCalculator = ({
         }
       }
     }
-    
+
     // Social Security (employee portion)
     const totalSocialRate = Object.values(system.socialSecurity).reduce((a, b) => a + b, 0);
     socialSec = annual * (totalSocialRate / 100);
-    
+
     // Solidarity Tax (5.5% of income tax)
     solidarity = incomeTax * 0.055;
-    
+
     const totalDeductions = incomeTax + socialSec + solidarity;
     const netAnnual = annual - totalDeductions;
-    
+
     results.breakdown = {
       incomeTax,
       socialSecurity: socialSec,
       solidarityTax: solidarity,
       totalDeductions
     };
-    
+
     results.netAnnual = netAnnual;
     results.netMonthly = netAnnual / 12;
     results.effectiveRate = (totalDeductions / annual) * 100;
-    
+
     return results;
   };
 
@@ -301,7 +305,7 @@ const EuropeanSalaryCalculator = ({
   const calculateFranceSalary = (annual, system, results) => {
     let incomeTax = 0;
     let socialSec = 0;
-    
+
     // Income Tax
     for (const band of system.taxBands) {
       if (annual > band.min) {
@@ -309,31 +313,31 @@ const EuropeanSalaryCalculator = ({
         incomeTax += taxableAmount * (band.rate / 100);
       }
     }
-    
+
     // Social Security
     const totalSocialRate = Object.values(system.socialSecurity).reduce((a, b) => a + b, 0);
     socialSec = annual * (totalSocialRate / 100);
-    
+
     const totalDeductions = incomeTax + socialSec;
     const netAnnual = annual - totalDeductions;
-    
+
     results.breakdown = {
       incomeTax,
       socialSecurity: socialSec,
       totalDeductions
     };
-    
+
     results.netAnnual = netAnnual;
     results.netMonthly = netAnnual / 12;
     results.effectiveRate = (totalDeductions / annual) * 100;
-    
+
     return results;
   };
 
   // Netherlands Tax Calculation
   const calculateNetherlandsSalary = (annual, system, results) => {
     let incomeTax = 0;
-    
+
     // Income Tax
     for (const band of system.taxBands) {
       if (annual > band.min) {
@@ -341,24 +345,24 @@ const EuropeanSalaryCalculator = ({
         incomeTax += taxableAmount * (band.rate / 100);
       }
     }
-    
+
     // Apply tax credits
     const taxCredits = system.generalCredit + system.laborCredit;
     const finalTax = Math.max(0, incomeTax - taxCredits);
-    
+
     const netAnnual = annual - finalTax;
-    
+
     results.breakdown = {
       grossTax: incomeTax,
       taxCredits,
       incomeTax: finalTax,
       totalDeductions: finalTax
     };
-    
+
     results.netAnnual = netAnnual;
     results.netMonthly = netAnnual / 12;
     results.effectiveRate = (finalTax / annual) * 100;
-    
+
     return results;
   };
 
@@ -367,7 +371,7 @@ const EuropeanSalaryCalculator = ({
     let federalTax = 0;
     let cantonalTax = 0;
     let ahv = 0;
-    
+
     // Federal Tax
     for (const band of system.federalTax) {
       if (annual > band.min) {
@@ -375,27 +379,27 @@ const EuropeanSalaryCalculator = ({
         federalTax += taxableAmount * (band.rate / 100);
       }
     }
-    
+
     // Cantonal Tax (average)
     cantonalTax = annual * (system.cantonalTax / 100);
-    
+
     // AHV (Old age insurance)
     ahv = annual * (system.ahv / 100);
-    
+
     const totalDeductions = federalTax + cantonalTax + ahv;
     const netAnnual = annual - totalDeductions;
-    
+
     results.breakdown = {
       federalTax,
       cantonalTax,
       ahv,
       totalDeductions
     };
-    
+
     results.netAnnual = netAnnual;
     results.netMonthly = netAnnual / 12;
     results.effectiveRate = (totalDeductions / annual) * 100;
-    
+
     return results;
   };
 
@@ -403,7 +407,7 @@ const EuropeanSalaryCalculator = ({
   const calculateAustriaSalary = (annual, system, results) => {
     let incomeTax = 0;
     let socialSec = 0;
-    
+
     // Income Tax
     for (const band of system.taxBands) {
       if (annual > band.min) {
@@ -411,23 +415,23 @@ const EuropeanSalaryCalculator = ({
         incomeTax += taxableAmount * (band.rate / 100);
       }
     }
-    
+
     // Social Security
     socialSec = annual * (system.socialSecurity / 100);
-    
+
     const totalDeductions = incomeTax + socialSec;
     const netAnnual = annual - totalDeductions;
-    
+
     results.breakdown = {
       incomeTax,
       socialSecurity: socialSec,
       totalDeductions
     };
-    
+
     results.netAnnual = netAnnual;
     results.netMonthly = netAnnual / 12;
     results.effectiveRate = (totalDeductions / annual) * 100;
-    
+
     return results;
   };
 
@@ -435,7 +439,7 @@ const EuropeanSalaryCalculator = ({
   const calculateBelgiumSalary = (annual, system, results) => {
     let incomeTax = 0;
     let socialSec = 0;
-    
+
     // Income Tax
     for (const band of system.taxBands) {
       if (annual > band.min) {
@@ -443,23 +447,23 @@ const EuropeanSalaryCalculator = ({
         incomeTax += taxableAmount * (band.rate / 100);
       }
     }
-    
+
     // Social Security
     socialSec = annual * (system.socialSecurity / 100);
-    
+
     const totalDeductions = incomeTax + socialSec;
     const netAnnual = annual - totalDeductions;
-    
+
     results.breakdown = {
       incomeTax,
       socialSecurity: socialSec,
       totalDeductions
     };
-    
+
     results.netAnnual = netAnnual;
     results.netMonthly = netAnnual / 12;
     results.effectiveRate = (totalDeductions / annual) * 100;
-    
+
     return results;
   };
 
@@ -468,10 +472,10 @@ const EuropeanSalaryCalculator = ({
     let municipalTax = 0;
     let stateTax = 0;
     let socialFees = 0;
-    
+
     // Municipal Tax
     municipalTax = annual * (system.municipalTax / 100);
-    
+
     // State Tax
     for (const band of system.stateTax) {
       if (annual > band.min) {
@@ -479,40 +483,38 @@ const EuropeanSalaryCalculator = ({
         stateTax += taxableAmount * (band.rate / 100);
       }
     }
-    
+
     // Social Security Fees
     socialFees = annual * (system.socialSecurity / 100);
-    
+
     const totalDeductions = municipalTax + stateTax + socialFees;
     const netAnnual = annual - totalDeductions;
-    
+
     results.breakdown = {
       municipalTax,
       stateTax,
       socialSecurity: socialFees,
       totalDeductions
     };
-    
+
     results.netAnnual = netAnnual;
     results.netMonthly = netAnnual / 12;
     results.effectiveRate = (totalDeductions / annual) * 100;
-    
+
     return results;
   };
 
   useEffect(() => {
     if (grossSalary) {
       calculateSalary();
+    } else {
+      setResults(null);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grossSalary, country, frequency]);
 
-  const getCountryFlag = (countryCode) => {
-    return SALARY_SYSTEMS[countryCode]?.flag || '🌍';
-  };
-
   const formatCurrency = (amount, currency) => {
-    return `${currency}${amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+    return `${currency}${Number(amount || 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
   };
 
   const selectedCountry = SALARY_SYSTEMS[country] || SALARY_SYSTEMS.UK;
@@ -530,27 +532,47 @@ const EuropeanSalaryCalculator = ({
   const resolvedHeading = pageHeading || (forcedCountry ? `${selectedCountryName} Salary Calculator` : 'European Salary Calculator');
   const resolvedSubheading = pageSubheading || (forcedCountry
     ? `Calculate your net salary after tax in ${selectedCountryName}`
-    : 'Calculate Your Net Salary After Tax - 8 European Countries');
+    : 'Estimate net salary after tax and social contributions across 8 European countries.');
+
+  const deductionLabels = {
+    incomeTax: 'Income Tax',
+    nationalInsurance: 'National Insurance',
+    socialSecurity: 'Social Security',
+    solidarityTax: 'Solidarity Tax',
+    federalTax: 'Federal Tax',
+    cantonalTax: 'Cantonal Tax',
+    ahv: 'AHV/Insurance',
+    municipalTax: 'Municipal Tax',
+    stateTax: 'State Tax',
+    grossTax: 'Gross Tax',
+    taxCredits: 'Tax Credits',
+    personalAllowance: 'Personal Allowance',
+    taxableIncome: 'Taxable Income'
+  };
+
+  const resultShareLines = results ? [
+    `Country: ${results.flag} ${results.country}`,
+    `Gross annual salary: ${formatCurrency(results.grossAnnual, results.currency)}`,
+    `Net annual salary (take-home): ${formatCurrency(results.netAnnual, results.currency)}`,
+    `Net monthly salary: ${formatCurrency(results.netMonthly, results.currency)}`,
+    `Total annual deductions: ${formatCurrency(results.breakdown.totalDeductions, results.currency)}`,
+    `Effective tax rate: ${results.effectiveRate?.toFixed(1)}%`
+  ] : [];
 
   return (
-    <div style={{ 
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f6f4ef 0%, #e7edf4 100%)',
-      padding: '2rem 1rem',
-      fontFamily: 'var(--app-font)'
-    }}>
+    <>
       <Head>
         <title>{resolvedTitle}</title>
         <meta name="description" content={resolvedDescription} />
         <meta name="keywords" content={resolvedKeywords} />
         <link rel="canonical" href={canonicalUrl} />
-        
+
         {/* Open Graph Tags */}
         <meta property="og:title" content={resolvedTitle} />
         <meta property="og:description" content={resolvedDescription} />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="website" />
-        
+
         {/* Twitter Cards */}
         <meta name="twitter:title" content={resolvedTitle} />
         <meta name="twitter:description" content={resolvedDescription} />
@@ -617,566 +639,211 @@ const EuropeanSalaryCalculator = ({
         </script>
       </Head>
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Header */}
-        <div className="calculator-header salary-header">
-          <div className="header-nav">
-            <HomeButton />
-            <div className="flex-spacer"></div>
-          </div>
-
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 style={{
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
-              fontWeight: '800',
-              background: 'linear-gradient(135deg, #0f2a43, #1d4e89, #0f766e)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              marginBottom: '0.5rem'
-            }}>
-              {resolvedHeading}
-            </h1>
-            <p style={{
-              color: '#64748b',
-              fontSize: '1.1rem',
-              marginBottom: '0',
-              fontWeight: '500'
-            }}>
-              {resolvedSubheading}
-            </p>
-          </div>
-        </div>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-          gap: '2rem',
-          alignItems: 'start'
-        }}>
+      <CalcLayout
+        eyebrow={forcedCountry ? `Europe · ${selectedCountryName}` : 'Europe · Salary'}
+        title={resolvedHeading}
+        subtitle={resolvedSubheading}
+      >
+        <div className="grid gap-5 lg:grid-cols-5">
           {/* Input Panel */}
-          <div className="salary-container">
-            <div style={{
-              background: 'rgba(255,255,255,0.95)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '16px',
-              padding: '2rem',
-              boxShadow: '0 16px 36px rgba(15, 42, 67, 0.14)',
-              border: '1px solid #dbe2eb'
-            }}>
-              <h2 style={{
-                fontSize: '1.5rem',
-                fontWeight: '700',
-                color: '#1e293b',
-                marginBottom: '1.5rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem'
-              }}>
-                <Calculator size={24} style={{ color: '#0f766e' }} />
-                Salary Calculator
-              </h2>
+          <Card className="p-5 lg:col-span-2">
+            <div className="space-y-4">
+              {!forcedCountry && (
+                <SelectField
+                  id="eu-country"
+                  label="Country"
+                  value={country}
+                  onChange={setCountry}
+                  options={Object.entries(SALARY_SYSTEMS).map(([code, data]) => ({
+                    value: code,
+                    label: `${data.flag} ${data.country}`
+                  }))}
+                />
+              )}
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                {/* Country Selection */}
-                {!forcedCountry && (
-                  <div>
-                    <label style={{ 
-                      display: 'block', 
-                      marginBottom: '0.5rem', 
-                      fontWeight: '600',
-                      color: '#334155',
-                      fontSize: '0.95rem'
-                    }}>
-                      <Globe size={16} style={{ display: 'inline', marginRight: '0.5rem' }} />
-                      Select Country
-                    </label>
-                    <select
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '1rem',
-                        border: '2px solid #d1dae6',
-                        borderRadius: '12px',
-                        fontSize: '1rem',
-                        fontWeight: '600',
-                        background: '#f8fafc',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {Object.entries(SALARY_SYSTEMS).map(([code, data]) => (
-                        <option key={code} value={code}>
-                          {data.flag} {data.country}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
+              <div>
+                <span className="mb-1.5 block text-sm font-medium text-ink-soft dark:text-slate-300">Salary frequency</span>
+                <Tabs
+                  tabs={[
+                    { id: 'annual', label: 'Annual' },
+                    { id: 'monthly', label: 'Monthly' }
+                  ]}
+                  active={frequency}
+                  onChange={setFrequency}
+                />
+              </div>
 
-                {/* Frequency Selection */}
-                <div>
-                  <label style={{ 
-                    display: 'block', 
-                    marginBottom: '0.75rem', 
-                    fontWeight: '600',
-                    color: '#334155',
-                    fontSize: '0.95rem'
-                  }}>
-                    Salary Frequency
-                  </label>
-                  <div style={{ display: 'flex', gap: '1rem' }}>
-                    <label style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      padding: '0.75rem 1rem',
-                      background: frequency === 'annual' ? '#dbe7f4' : '#f8fafc',
-                      border: `2px solid ${frequency === 'annual' ? '#1d4e89' : '#d1dae6'}`,
-                      borderRadius: '12px',
-                      cursor: 'pointer',
-                      flex: 1,
-                      fontWeight: '600',
-                      fontSize: '0.9rem'
-                    }}>
-                      <input
-                        type="radio"
-                        name="frequency"
-                        value="annual"
-                        checked={frequency === 'annual'}
-                        onChange={(e) => setFrequency(e.target.value)}
-                        style={{ margin: 0 }}
-                      />
-                      Annual
-                    </label>
-                    <label style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      padding: '0.75rem 1rem',
-                      background: frequency === 'monthly' ? '#dbe7f4' : '#f8fafc',
-                      border: `2px solid ${frequency === 'monthly' ? '#1d4e89' : '#d1dae6'}`,
-                      borderRadius: '12px',
-                      cursor: 'pointer',
-                      flex: 1,
-                      fontWeight: '600',
-                      fontSize: '0.9rem'
-                    }}>
-                      <input
-                        type="radio"
-                        name="frequency"
-                        value="monthly"
-                        checked={frequency === 'monthly'}
-                        onChange={(e) => setFrequency(e.target.value)}
-                        style={{ margin: 0 }}
-                      />
-                      Monthly
-                    </label>
-                  </div>
-                </div>
+              <NumberField
+                id="eu-gross"
+                label={`Gross salary (${frequency})`}
+                prefix={selectedCountry.currency}
+                value={grossSalary}
+                onChange={setGrossSalary}
+                hint={`Enter your gross ${frequency} salary to calculate take-home pay.`}
+              />
 
-                {/* Salary Input */}
-                <div>
-                  <label style={{ 
-                    display: 'block', 
-                    marginBottom: '0.5rem', 
-                    fontWeight: '600',
-                    color: '#334155',
-                    fontSize: '0.95rem'
-                  }}>
-                    Gross Salary ({SALARY_SYSTEMS[country].currency}) - {frequency}
-                  </label>
-                  <input
-                    type="number"
-                    value={grossSalary}
-                    onChange={(e) => setGrossSalary(e.target.value)}
-                    placeholder={`e.g., ${frequency === 'annual' ? '50000' : '4000'}`}
-                    style={{
-                      width: '100%',
-                      padding: '1rem',
-                      border: '2px solid #d1dae6',
-                      borderRadius: '12px',
-                      fontSize: '1.1rem',
-                      fontWeight: '600',
-                      transition: 'all 0.2s ease',
-                      background: '#f8fafc'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#0f766e'}
-                    onBlur={(e) => e.target.style.borderColor = '#d1dae6'}
-                  />
-                </div>
-
-                {/* Country Info Box */}
-                <div style={{
-                  background: 'linear-gradient(135deg, #eef9f8, #d7f2ee)',
-                  border: '1px solid #a7e2dc',
-                  borderRadius: '12px',
-                  padding: '1rem',
-                  marginTop: '1rem'
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    marginBottom: '0.5rem'
-                  }}>
-                    <Info size={16} style={{ color: '#0f766e' }} />
-                    <span style={{ fontWeight: '600', color: '#115e59' }}>
-                      {getCountryFlag(country)} {SALARY_SYSTEMS[country].country}
-                    </span>
-                  </div>
-                  <p style={{ 
-                    fontSize: '0.85rem', 
-                    color: '#0f766e',
-                    margin: 0,
-                    lineHeight: '1.4'
-                  }}>
-                    Calculations include income tax, social security, and other mandatory deductions for {SALARY_SYSTEMS[country].country}.
-                  </p>
-                </div>
+              <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-3 text-sm dark:border-teal-800/60 dark:bg-teal-900/20">
+                <p className="font-semibold text-teal-800 dark:text-teal-300">{selectedCountry.flag} {selectedCountryName}</p>
+                <p className="mt-0.5 text-teal-700 dark:text-teal-400">
+                  Calculations include income tax, social security, and other mandatory deductions for {selectedCountryName}.
+                </p>
               </div>
             </div>
-
-            {/* AdSense Ad */}
-            <div style={{ marginTop: '1.5rem' }}>
-              <AdSenseAd />
-            </div>
-          </div>
+            <div className="mt-5"><AdSenseAd /></div>
+          </Card>
 
           {/* Results Panel */}
-          {results && (
-            <div className="salary-container">
-              <div style={{
-                background: 'rgba(255,255,255,0.95)',
-                backdropFilter: 'blur(20px)',
-                borderRadius: '16px',
-                padding: '2rem',
-                boxShadow: '0 16px 36px rgba(15, 42, 67, 0.14)',
-                border: '1px solid #dbe2eb'
-              }}>
-                <h2 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: '700',
-                  color: '#1e293b',
-                  marginBottom: '1.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem'
-                }}>
-                  <TrendingUp size={24} style={{ color: '#0f766e' }} />
-                  Salary Breakdown
-                </h2>
-
-                {/* Summary Cards */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
-                  {/* Gross Salary */}
-                  <div style={{
-                    background: 'linear-gradient(135deg, #0f2a43, #1d4e89)',
-                    color: 'white',
-                    padding: '1.5rem',
-                    borderRadius: '16px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                    <div>
-                      <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Gross Annual Salary</div>
-                      <div style={{ fontSize: '1.8rem', fontWeight: '800' }}>
-                        {formatCurrency(results.grossAnnual, results.currency)}
-                      </div>
-                      <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-                        {formatCurrency(results.grossMonthly, results.currency)} per month
-                      </div>
-                    </div>
-                    <PiggyBank size={32} style={{ opacity: 0.7 }} />
-                  </div>
-
-                  {/* Net Salary */}
-                  <div style={{
-                    background: 'linear-gradient(135deg, #0f766e, #115e59)',
-                    color: 'white',
-                    padding: '1.5rem',
-                    borderRadius: '16px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                    <div>
-                      <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Net Annual Salary (Take Home)</div>
-                      <div style={{ fontSize: '1.8rem', fontWeight: '800' }}>
-                        {formatCurrency(results.netAnnual, results.currency)}
-                      </div>
-                      <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-                        {formatCurrency(results.netMonthly, results.currency)} per month
-                      </div>
-                    </div>
-                    <Euro size={32} style={{ opacity: 0.7 }} />
-                  </div>
-
-                  {/* Total Deductions */}
-                  <div style={{
-                    background: 'linear-gradient(135deg, #b45309, #c2410c)',
-                    color: 'white',
-                    padding: '1.5rem',
-                    borderRadius: '16px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                    <div>
-                      <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Total Annual Deductions</div>
-                      <div style={{ fontSize: '1.8rem', fontWeight: '800' }}>
-                        {formatCurrency(results.breakdown.totalDeductions, results.currency)}
-                      </div>
-                      <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-                        Effective Tax Rate: {results.effectiveRate?.toFixed(1)}%
-                      </div>
-                    </div>
-                    <Users size={32} style={{ opacity: 0.7 }} />
-                  </div>
+          <div className="space-y-5 lg:col-span-3">
+            {results ? (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <ResultStat label="Net annual (take-home)" value={formatCurrency(results.netAnnual, results.currency)} emphasis tone="positive" />
+                  <ResultStat label="Net monthly" value={formatCurrency(results.netMonthly, results.currency)} />
+                  <ResultStat label="Total deductions" value={formatCurrency(results.breakdown.totalDeductions, results.currency)} />
+                  <ResultStat label="Effective tax rate" value={`${results.effectiveRate?.toFixed(1)}%`} />
                 </div>
-                <PieBreakdownChart
-                  title="Gross salary composition"
-                  items={[
-                    { label: 'Net take-home', value: results.netAnnual, color: '#10b981' },
-                    { label: 'Total deductions', value: results.breakdown.totalDeductions, color: '#f97316' }
-                  ]}
-                  formatter={(value) => formatCurrency(value, results.currency)}
-                />
 
-                {/* Detailed Breakdown */}
-                <div style={{
-                  background: '#f8fafc',
-                  border: '1px solid #dbe2eb',
-                  borderRadius: '12px',
-                  padding: '1.5rem'
-                }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem', color: '#1e293b' }}>
-                    Detailed Breakdown
-                  </h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.5rem', borderBottom: '1px solid #e2e8f0' }}>
-                      <span style={{ fontWeight: '600', color: '#115e59' }}>Gross Annual Salary:</span>
-                      <span>{formatCurrency(results.grossAnnual, results.currency)}</span>
+                <Card className="p-5">
+                  <PieBreakdownChart
+                    title="Gross salary composition"
+                    items={[
+                      { label: 'Net take-home', value: results.netAnnual, color: '#10b981' },
+                      { label: 'Total deductions', value: results.breakdown.totalDeductions, color: '#f97316' }
+                    ]}
+                    formatter={(value) => formatCurrency(value, results.currency)}
+                  />
+                </Card>
+
+                <Card className="p-5">
+                  <h3 className="font-display text-base font-bold text-ink dark:text-white">Detailed breakdown</h3>
+                  <div className="mt-3 divide-y divide-slate-100 dark:divide-slate-700">
+                    <div className="flex items-center justify-between py-2 text-sm">
+                      <span className="font-medium text-ink-soft dark:text-slate-300">Gross annual salary</span>
+                      <span className="font-semibold text-ink dark:text-white">{formatCurrency(results.grossAnnual, results.currency)}</span>
                     </div>
-                    
                     {Object.entries(results.breakdown).map(([key, value]) => {
                       if (key === 'totalDeductions') return null;
-                      
-                      const labels = {
-                        incomeTax: 'Income Tax',
-                        nationalInsurance: 'National Insurance',
-                        socialSecurity: 'Social Security',
-                        solidarityTax: 'Solidarity Tax',
-                        federalTax: 'Federal Tax',
-                        cantonalTax: 'Cantonal Tax',
-                        ahv: 'AHV/Insurance',
-                        municipalTax: 'Municipal Tax',
-                        stateTax: 'State Tax',
-                        grossTax: 'Gross Tax',
-                        taxCredits: 'Tax Credits',
-                        personalAllowance: 'Personal Allowance',
-                        taxableIncome: 'Taxable Income'
-                      };
-                      
+                      const isPositive = key.includes('Credit') || key.includes('Allowance') || key === 'taxableIncome';
+                      const isNeutral = key === 'taxableIncome';
                       return (
-                        <div key={key} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span style={{ fontWeight: '500', color: '#374151' }}>
-                            {labels[key] || key}:
-                          </span>
-                          <span style={{ color: key.includes('Credit') || key.includes('Allowance') ? '#0f766e' : '#b45309' }}>
-                            {key.includes('Credit') || key.includes('Allowance') ? '+' : '-'}{formatCurrency(Math.abs(value), results.currency)}
+                        <div key={key} className="flex items-center justify-between py-2 text-sm">
+                          <span className="text-ink-soft dark:text-slate-300">{deductionLabels[key] || key}</span>
+                          <span className={cn(
+                            'font-medium',
+                            isNeutral
+                              ? 'text-ink dark:text-white'
+                              : isPositive
+                                ? 'text-emerald-700 dark:text-emerald-400'
+                                : 'text-amber-700 dark:text-amber-400'
+                          )}>
+                            {isNeutral ? '' : isPositive ? '+' : '-'}{formatCurrency(Math.abs(value), results.currency)}
                           </span>
                         </div>
                       );
                     })}
-                    
-                    <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.5rem', borderTop: '1px solid #e2e8f0', fontWeight: '700' }}>
-                      <span style={{ color: '#115e59' }}>Net Annual Salary:</span>
-                      <span style={{ color: '#115e59' }}>{formatCurrency(results.netAnnual, results.currency)}</span>
+                    <div className="flex items-center justify-between py-2 text-sm font-semibold">
+                      <span className="text-emerald-700 dark:text-emerald-400">Net annual salary</span>
+                      <span className="text-emerald-700 dark:text-emerald-400">{formatCurrency(results.netAnnual, results.currency)}</span>
                     </div>
                   </div>
-                </div>
-              </div>
+                </Card>
 
-              {/* Affiliate Recommendations */}
-              <div style={{ marginTop: '1.5rem' }}>
+                <ResultActions
+                  title={`${results.country} salary calculation summary`}
+                  summaryLines={resultShareLines}
+                  fileName="upaman-european-salary-summary.txt"
+                />
+
                 <AffiliateRecommendations calculatorType="european-salary" />
-              </div>
-            </div>
-          )}
+              </>
+            ) : (
+              <Card className="flex items-center justify-center p-10 text-center text-sm text-ink-muted dark:text-slate-400">
+                Enter your gross salary to see your net take-home breakdown.
+              </Card>
+            )}
+          </div>
         </div>
 
-        {/* Country Comparison Table */}
+        {/* Country Comparison */}
         {!forcedCountry && (
-          <div style={{ marginTop: '3rem' }}>
-            <div style={{
-              background: 'rgba(255,255,255,0.95)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '16px',
-              padding: '2rem',
-              boxShadow: '0 16px 36px rgba(15, 42, 67, 0.14)',
-              border: '1px solid #dbe2eb'
-            }}>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: '700', marginBottom: '1.5rem', color: '#1e293b' }}>
-                European Tax Systems Comparison
-              </h2>
-              
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-                gap: '1rem' 
-              }}>
-                {Object.entries(SALARY_SYSTEMS).map(([code, data]) => (
-                  <div key={code} style={{
-                    background: country === code ? '#dbe7f4' : '#f8fafc',
-                    border: `1px solid ${country === code ? '#a8bdd8' : '#dbe2eb'}`,
-                    borderRadius: '12px',
-                    padding: '1rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
+          <div className="mt-10">
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">European tax systems comparison</h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {Object.entries(SALARY_SYSTEMS).map(([code, data]) => (
+                <button
+                  key={code}
+                  type="button"
                   onClick={() => setCountry(code)}
-                  >
-                    <div style={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'center',
-                      marginBottom: '0.5rem'
-                    }}>
-                      <span style={{ 
-                        fontSize: '1rem', 
-                        fontWeight: '700',
-                        color: '#1e293b'
-                      }}>
-                        {data.flag} {data.country}
-                      </span>
-                      <span style={{
-                        background: country === code ? '#1d4e89' : '#64748b',
-                        color: 'white',
-                        padding: '0.25rem 0.5rem',
-                        borderRadius: '6px',
-                        fontSize: '0.8rem',
-                        fontWeight: '700'
-                      }}>
-                        {data.currency}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>
-                      {data.taxBands ? `Tax: ${data.taxBands[data.taxBands.length - 1].rate}% max` : 'Complex tax system'}
-                      {data.socialSecurity && ` • Social: ${typeof data.socialSecurity === 'number' ? data.socialSecurity : 'Variable'}%`}
-                    </div>
+                  className={cn(
+                    'rounded-xl border p-4 text-left transition',
+                    country === code
+                      ? 'border-brand-300 bg-brand-50/60 dark:border-brand-700 dark:bg-brand-900/20'
+                      : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800/60 dark:hover:border-slate-600'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-ink dark:text-white">{data.flag} {data.country}</span>
+                    <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-bold text-ink-soft dark:bg-slate-700 dark:text-slate-200">{data.currency}</span>
                   </div>
-                ))}
-              </div>
+                  <p className="mt-1 text-xs text-ink-muted dark:text-slate-400">
+                    {data.taxBands ? `Tax: up to ${data.taxBands[data.taxBands.length - 1].rate}%` : 'Complex tax system'}
+                    {data.socialSecurity && ` · Social: ${typeof data.socialSecurity === 'number' ? data.socialSecurity : 'Variable'}%`}
+                  </p>
+                </button>
+              ))}
             </div>
           </div>
         )}
 
         {/* FAQ Section */}
-        <div style={{ marginTop: '3rem' }}>
-          <div style={{
-            background: 'rgba(255,255,255,0.95)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: '16px',
-            padding: '2rem',
-            boxShadow: '0 16px 36px rgba(15, 42, 67, 0.14)',
-            border: '1px solid #dbe2eb'
-          }}>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: '700', marginBottom: '1.5rem', color: '#1e293b' }}>
-              {forcedCountry ? `${selectedCountryName} Salary Calculator FAQ` : 'European Salary Calculator FAQ'}
-            </h2>
-            
-            <div style={{ display: 'grid', gap: '1rem' }}>
-              <details style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
-                <summary style={{ fontWeight: '600', cursor: 'pointer', color: '#374151' }}>
-                  How accurate are these salary calculations?
-                </summary>
-                <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  These calculations use the tax rates and standard deductions configured in this calculator. Actual take-home pay may vary based on 
-                  personal circumstances, allowances, and local variations. Consult a tax professional for precise calculations.
-                </p>
+        <div className="mt-10">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">
+            {forcedCountry ? `${selectedCountryName} Salary Calculator FAQ` : 'European Salary Calculator FAQ'}
+          </h2>
+          <div className="mt-4 grid gap-3">
+            {[
+              { q: 'How accurate are these salary calculations?', a: 'These calculations use the tax rates and standard deductions configured in this calculator. Actual take-home pay may vary based on personal circumstances, allowances, and local variations. Consult a tax professional for precise calculations.' },
+              { q: "What's included in social security deductions?", a: 'Social security typically includes pension contributions, unemployment insurance, health insurance, and disability insurance. The exact components and rates vary significantly between European countries.' },
+              { q: 'Which European country is most tax-efficient for high earners?', a: 'Switzerland generally has lower overall tax rates, especially for high earners. However, cost of living and available services vary greatly. Consider total compensation packages and living costs, not just tax rates.' },
+              { q: 'Do these calculations include all possible deductions?', a: 'These are standard calculations for employees. Additional deductions may apply for pension contributions, charitable donations, professional expenses, or other tax-deductible items specific to each country.' }
+            ].map(({ q, a }) => (
+              <details key={q} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{q}</summary>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{a}</p>
               </details>
-
-              <details style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
-                <summary style={{ fontWeight: '600', cursor: 'pointer', color: '#374151' }}>
-                  What's included in social security deductions?
-                </summary>
-                <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  Social security typically includes pension contributions, unemployment insurance, health insurance, and disability 
-                  insurance. The exact components and rates vary significantly between European countries.
-                </p>
-              </details>
-
-              <details style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
-                <summary style={{ fontWeight: '600', cursor: 'pointer', color: '#374151' }}>
-                  Which European country is most tax-efficient for high earners?
-                </summary>
-                <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  Switzerland generally has lower overall tax rates, especially for high earners. However, cost of living and 
-                  available services vary greatly. Consider total compensation packages and living costs, not just tax rates.
-                </p>
-              </details>
-
-              <details style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
-                <summary style={{ fontWeight: '600', cursor: 'pointer', color: '#374151' }}>
-                  Do these calculations include all possible deductions?
-                </summary>
-                <p style={{ marginTop: '0.5rem', color: '#6b7280', lineHeight: '1.6' }}>
-                  These are standard calculations for employees. Additional deductions may apply for pension contributions, 
-                  charitable donations, professional expenses, or other tax-deductible items specific to each country.
-                </p>
-              </details>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Final AdSense */}
-        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-          <AdSenseAd />
+        <div className="mt-8">
+          <CalculatorInfoPanel
+            title="Methodology and assumptions"
+            inputs={[
+              'Country, salary frequency (annual or monthly), and gross salary amount'
+            ]}
+            formulas={[
+              'Progressive income-tax bands applied per country',
+              'Employee social-security / national-insurance contributions per country rules',
+              'Net = gross − income tax − social contributions (− credits where applicable)'
+            ]}
+            assumptions={[
+              'Standard single-employee treatment without personal allowances beyond those modelled',
+              'Germany uses a linear-progressive approximation in the 14–42% zone; Netherlands applies flat general + labour credits',
+              'Swiss cantonal tax uses an average rate; actual rates vary significantly by canton',
+              'Rates reflect 2026 published thresholds; verify with official sources before relying on figures'
+            ]}
+            sources={[
+              { label: 'UK Income Tax rates (gov.uk)', url: 'https://www.gov.uk/income-tax-rates' },
+              { label: 'Germany income tax (BMF)', url: 'https://www.bundesfinanzministerium.de/' },
+              { label: 'France impôt sur le revenu (service-public.fr)', url: 'https://www.service-public.fr/particuliers/vosdroits/F1419' },
+              { label: 'Netherlands Box 1 rates (belastingdienst.nl)', url: 'https://www.belastingdienst.nl/' }
+            ]}
+          />
         </div>
-      </div>
 
-      <style jsx>{`
-        .salary-header {
-          animation: slideDown 0.8s ease-out;
-        }
-        
-        .salary-container {
-          animation: fadeInUp 0.8s ease-out;
-        }
-
-        @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        details summary::-webkit-details-marker {
-          display: none;
-        }
-        
-        details summary::before {
-          content: "▶";
-          margin-right: 0.5rem;
-          transition: transform 0.2s;
-        }
-        
-        details[open] summary::before {
-          transform: rotate(90deg);
-        }
-
-        @media (max-width: 768px) {
-          .salary-container {
-            margin: 0;
-          }
-        }
-      `}</style>
-    </div>
+        <div className="mt-8 text-center"><AdSenseAd /></div>
+      </CalcLayout>
+    </>
   );
 };
 
