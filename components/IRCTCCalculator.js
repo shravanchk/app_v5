@@ -401,7 +401,7 @@ const IRCTCCalculator = () => {
                       className={calendarLinkCls}
                       style={{ backgroundColor: '#ea4335' }}
                     >
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="" className="h-5 w-5" />
+                      <Calendar size={18} />
                       Google
                     </a>
                     <a
@@ -411,7 +411,7 @@ const IRCTCCalculator = () => {
                       className={calendarLinkCls}
                       style={{ backgroundColor: '#0078d4' }}
                     >
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Microsoft_Office_Outlook_%282018–present%29.svg" alt="" className="h-5 w-5" />
+                      <Calendar size={18} />
                       Outlook
                     </a>
                     <a
