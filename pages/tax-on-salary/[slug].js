@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import HomeButton from '../../components/HomeButton';
+import Container from '../../components/ui/Container';
 const { calculateIndianIncomeTax } = require('../../utils/taxCalculations');
 
 const NEW_STD = 75000;
@@ -9,13 +9,6 @@ const MAX_LAKH = 50;
 
 const inr = (n) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(Math.round(n));
 const slugFor = (lakh) => `${lakh}-lakh`;
-
-const wrap = { maxWidth: '820px', margin: '0 auto', padding: '24px 20px 64px', fontFamily: "'Source Sans 3','Segoe UI',sans-serif", color: '#1f2937', lineHeight: 1.7 };
-const scrollWrap = { overflowX: 'auto', WebkitOverflowScrolling: 'touch', margin: '16px 0' };
-const tableStyle = { width: '100%', minWidth: '420px', borderCollapse: 'collapse', fontSize: '0.95rem' };
-const thStyle = { textAlign: 'left', padding: '8px 10px', background: '#eff6ff', border: '1px solid #dbe2eb', color: '#0f2a43' };
-const tdStyle = { padding: '8px 10px', border: '1px solid #dbe2eb' };
-const heroBox = { padding: '18px', borderRadius: '12px', background: 'linear-gradient(135deg,#eff6ff,#f0fdf4)', border: '1px solid #dbe2eb', margin: '12px 0' };
 
 export async function getStaticPaths() {
   const paths = [];
@@ -60,6 +53,9 @@ export async function getStaticProps({ params }) {
   };
 }
 
+const thCls = 'border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-white';
+const tdCls = 'border border-slate-200 px-3 py-2 text-ink-soft dark:border-slate-700 dark:text-slate-300';
+
 export default function TaxOnSalaryPage(props) {
   const { lakh, salary, newTaxable, newTax, newSlabTax, newRebate, newRelief, newCess, oldTaxNoInvest, breakdown, prevLakh, nextLakh } = props;
   const monthlyTakeHome = (salary - newTax) / 12;
@@ -85,7 +81,7 @@ export default function TaxOnSalaryPage(props) {
   };
 
   return (
-    <main>
+    <>
       <Head>
         <title>{title}</title>
         <meta name="description" content={desc} />
@@ -97,76 +93,81 @@ export default function TaxOnSalaryPage(props) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       </Head>
-      <HomeButton />
 
-      <article style={wrap}>
-        <p style={{ fontSize: '0.85rem', color: '#6b7280' }}>
-          <a href="/">Home</a> &rsaquo; <a href="/tax-on-salary">Tax on salary</a> &rsaquo; ₹{lakh} lakh
-        </p>
-        <h1 style={{ color: '#2563eb' }}>Tax on ₹{lakh} Lakh Salary in FY 2026-27 (New Regime)</h1>
+      <section className="py-8 sm:py-12">
+        <Container>
+          <article className="mx-auto max-w-[820px] text-[1.02rem] leading-relaxed text-ink-soft dark:text-slate-300 [&_p]:mt-4 [&_a]:font-medium [&_a]:text-brand-600 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-brand-700 dark:[&_a]:text-brand-300 [&_strong]:font-semibold [&_strong]:text-ink dark:[&_strong]:text-white">
+            <p className="text-sm text-ink-muted dark:text-slate-500">
+              <a href="/">Home</a> &rsaquo; <a href="/tax-on-salary">Tax on salary</a> &rsaquo; ₹{lakh} lakh
+            </p>
+            <h1 className="mt-2 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl dark:text-white">
+              Tax on ₹{lakh} Lakh Salary in FY 2026-27 (New Regime)
+            </h1>
 
-        <div style={heroBox}>
-          <div style={{ fontSize: '0.85rem', color: '#475569' }}>Income tax (new regime, FY 2026-27)</div>
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#0f2a43' }}>{inr(newTax)}</div>
-          <div style={{ fontSize: '0.9rem', color: '#475569', marginTop: '6px' }}>
-            Monthly take-home ≈ <strong>{inr(monthlyTakeHome)}</strong> &nbsp;•&nbsp; Effective rate {effRate.toFixed(2)}%
-          </div>
-        </div>
+            <div className="mt-5 rounded-2xl border border-brand-200 bg-gradient-to-br from-brand-50 to-emerald-50 p-5 dark:border-brand-800/60 dark:from-brand-900/30 dark:to-emerald-900/20">
+              <div className="text-sm text-ink-muted dark:text-slate-400">Income tax (new regime, FY 2026-27)</div>
+              <div className="mt-1 font-display text-3xl font-bold text-ink dark:text-white">{inr(newTax)}</div>
+              <div className="mt-1.5 text-sm text-ink-soft dark:text-slate-300">
+                Monthly take-home ≈ <strong>{inr(monthlyTakeHome)}</strong> &nbsp;•&nbsp; Effective rate {effRate.toFixed(2)}%
+              </div>
+            </div>
 
-        <p>
-          On a gross salary of <strong>{inr(salary)}</strong>, the new regime applies a ₹75,000 standard deduction, leaving a
-          taxable income of <strong>{inr(newTaxable)}</strong>. The income tax for FY 2026-27 (AY 2027-28) works out to{' '}
-          <strong>{inr(newTax)}</strong> including 4% cess.
-        </p>
+            <p>
+              On a gross salary of <strong>{inr(salary)}</strong>, the new regime applies a ₹75,000 standard deduction, leaving a
+              taxable income of <strong>{inr(newTaxable)}</strong>. The income tax for FY 2026-27 (AY 2027-28) works out to{' '}
+              <strong>{inr(newTax)}</strong> including 4% cess.
+            </p>
 
-        <h2 style={{ color: '#1e40af' }}>Slab-by-slab breakdown (new regime)</h2>
-        <div style={scrollWrap}>
-        <table style={tableStyle}>
-          <tbody>
-            <tr><th style={thStyle}>Income slab</th><th style={thStyle}>Rate</th><th style={thStyle}>Tax</th></tr>
-            {breakdown.filter((b) => b.tax > 0).map((b, i) => (
-              <tr key={i}>
-                <td style={tdStyle}>{inr(b.from)} – {b.to ? inr(b.to) : 'above'}</td>
-                <td style={tdStyle}>{b.rate}%</td>
-                <td style={tdStyle}>{inr(b.tax)}</td>
-              </tr>
-            ))}
-            <tr><td style={tdStyle}>Slab tax</td><td style={tdStyle}></td><td style={tdStyle}>{inr(newSlabTax)}</td></tr>
-            {newRebate > 0 && <tr><td style={tdStyle}>Less: Section 87A rebate</td><td style={tdStyle}></td><td style={tdStyle}>− {inr(newRebate)}</td></tr>}
-            {newRelief > 0 && <tr><td style={tdStyle}>Less: marginal relief</td><td style={tdStyle}></td><td style={tdStyle}>− {inr(newRelief)}</td></tr>}
-            <tr><td style={tdStyle}>Health &amp; education cess (4%)</td><td style={tdStyle}></td><td style={tdStyle}>{inr(newCess)}</td></tr>
-            <tr><td style={{ ...tdStyle, fontWeight: 700 }}>Total tax</td><td style={tdStyle}></td><td style={{ ...tdStyle, fontWeight: 700 }}>{inr(newTax)}</td></tr>
-          </tbody>
-        </table>
-        </div>
+            <h2 className="mt-9 font-display text-xl font-bold tracking-tight text-ink dark:text-white">Slab-by-slab breakdown (new regime)</h2>
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full min-w-[420px] border-collapse text-[0.95rem]">
+                <tbody>
+                  <tr><th className={thCls}>Income slab</th><th className={thCls}>Rate</th><th className={thCls}>Tax</th></tr>
+                  {breakdown.filter((b) => b.tax > 0).map((b, i) => (
+                    <tr key={i}>
+                      <td className={tdCls}>{inr(b.from)} – {b.to ? inr(b.to) : 'above'}</td>
+                      <td className={tdCls}>{b.rate}%</td>
+                      <td className={tdCls}>{inr(b.tax)}</td>
+                    </tr>
+                  ))}
+                  <tr><td className={tdCls}>Slab tax</td><td className={tdCls}></td><td className={tdCls}>{inr(newSlabTax)}</td></tr>
+                  {newRebate > 0 && <tr><td className={tdCls}>Less: Section 87A rebate</td><td className={tdCls}></td><td className={tdCls}>− {inr(newRebate)}</td></tr>}
+                  {newRelief > 0 && <tr><td className={tdCls}>Less: marginal relief</td><td className={tdCls}></td><td className={tdCls}>− {inr(newRelief)}</td></tr>}
+                  <tr><td className={tdCls}>Health &amp; education cess (4%)</td><td className={tdCls}></td><td className={tdCls}>{inr(newCess)}</td></tr>
+                  <tr><td className={`${tdCls} font-bold text-ink dark:text-white`}>Total tax</td><td className={tdCls}></td><td className={`${tdCls} font-bold text-ink dark:text-white`}>{inr(newTax)}</td></tr>
+                </tbody>
+              </table>
+            </div>
 
-        <h2 style={{ color: '#1e40af' }}>New vs old regime</h2>
-        <p>
-          Under the old regime, with only the ₹50,000 standard deduction and no other deductions claimed, the tax on a ₹{lakh}{' '}
-          lakh salary would be about <strong>{inr(oldTaxNoInvest)}</strong>. The old regime only becomes cheaper if you claim
-          substantial deductions (80C, 80D, HRA, home-loan interest) — see the{' '}
-          <a href="/guides/old-vs-new-regime-breakeven-fy-2026-27">breakeven guide</a> for how much you would need.
-        </p>
+            <h2 className="mt-9 font-display text-xl font-bold tracking-tight text-ink dark:text-white">New vs old regime</h2>
+            <p>
+              Under the old regime, with only the ₹50,000 standard deduction and no other deductions claimed, the tax on a ₹{lakh}{' '}
+              lakh salary would be about <strong>{inr(oldTaxNoInvest)}</strong>. The old regime only becomes cheaper if you claim
+              substantial deductions (80C, 80D, HRA, home-loan interest) — see the{' '}
+              <a href="/guides/old-vs-new-regime-breakeven-fy-2026-27">breakeven guide</a> for how much you would need.
+            </p>
 
-        <div style={heroBox}>
-          <strong>Check your exact number:</strong> use the{' '}
-          <a href="/income-tax-calculator">Income Tax Calculator</a> with your real deductions, or the{' '}
-          <a href="/salary-calculator">Salary Calculator</a> for monthly take-home. Related:{' '}
-          <a href="/guides/standard-deduction-fy-2026-27">standard deduction</a> and{' '}
-          <a href="/guides/marginal-relief-new-regime-fy-2026-27">marginal relief</a>.
-        </div>
+            <div className="mt-5 rounded-2xl border border-brand-200 bg-gradient-to-br from-brand-50 to-emerald-50 p-5 dark:border-brand-800/60 dark:from-brand-900/30 dark:to-emerald-900/20">
+              <strong>Check your exact number:</strong> use the{' '}
+              <a href="/income-tax-calculator">Income Tax Calculator</a> with your real deductions, or the{' '}
+              <a href="/salary-calculator">Salary Calculator</a> for monthly take-home. Related:{' '}
+              <a href="/guides/standard-deduction-fy-2026-27">standard deduction</a> and{' '}
+              <a href="/guides/marginal-relief-new-regime-fy-2026-27">marginal relief</a>.
+            </div>
 
-        <p style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}>
-          {prevLakh ? <a href={`/tax-on-salary/${slugFor(prevLakh)}`}>← Tax on ₹{prevLakh} lakh</a> : <span />}
-          {nextLakh ? <a href={`/tax-on-salary/${slugFor(nextLakh)}`}>Tax on ₹{nextLakh} lakh →</a> : <span />}
-        </p>
+            <p className="mt-6 flex justify-between text-[0.95rem]">
+              {prevLakh ? <a href={`/tax-on-salary/${slugFor(prevLakh)}`}>← Tax on ₹{prevLakh} lakh</a> : <span />}
+              {nextLakh ? <a href={`/tax-on-salary/${slugFor(nextLakh)}`}>Tax on ₹{nextLakh} lakh →</a> : <span />}
+            </p>
 
-        <p style={{ color: '#6b7280', fontSize: '0.85rem', marginTop: '24px' }}>
-          Reviewed June 28, 2026. Planning estimate for salaried individuals under the new regime; excludes surcharge and
-          special income. Not tax advice. Verify on the{' '}
-          <a href="https://www.incometax.gov.in/" target="_blank" rel="noopener noreferrer">Income Tax Department portal</a>.
-        </p>
-      </article>
-    </main>
+            <p className="mt-6 text-sm text-ink-muted dark:text-slate-500">
+              Reviewed June 28, 2026. Planning estimate for salaried individuals under the new regime; excludes surcharge and
+              special income. Not tax advice. Verify on the{' '}
+              <a href="https://www.incometax.gov.in/" target="_blank" rel="noopener noreferrer">Income Tax Department portal</a>.
+            </p>
+          </article>
+        </Container>
+      </section>
+    </>
   );
 }

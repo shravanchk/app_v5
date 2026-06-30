@@ -72,7 +72,7 @@ export default function MarginalReliefGuide() {
         Marginal relief applies only while the normal slab tax is larger than the &ldquo;excess over ₹12 lakh&rdquo;. Solving
         for the point where they are equal gives a band of:
       </p>
-      <p style={{ textAlign: 'center', fontWeight: 600, color: '#0f2a43' }}>
+      <p style={{ textAlign: 'center', fontWeight: 600 }}>
         ₹12,00,000 &nbsp;to&nbsp; ≈ ₹12,70,588 (taxable income)
       </p>
       <p>

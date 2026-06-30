@@ -1,49 +1,23 @@
 import React from 'react';
 import Head from 'next/head';
+import Container from '../ui/Container';
 import { DEFAULT_REVIEW_DATE } from '../../utils/siteMeta';
 
-const pageStyle = {
-  minHeight: '100vh',
-  background: '#ffffff',
-  fontFamily: "'Source Sans 3', 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-};
+// Legacy export kept so existing legal pages that do `<h2 style={headingTwoStyle}>`
+// keep working. Now a no-op: headings are styled by the layout's descendant classes
+// below so they adapt to dark mode (inline styles can't).
+const headingTwoStyle = {};
 
-const contentStyle = {
-  maxWidth: '800px',
-  margin: '0 auto',
-  padding: '20px',
-  lineHeight: 1.6,
-  color: '#1f2937'
-};
-
-const homeLinkStyle = {
-  position: 'sticky',
-  top: '0.75rem',
-  zIndex: 40,
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '38px',
-  height: '38px',
-  borderRadius: '999px',
-  border: '1px solid #cbd5e1',
-  background: '#ffffff',
-  color: '#0f2a43',
-  textDecoration: 'none',
-  boxShadow: '0 2px 8px rgba(15, 42, 67, 0.1)',
-  marginBottom: '0.8rem'
-};
-
-const headingOneStyle = { marginTop: 0, color: '#2563eb' };
-const headingTwoStyle = { color: '#1e40af', marginTop: '30px' };
-const reviewedStyle = { color: '#6b7280', fontStyle: 'italic' };
-
-const HomeIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-    <polyline points="9,22 9,12 15,12 15,22" />
-  </svg>
-);
+const proseCls = [
+  'text-[1.02rem] leading-relaxed text-ink-soft dark:text-slate-300',
+  '[&_h2]:mt-8 [&_h2]:font-display [&_h2]:text-xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-ink dark:[&_h2]:text-white',
+  '[&_h3]:mt-6 [&_h3]:font-display [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-ink dark:[&_h3]:text-white',
+  '[&_p]:mt-4',
+  '[&_ul]:mt-4 [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-6 [&_li]:marker:text-ink-muted',
+  '[&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:space-y-1 [&_ol]:pl-6',
+  '[&_strong]:font-semibold [&_strong]:text-ink dark:[&_strong]:text-white',
+  '[&_a]:font-medium [&_a]:text-brand-600 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-brand-700 dark:[&_a]:text-brand-300'
+].join(' ');
 
 const LegalPageLayout = ({
   title,
@@ -53,21 +27,20 @@ const LegalPageLayout = ({
   children
 }) => {
   return (
-    <main style={pageStyle}>
+    <section className="py-8 sm:py-12">
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href={`https://upaman.com${canonicalPath}`} />
       </Head>
-      <article style={contentStyle}>
-        <a style={homeLinkStyle} href="/" aria-label="Back to home">
-          <HomeIcon />
-        </a>
-        <h1 style={headingOneStyle}>{title}</h1>
-        <p style={reviewedStyle}>Last reviewed: {reviewedOn}</p>
-        {children}
-      </article>
-    </main>
+      <Container>
+        <article className="mx-auto max-w-[800px]">
+          <h1 className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl dark:text-white">{title}</h1>
+          <p className="mt-2 text-sm italic text-ink-muted dark:text-slate-500">Last reviewed: {reviewedOn}</p>
+          <div className={`mt-6 ${proseCls}`}>{children}</div>
+        </article>
+      </Container>
+    </section>
   );
 };
 
