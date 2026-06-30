@@ -4,6 +4,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import ResultActions from './ResultActions';
 import { ComparisonBars } from './calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField } from './ui/Field';
 import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
@@ -267,6 +268,18 @@ const USCreditCardPayoffCalculator = () => {
             ]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the Credit Card Payoff Calculator"
+          description="See how long it takes to clear a credit card balance."
+          steps={[
+            { name: "Enter your balance", text: "Type the outstanding balance on your card." },
+            { name: "Set the APR", text: "Enter the card annual percentage rate." },
+            { name: "Set your monthly payment", text: "Enter how much you can pay each month." },
+            { name: "Review the payoff", text: "See the months to payoff and total interest paid." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

@@ -6,6 +6,7 @@ import SearchLandingSections from './calculator/SearchLandingSections';
 import { buildFaqSchema } from '../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
 import { CalcLayout } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { SelectField } from './ui/Field';
 import Card from './ui/Card';
 import { cn } from './ui/cn';
@@ -23,25 +24,27 @@ const IRCTCCalculator = () => {
 
   // Booking rules based on IRCTC guidelines (effective from Nov 1, 2024)
   const bookingRules = useMemo(() => ({
+    // Tatkal opens 1 day before journey (excluding journey day): AC classes
+    // (incl. Premium Tatkal) at 10:00 AM, non-AC/Sleeper at 11:00 AM.
     general: {
       'mail-express': { days: 60, time: '10:00' },
       'rajdhani-shatabdi': { days: 60, time: '10:00' },
       'duronto': { days: 60, time: '10:00' },
-      'premium-tatkal': { days: 1, time: '11:00' },
+      'premium-tatkal': { days: 1, time: '10:00' },
       'tatkal': { days: 1, time: '11:00' }
     },
     senior: {
       'mail-express': { days: 60, time: '10:00' },
       'rajdhani-shatabdi': { days: 60, time: '10:00' },
       'duronto': { days: 60, time: '10:00' },
-      'premium-tatkal': { days: 1, time: '11:00' },
+      'premium-tatkal': { days: 1, time: '10:00' },
       'tatkal': { days: 1, time: '11:00' }
     },
     ladies: {
-      'mail-express': { days: 60, time: '11:00' },
-      'rajdhani-shatabdi': { days: 60, time: '11:00' },
-      'duronto': { days: 60, time: '11:00' },
-      'premium-tatkal': { days: 1, time: '11:00' },
+      'mail-express': { days: 60, time: '10:00' },
+      'rajdhani-shatabdi': { days: 60, time: '10:00' },
+      'duronto': { days: 60, time: '10:00' },
+      'premium-tatkal': { days: 1, time: '10:00' },
       'tatkal': { days: 1, time: '11:00' }
     }
   }), []);
@@ -61,10 +64,10 @@ const IRCTCCalculator = () => {
   ], []);
 
   const getTatkalNotes = useCallback(() => [
-    'Tatkal booking opens exactly 1 day before journey date',
-    'Both Premium and General Tatkal: 11:00 AM',
-    'Higher fare charges apply',
-    'Limited quota available'
+    'Tatkal opens exactly 1 day before journey date (excluding the journey day)',
+    'AC classes (incl. Premium Tatkal): 10:00 AM; non-AC / Sleeper: 11:00 AM',
+    'Higher Tatkal charges apply over the base fare',
+    'Limited quota available — book as soon as the window opens'
   ], []);
 
   const getGeneralNotes = useCallback(() => {
@@ -81,7 +84,7 @@ const IRCTCCalculator = () => {
     }
 
     if (passengerType === 'ladies') {
-      notes.push('Ladies quota booking opens at 11:00 AM IST');
+      notes.push('Ladies quota is reserved within the normal 10:00 AM booking window (not a separate opening time)');
     }
 
     const today = new Date();
@@ -110,7 +113,7 @@ const IRCTCCalculator = () => {
 
       setBookingResults({
         bookingStartDate: tatkalDate,
-        bookingStartTime: '11:00 AM',
+        bookingStartTime: rule.time + ' AM',
         journeyDate: journey,
         daysInAdvance: 1,
         passengerCategory: passengerTypes.find(p => p.value === passengerType).label,
@@ -462,6 +465,18 @@ END:VCALENDAR`}
           </div>
         </div>
 
+        <HowToSection
+          name="How to use the IRCTC Advance Booking Calculator"
+          description="Find out when your train ticket booking window opens and set a reminder."
+          steps={[
+            { name: 'Enter your journey date', text: 'Pick the date you plan to travel using the date selector.' },
+            { name: 'Choose your passenger category', text: 'Select General, Senior Citizen, or Ladies to apply the right quota rules.' },
+            { name: 'Select the train category', text: 'Pick Mail/Express, Rajdhani/Shatabdi, Duronto, or a Tatkal option.' },
+            { name: 'See when booking opens', text: 'The calculator shows the exact booking-open date, IST opening time, and a days-left countdown.' },
+            { name: 'Set a reminder', text: 'Add the booking window to Google Calendar, Outlook, or download an iCal file so you never miss it.' }
+          ]}
+        />
+
         {/* Advance booking rules */}
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">IRCTC advance booking rules</h2>
@@ -473,7 +488,7 @@ END:VCALENDAR`}
               },
               {
                 title: 'Special quotas & timings',
-                items: ['Tatkal: 11:00 AM (1 day before)', 'Premium Tatkal: AC classes, dynamic pricing', 'Ladies Quota: 11:00 AM IST', 'Senior Citizen: 60 days advance', 'Foreign Tourist: 365 days advance', 'Disabled Quota: 60 days advance', 'Defence Quota: Special rules apply']
+                items: ['Tatkal AC classes: 10:00 AM (1 day before)', 'Tatkal non-AC / Sleeper: 11:00 AM (1 day before)', 'Premium Tatkal: AC classes, dynamic pricing', 'Senior Citizen: 60 days advance', 'Foreign Tourist: 365 days advance', 'Disabled Quota: 60 days advance', 'Defence Quota: Special rules apply']
               },
               {
                 title: 'Important guidelines',

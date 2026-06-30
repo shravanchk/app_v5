@@ -6,6 +6,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import ResultActions from './ResultActions';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField, Tabs } from './ui/Field';
 import Card from './ui/Card';
 import { cn } from './ui/cn';
@@ -327,6 +328,18 @@ const VATCalculator = ({ onBack }) => {
         </div>
 
         <div className="mt-8 text-center"><AdSenseAd /></div>
+      
+        <HowToSection
+          name="How to use the European VAT Calculator"
+          description="Add or extract VAT for any supported European country."
+          steps={[
+            { name: "Select the country", text: "Pick the country whose standard VAT rate applies." },
+            { name: "Enter the amount", text: "Type the value you want to add or extract VAT from." },
+            { name: "Choose inclusive or exclusive", text: "Decide whether VAT should be added to or removed from the amount." },
+            { name: "Review the result", text: "See the net amount, VAT amount, and gross total." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

@@ -7,6 +7,7 @@ import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import SearchLandingSections from './calculator/SearchLandingSections';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, Tabs } from './ui/Field';
 import Card from './ui/Card';
 import { buildFaqSchema } from '../utils/faqSchema';
@@ -316,6 +317,18 @@ const SIPCalculator = () => {
             relatedLinks={[{ label: 'PPF Calculator', href: '/ppf-calculator' }, { label: 'Salary Calculator', href: '/salary-calculator' }, { label: 'SIP Step-up Planning Guide', href: '/guide-sip-step-up-planning.html' }]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the SIP Calculator"
+          description="Estimate the maturity value of a monthly mutual-fund SIP."
+          steps={[
+            { name: "Enter your monthly SIP amount", text: "Type how much you plan to invest each month." },
+            { name: "Set the expected return", text: "Enter the annual return rate you expect from the fund." },
+            { name: "Choose the investment period", text: "Set how many years you will stay invested." },
+            { name: "Review the projection", text: "See the maturity value, total invested, and estimated gains." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

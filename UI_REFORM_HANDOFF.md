@@ -86,6 +86,11 @@ These were explicitly deferred/skipped in session 2 — resume here:
   full-width, not `100vw`). Surfaced the previously-commented `specialNotes` as an amber note.
   All logic, JSON-LD (software/FAQ/breadcrumb), EEAT, SearchLandingSections preserved. Verified
   tsc + build + preview (light/dark, general + Tatkal branches).
+- **IRCTC logic fix**: Tatkal AC classes (incl. Premium Tatkal) open at 10:00 AM, non-AC/Sleeper
+  at 11:00 AM — the old code hard-coded 11:00 AM for the whole Tatkal branch (Premium Tatkal was
+  wrong). Now uses the rule's `time`. Also unified the general-booking opening time to 10:00 AM for
+  all passenger types (the old "ladies = 11:00 AM" was incorrect; ladies quota sits inside the
+  normal window). Notes/rules text updated to match.
 - **Known issue**: `AgeCalculator` logs a dev-only React hydration warning (renders live current-date
   values during render → static prerender ≠ client). Pre-existing, not from the reskin. Renders fine.
 
@@ -106,11 +111,16 @@ These were explicitly deferred/skipped in session 2 — resume here:
    repoint the nav (`components/home/Navbar.tsx`).
 7. **Legal pages**: verify `components/legal/LegalPageLayout.js` dark mode.
 8. Final dark-mode audit across all inner pages.
-9. **HowTo SEO (queued)**: only `AgeCalculator.js` currently emits `HowTo` JSON-LD. ~30 calculator
-   pages have neither a visible "How to use this calculator" step list nor HowTo structured data.
-   Plan: shared `HowToSection` component (numbered, dark-aware) + `buildHowToSchema` helper (copy
-   AgeCalculator's pattern), then add 3-6 concrete steps per calculator. Workflows already show
-   visible how-to notes (could also get HowTo schema).
+9. ~~**HowTo SEO (queued)**~~ **DONE** — built shared `components/calculator/HowToSection.tsx`
+   (visible numbered steps, dark-aware) + `buildHowToSchema` helper in `utils/schema.js`. The
+   component renders the visible "How to use this calculator" list AND emits matching `HowTo`
+   JSON-LD from the same `steps` array. Rolled out to all 20 migrated calculators
+   (EMI/SIP/PPF/GST/IncomeTax/Salary/TaxRegime/CreditCardTrap + EU salary/VAT/UK tax + 6 US +
+   Scientific/Statistics/UnitConverter) plus IRCTC; `AgeCalculator` already had bespoke HowTo
+   schema. Workflows keep their visible `HowToNote` (no HowTo schema — decision tools, not
+   step-by-step calculators).
+   - **SEO audit (all 70 routes):** every page has `<title>` + meta description + canonical
+     (verified via runtime fetch). Only `/404` lacks canonical, which is correct.
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's

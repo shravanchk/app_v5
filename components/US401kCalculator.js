@@ -4,6 +4,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField } from './ui/Field';
 import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
@@ -241,6 +242,18 @@ const US401kCalculator = () => {
             ]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the 401(k) Calculator"
+          description="Project your 401(k) balance at retirement."
+          steps={[
+            { name: "Enter your salary and contribution", text: "Type your annual salary and the percentage you contribute." },
+            { name: "Set the employer match", text: "Enter your employer match rate and limit." },
+            { name: "Set return and timeframe", text: "Choose an expected annual return and years until retirement." },
+            { name: "Review the projection", text: "See your estimated balance and total contributions at retirement." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

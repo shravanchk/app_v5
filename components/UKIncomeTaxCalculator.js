@@ -6,6 +6,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import ResultActions from './ResultActions';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField } from './ui/Field';
 import Card from './ui/Card';
 const { calculateUKTax } = require('../utils/taxCalculations');
@@ -326,6 +327,18 @@ const UKIncomeTaxCalculator = () => {
         </div>
 
         <div className="mt-8 text-center"><AdSenseAd /></div>
+      
+        <HowToSection
+          name="How to use the UK Income Tax Calculator"
+          description="Estimate UK take-home pay after tax, NI, and student loans."
+          steps={[
+            { name: "Enter your gross income", text: "Type your annual gross salary." },
+            { name: "Select your region", text: "Choose England/Wales/NI or Scotland for the right bands." },
+            { name: "Add pension and student loan", text: "Enter any pension contribution and your student loan plan." },
+            { name: "Review your take-home", text: "See income tax, National Insurance, and net pay for the year." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

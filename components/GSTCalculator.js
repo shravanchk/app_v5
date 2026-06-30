@@ -6,6 +6,7 @@ import CalculatorArticleLayout from './calculator/CalculatorArticleLayout';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import ResultActions from './ResultActions';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField, Tabs } from './ui/Field';
 import Card from './ui/Card';
 import { buildFaqSchema } from '../utils/faqSchema';
@@ -206,6 +207,18 @@ const GSTCalculator = () => {
             guideLinks={[{ label: 'Income tax regime choice guide', href: '/guide-income-tax-regime-choice.html' }]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the GST Calculator"
+          description="Add or remove GST from any amount with the correct slab."
+          steps={[
+            { name: "Enter the amount", text: "Type the base or total amount you want to work with." },
+            { name: "Pick the GST rate", text: "Select the applicable slab (5%, 12%, 18%, or 28%)." },
+            { name: "Choose inclusive or exclusive", text: "Decide whether GST should be added to or extracted from the amount." },
+            { name: "Review the result", text: "See the GST amount, CGST/SGST split, and net or gross total." }
+          ]}
+        />
+
       </CalcLayout>
 
       <CalculatorArticleLayout

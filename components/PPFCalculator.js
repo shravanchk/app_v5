@@ -4,6 +4,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField } from './ui/Field';
 import Card from './ui/Card';
 import { formatINR } from '../utils/calculations';
@@ -171,6 +172,18 @@ const PPFCalculator = () => {
             guideLinks={[{ label: 'PPF vs SIP choice guide', href: '/guide-ppf-vs-sip-choice.html' }, { label: 'SIP step-up planning guide', href: '/guide-sip-step-up-planning.html' }]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the PPF Calculator"
+          description="Project the maturity value of your Public Provident Fund account."
+          steps={[
+            { name: "Enter your yearly deposit", text: "Type the amount you plan to invest each financial year." },
+            { name: "Confirm the interest rate", text: "Use the current PPF rate or adjust it for your scenario." },
+            { name: "Set the duration", text: "Choose the number of years (15 or extended in blocks of 5)." },
+            { name: "Review the maturity value", text: "See your total deposits, interest earned, and final corpus." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

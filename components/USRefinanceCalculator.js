@@ -4,6 +4,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import ResultActions from './ResultActions';
 import { ComparisonBars } from './calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField } from './ui/Field';
 import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
@@ -186,6 +187,18 @@ const USRefinanceCalculator = () => {
             ]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the Refinance Calculator"
+          description="Check whether refinancing your mortgage saves money."
+          steps={[
+            { name: "Enter your current loan", text: "Type your current balance, rate, and remaining term." },
+            { name: "Enter the new loan terms", text: "Add the new interest rate and term you are offered." },
+            { name: "Add closing costs", text: "Enter the costs of refinancing." },
+            { name: "Review the savings", text: "See your new payment, monthly savings, and break-even point." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

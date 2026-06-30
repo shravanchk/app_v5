@@ -7,6 +7,7 @@ import ResultActions from './ResultActions';
 import { ComparisonBars } from './calculator/ResultVisualizations';
 import SearchLandingSections from './calculator/SearchLandingSections';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField } from './ui/Field';
 import Card from './ui/Card';
 import { HowToNote, Panel } from './workflow/WorkflowKit';
@@ -388,6 +389,18 @@ const CreditCardTrapCalculator = () => {
             ]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the Credit Card Trap Calculator"
+          description="See how long minimum payments take and what they really cost."
+          steps={[
+            { name: "Enter your outstanding balance", text: "Type the amount currently owed on your card." },
+            { name: "Set the interest rate", text: "Enter your card APR (monthly or annual)." },
+            { name: "Choose a monthly payment", text: "Compare minimum-only versus a fixed higher payment." },
+            { name: "Review the payoff", text: "See the payoff time, total interest, and how much faster you clear the debt." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

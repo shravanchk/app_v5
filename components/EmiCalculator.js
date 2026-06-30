@@ -8,6 +8,7 @@ import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import ResultActions from './ResultActions';
 import SavedScenarios from './SavedScenarios';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField, Tabs } from './ui/Field';
 import Card from './ui/Card';
 import { buildFaqSchema } from '../utils/faqSchema';
@@ -303,6 +304,19 @@ const ComprehensiveLoanCalculator = React.memo(() => {
             guideLinks={[{ label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' }, { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' }]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the EMI Calculator"
+          description="Work out your monthly loan instalment and total interest in a few steps."
+          steps={[
+            { name: "Enter the loan amount", text: "Type the principal you plan to borrow." },
+            { name: "Set the interest rate", text: "Enter the annual interest rate offered by your lender." },
+            { name: "Choose the tenure", text: "Set the repayment period in years or months." },
+            { name: "Review your EMI", text: "See the monthly instalment, total interest, and total amount payable update instantly." },
+            { name: "Explore the breakdown", text: "Check the principal-vs-interest split and amortization schedule." }
+          ]}
+        />
+
       </CalcLayout>
 
       <CalculatorArticleLayout

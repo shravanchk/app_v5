@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import { Info } from 'lucide-react';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField } from './ui/Field';
 import Card from './ui/Card';
 
@@ -308,6 +309,18 @@ const StatisticsCalculator = () => {
             <span>For audited or regulated reporting, validate these outputs with your official statistical workflow.</span>
           </p>
         </div>
+      
+        <HowToSection
+          name="How to use the Statistics Calculator"
+          description="Compute descriptive statistics for a set of numbers."
+          steps={[
+            { name: "Enter your data set", text: "Type or paste your numbers separated by commas or spaces." },
+            { name: "View descriptive stats", text: "See mean, median, mode, standard deviation, and more." },
+            { name: "Use the extra tools", text: "Compute a z-score or percentile rank for a value." },
+            { name: "Build a confidence interval", text: "Pick a confidence level to estimate the population mean." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

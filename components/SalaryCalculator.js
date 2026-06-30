@@ -7,6 +7,7 @@ import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizat
 import SearchLandingSections from './calculator/SearchLandingSections';
 import ResultActions from './ResultActions';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField, Tabs } from './ui/Field';
 import Card from './ui/Card';
 import { buildFaqSchema } from '../utils/faqSchema';
@@ -237,6 +238,17 @@ const SalaryCalculator = () => {
             relatedLinks={[{ label: 'Income Tax Calculator (India)', href: '/income-tax-calculator' }, { label: 'Tax Regime Comparison Tool', href: '/tax-regime-comparison' }, { label: 'CTC to In-hand Salary Guide', href: '/guides/ctc-to-in-hand-salary' }]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the Salary Calculator"
+          description="Convert your CTC into a monthly in-hand salary estimate."
+          steps={[
+            { name: "Enter your CTC", text: "Type your total annual cost-to-company." },
+            { name: "Adjust the components", text: "Set basic pay, allowances, and statutory deductions as needed." },
+            { name: "Review your in-hand pay", text: "See your estimated monthly and annual take-home salary." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

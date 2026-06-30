@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import { ArrowRightLeft } from 'lucide-react';
 import { CalcLayout } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField } from './ui/Field';
 import Card from './ui/Card';
 import { cn } from './ui/cn';
@@ -325,6 +326,18 @@ const UnitConverter = () => {
             </div>
           </Card>
         </div>
+      
+        <HowToSection
+          name="How to use the Unit Converter"
+          description="Convert between units across many measurement categories."
+          steps={[
+            { name: "Choose a category", text: "Select length, weight, temperature, or another category." },
+            { name: "Enter a value", text: "Type the number you want to convert." },
+            { name: "Pick the units", text: "Choose the unit to convert from and the unit to convert to." },
+            { name: "Read the result", text: "See the converted value instantly." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

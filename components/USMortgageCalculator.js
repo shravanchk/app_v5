@@ -4,6 +4,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField } from './ui/Field';
 import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
@@ -212,6 +213,19 @@ const USMortgageCalculator = () => {
             ]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the Mortgage Calculator"
+          description="Estimate your monthly mortgage payment."
+          steps={[
+            { name: "Enter the home price", text: "Type the purchase price of the property." },
+            { name: "Set the down payment", text: "Enter your down payment amount or percentage." },
+            { name: "Set the rate and term", text: "Enter the interest rate and loan length in years." },
+            { name: "Add taxes and insurance", text: "Include property tax, insurance, and HOA if relevant." },
+            { name: "Review the payment", text: "See your monthly payment and total interest over the loan." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

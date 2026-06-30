@@ -6,6 +6,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import ResultActions from './ResultActions';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField, Tabs } from './ui/Field';
 import Card from './ui/Card';
 import { cn } from './ui/cn';
@@ -842,6 +843,18 @@ const EuropeanSalaryCalculator = ({
         </div>
 
         <div className="mt-8 text-center"><AdSenseAd /></div>
+      
+        <HowToSection
+          name="How to use the European Salary Calculator"
+          description="Estimate net take-home pay across European countries."
+          steps={[
+            { name: "Select your country", text: "Choose from the supported European tax systems." },
+            { name: "Choose the frequency", text: "Switch between annual and monthly salary input." },
+            { name: "Enter your gross salary", text: "Type your gross pay for the selected frequency." },
+            { name: "Review your net pay", text: "See net salary, total deductions, and the effective tax rate." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

@@ -4,6 +4,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField } from './ui/Field';
 import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
@@ -201,6 +202,18 @@ const USSavingsCDCalculator = () => {
             ]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the Savings & CD Calculator"
+          description="Project the growth of a savings deposit or CD."
+          steps={[
+            { name: "Enter your deposit", text: "Type the initial amount and any regular contributions." },
+            { name: "Set the APY", text: "Enter the annual percentage yield." },
+            { name: "Choose the term", text: "Set how long the money stays invested." },
+            { name: "Review the result", text: "See the maturity value and total interest earned." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

@@ -5,6 +5,7 @@ import SearchLandingSections from './calculator/SearchLandingSections';
 import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField } from './ui/Field';
 import Card from './ui/Card';
 import { DecisionBanner } from './workflow/WorkflowKit';
@@ -201,6 +202,18 @@ const TaxRegimeComparisonCalculator = () => {
             relatedLinks={relatedLinks}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the Tax Regime Comparison Calculator"
+          description="Compare the old and new Indian tax regimes side by side."
+          steps={[
+            { name: "Enter your gross salary", text: "Type your total annual income." },
+            { name: "Add your deductions", text: "Enter 80C, 80D, HRA, and any other eligible deductions." },
+            { name: "Compare both regimes", text: "See the tax payable under the old and new regimes side by side." },
+            { name: "Pick the better option", text: "Use the recommended regime and savings figure to decide." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

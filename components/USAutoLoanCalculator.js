@@ -4,6 +4,7 @@ import CalculatorInfoPanel from './CalculatorInfoPanel';
 import ResultActions from './ResultActions';
 import { PieBreakdownChart } from './calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField } from './ui/Field';
 import Card from './ui/Card';
 import { formatCurrency } from '../utils/calculations';
@@ -180,6 +181,18 @@ const USAutoLoanCalculator = () => {
             ]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the Auto Loan Calculator"
+          description="Work out the monthly payment on a car loan."
+          steps={[
+            { name: "Enter the vehicle price", text: "Type the purchase price of the car." },
+            { name: "Set the down payment", text: "Enter your down payment and any trade-in value." },
+            { name: "Set the rate and term", text: "Enter the APR and loan length in months or years." },
+            { name: "Review the payment", text: "See your monthly payment, total interest, and total cost." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

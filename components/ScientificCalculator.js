@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import { Eraser, Delete, History, Sigma } from 'lucide-react';
 import { CalcLayout } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import Card from './ui/Card';
 import Button from './ui/Button';
 import { cn } from './ui/cn';
@@ -370,6 +371,18 @@ const ScientificCalculator = () => {
             </span>
           </p>
         </div>
+      
+        <HowToSection
+          name="How to use the Scientific Calculator"
+          description="Perform scientific calculations in your browser."
+          steps={[
+            { name: "Enter your numbers", text: "Type on your keyboard or tap the on-screen keypad." },
+            { name: "Use the functions", text: "Apply trig, logarithm, power, and root functions as needed." },
+            { name: "Apply operators", text: "Combine operations using parentheses for the right order." },
+            { name: "Read the result", text: "Press equals to see the computed value." }
+          ]}
+        />
+
       </CalcLayout>
     </>
   );

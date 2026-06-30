@@ -7,6 +7,7 @@ import EEATPanel from './calculator/EEATPanel';
 import { PieBreakdownChart, ComparisonBars } from './calculator/ResultVisualizations';
 import ResultActions from './ResultActions';
 import { CalcLayout, ResultStat } from './calculator/CalcLayout';
+import HowToSection from './calculator/HowToSection';
 import { NumberField, SelectField, Tabs } from './ui/Field';
 import Card from './ui/Card';
 import { buildFaqSchema } from '../utils/faqSchema';
@@ -306,6 +307,18 @@ const IncomeTaxCalculator = () => {
             guideLinks={[{ label: 'Old vs new regime guide', href: '/guide-income-tax-regime-choice.html' }, { label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' }]}
           />
         </div>
+      
+        <HowToSection
+          name="How to use the Income Tax Calculator"
+          description="Estimate your Indian income tax under the chosen regime."
+          steps={[
+            { name: "Enter your annual income", text: "Type your gross salary or total income for the year." },
+            { name: "Choose the tax regime", text: "Select the old or new regime to compare your liability." },
+            { name: "Add your deductions", text: "Enter eligible deductions such as 80C, 80D, and HRA." },
+            { name: "Review your tax", text: "See your taxable income, tax payable, and take-home estimate." }
+          ]}
+        />
+
       </CalcLayout>
 
       <CalculatorArticleLayout

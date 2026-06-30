@@ -23,6 +23,20 @@ export const buildSoftwareApplicationSchema = ({
   ...(featureList.length ? { featureList } : {})
 });
 
+export const buildHowToSchema = ({ name, description, steps = [], totalTime = 'PT1M' }) => ({
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name,
+  ...(description ? { description } : {}),
+  ...(totalTime ? { totalTime } : {}),
+  step: steps.map((step, index) => ({
+    '@type': 'HowToStep',
+    position: index + 1,
+    name: step.name,
+    text: step.text
+  }))
+});
+
 export const buildBreadcrumbSchema = (items = []) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
