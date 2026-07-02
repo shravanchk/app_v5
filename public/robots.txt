@@ -85,6 +85,8 @@ Allow: /bmr-calculator
 Allow: /body-fat-calculator
 Allow: /period-calculator
 Allow: /pregnancy-due-date-calculator
+Allow: /us-paycheck-calculator
+Allow: /paycheck
 
 # Known non-content or legacy areas
 Disallow: /build/

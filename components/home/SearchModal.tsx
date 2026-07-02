@@ -26,6 +26,8 @@ const INDEX: Item[] = [
   { label: 'Old vs New Regime Breakeven', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27', group: 'Guide' },
   { label: 'Unit Converter', href: '/unit-converter', group: 'Tool' },
   { label: 'JSON Formatter', href: '/json-tools', group: 'Tool' },
+  { label: 'US Paycheck Calculator', href: '/us-paycheck-calculator', group: 'Calculator' },
+  { label: 'Take-Home Pay by State', href: '/paycheck', group: 'Calculator' },
   { label: 'BMI Calculator', href: '/bmi-calculator', group: 'Health' },
   { label: 'Calorie Calculator (TDEE)', href: '/calorie-calculator', group: 'Health' },
   { label: 'BMR Calculator', href: '/bmr-calculator', group: 'Health' },
