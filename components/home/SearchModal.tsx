@@ -26,6 +26,13 @@ const INDEX: Item[] = [
   { label: 'Old vs New Regime Breakeven', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27', group: 'Guide' },
   { label: 'Unit Converter', href: '/unit-converter', group: 'Tool' },
   { label: 'JSON Formatter', href: '/json-tools', group: 'Tool' },
+  { label: 'BMI Calculator', href: '/bmi-calculator', group: 'Health' },
+  { label: 'Calorie Calculator (TDEE)', href: '/calorie-calculator', group: 'Health' },
+  { label: 'BMR Calculator', href: '/bmr-calculator', group: 'Health' },
+  { label: 'Body Fat Calculator', href: '/body-fat-calculator', group: 'Health' },
+  { label: 'Period Calculator', href: '/period-calculator', group: 'Health' },
+  { label: 'Pregnancy Due Date Calculator', href: '/pregnancy-due-date-calculator', group: 'Health' },
+  { label: 'Health Calculators Hub', href: '/health-calculators', group: 'Health' },
 ];
 
 export default function SearchModal({ onClose }: { onClose: () => void }) {

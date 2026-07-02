@@ -130,6 +130,25 @@ These were explicitly deferred/skipped in session 2 — resume here:
    - **SEO audit (all 70 routes):** every page has `<title>` + meta description + canonical
      (verified via runtime fetch). Only `/404` lacks canonical, which is correct.
 
+### Session 4 — Health & Fitness vertical (organic-traffic push) — done
+New calculator category targeting high-volume, geo-agnostic health keywords (supports the US/EU
+revenue focus). All on `CalcLayout` + `Card` + `NumberField`/`SelectField`/`Tabs` + `ResultStat`
++ `HowToSection` + FAQ + software/FAQ/breadcrumb JSON-LD + `EEATPanel` + `HealthDisclaimer`,
+with **animated explanatory visuals** and US/metric unit toggles (imperial default):
+- Shared math: `utils/healthCalculations.js` (BMI/WHO bands, Mifflin-St Jeor + revised
+  Harris-Benedict, TDEE multipliers, US Navy body fat + ACE bands, cycle prediction, Naegele's rule).
+- Shared visuals: `components/health/HealthKit.tsx` — `BandScale` (sliding marker), `GoalBars`
+  (animated widths), `PulseBadge`, `CycleRing` (SVG arcs), `TrimesterTrack`, `HealthDisclaimer`.
+- Calculators: `BMICalculator` (/bmi-calculator), `CalorieCalculator` (/calorie-calculator),
+  `BMRCalculator` (/bmr-calculator), `BodyFatCalculator` (/body-fat-calculator, sex-specific
+  hip field), `PeriodCalculator` (/period-calculator), `PregnancyDueDateCalculator`
+  (/pregnancy-due-date-calculator, LMP or conception method).
+- Hub: `HealthCalculatorsHub.js` + `pages/health-calculators.js`. Wired into Navbar `REGIONS`
+  ("Health & fitness"), SearchModal (Health group), SiteFooter Regions, and `public/sitemap.xml`
+  (also backfilled missing `/workflows` + `/guides` sitemap entries).
+- Verified: tsc + build clean; math hand-checked (BMI 24.3, TDEE 2,283, Navy 18.3% male /
+  28.8% female, next period +cycle days, due date LMP+280); light + dark previews; no console errors.
+
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's
   `next build` hung on lint; locally you CAN run `npm run build` — do it before deploying.

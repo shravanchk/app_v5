@@ -41,6 +41,7 @@ const COLUMNS: Col[] = [
       { label: 'India Calculators', href: '/india-calculators' },
       { label: 'US Calculators', href: '/us-calculators' },
       { label: 'UK & Europe', href: '/eu-calculators' },
+      { label: 'Health & Fitness', href: '/health-calculators' },
       { label: 'Everyday Tools', href: '/tools' },
     ],
   },

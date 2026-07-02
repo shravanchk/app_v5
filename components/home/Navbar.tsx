@@ -23,6 +23,7 @@ const REGIONS: NavLink[] = [
   { label: 'India calculators', href: '/india-calculators' },
   { label: 'US calculators', href: '/us-calculators' },
   { label: 'UK & Europe calculators', href: '/eu-calculators' },
+  { label: 'Health & fitness', href: '/health-calculators' },
   { label: 'Everyday tools', href: '/tools' },
 ];
 
