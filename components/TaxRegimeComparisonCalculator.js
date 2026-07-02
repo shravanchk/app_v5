@@ -107,6 +107,13 @@ const TaxRegimeComparisonCalculator = () => {
           content="Compare old vs new tax regime for India FY 2026-27 (AY 2027-28) with deductions, section 87A rebate, marginal relief, and cess."
         />
         <link rel="canonical" href="https://upaman.com/tax-regime-comparison" />
+        <meta property="og:title" content="Tax Regime Comparison Tool India (FY 2026-27) | Upaman" />
+        <meta property="og:description" content="Compare old vs new tax regime for India FY 2026-27 with deductions, rebate, marginal relief, and cess." />
+        <meta property="og:url" content="https://upaman.com/tax-regime-comparison" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Tax Regime Comparison Tool India | Upaman" />
+        <meta name="twitter:description" content="Old vs new regime comparison for FY 2026-27 with your deductions." />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>

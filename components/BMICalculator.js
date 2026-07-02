@@ -5,7 +5,7 @@ import HowToSection from './calculator/HowToSection';
 import EEATPanel from './calculator/EEATPanel';
 import { NumberField, Tabs } from './ui/Field';
 import Card from './ui/Card';
-import { BandScale, HealthDisclaimer, toneText } from './health/HealthKit';
+import { BandScale, HealthDisclaimer, toneText, RelatedHealthLinks } from './health/HealthKit';
 import {
   calculateBMI, bmiCategory, BMI_BANDS, healthyWeightRangeKg,
   kgFromLb, lbFromKg, cmFromFtIn
@@ -180,6 +180,8 @@ const BMICalculator = () => {
             ]}
           />
         </div>
+
+        <RelatedHealthLinks current="/bmi-calculator" />
 
         <HealthDisclaimer />
       </CalcLayout>

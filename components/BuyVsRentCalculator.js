@@ -88,6 +88,13 @@ const BuyVsRentCalculator = () => {
           content="Compare buying vs renting a house in India with EMI, rent escalation, home appreciation, and break-even timeline."
         />
         <link rel="canonical" href="https://upaman.com/buy-vs-rent-calculator" />
+        <meta property="og:title" content="Buy vs Rent Calculator India | Home Decision Tool | Upaman" />
+        <meta property="og:description" content="Compare buying vs renting with EMI, rent escalation, appreciation, and break-even timeline." />
+        <meta property="og:url" content="https://upaman.com/buy-vs-rent-calculator" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Buy vs Rent Calculator India | Upaman" />
+        <meta name="twitter:description" content="Buy vs rent comparison with EMI and break-even timeline." />
       </Head>
 
       <div className="calculator-card">

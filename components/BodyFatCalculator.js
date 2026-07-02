@@ -5,7 +5,7 @@ import HowToSection from './calculator/HowToSection';
 import EEATPanel from './calculator/EEATPanel';
 import { NumberField, SelectField, Tabs } from './ui/Field';
 import Card from './ui/Card';
-import { BandScale, HealthDisclaimer, toneText } from './health/HealthKit';
+import { BandScale, HealthDisclaimer, toneText, RelatedHealthLinks } from './health/HealthKit';
 import {
   bodyFatNavy, bodyFatCategory, BODY_FAT_BANDS,
   kgFromLb, cmFromFtIn, cmFromIn
@@ -200,6 +200,8 @@ const BodyFatCalculator = () => {
             ]}
           />
         </div>
+
+        <RelatedHealthLinks current="/body-fat-calculator" />
 
         <HealthDisclaimer />
       </CalcLayout>

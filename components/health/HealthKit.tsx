@@ -219,6 +219,43 @@ export function TrimesterTrack({ weeks, days }: { weeks: number; days: number })
   );
 }
 
+// ---------------------------------------------------------------- Related links
+// Internal links between the health tools (topical cluster for SEO + discovery).
+const HEALTH_TOOLS = [
+  { label: 'BMI Calculator', href: '/bmi-calculator' },
+  { label: 'Calorie Calculator (TDEE)', href: '/calorie-calculator' },
+  { label: 'BMR Calculator', href: '/bmr-calculator' },
+  { label: 'Body Fat Calculator', href: '/body-fat-calculator' },
+  { label: 'Period Calculator', href: '/period-calculator' },
+  { label: 'Pregnancy Due Date Calculator', href: '/pregnancy-due-date-calculator' }
+];
+
+export function RelatedHealthLinks({ current }: { current: string }) {
+  const others = HEALTH_TOOLS.filter((t) => t.href !== current);
+  return (
+    <nav className="mt-10" aria-label="Related health calculators">
+      <h2 className="font-display text-xl font-bold text-ink dark:text-white">More health calculators</h2>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {others.map((t) => (
+          <a
+            key={t.href}
+            href={t.href}
+            className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-medium text-ink-soft transition hover:border-brand-300 hover:text-brand-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:border-brand-700 dark:hover:text-brand-300"
+          >
+            {t.label}
+          </a>
+        ))}
+        <a
+          href="/health-calculators"
+          className="rounded-full border border-brand-200 bg-brand-50/60 px-3.5 py-1.5 text-sm font-semibold text-brand-700 transition hover:border-brand-300 dark:border-brand-800/60 dark:bg-brand-900/20 dark:text-brand-300"
+        >
+          All health calculators →
+        </a>
+      </div>
+    </nav>
+  );
+}
+
 // ---------------------------------------------------------------- Disclaimer
 export function HealthDisclaimer({ children }: { children?: React.ReactNode }) {
   return (

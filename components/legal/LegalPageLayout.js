@@ -32,6 +32,13 @@ const LegalPageLayout = ({
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href={`https://upaman.com${canonicalPath}`} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={`https://upaman.com${canonicalPath}`} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
       </Head>
       <Container>
         <article className="mx-auto max-w-[800px]">

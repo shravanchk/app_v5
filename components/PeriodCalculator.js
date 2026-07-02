@@ -5,7 +5,7 @@ import HowToSection from './calculator/HowToSection';
 import EEATPanel from './calculator/EEATPanel';
 import { NumberField } from './ui/Field';
 import Card from './ui/Card';
-import { CycleRing, HealthDisclaimer } from './health/HealthKit';
+import { CycleRing, HealthDisclaimer, RelatedHealthLinks } from './health/HealthKit';
 import { predictCycles } from '../utils/healthCalculations';
 import { buildFaqSchema } from '../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
@@ -169,6 +169,8 @@ const PeriodCalculator = () => {
             ]}
           />
         </div>
+
+        <RelatedHealthLinks current="/period-calculator" />
 
         <HealthDisclaimer>
           This calculator gives calendar-based estimates for planning and awareness. It is not a contraceptive method and not medical advice — consult a doctor about irregular cycles or fertility questions.

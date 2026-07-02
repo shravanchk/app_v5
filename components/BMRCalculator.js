@@ -5,7 +5,7 @@ import HowToSection from './calculator/HowToSection';
 import EEATPanel from './calculator/EEATPanel';
 import { NumberField, SelectField, Tabs } from './ui/Field';
 import Card from './ui/Card';
-import { PulseBadge, HealthDisclaimer } from './health/HealthKit';
+import { PulseBadge, HealthDisclaimer, RelatedHealthLinks } from './health/HealthKit';
 import {
   bmrMifflin, bmrHarrisBenedict, ACTIVITY_LEVELS, tdeeFromBmr,
   kgFromLb, cmFromFtIn
@@ -175,6 +175,8 @@ const BMRCalculator = () => {
             ]}
           />
         </div>
+
+        <RelatedHealthLinks current="/bmr-calculator" />
 
         <HealthDisclaimer />
       </CalcLayout>

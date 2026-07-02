@@ -5,7 +5,7 @@ import HowToSection from './calculator/HowToSection';
 import EEATPanel from './calculator/EEATPanel';
 import { NumberField, SelectField, Tabs } from './ui/Field';
 import Card from './ui/Card';
-import { GoalBars, HealthDisclaimer } from './health/HealthKit';
+import { GoalBars, HealthDisclaimer, RelatedHealthLinks } from './health/HealthKit';
 import {
   bmrMifflin, tdeeFromBmr, ACTIVITY_LEVELS, CALORIE_GOALS,
   kgFromLb, cmFromFtIn
@@ -184,6 +184,8 @@ const CalorieCalculator = () => {
             ]}
           />
         </div>
+
+        <RelatedHealthLinks current="/calorie-calculator" />
 
         <HealthDisclaimer />
       </CalcLayout>

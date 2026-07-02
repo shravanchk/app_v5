@@ -5,7 +5,7 @@ import HowToSection from './calculator/HowToSection';
 import EEATPanel from './calculator/EEATPanel';
 import { NumberField, Tabs } from './ui/Field';
 import Card from './ui/Card';
-import { TrimesterTrack, HealthDisclaimer } from './health/HealthKit';
+import { TrimesterTrack, HealthDisclaimer, RelatedHealthLinks } from './health/HealthKit';
 import { dueDateFromLMP, dueDateFromConception, gestationalAge, addDays } from '../utils/healthCalculations';
 import { buildFaqSchema } from '../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../utils/schema';
@@ -190,6 +190,8 @@ const PregnancyDueDateCalculator = () => {
             ]}
           />
         </div>
+
+        <RelatedHealthLinks current="/pregnancy-due-date-calculator" />
 
         <HealthDisclaimer>
           Due dates are planning estimates — only about 1 in 20 babies arrives on the exact date. Always follow your healthcare provider&apos;s dating and advice.

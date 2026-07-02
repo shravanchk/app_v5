@@ -75,6 +75,16 @@ Allow: /guides/car-ownership-cost-guide
 Allow: /guides/india-income-tax-2026-27
 Allow: /guides/uk-tax-rates-2026-27
 Allow: /guides/ctc-to-in-hand-salary
+Allow: /guides
+Allow: /workflows
+Allow: /tax-on-salary
+Allow: /health-calculators
+Allow: /bmi-calculator
+Allow: /calorie-calculator
+Allow: /bmr-calculator
+Allow: /body-fat-calculator
+Allow: /period-calculator
+Allow: /pregnancy-due-date-calculator
 
 # Known non-content or legacy areas
 Disallow: /build/
