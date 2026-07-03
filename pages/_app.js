@@ -57,14 +57,15 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     if (!AD_ELIGIBLE_ROUTES.has(router.pathname)) return;
 
-    const existingScript = document.querySelector('script[data-upaman-adsense="true"]');
-    if (existingScript) return;
+    // Dedupe marker uses id, not a data-* attribute: adsbygoogle.js warns about
+    // unrecognized data-* attributes on its own script tag.
+    if (document.getElementById('upaman-adsense')) return;
 
     const script = document.createElement('script');
+    script.id = 'upaman-adsense';
     script.async = true;
     script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3543327769912677';
     script.crossOrigin = 'anonymous';
-    script.setAttribute('data-upaman-adsense', 'true');
     script.onload = () => {
       window.adsenseLoaded = true;
     };
