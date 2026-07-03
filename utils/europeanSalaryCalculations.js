@@ -30,24 +30,28 @@ export const SALARY_SYSTEMS = {
     country: 'Germany',
     currency: '€',
     symbol: 'EUR',
-    // 2026 Einkommensteuer zones (§32a EStG). Grundfreibetrag €12,348;
-    // 42% top-of-progression starts at €69,878; 45% Reichensteuer above €277,825.
+    // Display metadata only — the exact 2026 §32a EStG tariff formulas live in
+    // calculateGermanySalary. Grundfreibetrag €12,348; 42% zone from €69,879
+    // of taxable income; 45% Reichensteuer above €277,825.
     taxBands: [
       { min: 0, max: 12348, rate: 0 },
       { min: 12348, max: 69878, rate: 14 },
       { min: 69878, max: 277825, rate: 42 },
       { min: 277825, max: Infinity, rate: 45 }
     ],
-    // Employee shares, 2026. NOTE: health excludes the fund-specific average
-    // additional contribution (~1.45% employee share of the 2.9% Zusatzbeitrag);
-    // care base 1.7% excludes the +0.6% childless surcharge.
+    // Employee shares, 2026: health 7.3% + half of the 2.9% average
+    // Zusatzbeitrag = 8.75%; care 2.4% (childless rate, most states).
+    // Contributions stop at the assessment ceilings below.
     socialSecurity: {
       pension: 9.3,
       unemployment: 1.3,
-      health: 7.3,
-      care: 1.7
+      health: 8.75,
+      care: 2.4
     },
-    solidarityTax: 5.5,
+    ceilings: {
+      pensionUnemployment: 101400,
+      healthCare: 69750
+    },
     flag: '🇩🇪'
   },
   'FR': {
@@ -187,32 +191,43 @@ const calculateUKSalary = (annual, system, results) => {
   return results;
 };
 
-// Germany Tax Calculation
+// Germany Tax Calculation — 2026 payroll approximation for a single employee:
+// Steuerklasse I, childless, statutory insurance, no church tax.
 const calculateGermanySalary = (annual, system, results) => {
+  const s = system.socialSecurity;
+  const pensionBase = Math.min(annual, system.ceilings.pensionUnemployment);
+  const healthBase = Math.min(annual, system.ceilings.healthCare);
+  const pension = pensionBase * (s.pension / 100);
+  const unemployment = pensionBase * (s.unemployment / 100);
+  const health = healthBase * (s.health / 100);
+  const care = healthBase * (s.care / 100);
+  const socialSec = pension + unemployment + health + care;
+
+  // Taxable income (zvE): gross minus the employee lump sums (Werbungskosten
+  // €1,230 + Sonderausgaben €36) and deductible insurance contributions
+  // (pension in full, health at 96% for sick-pay entitlement, care in full).
+  const zvE = Math.floor(Math.max(0, annual - 1230 - 36 - pension - health * 0.96 - care));
+
+  // §32a EStG tariff, 2026 coefficients (gesetze-im-internet.de/estg/__32a.html)
   let incomeTax = 0;
-  let socialSec = 0;
-  let solidarity = 0;
-
-  // Income Tax
-  for (const band of system.taxBands) {
-    if (annual > band.min) {
-      const taxableAmount = Math.min(annual - band.min, band.max - band.min);
-      if (band.rate === 14) {
-        // Progressive rate from 14% to 42%
-        const rate = 14 + ((annual - band.min) / (band.max - band.min)) * 28;
-        incomeTax += taxableAmount * (rate / 100);
-      } else {
-        incomeTax += taxableAmount * (band.rate / 100);
-      }
-    }
+  if (zvE > 277825) {
+    incomeTax = 0.45 * zvE - 19470.38;
+  } else if (zvE > 69878) {
+    incomeTax = 0.42 * zvE - 11135.63;
+  } else if (zvE > 17799) {
+    const z = (zvE - 17799) / 10000;
+    incomeTax = (173.10 * z + 2397) * z + 1034.87;
+  } else if (zvE > 12348) {
+    const y = (zvE - 12348) / 10000;
+    incomeTax = (914.51 * y + 1400) * y;
   }
+  incomeTax = Math.floor(incomeTax);
 
-  // Social Security (employee portion)
-  const totalSocialRate = Object.values(system.socialSecurity).reduce((a, b) => a + b, 0);
-  socialSec = annual * (totalSocialRate / 100);
-
-  // Solidarity Tax (5.5% of income tax)
-  solidarity = incomeTax * 0.055;
+  // Solidarity surcharge: zero up to €20,350 of income tax (2026 Freigrenze),
+  // then tapered at 11.9% of the excess until the full 5.5% applies.
+  const solidarity = incomeTax > 20350
+    ? Math.min(incomeTax * 0.055, (incomeTax - 20350) * 0.119)
+    : 0;
 
   const totalDeductions = incomeTax + socialSec + solidarity;
   const netAnnual = annual - totalDeductions;

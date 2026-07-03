@@ -244,6 +244,16 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   (AdSenseAd, ResultActions, Footer, CalculatorInfoPanel, etc.) stay at the root.
   Pure git-mv renames + import rewrites, no logic changes; legacy unused
   `components/Main.js` deleted. New components go in their section folder.
+- **German engine rewrite + take-home pages**: the old DE path applied the *marginal*
+  rate to the whole progression zone (overstated €60k tax by ~€8k), ignored the
+  contribution ceilings, and always charged soli. Rewritten in
+  `utils/europeanSalaryCalculations.js` with the official 2026 §32a EStG tariff
+  (gesetze-im-internet coefficients), 2026 ceilings (RV/AV €101,400, KV/PV €69,750),
+  8.75% health incl. avg Zusatzbeitrag, 2.4% childless care, soli Freigrenze €20,350
+  with 11.9% taper, and a zvE approximation (gross − €1,266 lump sums − deductible
+  contributions). DE €60k net: €29,542 → **€37,551** (63% keep, EU hub table resorted).
+  New programmatic `/germany/take-home/[salary]` (25 levels, €25k–€150k, from
+  `DE_SALARY_LEVELS`) + index; EU hub card; sitemap 272 URLs.
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's
