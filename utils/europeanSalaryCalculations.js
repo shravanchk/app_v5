@@ -10,11 +10,12 @@ export const SALARY_SYSTEMS = {
     symbol: 'GBP',
     personalAllowance: 12570,
     // 2026-27 rates (matches /guides/uk-tax-rates-2026-27). Bands are on taxable
-    // income after the allowance; additional rate starts at £125,140 gross.
+    // income after the (tapered) personal allowance; additional rate above
+    // £125,140 of taxable income.
     taxBands: [
       { min: 0, max: 37700, rate: 20 },
-      { min: 37700, max: 112570, rate: 40 },
-      { min: 112570, max: Infinity, rate: 45 }
+      { min: 37700, max: 125140, rate: 40 },
+      { min: 125140, max: Infinity, rate: 45 }
     ],
     // Employee class 1 NI: 8% between primary threshold and UEL, 2% above.
     niEmployee: [
@@ -144,7 +145,11 @@ export const SALARY_SYSTEMS = {
 };
 
 const calculateUKSalary = (annual, system, results) => {
-  const taxableIncome = Math.max(0, annual - system.personalAllowance);
+  // Personal allowance tapers £1 per £2 of income above £100,000 (zero at £125,140).
+  const personalAllowance = annual > 100000
+    ? Math.max(0, system.personalAllowance - Math.floor((annual - 100000) / 2))
+    : system.personalAllowance;
+  const taxableIncome = Math.max(0, annual - personalAllowance);
   let incomeTax = 0;
   let ni = 0;
 
@@ -171,7 +176,7 @@ const calculateUKSalary = (annual, system, results) => {
     incomeTax,
     nationalInsurance: ni,
     totalDeductions,
-    personalAllowance: system.personalAllowance,
+    personalAllowance,
     taxableIncome
   };
 

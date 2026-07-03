@@ -225,6 +225,13 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   water-intake (35 ml/kg + exercise/climate) calculators. Math in
   `utils/healthCalculations.js`; hub + RelatedHealthLinks now list 9 tools;
   sitemap 220 URLs.
+- **UK take-home pages**: programmatic `/uk/take-home/[salary]` (25 levels, £20k–£150k,
+  from `UK_SALARY_LEVELS` in `utils/salaryLevels.js`) + index, built on `calculateUKTax`
+  (utils/taxCalculations.js — handles the allowance taper). Also fixed the European
+  engine's UK path (utils/europeanSalaryCalculations.js): added the £100k allowance
+  taper and moved the 45% band to £125,140 *taxable* (was 112,570 with no taper —
+  interactive calculator overstated UK net above £100k). EU hub gained a
+  "UK Take-Home by Salary" card; UK tax guide links to the tables; sitemap 246 URLs.
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's

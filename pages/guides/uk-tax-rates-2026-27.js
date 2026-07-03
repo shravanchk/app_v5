@@ -64,7 +64,8 @@ export default function UKTaxRatesGuidePage() {
         Verify details with <a href="https://www.gov.uk/income-tax-rates" target="_blank" rel="noopener noreferrer">GOV.UK Income Tax rates</a>,{' '}
         <a href="https://www.gov.uk/scottish-income-tax" target="_blank" rel="noopener noreferrer">Scottish Income Tax</a>, and{' '}
         <a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027" target="_blank" rel="noopener noreferrer">HMRC payroll thresholds</a>.
-        Then use the <a href="/uk-income-tax-calculator">UK Income Tax Calculator</a> for an estimate.
+        Then use the <a href="/uk-income-tax-calculator">UK Income Tax Calculator</a> for an estimate, or look up
+        your salary directly in the <a href="/uk/take-home">UK take-home pay tables</a> (£20,000–£150,000).
       </p>
     </GuidePageLayout>
   );
