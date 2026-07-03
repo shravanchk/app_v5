@@ -8,12 +8,12 @@ const COLUMNS: Col[] = [
   {
     heading: 'Calculators',
     links: [
+      { label: 'US Paycheck', href: '/us-paycheck-calculator' },
+      { label: 'US Mortgage', href: '/us-mortgage-calculator' },
+      { label: 'Compound Interest', href: '/compound-interest-calculator' },
+      { label: 'European Salary', href: '/european-salary-calculator' },
+      { label: 'India Income Tax', href: '/income-tax-calculator' },
       { label: 'EMI / Loan', href: '/loan-calculator' },
-      { label: 'Income Tax', href: '/income-tax-calculator' },
-      { label: 'SIP', href: '/sip-calculator' },
-      { label: 'PPF', href: '/ppf-calculator' },
-      { label: 'GST', href: '/gst-calculator' },
-      { label: 'Capital Gains', href: '/capital-gains-calculator' },
     ],
   },
   {
@@ -29,18 +29,18 @@ const COLUMNS: Col[] = [
   {
     heading: 'Guides',
     links: [
-      { label: 'FY 2026-27 Tax Slabs', href: '/guides/india-income-tax-2026-27' },
-      { label: 'Tax on ₹12 Lakh Salary', href: '/guides/tax-on-12-lakh-salary-fy-2026-27' },
-      { label: 'Old vs New Regime', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' },
+      { label: 'UK Tax Rates 2026-27', href: '/guides/uk-tax-rates-2026-27' },
+      { label: 'Comparing Job Offers', href: '/guides/how-to-compare-job-offers' },
+      { label: 'India FY 2026-27 Tax Slabs', href: '/guides/india-income-tax-2026-27' },
       { label: 'How Much EMI Is Safe', href: '/guides/how-much-emi-is-safe' },
     ],
   },
   {
     heading: 'Regions',
     links: [
-      { label: 'India Calculators', href: '/india-calculators' },
       { label: 'US Calculators', href: '/us-calculators' },
       { label: 'UK & Europe', href: '/eu-calculators' },
+      { label: 'India Calculators', href: '/india-calculators' },
       { label: 'Health & Fitness', href: '/health-calculators' },
       { label: 'Everyday Tools', href: '/tools' },
     ],
