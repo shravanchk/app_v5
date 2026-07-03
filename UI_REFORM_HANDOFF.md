@@ -149,6 +149,27 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
 - Verified: tsc + build clean; math hand-checked (BMI 24.3, TDEE 2,283, Navy 18.3% male /
   28.8% female, next period +cycle days, due date LMP+280); light + dark previews; no console errors.
 
+### Session 5 — US Paycheck vertical (highest-RPM US cluster) — done (commit 9e24bfe)
+- **Engine** `utils/usPaycheckCalculations.js`: 2026 federal brackets + standard deductions
+  (single/married/HoH, Rev. Proc. 2025-32), FICA 2026 (SS 6.2% to $184,500 wage base; Medicare
+  1.45% + 0.9% additional), and all 50 states + DC (`US_STATES`: 9 no-tax, flat, and progressive
+  states; married brackets/deductions doubled as an approximation; MD includes avg 3.2% county
+  rate; local-tax notes for NYC/OH/PA). Pre-tax 401(k) reduces income taxes, not FICA.
+  `stateSlug`/`codeFromSlug` drive the programmatic routes.
+- **Calculator** `USPaycheckCalculator.js` → `/us-paycheck-calculator`: salary/state/filing
+  status/401(k)%, pay-frequency Tabs (annual/monthly/bi-weekly/weekly), animated "Where each
+  $100 goes" stacked bar, annual breakdown, PieBreakdownChart, ResultActions, HowToSection,
+  FAQ, software/FAQ/breadcrumb JSON-LD, CalculatorInfoPanel (IRS/SSA/Tax Foundation sources).
+- **Programmatic pages** `pages/paycheck/[state].js` (51 pages, `/paycheck/texas` etc.):
+  $75k hero + $40k–$150k take-home table (single, standard deduction), state tax summary,
+  state-specific FAQ schema, breadcrumb, prev/next links. Index `pages/paycheck/index.js`
+  lists all states with $75k net + NO-TAX badges and ItemList schema.
+- **Wiring**: US hub card (top slot), SearchModal, sitemap (+53 URLs), robots.txt.
+- Verified live in production: TX $75k → $61,593 net and CA $75k → $58,575 net (both match
+  hand calculations exactly), 9 NO-TAX badges, 51 index cards, all schemas present.
+- **Maintenance note**: state rates are 2025-26 published figures labeled as estimates —
+  revisit annually (federal figures are firm 2026).
+
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's
   `next build` hung on lint; locally you CAN run `npm run build` — do it before deploying.
