@@ -7,7 +7,7 @@ type CardProps = {
   href?: string;
   className?: string;
   interactive?: boolean;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
 };
 
 const surface =

@@ -4,7 +4,7 @@ import { cn } from './cn';
 type ContainerProps = {
   children: React.ReactNode;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
 };
 
 // Full-bleed: content spans the full viewport with comfortable edge padding.

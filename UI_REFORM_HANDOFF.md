@@ -232,6 +232,12 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   taper and moved the 45% band to £125,140 *taxable* (was 112,570 with no taper —
   interactive calculator overstated UK net above £100k). EU hub gained a
   "UK Take-Home by Salary" card; UK tax guide links to the tables; sitemap 246 URLs.
+- **Next 16 + React 19 upgrade** (branch `next16-upgrade`): next 16.2.10, react 19.2.7,
+  types bumped. Fixes: `keyof JSX.IntrinsicElements` → `keyof React.JSX.IntrinsicElements`
+  (Card/Container — React 19 removed the global JSX namespace); removed the `next lint`
+  script (command removed in 16); engines → `>=20.9`; Next auto-set `jsx: react-jsx` in
+  tsconfig. Turbopack is now the default dev/build bundler — output verified identical
+  (250 HTML pages, 246 sitemap URLs, no hidden prerendered content).
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's
