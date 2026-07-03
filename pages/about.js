@@ -9,8 +9,8 @@ export default function AboutPage() {
     >
         <p>
           Upaman is built as a decision-first financial tools platform. The focus is not just arithmetic output, but
-          helping users make high-impact decisions like choosing a tax regime, planning an EMI, comparing job offers,
-          and managing credit-card debt.
+          helping users make high-impact decisions like estimating take-home pay, planning a loan, growing long-term
+          savings, comparing job offers, and managing credit-card debt.
         </p>
         <h2 style={headingTwoStyle}>What We Optimize For</h2>
         <ul>
@@ -21,8 +21,10 @@ export default function AboutPage() {
         </ul>
         <h2 style={headingTwoStyle}>Product Scope</h2>
         <p>
-          Primary focus is India-oriented financial decisions. Additional US/EU calculators and utility tools are
-          provided as supporting modules, not the core product identity.
+          Upaman serves a global audience. Coverage includes US paycheck and tax tools, European salary and VAT
+          calculators, India-specific tax and loan planners, and universal finance and health calculators such as
+          compound interest, inflation, and calorie/BMI tools. Region-specific calculators state their assumptions
+          (tax year, jurisdiction, currency) so results stay verifiable.
         </p>
         <h2 style={headingTwoStyle}>Important Note</h2>
         <p>
