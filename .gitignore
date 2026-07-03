@@ -9,3 +9,4 @@ pnpm-debug.log*
 
 # Local Claude settings (personal)
 .claude/settings.local.json
+tsconfig.tsbuildinfo
