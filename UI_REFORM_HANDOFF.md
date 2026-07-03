@@ -220,6 +220,11 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   sections + EU hub table); SSR HTML stays visible (hidden state applied post-hydration
   only). `ResultStat` fades up on mount. Global prefers-reduced-motion kill switch at the
   end of `styles/globals.css`.
+- **Health cluster complete**: added ideal-weight (Devine/Robinson/Miller/Hamwi +
+  healthy-BMI range), macro (TDEE → goal → 4 splits, protein g/kg check), and
+  water-intake (35 ml/kg + exercise/climate) calculators. Math in
+  `utils/healthCalculations.js`; hub + RelatedHealthLinks now list 9 tools;
+  sitemap 220 URLs.
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's

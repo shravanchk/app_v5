@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Scale, Flame, HeartPulse, Ruler, CalendarHeart, Baby,
+  Scale, Flame, HeartPulse, Ruler, CalendarHeart, Baby, Weight, UtensilsCrossed, Droplets,
 } from 'lucide-react';
 import { CalcLayout } from './calculator/CalcLayout';
 
@@ -19,6 +19,9 @@ const cards = [
   { title: 'Calorie Calculator (TDEE)', description: 'Daily calorie needs with Mifflin-St Jeor, plus safe targets for losing or gaining weight.', icon: Flame, path: '/calorie-calculator', tint: T.amber, tags: ['TDEE', 'Goal targets', '5 activity levels'] },
   { title: 'BMR Calculator', description: 'Your resting calorie burn with two research equations and daily burn by activity level.', icon: HeartPulse, path: '/bmr-calculator', tint: T.rose, tags: ['Mifflin-St Jeor', 'Harris-Benedict', 'Resting burn'] },
   { title: 'Body Fat Calculator', description: 'Body-fat percentage from tape measurements with the US Navy method — no calipers needed.', icon: Ruler, path: '/body-fat-calculator', tint: T.emerald, tags: ['US Navy method', 'ACE categories', 'Lean mass'] },
+  { title: 'Ideal Weight Calculator', description: 'Your ideal body weight from the four standard formulas plus the healthy BMI range.', icon: Weight, path: '/ideal-weight-calculator', tint: T.violet, tags: ['4 formulas', 'Healthy BMI range', 'US & metric'] },
+  { title: 'Macro Calculator', description: 'Daily protein, carb, and fat gram targets from your TDEE, goal, and preferred split.', icon: UtensilsCrossed, path: '/macro-calculator', tint: T.amber, tags: ['4 splits', 'Protein per kg', 'Goal-based'] },
+  { title: 'Water Intake Calculator', description: 'How much water to drink per day from your weight, exercise, and climate.', icon: Droplets, path: '/water-intake-calculator', tint: T.sky, tags: ['Liters, oz & cups', 'Exercise adjusted', 'Climate aware'] },
   { title: 'Period Calculator', description: 'Predict your next three periods, fertile window, and ovulation day on a cycle wheel.', icon: CalendarHeart, path: '/period-calculator', tint: T.violet, tags: ['Next 3 cycles', 'Fertile window', 'Ovulation'] },
   { title: 'Pregnancy Due Date Calculator', description: "Estimate your due date with Naegele's rule, gestational age today, and trimester milestones.", icon: Baby, path: '/pregnancy-due-date-calculator', tint: T.sky, tags: ["Naegele's rule", 'Trimester tracker', 'Milestones'] },
 ];

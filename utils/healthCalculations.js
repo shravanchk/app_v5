@@ -101,6 +101,54 @@ export const bodyFatCategory = (percent, sex) => {
   return bands.find((b) => percent < b.max) || bands[bands.length - 1];
 };
 
+// ---------------------------------------------------------------- Ideal weight
+// The four standard height-based estimates. Each is (base kg at 5 ft) +
+// (kg per inch over 5 ft); results below 5 ft fall back to the base value.
+export const IDEAL_WEIGHT_FORMULAS = [
+  { id: 'devine', label: 'Devine (1974)', note: 'The classic — still used for drug dosing.', male: { base: 50, perInch: 2.3 }, female: { base: 45.5, perInch: 2.3 } },
+  { id: 'robinson', label: 'Robinson (1983)', note: 'A refinement of Devine.', male: { base: 52, perInch: 1.9 }, female: { base: 49, perInch: 1.7 } },
+  { id: 'miller', label: 'Miller (1983)', note: 'Tends to run a little higher for short heights.', male: { base: 56.2, perInch: 1.41 }, female: { base: 53.1, perInch: 1.36 } },
+  { id: 'hamwi', label: 'Hamwi (1964)', note: 'Common in clinical nutrition.', male: { base: 48, perInch: 2.7 }, female: { base: 45.5, perInch: 2.2 } }
+];
+
+export const idealWeightsKg = ({ sex, heightCm }) => {
+  const inchesOver5Ft = Math.max(0, heightCm / CM_PER_IN - 60);
+  return IDEAL_WEIGHT_FORMULAS.map((f) => {
+    const p = f[sex] || f.male;
+    return { id: f.id, label: f.label, note: f.note, kg: p.base + p.perInch * inchesOver5Ft };
+  });
+};
+
+// ---------------------------------------------------------------- Macros
+// Calories per gram: protein 4, carbs 4, fat 9.
+export const MACRO_PRESETS = [
+  { id: 'balanced', label: 'Balanced', protein: 30, carbs: 40, fat: 30 },
+  { id: 'lowcarb', label: 'Low carb', protein: 40, carbs: 20, fat: 40 },
+  { id: 'highprotein', label: 'High protein', protein: 40, carbs: 30, fat: 30 },
+  { id: 'keto', label: 'Keto-style', protein: 30, carbs: 10, fat: 60 }
+];
+
+export const macroGrams = (calories, preset) => ({
+  protein: (calories * preset.protein) / 100 / 4,
+  carbs: (calories * preset.carbs) / 100 / 4,
+  fat: (calories * preset.fat) / 100 / 9
+});
+
+// ---------------------------------------------------------------- Water intake
+// Baseline ≈ 35 ml/kg body weight (common dietetic rule of thumb), plus
+// ~12 ml/kg-adjusted 350 ml per 30 min of exercise, plus ~500 ml in hot
+// climates. This is drinking-water guidance, not total water (food adds ~20%).
+export const WATER_CLIMATES = [
+  { value: 'temperate', label: 'Temperate / indoors', extraMl: 0 },
+  { value: 'hot', label: 'Hot or humid climate', extraMl: 500 }
+];
+
+export const waterIntakeMl = ({ weightKg, exerciseMinPerDay = 0, climate = 'temperate' }) => {
+  if (!weightKg || weightKg <= 0) return null;
+  const climateExtra = (WATER_CLIMATES.find((c) => c.value === climate) || WATER_CLIMATES[0]).extraMl;
+  return weightKg * 35 + (exerciseMinPerDay / 30) * 350 + climateExtra;
+};
+
 // ---------------------------------------------------------------- Cycle / pregnancy dates
 const DAY_MS = 24 * 60 * 60 * 1000;
 export const addDays = (date, days) => new Date(date.getTime() + days * DAY_MS);

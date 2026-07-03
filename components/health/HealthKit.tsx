@@ -226,6 +226,9 @@ const HEALTH_TOOLS = [
   { label: 'Calorie Calculator (TDEE)', href: '/calorie-calculator' },
   { label: 'BMR Calculator', href: '/bmr-calculator' },
   { label: 'Body Fat Calculator', href: '/body-fat-calculator' },
+  { label: 'Ideal Weight Calculator', href: '/ideal-weight-calculator' },
+  { label: 'Macro Calculator', href: '/macro-calculator' },
+  { label: 'Water Intake Calculator', href: '/water-intake-calculator' },
   { label: 'Period Calculator', href: '/period-calculator' },
   { label: 'Pregnancy Due Date Calculator', href: '/pregnancy-due-date-calculator' }
 ];
