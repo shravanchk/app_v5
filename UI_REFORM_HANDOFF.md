@@ -195,6 +195,10 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   multiple JSX children (the inflation title silently truncated until fixed).
 - Verified: tsc + build clean (186 pages); preview interactions tested on all four
   (mode switch, presets, stepper, swap); only pre-existing AdSense console warning.
+- **Hero carousel** (`components/home/DashboardPreview.tsx`): now 5 cards — compound
+  interest (US, first slide → prerendered in index.html) and calorie/TDEE added ahead of
+  EMI/SIP/tax. Card math is inlined at module scope mirroring the utils so hero values
+  match each calculator's default inputs exactly ($144,573; 2,283 kcal maintain).
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's

@@ -2,17 +2,26 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   IndianRupee,
+  DollarSign,
   Percent,
   CalendarClock,
   TrendingUp,
   Wallet,
   Receipt,
+  PersonStanding,
+  Ruler,
+  Weight,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
 
 const inr0 = (n: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(Math.round(n));
+
+const usd0 = (n: number) =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Math.round(n));
+
+const kcal0 = (n: number) => `${Math.round(n).toLocaleString('en-US')} kcal`;
 
 // ---------- finance helpers (static homepage visuals only) ----------
 function emiBreakup(principal: number, annualRate: number, years: number) {
@@ -29,6 +38,30 @@ function sipBreakup(monthly: number, annualRate: number, years: number) {
   const corpus = monthly * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
   const invested = monthly * n;
   return { corpus, invested, gains: corpus - invested };
+}
+
+// Mirrors utils/quickCalculations computeCompoundGrowth (monthly compounding,
+// contributions at month-end) so the hero matches the calculator's defaults.
+function compoundBreakup(principal: number, monthly: number, annualRatePct: number, years: number) {
+  const r = annualRatePct / 100 / 12;
+  let balance = principal;
+  const yearly: number[] = [principal];
+  for (let m = 1; m <= years * 12; m++) {
+    balance = balance * (1 + r) + monthly;
+    if (m % 12 === 0) yearly.push(balance);
+  }
+  const invested = principal + monthly * years * 12;
+  return { balance, invested, interest: balance - invested, yearly };
+}
+
+// Mirrors utils/healthCalculations bmrMifflin + tdeeFromBmr for the calorie
+// calculator's default profile (30 yr male, 5'8", 160 lb, lightly active).
+function calorieBreakup() {
+  const weightKg = 160 * 0.45359237;
+  const heightCm = 68 * 2.54;
+  const bmr = 10 * weightKg + 6.25 * heightCm - 5 * 30 + 5;
+  const tdee = bmr * 1.375;
+  return { bmr, tdee, activityBurn: tdee - bmr };
 }
 
 // India new-regime estimate (FY 2025-26) with standard deduction + 4% cess.
@@ -76,8 +109,56 @@ const iconCls = 'h-4 w-4 text-brand-600 dark:text-brand-300';
 const EMI = emiBreakup(5000000, 8.5, 20);
 const SIP = sipBreakup(25000, 12, 15);
 const TAX = newRegimeTax(1800000);
+const COMPOUND = compoundBreakup(10000, 200, 7, 20);
+const CAL = calorieBreakup();
 
 const CARDS: CardConfig[] = [
+  {
+    id: 'compound',
+    title: 'Compound Interest Calculator',
+    href: '/compound-interest-calculator',
+    valueLabel: 'Balance after 20 years',
+    value: usd0(COMPOUND.balance),
+    chips: [
+      { icon: <DollarSign className={iconCls} strokeWidth={2} />, label: 'Initial', value: usd0(10000) },
+      { icon: <Wallet className={iconCls} strokeWidth={2} />, label: 'Monthly', value: usd0(200) },
+      { icon: <TrendingUp className={iconCls} strokeWidth={2} />, label: 'Return', value: '7% p.a.' },
+    ],
+    chart: {
+      kind: 'area',
+      points: [0, 3, 6, 9, 12, 15, 18, 20].map((y) => COMPOUND.yearly[y]),
+      years: ['2026', '2031', '2036', '2041', '2046'],
+    },
+    stats: [
+      { label: 'Total invested', value: usd0(COMPOUND.invested) },
+      { label: 'Interest earned', value: usd0(COMPOUND.interest) },
+      { label: 'Growth', value: `${(COMPOUND.balance / COMPOUND.invested).toFixed(1)}×` },
+    ],
+  },
+  {
+    id: 'calories',
+    title: 'Calorie Calculator',
+    href: '/calorie-calculator',
+    valueLabel: 'Daily calories to maintain weight',
+    value: kcal0(CAL.tdee),
+    chips: [
+      { icon: <PersonStanding className={iconCls} strokeWidth={2} />, label: 'Profile', value: '30 yr male' },
+      { icon: <Ruler className={iconCls} strokeWidth={2} />, label: 'Height', value: '5′8″' },
+      { icon: <Weight className={iconCls} strokeWidth={2} />, label: 'Weight', value: '160 lb' },
+    ],
+    chart: {
+      kind: 'split',
+      parts: [
+        { label: 'Resting burn (BMR)', value: CAL.bmr, color: '#10b981' },
+        { label: 'Activity burn', value: CAL.activityBurn, color: '#f59e0b' },
+      ],
+    },
+    stats: [
+      { label: 'Lose 1 lb/wk', value: kcal0(CAL.tdee - 500) },
+      { label: 'Maintain', value: kcal0(CAL.tdee) },
+      { label: 'Gain 1 lb/wk', value: kcal0(CAL.tdee + 500) },
+    ],
+  },
   {
     id: 'emi',
     title: 'Home Loan EMI Calculator',
