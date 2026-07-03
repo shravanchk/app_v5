@@ -329,3 +329,14 @@ html, body {
 .dark-theme article summary span {
   color: #cbd5e1;
 }
+
+/* Global reduced-motion kill switch: collapses every animation and transition
+   (carousel, reveals, decorative loops) for users who opt out of motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

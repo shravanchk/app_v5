@@ -4,6 +4,7 @@ import {
   BadgePercent, Banknote, Landmark, Train,
 } from 'lucide-react';
 import { CalcLayout } from './calculator/CalcLayout';
+import Reveal from './ui/Reveal';
 import { computeEuropeanSalary } from '../utils/europeanSalaryCalculations';
 
 const T = {
@@ -87,6 +88,7 @@ const EUCalculatorsHub = () => {
         ))}
       </div>
 
+      <Reveal>
       <section className="mt-12">
         <h2 className="font-display text-xl font-bold tracking-tight text-ink dark:text-white">
           Who keeps most of their salary in Europe?
@@ -129,6 +131,7 @@ const EUCalculatorsHub = () => {
           Cost of living differs; a higher keep-rate is not automatically a higher standard of living.
         </p>
       </section>
+      </Reveal>
     </CalcLayout>
   );
 };

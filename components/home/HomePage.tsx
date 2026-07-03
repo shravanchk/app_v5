@@ -7,6 +7,7 @@ import CalculatorGrid from './CalculatorGrid';
 import RegionSection from './RegionSection';
 import GuideCards from './GuideCards';
 import TrustSection from './TrustSection';
+import Reveal from '../ui/Reveal';
 
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -47,12 +48,12 @@ export default function HomePage() {
       </Head>
       <div className="bg-white font-sans text-ink dark:bg-slate-900">
         <Hero />
-        <StartHere />
-        <WorkflowCards />
-        <CalculatorGrid />
-        <RegionSection />
-        <GuideCards />
-        <TrustSection />
+        <Reveal><StartHere /></Reveal>
+        <Reveal><WorkflowCards /></Reveal>
+        <Reveal><CalculatorGrid /></Reveal>
+        <Reveal><RegionSection /></Reveal>
+        <Reveal><GuideCards /></Reveal>
+        <Reveal><TrustSection /></Reveal>
       </div>
     </>
   );

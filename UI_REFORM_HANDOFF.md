@@ -216,6 +216,10 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   table (8 countries, typical gross in local currency, sorted by keep-rate). While
   extracting, fixed stale UK rates: employee NI 12% → 8%, additional-rate threshold
   £150k → £125,140 (now consistent with the UK tax guide).
+- **Animations**: `components/ui/Reveal.tsx` scroll-reveals below-fold sections (homepage
+  sections + EU hub table); SSR HTML stays visible (hidden state applied post-hydration
+  only). `ResultStat` fades up on mount. Global prefers-reduced-motion kill switch at the
+  end of `styles/globals.css`.
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's

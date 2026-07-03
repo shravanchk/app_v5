@@ -30,7 +30,7 @@ type ResultStatProps = { label: string; value: string; emphasis?: boolean; tone?
 
 export function ResultStat({ label, value, emphasis, tone = 'default' }: ResultStatProps) {
   return (
-    <div className={cn('rounded-xl border p-4', emphasis ? 'border-brand-200 bg-brand-50/60 dark:border-brand-800/60 dark:bg-brand-900/20' : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800/60')}>
+    <div className={cn('animate-fade-up rounded-xl border p-4', emphasis ? 'border-brand-200 bg-brand-50/60 dark:border-brand-800/60 dark:bg-brand-900/20' : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800/60')}>
       <p className="text-xs font-medium uppercase tracking-wide text-ink-muted dark:text-slate-400">{label}</p>
       <p className={cn('mt-1 font-display text-xl font-bold tracking-tight', tone === 'positive' ? 'text-emerald-600 dark:text-emerald-400' : 'text-ink dark:text-white')}>{value}</p>
     </div>
