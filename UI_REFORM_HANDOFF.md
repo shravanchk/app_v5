@@ -170,6 +170,32 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
 - **Maintenance note**: state rates are 2025-26 published figures labeled as estimates —
   revisit annually (federal figures are firm 2026).
 
+### Session 6 — Quick-win calculator pack (top search-volume keywords) — done
+- **Engine** `utils/quickCalculations.js`: compound growth (monthly simulation at the
+  equivalent monthly rate so contributions work with any of 5 compounding frequencies),
+  percentage helpers (percentOf / whatPercent / percentChange / applyPercent), tip split
+  with per-person round-up, and US CPI-U annual averages 1913–2025 (`adjustForInflation`
+  works both directions). All engines verified against closed-form results to the cent.
+- **`/compound-interest-calculator`**: deposit + monthly contribution + rate + years +
+  frequency; animated stacked growth bars (deposit/contributions/interest per year),
+  pie composition, yearly schedule table, Rule-of-72 callout, ResultActions.
+- **`/inflation-calculator`**: any two years 1913–2025, swap button, animated value bars,
+  $100-by-decade milestones, buying-power stat. BLS/Fed sources. **Maintenance: add the
+  new CPI annual average each January** (currently 2025 = 322.3).
+- **`/percentage-calculator`**: 4 modes via Tabs (X% of Y, X is what % of Y, % change,
+  increase/decrease), mode-aware field labels, sentence + formula + animated percent ring.
+- **`/tip-calculator`**: preset % buttons (10–25) + custom, people stepper, per-person
+  round-up, animated bill-vs-tip bar, US tipping guide table (Emily Post / Pew sources).
+- All four: full SEO kit (title/desc/keywords/canonical/OG/Twitter + SoftwareApplication +
+  FAQPage + HowTo + BreadcrumbList = 4 JSON-LD blocks each), FAQ details, CalculatorInfoPanel.
+- **Wiring**: SearchModal (+4), ToolsHub cards (percentage, tip — top slots),
+  USCalculatorsHub cards (compound interest, inflation), hub page meta refreshed,
+  sitemap (189 URLs), robots.txt.
+- Gotcha fixed: Next.js `<title>` must be a single string — use a template literal, not
+  multiple JSX children (the inflation title silently truncated until fixed).
+- Verified: tsc + build clean (186 pages); preview interactions tested on all four
+  (mode switch, presets, stepper, swap); only pre-existing AdSense console warning.
+
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's
   `next build` hung on lint; locally you CAN run `npm run build` — do it before deploying.

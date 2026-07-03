@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  CalendarDays, FlaskConical, BarChart3, Ruler, Braces,
+  CalendarDays, FlaskConical, BarChart3, Ruler, Braces, Percent, HandCoins,
 } from 'lucide-react';
 import { CalcLayout } from './calculator/CalcLayout';
 
@@ -14,6 +14,8 @@ const T = {
 };
 
 const cards = [
+  { title: 'Percentage Calculator', description: 'Percent of a number, share of a whole, percent change, and increase/decrease — with formulas.', icon: Percent, path: '/percentage-calculator', tint: T.brand, tags: ['% of a number', '% change', 'Reverse %'] },
+  { title: 'Tip Calculator', description: 'Tip, total, and per-person share with one-tap percents, bill splitting, and round-up.', icon: HandCoins, path: '/tip-calculator', tint: T.emerald, tags: ['Split the bill', '10–25% presets', 'US tipping guide'] },
   { title: 'Age Calculator', description: 'Find exact age in years, months, and days between any two dates.', icon: CalendarDays, path: '/age-calculator', tint: T.brand, tags: ['Years/months/days', 'Any two dates', 'Next birthday'] },
   { title: 'Scientific Calculator', description: 'Trigonometry, logarithms, powers, and constants for everyday and study use.', icon: FlaskConical, path: '/scientific-calculator', tint: T.violet, tags: ['Trig & log', 'Powers/roots', 'Constants'] },
   { title: 'Statistics Calculator', description: 'Compute mean, median, mode, variance, and standard deviation from a data set.', icon: BarChart3, path: '/statistics-calculator', tint: T.emerald, tags: ['Mean/median/mode', 'Variance', 'Std deviation'] },

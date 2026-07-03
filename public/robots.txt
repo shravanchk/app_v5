@@ -87,6 +87,10 @@ Allow: /period-calculator
 Allow: /pregnancy-due-date-calculator
 Allow: /us-paycheck-calculator
 Allow: /paycheck
+Allow: /compound-interest-calculator
+Allow: /inflation-calculator
+Allow: /percentage-calculator
+Allow: /tip-calculator
 
 # Known non-content or legacy areas
 Disallow: /build/

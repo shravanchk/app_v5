@@ -5,14 +5,14 @@ export default function RoutePage() {
   return (
     <>
       <Head>
-        <title>Everyday Tools | Age, Scientific, Statistics, Unit & JSON | Upaman</title>
+        <title>Everyday Tools | Percentage, Tip, Age, Unit & JSON | Upaman</title>
         <meta
           name="description"
-          content="Free everyday tools on Upaman: age calculator, scientific calculator, statistics calculator, unit converter, and JSON formatter. No sign-up required."
+          content="Free everyday tools on Upaman: percentage calculator, tip calculator with bill split, age calculator, scientific and statistics calculators, unit converter, and JSON formatter."
         />
         <meta
           name="keywords"
-          content="age calculator, scientific calculator, statistics calculator, unit converter, JSON formatter, online tools"
+          content="percentage calculator, tip calculator, age calculator, scientific calculator, statistics calculator, unit converter, JSON formatter, online tools"
         />
         <link rel="canonical" href="https://upaman.com/tools" />
         <meta property="og:title" content="Everyday Tools | Upaman" />
