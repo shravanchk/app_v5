@@ -146,7 +146,9 @@ export default function StatePaycheckPage({ code, name, slug, type, taxSummary, 
                   </tr>
                   {rows.map((r) => (
                     <tr key={r.salary}>
-                      <td className={`${tdCls} font-semibold text-ink dark:text-white`}>{usd(r.salary)}</td>
+                      <td className={`${tdCls} font-semibold`}>
+                        <a href={`/after-taxes/${r.salary}`} className={linkCls}>{usd(r.salary)}</a>
+                      </td>
                       <td className={`${tdCls} font-semibold text-emerald-700 dark:text-emerald-400`}>{usd(r.net)}</td>
                       <td className={tdCls}>{usd(r.monthly)}</td>
                       <td className={tdCls}>{usd(r.biweekly)}</td>
@@ -162,7 +164,8 @@ export default function StatePaycheckPage({ code, name, slug, type, taxSummary, 
               <strong className="text-ink dark:text-white">Get your exact number:</strong> the{' '}
               <a href="/us-paycheck-calculator" className={linkCls}>US Paycheck Calculator</a> adds filing status,
               401(k) contributions, and weekly/bi-weekly views. Or compare{' '}
-              <a href="/paycheck" className={linkCls}>take-home pay in every state</a>.
+              <a href="/paycheck" className={linkCls}>take-home pay in every state</a> and{' '}
+              <a href="/after-taxes" className={linkCls}>by salary level</a>.
             </div>
 
             <p className="mt-6 flex justify-between text-[0.95rem]">

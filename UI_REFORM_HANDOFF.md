@@ -199,6 +199,13 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   interest (US, first slide → prerendered in index.html) and calorie/TDEE added ahead of
   EMI/SIP/tax. Card math is inlined at module scope mirroring the utils so hero values
   match each calculator's default inputs exactly ($144,573; 2,283 kcal maintain).
+- **Global repositioning**: About page Product Scope rewritten (global audience, was
+  India-first); footer Calculators/Guides/Regions columns now lead with US/EU links.
+- **Salary-level pages** (`/after-taxes`): 25 programmatic pages ($30k–$250k, list in
+  `utils/salaryLevels.js`) targeting "$X after taxes" queries. Each has a 51-state
+  take-home table linking every `/paycheck/[state]` page; state pages link back from
+  their salary cells. Index + hub card on /us-calculators; sitemap now 215 URLs
+  (keep `utils/salaryLevels.js`, sitemap, and state-page SALARIES row set in sync).
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's

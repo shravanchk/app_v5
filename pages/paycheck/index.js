@@ -58,7 +58,8 @@ export default function PaycheckIndex({ states }) {
             <p className="mt-3 max-w-2xl text-[1.02rem] leading-relaxed text-ink-soft dark:text-slate-300">
               The figure on each card is the estimated annual take-home for a <strong>$75,000 salary</strong> (single
               filer, standard deduction) after federal income tax, Social Security, Medicare, and state tax. Pick your
-              state for a full $40k–$150k table, or use the{' '}
+              state for a full $40k–$150k table, browse{' '}
+              <a href="/after-taxes" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">take-home pay by salary level</a>, or use the{' '}
               <a href="/us-paycheck-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">US Paycheck Calculator</a>{' '}
               for exact numbers.
             </p>

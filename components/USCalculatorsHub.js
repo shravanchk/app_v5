@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Landmark, RefreshCcw, Car, PiggyBank, Wallet, CreditCard, BadgeDollarSign, TrendingUp, Banknote,
+  Landmark, RefreshCcw, Car, PiggyBank, Wallet, CreditCard, BadgeDollarSign, TrendingUp, Banknote, Table2,
 } from 'lucide-react';
 import { CalcLayout } from './calculator/CalcLayout';
 
@@ -16,6 +16,7 @@ const T = {
 
 const cards = [
   { title: 'US Paycheck Calculator', description: 'Take-home pay for 2026 after federal tax, Social Security, Medicare, and state tax — all 50 states + D.C.', icon: BadgeDollarSign, path: '/us-paycheck-calculator', tint: T.emerald, tags: ['2026 tax year', 'All 50 states', 'Take-home pay'] },
+  { title: 'Salary After Taxes', description: 'How much you keep from $30k–$250k salaries in 2026, with state-by-state take-home tables for every level.', icon: Table2, path: '/after-taxes', tint: T.sky, tags: ['$30k–$250k', '50-state tables', '2026 tax year'] },
   { title: 'US Mortgage Calculator', description: 'Estimate your monthly payment with principal, interest, property tax, insurance, HOA, and PMI.', icon: Landmark, path: '/us-mortgage-calculator', tint: T.brand, tags: ['PITI + PMI', 'Affordability ratio', 'Interest estimate'] },
   { title: 'US Refinance Break-even Calculator', description: 'Compare your current mortgage against a refinance offer and estimate the break-even point.', icon: RefreshCcw, path: '/us-refinance-calculator', tint: T.violet, tags: ['Break-even', 'Cost recovery', 'Savings estimate'] },
   { title: 'US Auto Loan Calculator', description: 'Calculate the monthly car payment using sales tax, trade-in value, fees, APR, and term.', icon: Car, path: '/us-auto-loan-calculator', tint: T.sky, tags: ['Car financing', 'APR impact', 'Total cost'] },

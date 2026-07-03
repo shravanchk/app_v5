@@ -230,7 +230,8 @@ const USPaycheckCalculator = () => {
                   <Link href={`/paycheck/${stateSlug(stateCode)}`} className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">
                     take-home pay in {st.name}
                   </Link>{' '}
-                  or browse <Link href="/paycheck" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">all states</Link>.
+                  browse <Link href="/paycheck" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">all states</Link>, or
+                  compare <Link href="/after-taxes" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">salary levels after taxes</Link>.
                 </p>
               </>
             ) : (
