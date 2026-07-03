@@ -238,6 +238,12 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   script (command removed in 16); engines → `>=20.9`; Next auto-set `jsx: react-jsx` in
   tsconfig. Turbopack is now the default dev/build bundler — output verified identical
   (250 HTML pages, 246 sitemap URLs, no hidden prerendered content).
+- **Components reorg** (branch `components-reorg`): 58 flat files moved into section
+  folders — `us/`, `europe/`, `india/`, `health/`, `tools/`, `finance/`
+  (compound-interest + inflation), `workflow/` (joins WorkflowKit). Shared pieces
+  (AdSenseAd, ResultActions, Footer, CalculatorInfoPanel, etc.) stay at the root.
+  Pure git-mv renames + import rewrites, no logic changes; legacy unused
+  `components/Main.js` deleted. New components go in their section folder.
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's

@@ -1,4 +1,4 @@
-import PageComponent from '../components/SIPCalculator';
+import PageComponent from '../components/india/SIPCalculator';
 
 export default function RoutePage() {
   return <PageComponent />;

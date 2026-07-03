@@ -1,4 +1,4 @@
-import PageComponent from '../components/PPFCalculator';
+import PageComponent from '../components/india/PPFCalculator';
 
 export default function RoutePage() {
   return <PageComponent />;

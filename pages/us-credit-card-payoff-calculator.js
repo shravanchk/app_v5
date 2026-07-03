@@ -1,4 +1,4 @@
-import PageComponent from '../components/USCreditCardPayoffCalculator';
+import PageComponent from '../components/us/USCreditCardPayoffCalculator';
 
 export default function RoutePage() {
   return <PageComponent />;

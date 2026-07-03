@@ -1,4 +1,4 @@
-import PageComponent from '../components/CreditCardAnalyzer';
+import PageComponent from '../components/india/CreditCardAnalyzer';
 
 export default function RoutePage() {
   return <PageComponent />;

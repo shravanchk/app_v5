@@ -1,4 +1,4 @@
-import PageComponent from '../components/ScientificCalculator';
+import PageComponent from '../components/tools/ScientificCalculator';
 
 export default function RoutePage() {
   return <PageComponent />;

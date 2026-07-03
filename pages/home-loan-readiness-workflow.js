@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PageComponent from '../components/HomeLoanReadinessWorkflow';
+import PageComponent from '../components/workflow/HomeLoanReadinessWorkflow';
 
 export default function RoutePage() {
   return (

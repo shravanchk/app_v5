@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PageComponent from '../components/JobOfferWorkflow';
+import PageComponent from '../components/workflow/JobOfferWorkflow';
 
 export default function RoutePage() {
   return (

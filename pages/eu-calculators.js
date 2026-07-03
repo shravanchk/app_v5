@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PageComponent from '../components/EUCalculatorsHub';
+import PageComponent from '../components/europe/EUCalculatorsHub';
 
 export default function RoutePage() {
   return (

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PageComponent from '../components/RentVsBuyWorkflow';
+import PageComponent from '../components/workflow/RentVsBuyWorkflow';
 
 export default function RoutePage() {
   return (

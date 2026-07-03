@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PageComponent from '../components/HealthCalculatorsHub';
+import PageComponent from '../components/health/HealthCalculatorsHub';
 
 const TOOLS = [
   { name: 'BMI Calculator', path: '/bmi-calculator' },

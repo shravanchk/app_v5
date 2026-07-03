@@ -1,4 +1,4 @@
-import PageComponent from '../components/GratuityCalculator';
+import PageComponent from '../components/india/GratuityCalculator';
 
 export default function RoutePage() {
   return <PageComponent />;

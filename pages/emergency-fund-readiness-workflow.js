@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PageComponent from '../components/EmergencyFundReadinessWorkflow';
+import PageComponent from '../components/workflow/EmergencyFundReadinessWorkflow';
 
 export default function RoutePage() {
   return (

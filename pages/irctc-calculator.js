@@ -1,4 +1,4 @@
-import PageComponent from '../components/IRCTCCalculator';
+import PageComponent from '../components/india/IRCTCCalculator';
 
 export default function RoutePage() {
   return <PageComponent />;

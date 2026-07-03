@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PageComponent from '../components/CarOwnershipCostWorkflow';
+import PageComponent from '../components/workflow/CarOwnershipCostWorkflow';
 
 export default function RoutePage() {
   return (

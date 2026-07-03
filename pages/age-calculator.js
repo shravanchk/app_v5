@@ -1,4 +1,4 @@
-import PageComponent from '../components/AgeCalculator';
+import PageComponent from '../components/tools/AgeCalculator';
 
 export default function RoutePage() {
   return <PageComponent />;

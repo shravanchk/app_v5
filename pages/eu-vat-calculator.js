@@ -1,4 +1,4 @@
-import PageComponent from '../components/VATCalculator';
+import PageComponent from '../components/europe/VATCalculator';
 
 export default function RoutePage() {
   return <PageComponent />;

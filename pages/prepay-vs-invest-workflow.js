@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PageComponent from '../components/PrepayVsInvestWorkflow';
+import PageComponent from '../components/workflow/PrepayVsInvestWorkflow';
 
 export default function RoutePage() {
   return (

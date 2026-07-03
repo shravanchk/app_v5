@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PageComponent from '../components/ToolsHub';
+import PageComponent from '../components/tools/ToolsHub';
 
 export default function RoutePage() {
   return (
