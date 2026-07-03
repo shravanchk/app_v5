@@ -173,8 +173,9 @@ export default function SalaryAfterTaxesPage({ salary, rows, best, lowest, feder
               <strong className="text-ink dark:text-white">Get your exact number:</strong> the{' '}
               <a href="/us-paycheck-calculator" className={linkCls}>US Paycheck Calculator</a> adds filing status,
               401(k) contributions, and weekly/bi-weekly views. Or browse{' '}
-              <a href="/after-taxes" className={linkCls}>other salary levels</a> and{' '}
-              <a href="/paycheck" className={linkCls}>take-home pay by state</a>.
+              <a href="/after-taxes" className={linkCls}>other salary levels</a>,{' '}
+              <a href="/paycheck" className={linkCls}>take-home pay by state</a>, or learn{' '}
+              <a href="/guides/how-to-read-your-paycheck" className={linkCls}>how every paycheck deduction works</a>.
             </div>
 
             <p className="mt-6 flex justify-between text-[0.95rem]">

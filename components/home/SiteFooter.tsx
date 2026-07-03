@@ -29,10 +29,10 @@ const COLUMNS: Col[] = [
   {
     heading: 'Guides',
     links: [
+      { label: 'Read Your US Paycheck', href: '/guides/how-to-read-your-paycheck' },
+      { label: 'Traditional vs Roth 401(k)', href: '/guides/traditional-vs-roth-401k' },
       { label: 'UK Tax Rates 2026-27', href: '/guides/uk-tax-rates-2026-27' },
-      { label: 'Comparing Job Offers', href: '/guides/how-to-compare-job-offers' },
       { label: 'India FY 2026-27 Tax Slabs', href: '/guides/india-income-tax-2026-27' },
-      { label: 'How Much EMI Is Safe', href: '/guides/how-much-emi-is-safe' },
     ],
   },
   {

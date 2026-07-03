@@ -6,6 +6,14 @@ import Card from '../../components/ui/Card';
 
 const GROUPS = [
   {
+    heading: 'United States',
+    guides: [
+      { title: 'How to Read Your US Paycheck', desc: 'Every pay-stub line explained: 2026 brackets, FICA, and pre-tax deductions.', href: '/guides/how-to-read-your-paycheck' },
+      { title: 'Traditional vs Roth 401(k)', desc: 'How each is taxed, 2026 limits, and a simple rule for choosing.', href: '/guides/traditional-vs-roth-401k' },
+      { title: 'Salary After Taxes ($30k–$250k)', desc: 'Pick any salary for a 50-state take-home table.', href: '/after-taxes' },
+    ]
+  },
+  {
     heading: 'India tax & salary',
     guides: [
       { title: 'India Income Tax Slabs FY 2026-27', desc: 'New and old regime slabs, rates, and how to compare them.', href: '/guides/india-income-tax-2026-27' },
@@ -51,7 +59,7 @@ export default function GuidesIndex() {
     <>
       <Head>
         <title>Financial Guides | Tax, Salary, Loans & Money Decisions | Upaman</title>
-        <meta name="description" content="Practical, plain-English guides on Indian income tax, salary and CTC, EMI affordability, job offers, car ownership cost, and UK tax — to use alongside Upaman's calculators." />
+        <meta name="description" content="Practical, plain-English guides on US paychecks and 401(k)s, UK tax, Indian income tax and CTC, EMI affordability, job offers, and car ownership cost — to use alongside Upaman's calculators." />
         <link rel="canonical" href="https://upaman.com/guides" />
         <meta property="og:title" content="Financial Guides | Upaman" />
         <meta property="og:description" content="Plain-English guides on tax, salary, loans, and money decisions." />

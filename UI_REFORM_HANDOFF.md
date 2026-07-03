@@ -206,6 +206,10 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   take-home table linking every `/paycheck/[state]` page; state pages link back from
   their salary cells. Index + hub card on /us-calculators; sitemap now 215 URLs
   (keep `utils/salaryLevels.js`, sitemap, and state-page SALARIES row set in sync).
+- **US guides**: `how-to-read-your-paycheck` (2026 brackets/FICA, worked $70k example that
+  matches the engine) and `traditional-vs-roth-401k` (2026 limits: $24,500 deferral).
+  Guides index now leads with a "United States" group; footer Guides swapped to
+  US/US/UK/India. Sitemap 217 URLs.
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's
