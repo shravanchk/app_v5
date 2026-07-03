@@ -210,6 +210,12 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   matches the engine) and `traditional-vs-roth-401k` (2026 limits: $24,500 deferral).
   Guides index now leads with a "United States" group; footer Guides swapped to
   US/US/UK/India. Sitemap 217 URLs.
+- **EU hub comparison table**: European salary engine extracted from the calculator
+  component into `utils/europeanSalaryCalculations.js` (verbatim, component now imports
+  it) so the EU hub renders a build-time "Who keeps most of their salary in Europe?"
+  table (8 countries, typical gross in local currency, sorted by keep-rate). While
+  extracting, fixed stale UK rates: employee NI 12% → 8%, additional-rate threshold
+  £150k → £125,140 (now consistent with the UK tax guide).
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's
