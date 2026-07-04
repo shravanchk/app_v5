@@ -254,6 +254,13 @@ with **animated explanatory visuals** and US/metric unit toggles (imperial defau
   contributions). DE €60k net: €29,542 → **€37,551** (63% keep, EU hub table resorted).
   New programmatic `/germany/take-home/[salary]` (25 levels, €25k–€150k, from
   `DE_SALARY_LEVELS`) + index; EU hub card; sitemap 272 URLs.
+- **Homepage refinements (2026-07-04)**: hero carousel's calorie card replaced with a
+  US Paycheck card ($85k/Texas/single, mirrors the 2026 engine — verified identical to
+  `computePaycheck`); "By region" section moved up to 2nd (after Start Here); search
+  rebuilt — every entry has hidden `k` synonyms ("date of birth" → Age Calculator,
+  "brutto netto" → Germany), multi-word AND matching with label-first ranking, index
+  expanded to ~70 entries covering all verticals. Keep `SearchModal.tsx` INDEX in sync
+  when adding calculators.
 
 ## Rules / gotchas
 - **Verify every change** with `npx tsc --noEmit` (must be exit 0). The previous environment's

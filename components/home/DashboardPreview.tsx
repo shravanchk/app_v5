@@ -8,9 +8,8 @@ import {
   TrendingUp,
   Wallet,
   Receipt,
-  PersonStanding,
-  Ruler,
-  Weight,
+  MapPin,
+  UserRound,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -20,8 +19,6 @@ const inr0 = (n: number) =>
 
 const usd0 = (n: number) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Math.round(n));
-
-const kcal0 = (n: number) => `${Math.round(n).toLocaleString('en-US')} kcal`;
 
 // ---------- finance helpers (static homepage visuals only) ----------
 function emiBreakup(principal: number, annualRate: number, years: number) {
@@ -54,14 +51,28 @@ function compoundBreakup(principal: number, monthly: number, annualRatePct: numb
   return { balance, invested, interest: balance - invested, yearly };
 }
 
-// Mirrors utils/healthCalculations bmrMifflin + tdeeFromBmr for the calorie
-// calculator's default profile (30 yr male, 5'8", 160 lb, lightly active).
-function calorieBreakup() {
-  const weightKg = 160 * 0.45359237;
-  const heightCm = 68 * 2.54;
-  const bmr = 10 * weightKg + 6.25 * heightCm - 5 * 30 + 5;
-  const tdee = bmr * 1.375;
-  return { bmr, tdee, activityBurn: tdee - bmr };
+// Mirrors utils/usPaycheckCalculations computePaycheck (2026 single-filer
+// standard deduction + brackets, FICA) for a no-state-tax example (Texas).
+function paycheckBreakup(gross: number) {
+  const taxable = Math.max(0, gross - 16100);
+  const brackets: [number, number][] = [
+    [12400, 0.1],
+    [50400, 0.12],
+    [105700, 0.22],
+    [201775, 0.24],
+  ];
+  let federal = 0;
+  let lower = 0;
+  for (const [upTo, rate] of brackets) {
+    if (taxable <= lower) break;
+    federal += (Math.min(taxable, upTo) - lower) * rate;
+    lower = upTo;
+  }
+  const socialSecurity = Math.min(gross, 184500) * 0.062;
+  const medicare = gross * 0.0145;
+  const fica = socialSecurity + medicare;
+  const net = gross - federal - fica;
+  return { federal, fica, net, monthly: net / 12 };
 }
 
 // India new-regime estimate (FY 2025-26) with standard deduction + 4% cess.
@@ -110,7 +121,7 @@ const EMI = emiBreakup(5000000, 8.5, 20);
 const SIP = sipBreakup(25000, 12, 15);
 const TAX = newRegimeTax(1800000);
 const COMPOUND = compoundBreakup(10000, 200, 7, 20);
-const CAL = calorieBreakup();
+const PAY = paycheckBreakup(85000);
 
 const CARDS: CardConfig[] = [
   {
@@ -136,27 +147,28 @@ const CARDS: CardConfig[] = [
     ],
   },
   {
-    id: 'calories',
-    title: 'Calorie Calculator',
-    href: '/calorie-calculator',
-    valueLabel: 'Daily calories to maintain weight',
-    value: kcal0(CAL.tdee),
+    id: 'paycheck',
+    title: 'US Paycheck Calculator',
+    href: '/us-paycheck-calculator',
+    valueLabel: 'Annual take-home pay (2026)',
+    value: usd0(PAY.net),
     chips: [
-      { icon: <PersonStanding className={iconCls} strokeWidth={2} />, label: 'Profile', value: '30 yr male' },
-      { icon: <Ruler className={iconCls} strokeWidth={2} />, label: 'Height', value: '5′8″' },
-      { icon: <Weight className={iconCls} strokeWidth={2} />, label: 'Weight', value: '160 lb' },
+      { icon: <DollarSign className={iconCls} strokeWidth={2} />, label: 'Salary', value: usd0(85000) },
+      { icon: <MapPin className={iconCls} strokeWidth={2} />, label: 'State', value: 'Texas' },
+      { icon: <UserRound className={iconCls} strokeWidth={2} />, label: 'Filing', value: 'Single' },
     ],
     chart: {
       kind: 'split',
       parts: [
-        { label: 'Resting burn (BMR)', value: CAL.bmr, color: '#10b981' },
-        { label: 'Activity burn', value: CAL.activityBurn, color: '#f59e0b' },
+        { label: 'Take-home', value: PAY.net, color: '#10b981' },
+        { label: 'Federal tax', value: PAY.federal, color: '#f59e0b' },
+        { label: 'FICA', value: PAY.fica, color: '#0ea5e9' },
       ],
     },
     stats: [
-      { label: 'Lose 1 lb/wk', value: kcal0(CAL.tdee - 500) },
-      { label: 'Maintain', value: kcal0(CAL.tdee) },
-      { label: 'Gain 1 lb/wk', value: kcal0(CAL.tdee + 500) },
+      { label: 'Federal income tax', value: usd0(PAY.federal) },
+      { label: 'Social Security + Medicare', value: usd0(PAY.fica) },
+      { label: 'Monthly take-home', value: usd0(PAY.monthly) },
     ],
   },
   {

@@ -49,9 +49,9 @@ export default function HomePage() {
       <div className="bg-white font-sans text-ink dark:bg-slate-900">
         <Hero />
         <Reveal><StartHere /></Reveal>
+        <Reveal><RegionSection /></Reveal>
         <Reveal><WorkflowCards /></Reveal>
         <Reveal><CalculatorGrid /></Reveal>
-        <Reveal><RegionSection /></Reveal>
         <Reveal><GuideCards /></Reveal>
         <Reveal><TrustSection /></Reveal>
       </div>
