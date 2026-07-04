@@ -29,7 +29,6 @@ const INDEX: Item[] = [
   { label: 'Netherlands Salary Calculator', href: '/netherlands-salary-calculator', group: 'UK & Europe', k: 'dutch box 1 holland net salary' },
   { label: 'European Salary Calculator', href: '/european-salary-calculator', group: 'UK & Europe', k: 'net salary europe switzerland sweden austria belgium compare countries' },
   { label: 'European VAT Calculator', href: '/eu-vat-calculator', group: 'UK & Europe', k: 'value added tax reverse inclusive exclusive' },
-  { label: 'UK Rail Fare Calculator', href: '/uk-rail-calculator', group: 'UK & Europe', k: 'train ticket railcard journey' },
   { label: 'UK & Europe Calculators Hub', href: '/eu-calculators', group: 'UK & Europe', k: 'european tools' },
   // India
   { label: 'EMI / Loan Calculator', href: '/loan-calculator', group: 'India', k: 'home loan car loan monthly installment interest prepayment' },

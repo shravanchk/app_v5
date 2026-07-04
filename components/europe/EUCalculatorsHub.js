@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  BadgePercent, Banknote, Landmark, Table2, Train,
+  BadgePercent, Banknote, Landmark, Table2,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
 import Reveal from '../ui/Reveal';
@@ -20,7 +20,6 @@ const T = {
 const cards = [
   { title: 'UK Income Tax Calculator', description: 'Estimate UK income tax for 2026-27 with Scottish rates and National Insurance.', icon: Landmark, path: '/uk-income-tax-calculator', tint: T.violet, tags: ['2026-27 tax year', 'Scottish rates', 'NI included'] },
   { title: 'UK Take-Home by Salary', description: 'Instant after-tax figures for UK salaries from £20,000 to £150,000 — tax, NI, and monthly pay.', icon: Table2, path: '/uk/take-home', tint: T.brand, tags: ['£20k–£150k', '2026-27 rates', 'Tax + NI'] },
-  { title: 'UK Rail Fare Calculator', description: 'Compare UK rail ticket options and estimate fares across journey types.', icon: Train, path: '/uk-rail-calculator', tint: T.rose, tags: ['Fare compare', 'Journey types', 'Quick planning'] },
   { title: 'European VAT Calculator', description: 'Calculate VAT for 15 European countries with inclusive/exclusive and reverse VAT modes.', icon: BadgePercent, path: '/eu-vat-calculator', tint: T.amber, tags: ['15 countries', 'Inclusive/exclusive', 'Rate comparison'] },
   { title: 'European Salary Calculator', description: 'Estimate net salary after tax and social contributions across key European countries.', icon: Banknote, path: '/european-salary-calculator', tint: T.emerald, tags: ['Net salary', 'Social contributions', 'Country comparison'] },
   { title: 'Germany Salary Calculator', description: 'Estimate Germany net salary with income tax, social insurance, and solidarity surcharge.', icon: Banknote, path: '/germany-salary-calculator', tint: T.brand, tags: ['Brutto to netto', 'Social insurance', 'Take-home'] },

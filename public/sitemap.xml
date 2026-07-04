@@ -144,17 +144,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://upaman.com/uk-rail-calculator</loc>
-    <lastmod>2026-02-24</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://upaman.com/upaman-elephant-logo.svg</image:loc>
-      <image:caption>UK Rail Journey Planner - Live Train Times and Fare Calculator</image:caption>
-      <image:title>UK Rail Calculator</image:title>
-    </image:image>
-  </url>
-  <url>
     <loc>https://upaman.com/credit-card-analyzer</loc>
     <lastmod>2026-02-24</lastmod>
     <changefreq>weekly</changefreq>

@@ -9,7 +9,6 @@ Allow: /static/
 
 # Main calculator routes
 Allow: /irctc-calculator
-Allow: /uk-rail-calculator
 Allow: /credit-card-analyzer
 Allow: /credit-card-trap-calculator
 Allow: /loan-calculator
