@@ -9,17 +9,14 @@ import GuideCards from './GuideCards';
 import TrustSection from './TrustSection';
 import Reveal from '../ui/Reveal';
 
+// No SearchAction: site search is a client-side modal with no ?q= results
+// page, and declaring a non-functional target hurts more than omitting it.
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Upaman',
   url: 'https://upaman.com/',
   description: 'Free calculators, comparison tools, workflows and guides to make better financial decisions.',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: 'https://upaman.com/india-calculators?q={search_term_string}',
-    'query-input': 'required name=search_term_string',
-  },
 };
 
 const orgSchema = {
