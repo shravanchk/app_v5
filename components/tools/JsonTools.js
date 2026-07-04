@@ -1327,6 +1327,7 @@ const JsonTools = () => {
 
             <CalculatorInfoPanel
               title="Methodology, assumptions, and source references"
+              credibilityScope="This developer utility processes data entirely in your browser; output depends only on the input you provide and the documented transformation rules below."
               inputs={[
                 'Input accepts JSON, CSV, and YAML (for YAML→JSON action)',
                 'JSON Patch Diff compares source JSON against target JSON panel',

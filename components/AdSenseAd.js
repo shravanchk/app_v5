@@ -139,9 +139,12 @@ const AdSenseAd = ({
     );
   };
 
-  // Show loading state
+  // Loading state reserves the slot silently — visible "Loading Advertisement"
+  // text ends up in crawled/extracted page text and dilutes content.
   if (adStatus.loading) {
-    return showFallback ? <FallbackContent reason="loading" /> : null;
+    return showFallback ? (
+      <div style={{ ...style, minHeight: style.height || style.minHeight || '90px' }} aria-hidden="true" />
+    ) : null;
   }
 
   // Show fallback if ads are blocked and fallback is enabled

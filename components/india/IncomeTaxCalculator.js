@@ -345,7 +345,7 @@ const IncomeTaxCalculator = () => {
         example={(
           <>
             <p>Suppose a salaried user has annual salary of ₹12,00,000 and expects ₹1,50,000 under 80C, ₹25,000 under 80D, and ₹50,000 under NPS. In old-regime view, the calculator first adjusts salary by standard deduction and eligible deductions, then computes slab tax on remaining taxable income. Cess is added and rebate is checked where relevant. In new-regime view, the tool applies new-regime deduction treatment and runs slab math again.</p>
-            <p>Assume the model returns old-regime tax of about ₹X and new-regime tax of about ₹Y (numbers depend on final input mix). If old-regime tax is lower by ₹18,000, the comparison card marks old regime as better and also shows higher take-home amount. If future deduction plans reduce, you can rerun quickly and see whether the recommendation flips. This scenario-testing workflow is usually more useful than a one-time static estimate.</p>
+            <p>For that profile the calculator returns old-regime tax of about ₹1,01,400 (taxable income ₹9,25,000 after ₹2,75,000 of deductions, including cess) and new-regime tax of ₹0, because taxable income of ₹11,25,000 after the ₹75,000 standard deduction falls within the Section 87A rebate limit. The comparison card marks the new regime as better by about ₹1,01,400 and shows the higher take-home. If your deduction plans change, you can rerun quickly and see whether the recommendation flips — this scenario-testing workflow is usually more useful than a one-time static estimate.</p>
           </>
         )}
         tips={(

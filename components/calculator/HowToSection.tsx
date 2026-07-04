@@ -34,13 +34,18 @@ export default function HowToSection({
     <section className={cn('mt-10', className)} aria-label={heading}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <h2 className="font-display text-xl font-bold text-ink dark:text-white">{heading}</h2>
-      <ol className="mt-4 grid gap-3 sm:grid-cols-2">
+      {/* ul, not ol: the number badge is rendered explicitly, and ol semantics
+          would double it for screen readers and text extractors ("1. 1"). */}
+      <ul className="mt-4 grid gap-3 sm:grid-cols-2">
         {steps.map((step, index) => (
           <li
             key={step.name}
             className="flex gap-3 rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70"
           >
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-50 font-display text-sm font-bold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
+            <span
+              aria-hidden="true"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-50 font-display text-sm font-bold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300"
+            >
               {index + 1}
             </span>
             <div>
@@ -49,7 +54,7 @@ export default function HowToSection({
             </div>
           </li>
         ))}
-      </ol>
+      </ul>
     </section>
   );
 }
