@@ -16,6 +16,7 @@ export default function Document() {
           }}
         />
         <meta charSet="utf-8" />
+        <meta name="google-adsense-account" content="ca-pub-3543327769912677" />
         <meta name="theme-color" content="#1d4e89" />
         <link rel="icon" type="image/svg+xml" href="/upaman-elephant-logo.svg?v=20260223a" />
         <link rel="shortcut icon" type="image/svg+xml" href="/upaman-elephant-logo.svg?v=20260223a" />
