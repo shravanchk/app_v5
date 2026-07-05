@@ -15,7 +15,10 @@ const FAQ = [
   { question: 'How much water should I drink a day?', answer: 'A common dietetic rule of thumb is about 35 ml per kg of body weight from drinks, plus extra for exercise and heat. For reference, the US National Academies put adequate total water intake (including ~20% from food) at about 3.7 L/day for men and 2.7 L/day for women.' },
   { question: 'Do coffee and tea count toward my intake?', answer: 'Yes. Caffeinated drinks are mildly diuretic but still hydrate on balance, so they count toward daily fluid. Alcohol does not — it dehydrates.' },
   { question: 'Can I drink too much water?', answer: 'Yes — drinking far beyond thirst over a short period can dilute blood sodium (hyponatremia), which is dangerous. Spread intake through the day and let thirst and pale-yellow urine be your guide.' },
-  { question: 'Why does exercise change the target?', answer: 'Sweat losses during exercise commonly run 0.5–2 L per hour. The calculator adds roughly 350 ml per 30 minutes of activity — weigh-ins before and after long sessions give a more personal number.' }
+  { question: 'Why does exercise change the target?', answer: 'Sweat losses during exercise commonly run 0.5–2 L per hour. The calculator adds roughly 350 ml per 30 minutes of activity — weigh-ins before and after long sessions give a more personal number.' },
+  { question: 'Is the "8 glasses a day" rule true?', answer: 'It has no clear scientific origin, but at 8 × 240 ml it lands near 1.9 L — a reasonable ballpark for a smaller adult and low for a larger or active one. A weight-based estimate personalizes what the folk rule approximates.' },
+  { question: 'Does drinking more water help with weight loss or skin?', answer: 'Evidence is modest: water before meals can slightly reduce intake in some studies, and correcting genuine dehydration improves skin appearance and energy — but extra water beyond needs is simply excreted. Hydration fixes deficits; it is not a supplement.' },
+  { question: 'How do I know if I am drinking enough?', answer: 'The two best everyday signals are thirst and urine colour — pale yellow suggests adequate hydration, dark amber suggests you are behind. Persistent headaches, fatigue, and constipation are also common mild-dehydration flags.' }
 ];
 
 const WaterIntakeCalculator = () => {
@@ -134,6 +137,62 @@ const WaterIntakeCalculator = () => {
             { name: 'Spread it through the day', text: 'Use the liters, ounces, or cups figure as a pacing guide — not something to drink in one sitting.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">How the estimate is built — and how seriously to take it</h2>
+          <p className="mt-3">
+            Unlike calories, hydration has no precise personal equation, because the body defends its water
+            balance aggressively on its own: kidneys can concentrate or dilute urine across a nearly tenfold
+            range, and thirst is a genuinely reliable signal in healthy adults. What a calculator can do is give
+            you a sensible pacing target. This one starts from a common dietetic rule — about{' '}
+            <strong className="text-ink dark:text-white">35 ml of drinking water per kilogram of body weight</strong> —
+            then adds roughly 350 ml per 30 minutes of exercise and a flat 500 ml for hot climates. A 70-kg
+            person on a temperate desk day gets 2.5 L; add 45 minutes of training and a hot climate and it rises
+            to about 3.5 L. Treat those as the centre of a comfortable range, not a compliance quota.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Why weight-based beats one-size rules</h3>
+          <p className="mt-3">
+            The famous &ldquo;8 glasses a day&rdquo; has never been traced to a study, and its arithmetic (about
+            1.9 L) shows the problem with any flat rule: it is roughly right for a 55-kg adult and clearly light
+            for a 95-kg one, whose estimate here runs above 3.3 L before any exercise. Bodies are mostly water —
+            around 60% by weight — and both metabolic water turnover and sweat capacity scale with size. The
+            official reference values take a different route to a similar place: the US National Academies put
+            adequate <em>total</em> water at ~3.7 L/day for men and ~2.7 L for women, but that includes the
+            ~20% of water arriving in food (fruit, vegetables, rice, curries, soups). Subtract the food share and
+            the drinking-water portion lands close to what the 35 ml/kg rule produces for average weights — two
+            independent methods agreeing is about as good as hydration science gets.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">What counts, what doesn&rsquo;t, and the myth about coffee</h3>
+          <p className="mt-3">
+            All non-alcoholic fluid counts: water, milk, tea, coffee, buttermilk, juice, even the water in a
+            watermelon. The idea that caffeinated drinks dehydrate is a misreading of old research — caffeine is
+            mildly diuretic, but the fluid in the cup more than covers the loss, and regular drinkers develop
+            tolerance to the effect anyway. Alcohol is the genuine exception: it suppresses the hormone that
+            tells kidneys to retain water, which is why a night of drinking ends in net loss. Sugary drinks
+            hydrate too; their problem is the calorie payload, not the water. If a target from this page pushes
+            you toward more plain water and less of those, that is the estimate doing double duty for the
+            calorie budget in the{' '}
+            <a href="/calorie-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">calorie calculator</a>.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Pacing, over-drinking, and when the rules change</h3>
+          <p className="mt-3">
+            Spread intake across the day — a glass with each meal and one between covers most of a sedentary
+            target — and front-load around exercise rather than gulping afterwards. More is not better past the
+            target: drinking litres beyond thirst in a short window can dilute blood sodium (hyponatremia), a
+            genuine medical emergency seen in marathoners who over-hydrate, which is why endurance guidance now
+            says &ldquo;drink to thirst&rdquo; during events. For sessions over an hour, weighing before and
+            after gives your personal sweat rate — each missing kilogram is a litre to replace, ideally with
+            electrolytes. And the healthy-adult assumptions break down in pregnancy and breastfeeding (needs
+            rise), illness with fever or diarrhoea (rise sharply), and kidney or heart conditions (fluid may be
+            medically restricted) — in those cases the number that matters comes from a clinician, not a
+            calculator. For the bigger picture your weight itself feeds this estimate; the{' '}
+            <a href="/bmi-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">BMI calculator</a>{' '}
+            shows where that input sits for your height.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Water Intake Calculator FAQ</h2>

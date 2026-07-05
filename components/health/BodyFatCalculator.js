@@ -17,7 +17,10 @@ const FAQ = [
   { question: 'How does the US Navy body fat method work?', answer: 'It estimates body-fat percentage from circumference measurements — neck and waist for men; neck, waist, and hips for women — combined with height in a validated regression formula (Hodgdon & Beckett, 1984). It is accurate to within roughly ±3-4% for most people.' },
   { question: 'How do I measure correctly?', answer: 'Use a flexible tape, snug but not compressing the skin. Waist: at the navel for men, at the narrowest point for women. Neck: just below the larynx, sloping slightly down to the front. Hips (women): at the widest point. Measure relaxed, after exhaling.' },
   { question: 'What is a healthy body fat percentage?', answer: 'ACE guidelines: for men, 6–13% is athletic, 14–17% fitness, 18–24% average, and 25%+ obese. For women (who carry more essential fat), 14–20% is athletic, 21–24% fitness, 25–31% average, and 32%+ obese.' },
-  { question: 'Is this more accurate than BMI?', answer: 'It answers a different question. BMI classifies weight for height; the Navy method estimates actual fat percentage, so it distinguishes a muscular person from an over-fat one. For lab-grade accuracy you would need DEXA or hydrostatic weighing.' }
+  { question: 'Is this more accurate than BMI?', answer: 'It answers a different question. BMI classifies weight for height; the Navy method estimates actual fat percentage, so it distinguishes a muscular person from an over-fat one. For lab-grade accuracy you would need DEXA or hydrostatic weighing.' },
+  { question: 'Why do women have higher healthy body-fat ranges than men?', answer: 'Essential fat — the minimum needed for hormones, organs, and cell function — is around 2–5% for men but 10–13% for women, reflecting reproductive physiology. The ACE bands shift every category upward for women accordingly; comparing your number against the other sex’s scale is meaningless.' },
+  { question: 'How often should I re-measure?', answer: 'Every 2–4 weeks is enough. Tape measurements shift with food, water, and time of day, so measure under the same conditions each time (morning, before eating, relaxed) and watch the trend across several readings rather than any single result.' },
+  { question: 'Why did my percentage change so much from a small waist difference?', answer: 'The formula is deliberately waist-sensitive: for a typical man, adding two inches at the waist with nothing else changed raises the estimate by 3–4 percentage points. That sensitivity is a feature — abdominal circumference tracks the visceral fat most associated with health risk.' }
 ];
 
 const BodyFatCalculator = () => {
@@ -175,6 +178,71 @@ const BodyFatCalculator = () => {
             { name: 'Read your result', text: 'See your body-fat percentage, ACE category on the animated scale, and your fat vs lean mass split.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">Why a tape measure can estimate body fat at all</h2>
+          <p className="mt-3">
+            The US Navy needed a way to assess thousands of sailors without labs, so in 1984 its researchers
+            (Hodgdon &amp; Beckett) measured servicemembers with both underwater weighing — then the gold
+            standard — and simple circumferences, and fitted equations linking the two. The insight that makes it
+            work: where you store fat is predictable. Men accumulate it first at the abdomen, women at the hips
+            and waist, while the neck stays comparatively lean and stands in for frame size. The waist-minus-neck
+            contrast (plus hips for women), scaled by height, recovers fat percentage to within roughly ±3&ndash;4
+            points of lab methods for most adults — remarkable for sixty seconds with a tape.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">A worked reading</h3>
+          <p className="mt-3">
+            A man of 5&prime;10&Prime; with a 15-inch neck and 34-inch waist gets an estimate of about{' '}
+            <strong className="text-ink dark:text-white">17.4%</strong> — top of the ACE &ldquo;fitness&rdquo;
+            band. If he weighs 180 lb, that splits his body into roughly 31 lb of fat and 149 lb of lean mass
+            (muscle, bone, organs, water). Those two numbers are more useful than the percentage itself: someone
+            cutting weight wants the fat number falling while the lean number holds, and someone bulking wants
+            the reverse. Note the formula&rsquo;s sensitivity — the same man at a 36-inch waist reads about
+            21.1%, nearly four points higher from two inches of tape. That is by design: abdominal girth tracks
+            visceral fat, the kind most associated with metabolic risk, so the formula weights it heavily.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Measurement technique is most of the accuracy</h3>
+          <p className="mt-3">
+            A half-inch of tape error moves the result by roughly a percentage point, so consistency beats
+            precision. Measure in the morning before eating, standing relaxed — not sucked in, not pushed out.
+            The tape should be snug enough not to slip but never compress the skin. Men measure the waist at the
+            navel; women at the narrowest point, plus hips at the widest. For the neck, wrap just below the
+            larynx, sloping slightly downward to the front. If two consecutive measurements differ, take a third
+            and use the pair that agree. Above all, re-measure under the same conditions: the trend across a
+            month of consistent readings is trustworthy even if any single reading is a point off.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Reading the bands without alarm</h3>
+          <p className="mt-3">
+            The ACE categories are descriptive ranges, not grades. &ldquo;Average&rdquo; (18&ndash;24% for men,
+            25&ndash;31% for women) describes the population, and sitting there carries no automatic health
+            verdict. The female scale runs higher throughout because women&rsquo;s essential fat — the minimum
+            for hormonal and reproductive function — is around 10&ndash;13% against 2&ndash;5% for men; a woman
+            at 25% (say, 5&prime;5&Prime;, 13-inch neck, 28-inch waist, 38-inch hips, which reads 25.7%) and a
+            man at 17% can be at equivalent fitness. Chasing the bottom bands is also not free: sustained
+            essential-fat levels impair hormones, immunity, and bone health in both sexes. If your estimate sits
+            far above the average band, the useful response is the same as with any screening number — confirm
+            the trend over a few weeks, then act on diet and training, using the{' '}
+            <a href="/calorie-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">calorie calculator</a>{' '}
+            to set the energy side of the plan.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Where this method sits among the alternatives</h3>
+          <p className="mt-3">
+            DEXA scans and hydrostatic weighing are more accurate but cost money and access; bioimpedance scales
+            are convenient but swing several points with hydration; calipers rival the Navy method only with a
+            practiced tester. The tape method&rsquo;s ±3&ndash;4% error is real, but it is <em>stable</em> error —
+            your technique and body shape bias it consistently, so changes over time are measured much more
+            accurately than the absolute level. Used monthly alongside the{' '}
+            <a href="/bmi-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">BMI calculator</a>{' '}
+            for weight-for-height context and the{' '}
+            <a href="/ideal-weight-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">ideal weight calculator</a>{' '}
+            for a height-based target range, it answers the question the bathroom scale cannot: what the weight
+            is made of.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Body Fat Calculator FAQ</h2>

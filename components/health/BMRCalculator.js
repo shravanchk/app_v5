@@ -17,7 +17,10 @@ const FAQ = [
   { question: 'What is BMR?', answer: 'Basal Metabolic Rate is the energy your body burns at complete rest — powering your heart, brain, breathing, and cell repair. It typically accounts for 60–70% of the calories most people burn in a day.' },
   { question: 'Which BMR formula is most accurate?', answer: 'The Mifflin-St Jeor equation (1990) is generally the most accurate population formula for modern adults and is preferred by the Academy of Nutrition and Dietetics. We also show the revised Harris-Benedict value for comparison.' },
   { question: 'Can I eat at my BMR to lose weight?', answer: 'Eating exactly at BMR creates an aggressive deficit for most people, since real days always burn more than resting. A moderate deficit below your TDEE (maintenance) is more sustainable — see our calorie calculator.' },
-  { question: 'How can I increase my BMR?', answer: 'Building muscle raises resting burn slightly (muscle is more metabolically active than fat), and adequate protein and sleep help preserve it. Crash dieting can lower BMR through adaptive thermogenesis.' }
+  { question: 'How can I increase my BMR?', answer: 'Building muscle raises resting burn slightly (muscle is more metabolically active than fat), and adequate protein and sleep help preserve it. Crash dieting can lower BMR through adaptive thermogenesis.' },
+  { question: 'Why do the two equations give different numbers?', answer: 'They were fitted to different study populations six years apart. Mifflin-St Jeor (1990) tends to run a little lower and validates better against modern adults; the revised Harris-Benedict (1984) often reads 30–80 kcal higher. If the two agree within ~5%, either is a reasonable starting point.' },
+  { question: 'How much does BMR fall with age?', answer: 'In the Mifflin-St Jeor equation, exactly 5 kcal per year — about 50 kcal per decade at the same height and weight. Much of the real-world decline is muscle loss rather than age itself, which is why resistance training blunts it.' },
+  { question: 'Is BMR the same as the "calories burned" my watch shows?', answer: 'No. Watches report total daily burn (BMR plus movement), estimated from sensors with their own error. BMR is only the resting component — compare your watch number with the activity-scaled figures in the table, not with BMR itself.' }
 ];
 
 const BMRCalculator = () => {
@@ -150,6 +153,83 @@ const BMRCalculator = () => {
             { name: 'Scale to your day', text: 'Use the activity table to see roughly what you burn on sedentary through very active days.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">What your BMR actually pays for</h2>
+          <p className="mt-3">
+            Basal metabolic rate is the electricity bill of being alive: the energy spent keeping your heart
+            beating, lungs breathing, brain thinking, kidneys filtering, and cells rebuilding — before you take a
+            single step. For most adults it is the largest slice of daily energy use, typically 60&ndash;70%.
+            Exercise, for all the attention it gets, is usually a far smaller line item. That proportion is why
+            two people of different sizes can eat the same diet with opposite results, and why &ldquo;fast&rdquo;
+            and &ldquo;slow&rdquo; metabolisms are mostly just bigger and smaller bodies with more or less lean
+            tissue.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Reading the two equations side by side</h3>
+          <p className="mt-3">
+            For a 40-year-old woman, 165 cm and 68 kg, the calculator returns a Mifflin-St Jeor BMR of about{' '}
+            <strong className="text-ink dark:text-white">1,350 kcal</strong> and a revised Harris-Benedict value
+            of about <strong className="text-ink dark:text-white">1,414 kcal</strong>. The 64-kcal gap is not an
+            error — it is two research teams fitting curves to different groups of people, in 1990 and 1984
+            respectively. Mifflin-St Jeor validates better against measured resting energy in modern adults,
+            which is why it is the headline number here and the equation behind our{' '}
+            <a href="/calorie-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">calorie calculator</a>.
+            When the two equations agree within about 5%, as they do for most inputs, you can treat their average
+            as a sensible working figure. When they diverge sharply — very high or very low body weights — both
+            are extrapolating beyond their study data, and real measurement (indirect calorimetry) is the only
+            way to know.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">What moves the number — and by how much</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Weight: 10 kcal per kg.</strong> Each kilogram of body
+              mass adds 10 kcal to resting burn in Mifflin-St Jeor. Losing 5 kg lowers BMR by ~50 kcal/day — one
+              reason weight loss slows as it proceeds.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Height: 6.25 kcal per cm.</strong> Taller bodies have
+              more surface area and more tissue to run.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Age: −5 kcal per year.</strong> Our example at 30 would
+              read 1,400 kcal and at 50, 1,300 kcal — a steady 50 kcal per decade at the same size. Much of the
+              real decline is muscle loss, not aging itself, which is why the trend is partly negotiable.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Sex: a 166-kcal constant.</strong> The equations offset
+              men and women by a fixed amount, standing in for average differences in lean mass. A muscular woman
+              and a sedentary man of the same size can easily swap places in reality.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">The mistake the activity table prevents</h3>
+          <p className="mt-3">
+            The most common misuse of a BMR number is eating at it. BMR is a floor, not a target: even a bedridden
+            day burns more than basal, because digestion alone adds roughly 10% on top of everything else. Eating
+            at BMR therefore creates an uncontrolled, usually aggressive deficit — our example would be
+            under-eating by 270 kcal even on fully sedentary days (1,620 vs 1,350), and by more than 740 kcal on
+            moderately active ones. The table above scales your BMR through the standard activity factors
+            (1.2&ndash;1.9) precisely so you can see the range your real days fall into. Pick the level that
+            matches your week honestly and treat <em>that</em> number as maintenance; deficits and surpluses
+            should be measured from it, not from BMR.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Can you change your BMR?</h3>
+          <p className="mt-3">
+            Modestly, and in both directions. Resistance training adds muscle, and each kilogram of muscle burns
+            roughly 10&ndash;13 kcal a day at rest — small per kilo, meaningful over years. In the other
+            direction, prolonged severe dieting triggers adaptive thermogenesis: the body lowers resting burn
+            beyond what the lost weight alone predicts, which is one reason crash diets rebound. Protein intake
+            and sleep both help preserve lean mass while losing weight. If your goal is a target weight rather
+            than a target burn, the{' '}
+            <a href="/bmi-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">BMI calculator</a>{' '}
+            frames a healthy range for your height, and the{' '}
+            <a href="/body-fat-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">body fat calculator</a>{' '}
+            tracks whether the weight you keep is the kind that burns.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">BMR Calculator FAQ</h2>

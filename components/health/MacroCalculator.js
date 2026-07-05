@@ -18,7 +18,10 @@ const FAQ = [
   { question: 'What are macros?', answer: 'Macronutrients are the three calorie-providing nutrient groups: protein and carbohydrate (4 kcal per gram each) and fat (9 kcal per gram). A macro plan splits your daily calorie target across the three.' },
   { question: 'Which macro split is best?', answer: 'For most goals, total calories and adequate protein matter far more than the exact carb/fat ratio. Pick the split you can sustain: balanced is the usual default; higher-protein splits help preserve muscle in a deficit.' },
   { question: 'How much protein do I need?', answer: 'The RDA is 0.8 g per kg of body weight for sedentary adults, but 1.2–2.2 g/kg is commonly recommended for active people or anyone dieting to retain lean mass. The high-protein preset lands in that territory for most bodies.' },
-  { question: 'Are these calorie targets safe?', answer: 'The presets cap changes at ±500 kcal/day (about 1 lb per week), which is a conventional moderate pace. Very low-calorie diets should only be done under medical supervision.' }
+  { question: 'Are these calorie targets safe?', answer: 'The presets cap changes at ±500 kcal/day (about 1 lb per week), which is a conventional moderate pace. Very low-calorie diets should only be done under medical supervision.' },
+  { question: 'Why does fat get fewer grams than its percentage suggests?', answer: 'Fat carries 9 kcal per gram versus 4 for protein and carbs, so the same calorie share buys fewer grams. In a balanced 2,200-kcal day, 30% protein is 165 g but 30% fat is only 73 g — both are 660 kcal.' },
+  { question: 'Do I have to hit all three macros exactly?', answer: 'No. Prioritize in order: total calories first, protein second (within ±10 g), then let carbs and fat float to fill the remainder. The carb/fat ratio matters far less for body composition than the first two.' },
+  { question: 'Is a keto-style split better for fat loss?', answer: 'Controlled studies matching calories and protein find no meaningful fat-loss advantage for very-low-carb diets — adherence decides. Keto suits people whose hunger is better controlled without carbs; athletes doing intense training usually perform better with more.' }
 ];
 
 const macroTones = { protein: 'emerald', carbs: 'amber', fat: 'sky' };
@@ -178,6 +181,73 @@ const MacroCalculator = () => {
             { name: 'Plan meals from grams', text: 'Use the protein, carb, and fat gram targets — and the g/kg protein check — to build your day.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">From percentages to plates: how macro math works</h2>
+          <p className="mt-3">
+            A macro split is just a calorie budget divided three ways, using the energy density of each nutrient:
+            protein and carbohydrate carry 4 kcal per gram, fat 9. That last number is why fat gram targets always
+            look small next to their percentage. Take a 2,200-kcal day on the balanced (30/40/30) split: 30%
+            protein is 660 kcal ÷ 4 = <strong className="text-ink dark:text-white">165 g</strong>, 40% carbs is
+            880 kcal ÷ 4 = <strong className="text-ink dark:text-white">220 g</strong>, and 30% fat is 660 kcal ÷
+            9 = <strong className="text-ink dark:text-white">73 g</strong>. Same calories for protein and fat —
+            barely two-fifths the grams. Once you internalize the 4/4/9 arithmetic, food labels stop being
+            mysterious: a 20 g-fat pastry has quietly spent 180 kcal of your budget before any carbs are counted.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">The hierarchy: what matters, in order</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">1. Total calories</strong> decide whether you lose,
+              maintain, or gain. No split rescues a wrong total — this is why the calculator builds your target
+              from TDEE first and the split second.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">2. Protein</strong> decides what the change is made
+              of. In a deficit, adequate protein (roughly 1.2&ndash;2.2 g per kg of body weight) is what steers
+              loss toward fat rather than muscle; the g/kg readout under the bars exists precisely for this check.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">3. Carbs vs fat</strong> is mostly preference and
+              performance. Matched for calories and protein, studies find little body-composition difference —
+              pick the ratio that controls your hunger and fuels your training.
+            </li>
+          </ul>
+          <p className="mt-3">
+            This ordering is liberating in practice: hit calories, land protein within ±10 g, and let the other
+            two macros float. Perfection in all three daily is meal-prep-influencer fiction.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Choosing between the four presets</h3>
+          <p className="mt-3">
+            On the same 2,200-kcal budget the presets redistribute, never add:{' '}
+            <strong className="text-ink dark:text-white">balanced</strong> (165P/220C/73F) suits most people most
+            of the time; <strong className="text-ink dark:text-white">high protein</strong> (220P/165C/73F) is
+            the dieting workhorse, trading carbs for satiety and muscle retention;{' '}
+            <strong className="text-ink dark:text-white">low carb</strong> (220P/110C/98F) suits sedentary days
+            and people who feel steadier without bread and rice;{' '}
+            <strong className="text-ink dark:text-white">keto-style</strong> (165P/55C/147F) is the outlier — 55 g
+            of carbs is above strict-keto territory but low enough to change how meals must be built, and it
+            fails fast for anyone who trains hard or eats socially. If in doubt, start balanced and switch to
+            high-protein when cutting; the best split remains whichever one you are still following in March.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Making gram targets survive real food</h3>
+          <p className="mt-3">
+            Gram targets become useful when you can eyeball them: a chicken breast or a block of paneer is
+            roughly 30&ndash;40 g of protein, a cup of cooked rice about 45 g of carbs, a tablespoon of oil or
+            ghee 14 g of fat. Three or four protein anchors a day usually lands the protein target without a
+            spreadsheet, and cooking fat is the stealth line item most people under-count. Expect to miss on the
+            first week — then adjust the inputs, not your honesty. If the calorie side of the plan is the part
+            you are unsure about, the{' '}
+            <a href="/calorie-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">calorie calculator</a>{' '}
+            explains the TDEE layer this page builds on, the{' '}
+            <a href="/bmr-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">BMR calculator</a>{' '}
+            shows the resting component, and the{' '}
+            <a href="/body-fat-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">body fat calculator</a>{' '}
+            tracks whether the protein is doing its job of keeping lean mass while the scale moves.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Macro Calculator FAQ</h2>

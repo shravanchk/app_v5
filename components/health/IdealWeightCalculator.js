@@ -16,7 +16,10 @@ const FAQ = [
   { question: 'Which ideal weight formula should I trust?', answer: 'None is "correct" — all four are height-based estimates developed for clinical use (the Devine formula was designed for drug dosing, not aesthetics). Treat the spread across formulas, together with the healthy-BMI range, as a reasonable zone rather than a single target number.' },
   { question: 'Why is my ideal weight different from what I expect?', answer: 'These formulas only use height and sex. They ignore muscle mass, frame size, age, and body composition — a muscular person can be perfectly healthy well above every formula value. Body-fat percentage is a better lens for athletic builds.' },
   { question: 'What is the healthy BMI weight range?', answer: 'It is the weight span that keeps your body mass index between 18.5 and 24.9 — the WHO "normal weight" band for adults. It is a population screening range, not an individual prescription.' },
-  { question: 'Do these formulas work for children or very short adults?', answer: 'No. They were derived for adults, and below 5 feet (152 cm) the per-inch adjustments stop being meaningful — this calculator falls back to the formula base value there. For children and teens, growth-chart percentiles are the right tool.' }
+  { question: 'Do these formulas work for children or very short adults?', answer: 'No. They were derived for adults, and below 5 feet (152 cm) the per-inch adjustments stop being meaningful — this calculator falls back to the formula base value there. For children and teens, growth-chart percentiles are the right tool.' },
+  { question: 'Why do the four formulas disagree?', answer: 'Each was fitted in a different era for a different purpose — Hamwi (1964) for quick clinical estimates, Devine (1974) for drug dosing, Robinson and Miller (1983) as statistical refinements. They all share the same structure (a base weight at 5 feet plus an amount per inch) but with different constants, so they fan out as height increases.' },
+  { question: 'Why is the formula value below the middle of the healthy BMI range?', answer: 'The formulas were designed as clinical reference weights and tend to sit in the lower half of the BMI 18.5–24.9 band, especially for taller people. Being above a formula value but inside the BMI range is not "overweight" by any medical definition.' },
+  { question: 'Should I diet down to my ideal weight number?', answer: 'Not on the strength of a height formula alone. If you are inside the healthy BMI range, composition (body-fat percentage, waist) says more than another kilogram either way; if you are outside it, pick a sustainable rate of change and a target zone rather than a single number.' }
 ];
 
 const IdealWeightCalculator = () => {
@@ -141,6 +144,68 @@ const IdealWeightCalculator = () => {
             { name: 'Anchor on the healthy range', text: 'Use the BMI 18.5–24.9 range as the evidence-based zone, and treat formula values as reference points inside or near it.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">Where &ldquo;ideal weight&rdquo; formulas actually come from</h2>
+          <p className="mt-3">
+            None of the four formulas on this page was invented to tell you what to weigh. Hamwi (1964) was a
+            quick bedside rule for clinical nutrition; Devine (1974) was created to dose medications whose safe
+            amounts scale with lean body size, and it remains embedded in pharmacology today; Robinson and Miller
+            (both 1983) were statistical refinements once better population data existed. They share one
+            structure — a base weight at 5 feet, plus a fixed amount per inch above it — which is why they agree
+            reasonably well at average heights and fan out at the extremes. Understanding that lineage is the key
+            to using them: they are clinical reference points, not aesthetic targets, and the spread between them
+            is honest uncertainty, not a bug.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Reading the spread: a worked example</h3>
+          <p className="mt-3">
+            For a woman of 5&prime;6&Prime;, the four formulas land at roughly 129&ndash;135 lb
+            (58.7&ndash;61.3 kg) — Hamwi lowest, Miller highest, Devine and Robinson nearly identical at 131 lb.
+            The healthy-BMI range for the same height is far wider: about{' '}
+            <strong className="text-ink dark:text-white">115&ndash;154 lb (52&ndash;70 kg)</strong>. That
+            comparison is the single most useful thing on this page. The formulas cluster in the lower-middle of
+            the evidence-based band, so someone at 150 lb and 5&prime;6&Prime; is 15&ndash;20 lb &ldquo;above
+            ideal&rdquo; by formula yet comfortably inside the range population studies associate with good
+            health. For a man of 5&prime;10&Prime; the same pattern holds: formulas from 155 to 165 lb, with
+            Hamwi highest for men and Miller lowest — the ordering flips between sexes because each author fitted
+            different per-inch increments.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">What height alone cannot see</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Composition.</strong> A 5&prime;10&Prime; man at 180 lb
+              could be 12% body fat or 28% — same formula verdict, opposite health picture. The{' '}
+              <a href="/body-fat-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">body fat calculator</a>{' '}
+              distinguishes the two with a tape measure.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Frame.</strong> Wrist and shoulder breadth vary enough
+              that two healthy people of one height can differ by 10 kg of bone and muscle alone. Older clinical
+              practice added ±10% for small or large frames — a crude but honest admission of the formulas&rsquo; limits.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Age.</strong> Some muscle loss with age is normal, and
+              modest extra weight in older adults is not associated with the same risks as in the young. The
+              formulas apply one number to a 25-year-old and a 75-year-old.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Turning a zone into a plan</h3>
+          <p className="mt-3">
+            The practical reading order: start with the healthy-BMI range as the evidence-based zone (the{' '}
+            <a href="/bmi-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">BMI calculator</a>{' '}
+            shows where your current weight sits in it), use the formula cluster as a reference point within that
+            zone, and let composition — not the scale — arbitrate the last few kilograms. If a change is
+            warranted, the{' '}
+            <a href="/calorie-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">calorie calculator</a>{' '}
+            converts a target rate of loss or gain into a daily energy budget. A target zone of a few kilograms,
+            approached at 0.25&ndash;0.45 kg a week, survives real life far better than a single magic number —
+            and the difference between weighing 131 lb and 137 lb at 5&prime;6&Prime; is invisible to every
+            health outcome that matters.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Ideal Weight Calculator FAQ</h2>
