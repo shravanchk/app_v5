@@ -18,7 +18,10 @@ const FAQ = [
   { question: 'How is take-home pay calculated?', answer: 'Gross salary minus federal income tax (2026 brackets and standard deduction), Social Security (6.2% up to the wage base), Medicare (1.45% plus 0.9% on high incomes), state income tax where applicable, and any pre-tax 401(k) contribution.' },
   { question: 'Which states have no income tax?', answer: 'Nine states levy no tax on wages: Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas, Washington, and Wyoming. Your take-home pay there is reduced only by federal taxes and FICA.' },
   { question: 'Does a 401(k) contribution reduce my taxes?', answer: 'Traditional 401(k) contributions are deducted before federal and state income tax, so they lower those taxes — but not Social Security or Medicare, which apply to your full wages.' },
-  { question: 'Why is my actual paycheck different?', answer: 'This is a planning estimate. Real paychecks also reflect W-4 withholding choices, health/dental premiums, HSA/FSA contributions, local city taxes (e.g., NYC), state disability/family-leave programs, and bonuses. Withholding also differs from your final tax bill.' }
+  { question: 'Why is my actual paycheck different?', answer: 'This is a planning estimate. Real paychecks also reflect W-4 withholding choices, health/dental premiums, HSA/FSA contributions, local city taxes (e.g., NYC), state disability/family-leave programs, and bonuses. Withholding also differs from your final tax bill.' },
+  { question: 'Is getting a big tax refund a good thing?', answer: 'A refund means your employer withheld more than you owed — an interest-free loan to the government repaid the following spring. It is not extra income. If your refunds are consistently large, adjusting your W-4 moves that money into each paycheck instead.' },
+  { question: 'Do bonuses get taxed at a higher rate?', answer: 'No — they are withheld at a flat supplemental rate (22% federally for most bonuses), which often differs from your regular withholding. At filing time a bonus is just ordinary income taxed at your normal brackets; any over- or under-withholding settles in your refund or balance due.' },
+  { question: 'What happens to Social Security tax on high salaries?', answer: 'Social Security (6.2%) applies only up to the annual wage base — $184,500 in 2026. Earnings above it pay no Social Security tax, which is why high earners see take-home jump late in the year once they cross the cap. Medicare has no cap and adds 0.9% above $200,000.' }
 ];
 
 // Animated "where each $100 goes" stacked bar.
@@ -252,6 +255,96 @@ const USPaycheckCalculator = () => {
             { name: 'Read your paycheck', text: 'Switch between weekly, bi-weekly, monthly, and annual views and see where each $100 goes.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">Gross to net: where the money actually goes</h2>
+          <p className="mt-3">
+            An $85,000 offer letter and an $85,000 lifestyle are separated by four deductions, each with its own
+            rules. Federal income tax is progressive and applies after the standard deduction. Social Security
+            takes a flat 6.2% of wages up to an annual cap. Medicare takes 1.45% of everything, plus a surtax at
+            high incomes. State income tax ranges from zero (nine states) to double digits (California&rsquo;s top
+            brackets). Because each deduction uses a different base and different thresholds, questions like
+            &ldquo;what does a $10,000 raise really pay me?&rdquo; or &ldquo;what does a 6% 401(k) contribution
+            really cost me?&rdquo; have unintuitive answers — which is what this calculator is for.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">A worked example: $85,000, single, two states</h3>
+          <p className="mt-3">
+            Jordan earns $85,000 and is comparing offers in Austin and Los Angeles. In Texas the 2026 numbers run:
+            federal income tax <strong className="text-ink dark:text-white">$9,870</strong> (on $68,900 of taxable
+            income after the $16,100 standard deduction), Social Security{' '}
+            <strong className="text-ink dark:text-white">$5,270</strong>, Medicare{' '}
+            <strong className="text-ink dark:text-white">$1,233</strong>, state tax zero — take-home{' '}
+            <strong className="text-ink dark:text-white">$68,628</strong>, or 81 cents of every gross dollar. The
+            same salary in California keeps the federal numbers identical but adds about{' '}
+            <strong className="text-ink dark:text-white">$3,932</strong> of state tax: take-home{' '}
+            <strong className="text-ink dark:text-white">$64,695</strong>. The gap — roughly $328 a month — is a
+            real input to the offer comparison, but only one: LA rent differences dwarf it, which is why
+            state tax should inform a relocation decision, not decide it.
+          </p>
+          <p className="mt-3">
+            Now add a 6% traditional 401(k) contribution in Texas. $5,100 goes into the account, but Jordan&rsquo;s
+            take-home falls only to $64,650 — a drop of{' '}
+            <strong className="text-ink dark:text-white">$3,978</strong>. The missing $1,122 is federal tax he no
+            longer owes, because contributions come out before income tax. Every dollar he saves costs him about
+            78 cents. Note what did <em>not</em> change: Social Security and Medicare are still charged on the
+            full $85,000 — pre-tax retirement money escapes income tax, not FICA.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">The two rates worth knowing by heart</h3>
+          <p className="mt-3">
+            Jordan&rsquo;s <em>effective</em> rate in Texas is 19% — total deductions over total pay, the number
+            that matters for budgeting. His <em>marginal</em> rate is 24% federal plus 7.65% FICA: what the next
+            dollar loses, the number that matters for evaluating overtime, a side income, or the raise that comes
+            with a promotion. Neither is the &ldquo;I&rsquo;m in the 22% bracket so I lose 22% of everything&rdquo;
+            folk model — crossing a bracket boundary never reduces take-home pay, because higher rates apply only
+            to the dollars above each threshold.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Withholding is not your tax bill</h3>
+          <p className="mt-3">
+            The deductions on a real pay stub are your employer&rsquo;s estimate of your annual tax, spread across
+            pay periods according to your W-4. The truth arrives at filing time: withhold too much all year and
+            the difference comes back as a refund; too little and you owe. Life events that break the estimate —
+            a second job, a working spouse, large non-wage income — are exactly when a W-4 update is worth the
+            ten minutes. A calculator like this one gives the annual liability side of that comparison; your pay
+            stub gives the withholding side.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Distinctions that save real money</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Pre-tax vs Roth contributions.</strong> Traditional
+              401(k) money skips income tax now and pays it in retirement; Roth pays now and skips later. The
+              worked example&rsquo;s 78-cents-per-dollar math applies only to traditional — a Roth dollar costs a
+              full dollar of take-home today. The{' '}
+              <a href="/guides/traditional-vs-roth-401k" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">traditional vs Roth guide</a>{' '}
+              covers how to choose.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">FICA vs income tax.</strong> They fund different things
+              and follow different rules: FICA is flat, capped (Social Security), and unavoidable through
+              deductions; income tax is progressive and highly plannable. Advice that works on one is often
+              useless against the other.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Salary vs taxable income.</strong> The brackets apply
+              to income after the standard deduction ($16,100 single in 2026) and pre-tax contributions. An
+              $85,000 salary is $68,900 of taxable income before any 401(k) — comparing your salary directly to
+              bracket thresholds overstates your tax.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Where to go from here</h3>
+          <p className="mt-3">
+            The ready-made tables answer the common questions instantly:{' '}
+            <a href="/after-taxes" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">take-home by salary level</a>{' '}
+            across every state, and{' '}
+            <a href="/paycheck" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">take-home by state</a>{' '}
+            across every salary. For the full anatomy of a pay stub — every code, every box — read{' '}
+            <a href="/guides/how-to-read-your-paycheck" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">how to read your paycheck</a>.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Paycheck Calculator FAQ</h2>

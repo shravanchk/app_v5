@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { Calendar } from 'lucide-react';
 import EEATPanel from '../calculator/EEATPanel';
 import SearchLandingSections from '../calculator/SearchLandingSections';
-import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 import { CalcLayout } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
@@ -205,6 +204,18 @@ const IRCTCCalculator = () => {
     {
       question: 'Can this tool guarantee seat availability?',
       answer: 'No. It helps plan booking windows and timing strategy. Final availability depends on live quota, demand, and IRCTC system status.'
+    },
+    {
+      question: 'What is the difference between GNWL and RLWL waitlists?',
+      answer: 'GNWL (General Waiting List) applies to journeys starting near the train’s origin and clears most often, because it absorbs cancellations from the largest quota. RLWL (Remote Location) and PQWL (Pooled Quota) serve intermediate stations with much smaller quotas, so equal-looking waitlist numbers can have very different chances of confirming.'
+    },
+    {
+      question: 'What does RAC mean on a ticket?',
+      answer: 'Reservation Against Cancellation — you are allowed to board and travel, typically sharing a side-lower berth with another RAC passenger, and you get a full berth if a confirmed passenger cancels. It sits between confirmed and waitlisted: travel is guaranteed, comfort is not.'
+    },
+    {
+      question: 'Does the 60-day window apply to Tatkal bookings?',
+      answer: 'No. Tatkal is a separate quota that opens one day before the journey date — 10:00 AM IST for AC classes and 11:00 AM for non-AC — regardless of when general booking opened. A Tatkal ticket also carries a maximum of 4 passengers.'
     }
   ];
   const softwareSchema = buildSoftwareApplicationSchema({
@@ -219,7 +230,6 @@ const IRCTCCalculator = () => {
       'Quota and timing guidance'
     ]
   });
-  const faqSchema = buildFaqSchema(seoFaqItems);
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', item: 'https://upaman.com/' },
     { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
@@ -257,7 +267,6 @@ const IRCTCCalculator = () => {
         <meta name="twitter:description" content="IRCTC train ticket booking fee & convenience charge calculator." />
         <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 
@@ -505,6 +514,77 @@ END:VCALENDAR`}
               </Card>
             ))}
           </div>
+        </div>
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">Why the booking date is the whole game</h2>
+          <p className="mt-3">
+            On popular routes, confirmed berths disappear within minutes of the window opening — sometimes within
+            seconds around festivals. That turns a simple question, &ldquo;when exactly can I book?&rdquo;, into
+            the difference between a confirmed sleeper berth and a three-digit waitlist. The arithmetic trips
+            people in two places: the 60-day general window is counted excluding the journey day, and Tatkal
+            follows its own clock entirely — one day before the journey, at different times for AC and non-AC
+            classes. This tool exists to do that date math and let you set the reminder.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">A worked example: five people to a wedding</h3>
+          <p className="mt-3">
+            Ananya needs five sleeper berths to Lucknow for a family wedding on a Friday. Her best option is the
+            general window: the calculator gives her the exact opening date roughly two months out, at 10:00 AM
+            IST, and she books all five on one ticket the moment it opens. If she misses it, the fallback splits
+            into two problems: Tatkal opens the Thursday before at 11:00 AM for sleeper (10:00 for AC), and a
+            Tatkal ticket carries at most four passengers — so five people means two tickets, booked in a quota
+            that often empties in the first minutes. The lesson generalizes: the general window rewards planning
+            once; Tatkal punishes everyone equally.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Living with the 60-day window</h3>
+          <p className="mt-3">
+            The advance reservation period was halved from 120 to 60 days on 1 November 2024. The practical
+            effects cut both ways. Trips can no longer be locked in a season ahead, so holiday travel now needs a
+            calendar reminder two months out. But the shorter window also squeezed out speculative booking —
+            tickets bought &ldquo;just in case&rdquo; and cancelled later — which had inflated apparent demand
+            and fed the waitlist churn. Availability at opening now reflects real intent more than it used to.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">A Tatkal opening, run properly</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li><strong className="text-ink dark:text-white">Before the clock:</strong> log in early (sessions started at 9:58 beat logins at 10:00), and have every traveller saved in your master passenger list — typing names during the rush is where bookings die.</li>
+            <li><strong className="text-ink dark:text-white">Payment:</strong> keep one fast method ready and pre-authorized; a payment that bounces at 10:02 usually means starting over against an emptier quota.</li>
+            <li><strong className="text-ink dark:text-white">Know your hour:</strong> AC classes open at 10:00, sleeper and other non-AC at 11:00 — two separate chances if your class is flexible. Agents are barred from booking in the opening window, which keeps the first minutes for individual users.</li>
+            <li><strong className="text-ink dark:text-white">Premium Tatkal</strong> is the paid escape hatch: dynamic pricing on AC classes, so you trade money for probability. Worth it when the journey is non-negotiable; poor value when a waitlist would likely clear anyway.</li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Reading a waitlisted ticket</h3>
+          <p className="mt-3">
+            The status code matters as much as the number. <strong className="text-ink dark:text-white">CNF</strong>{' '}
+            is a berth. <strong className="text-ink dark:text-white">RAC</strong> guarantees travel — typically a
+            shared side-lower berth — and upgrades to a full berth as confirmed passengers cancel.{' '}
+            <strong className="text-ink dark:text-white">WL</strong> means no travel unless it clears, and the
+            prefix tells you the odds: GNWL draws on the origin station&rsquo;s large quota and clears most
+            reliably, while RLWL and PQWL pool much smaller allocations for intermediate stations — a GNWL 20 is
+            routinely a better bet than an RLWL 8. Checking which waitlist a route uses, before booking, is the
+            single most underrated habit in Indian rail planning.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Charges people conflate</h3>
+          <p className="mt-3">
+            The fare on the ticket is the railway&rsquo;s; the convenience fee added at checkout is IRCTC&rsquo;s
+            platform charge and varies by payment method — one reason the same journey can cost slightly different
+            amounts on different bookings. Tatkal adds its own premium over base fare, and Premium Tatkal replaces
+            fixed pricing with demand-based fares altogether. When comparing the &ldquo;cost of a ticket,&rdquo;
+            be clear which of the three layers moved.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Using this page well</h3>
+          <p className="mt-3">
+            Enter the journey date the moment travel plans firm up, add the calendar reminder the tool generates,
+            and book at opening. If the date is inside the 60-day window already, check the general quota first
+            and treat Tatkal as the fallback it was designed to be. Planning the trip budget too? The{' '}
+            <a href="/loan-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">EMI calculator</a>{' '}
+            and <a href="/credit-card-trap-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">credit-card trap calculator</a>{' '}
+            cover the other side of festival-season spending.
+          </p>
         </div>
 
         <div className="mt-8">

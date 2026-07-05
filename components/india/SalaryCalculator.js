@@ -10,7 +10,6 @@ import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
-import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 const { calculateIndianIncomeTax } = require('../../utils/taxCalculations');
 
@@ -97,7 +96,6 @@ const SalaryCalculator = () => {
     description: 'Calculate CTC to in-hand salary with deduction estimates and compare offers across city contexts.',
     featureList: ['CTC to In-hand Salary Calculator', 'Salary Comparison Tool', 'City Cost-Adjusted Salary Comparison', 'Deduction Breakdown'],
   });
-  const faqSchema = buildFaqSchema(seoFaqItems);
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', item: 'https://upaman.com/' },
     { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
@@ -130,7 +128,6 @@ const SalaryCalculator = () => {
         <meta property="og:url" content="https://upaman.com/salary-calculator" />
         <meta property="og:type" content="website" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 

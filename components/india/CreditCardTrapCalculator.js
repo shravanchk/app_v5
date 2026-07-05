@@ -12,7 +12,6 @@ import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { HowToNote, Panel } from '../workflow/WorkflowKit';
 import { formatINR } from '../../utils/calculations';
-import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 
 const MAX_MONTHS = 1200;
@@ -157,7 +156,6 @@ const CreditCardTrapCalculator = () => {
       'Month-wise debt schedule'
     ]
   });
-  const faqSchema = buildFaqSchema(faqItems);
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', item: 'https://upaman.com/' },
     { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
@@ -200,7 +198,6 @@ const CreditCardTrapCalculator = () => {
         />
         <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 

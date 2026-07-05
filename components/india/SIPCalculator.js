@@ -10,7 +10,6 @@ import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
 import { NumberField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
-import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 
 const SIPCalculator = () => {
@@ -134,7 +133,6 @@ const SIPCalculator = () => {
     description: 'SIP, step-up SIP, goal-based SIP, and SIP vs lumpsum projection calculator for planning.',
     featureList: ['SIP Calculator', 'Step-up SIP Calculator', 'Goal-based SIP Planner', 'SIP vs Lumpsum Comparison'],
   });
-  const faqSchema = buildFaqSchema(seoFaqItems);
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', item: 'https://upaman.com/' },
     { name: 'India Calculators', item: 'https://upaman.com/india-calculators' },
@@ -155,7 +153,6 @@ const SIPCalculator = () => {
         <meta property="og:url" content="https://upaman.com/sip-calculator" />
         <meta property="og:type" content="website" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 
@@ -287,6 +284,111 @@ const SIPCalculator = () => {
             </div>
           </div>
         )}
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">What a SIP projection can and cannot tell you</h2>
+          <p className="mt-3">
+            A SIP projection answers one question well: given a monthly amount, a tenure, and an assumed return,
+            what does compounding do to the money? It cannot tell you what the market will return — that input is
+            yours, and it is the weakest one. Treat the output as a planning scenario, not a forecast, and the
+            calculator becomes genuinely useful: it shows how sensitive your goal is to each of the three levers
+            you actually control — how much, how long, and how aggressively you step up contributions over time.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">A worked example: ₹15,000 a month for 15 years</h3>
+          <p className="mt-3">
+            Rohan, 30, starts a ₹15,000 monthly SIP in an equity index fund and assumes 12% annual returns. Over
+            15 years he invests ₹27,00,000, and the projection lands at roughly <strong className="text-ink dark:text-white">₹75.7 lakh</strong> —
+            ₹48.7 lakh of it growth. Two details in the year-by-year table deserve more attention than the final figure:
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Gains overtake contributions only in year 11.</strong>{' '}
+              For the first decade, most of the corpus is simply his own money. The dramatic compounding lives
+              almost entirely in the last third of the tenure — which is why quitting a SIP in year 6 or 7
+              forfeits far more than the years already invested suggest.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">The return assumption swings the outcome by lakhs.</strong>{' '}
+              The same ₹15,000 for the same 15 years projects to ₹62.7 lakh at 10% and ₹91.9 lakh at 14%. A
+              two-point difference in an assumption he cannot control moves the result by more than his entire
+              first four years of contributions. Planning against a conservative band (say 10–12% for equity)
+              and being pleasantly surprised beats anchoring on an optimistic point estimate.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Time beats amount — by more than intuition suggests</h3>
+          <p className="mt-3">
+            Compare two investors targeting retirement. One starts ₹15,000 a month at 25 and continues for 25
+            years, investing ₹45 lakh in total. The other waits a decade, then invests double — ₹30,000 a month
+            for 15 years, ₹54 lakh in total. At the same 12%, the early starter finishes with about{' '}
+            <strong className="text-ink dark:text-white">₹2.85 crore</strong>; the late starter with{' '}
+            <strong className="text-ink dark:text-white">₹1.51 crore</strong>. Nine lakh less invested, ₹1.3 crore
+            more at the end. Every year of delay quietly removes the most valuable years of compounding — the last
+            ones.
+          </p>
+          <p className="mt-3">
+            The step-up feature models the realistic middle path: start with what fits today and raise the SIP as
+            income grows. Rohan&rsquo;s ₹15,000 SIP with a 10% annual step-up invests ₹57.2 lakh over the same 15
+            years and projects to about ₹1.30 crore — but note the honest framing: most of that improvement comes
+            from investing more money, not from any compounding magic. The step-up&rsquo;s real value is
+            behavioural — it commits future raises before lifestyle absorbs them.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">What the projection deliberately leaves out</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Costs.</strong> Expense ratios compound against you
+              exactly the way returns compound for you. A regular plan typically carries distributor commission
+              that a direct plan of the same fund does not; over 15 years even a half-percent drag is material.
+              Model it by shaving your return assumption, not by ignoring it.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Volatility.</strong> Real equity returns arrive
+              lumpily. The projection&rsquo;s smooth curve is an average; actual portfolios spend years above and
+              below it. Rupee-cost averaging works precisely because contributions continue through the dips —
+              pausing a SIP during a fall buys fewer of the cheapest units you were ever offered.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Tax.</strong> Under current rules, long-term capital
+              gains on equity funds above the annual exemption are taxed on redemption, so the corpus you see is
+              pre-tax. Since each SIP instalment has its own purchase date, instalments from the final year may
+              still be short-term when you begin withdrawing — sequencing redemptions matters at the goal end.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Ideas people conflate</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">SIP vs lumpsum is a cash-flow question, not a returns
+              debate.</strong> If money arrives monthly from salary, a SIP is simply how investing looks. The
+              comparison tab matters only when a lump sum exists today — historically, deploying it immediately
+              wins more often than spreading it, but spreading softens the regret of a crash in month two. That
+              trade-off is about temperament as much as math.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">CAGR vs absolute return.</strong> &ldquo;My fund
+              doubled&rdquo; means little without the holding period: doubling in 6 years is roughly 12% CAGR;
+              in 10 years, about 7%. The calculator speaks CAGR; fund marketing often speaks absolute.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">NAV level says nothing about value.</strong> A fund at
+              NAV ₹15 is not cheaper than one at ₹150 — you simply hold more units of the first. Growth depends on
+              the portfolio behind the NAV, never on the number itself.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">When to come back to this page</h3>
+          <p className="mt-3">
+            Rerun the projection when income changes (to size a step-up), when a goal date moves, or annually to
+            compare actual portfolio value against the scenario line — a portfolio meaningfully below the 10%
+            curve after several years is a prompt to review fund selection or contribution levels, not to abandon
+            the plan. Pair it with the <a href="/prepay-vs-invest-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">prepay vs invest workflow</a>{' '}
+            if a loan competes for the same monthly surplus, or the{' '}
+            <a href="/ppf-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">PPF calculator</a>{' '}
+            to model the guaranteed-return leg of the same goal.
+          </p>
+        </div>
 
         <div className="mt-10 space-y-6">
           <EEATPanel

@@ -17,7 +17,10 @@ const FAQ = [
   { question: 'What is a healthy BMI?', answer: 'For most adults, a BMI between 18.5 and 24.9 is considered a healthy weight by the WHO and CDC. Below 18.5 is underweight, 25–29.9 is overweight, and 30 or above falls in the obesity range.' },
   { question: 'How is BMI calculated?', answer: 'BMI = weight in kilograms divided by height in metres squared (kg/m²). In US units the equivalent formula is 703 × weight in pounds ÷ height in inches squared.' },
   { question: 'Is BMI accurate for everyone?', answer: 'BMI is a useful screening tool but not a diagnosis. It does not distinguish muscle from fat, so very muscular people can read as overweight, and it may underestimate body fat in older adults. Athletes, pregnant women, and children should use other measures.' },
-  { question: 'What should I do if my BMI is outside the healthy range?', answer: 'Treat it as a prompt to look deeper, not a verdict. Pair BMI with waist circumference and body-fat percentage, and discuss the full picture with a healthcare professional before changing diet or exercise.' }
+  { question: 'What should I do if my BMI is outside the healthy range?', answer: 'Treat it as a prompt to look deeper, not a verdict. Pair BMI with waist circumference and body-fat percentage, and discuss the full picture with a healthcare professional before changing diet or exercise.' },
+  { question: 'Why does BMI divide by height squared?', answer: 'The formula dates to the statistician Adolphe Quetelet in the 1830s, who found weight scales roughly with height squared across adult populations. It is an empirical fit, not a law of physiology — one reason BMI reads slightly high for very tall people and slightly low for very short people.' },
+  { question: 'Are the BMI cut-offs different for Asian populations?', answer: 'The WHO notes that health risks associated with weight begin at lower BMI values in many Asian populations, and suggests action points of 23 (increased risk) and 27.5 (high risk) instead of 25 and 30. If this applies to you, read the standard categories conservatively.' },
+  { question: 'Is BMI useful while building muscle?', answer: 'Not on its own. Resistance training can raise BMI while body fat falls, which BMI reads as movement toward "overweight". Track waist measurement and body-fat percentage alongside weight during a recomposition phase — direction matters more than the single number.' }
 ];
 
 const BMICalculator = () => {
@@ -155,6 +158,98 @@ const BMICalculator = () => {
             { name: 'Check your healthy range', text: 'Compare your weight against the healthy range calculated for your height.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">What BMI is good at — and what it quietly ignores</h2>
+          <p className="mt-3">
+            BMI survives as a screening tool for one reason: it costs nothing and needs only a scale and a tape
+            measure. Clinicians, researchers, and insurers use it to triage — to decide whose weight deserves a
+            closer look — not to diagnose anyone. Used the same way at home, it is genuinely useful. Used as a
+            verdict on body composition, it misleads in predictable directions, and knowing those directions is
+            worth more than the number itself.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Reading a real result</h3>
+          <p className="mt-3">
+            Maya is 5&prime;7&Prime; and weighs 172 lb. The calculator returns a BMI of 26.9 — inside the
+            overweight band — and a healthy range for her height of roughly 118–159 lb. Three observations turn
+            that from a label into a plan:
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">The distance matters more than the category.</strong>{' '}
+              She is 13 lb above the top of the healthy range — a modest gap. At a sustainable loss rate of 0.5–1
+              lb a week, that is a three-to-six-month project, not a life overhaul. Someone at the same height
+              weighing 220 lb faces a different problem needing different support.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">The number says nothing about what the 13 lb is.</strong>{' '}
+              If Maya lifts weights four days a week, 26.9 may be entirely benign muscle. Her waist measurement
+              answers that faster than the scale: central fat is the kind most associated with metabolic risk,
+              which is why screening guidance pairs BMI with waist circumference rather than using either alone.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Trend beats snapshot.</strong> Day-to-day weight moves
+              a few pounds with water, salt, and sleep. A weekly average, measured at the same time of day, is the
+              signal; any single reading is mostly noise.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Where the formula comes from, and why it bends at the edges</h3>
+          <p className="mt-3">
+            The index is nearly two centuries old — Adolphe Quetelet observed in the 1830s that adult weight
+            scales roughly with the square of height. That empirical fit works well across populations and poorly
+            at individual extremes: very tall people read slightly heavy, very short people slightly light, and
+            the formula is blind to composition by construction. Muscle, bone density, and fat all weigh the same
+            to it. The categories also assume a body-fat-to-BMI relationship derived largely from European
+            populations; the WHO&rsquo;s guidance for many Asian populations moves the risk thresholds down to 23
+            and 27.5, and older adults often carry higher risk at a &ldquo;normal&rdquo; BMI because muscle loss
+            masks fat gain. Children use age-and-sex percentile charts, never the adult bands.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Picking the right measure for the question</h3>
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full min-w-[460px] border-collapse text-[0.9rem]">
+              <tbody>
+                <tr>
+                  <th className="border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-white">Measure</th>
+                  <th className="border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-white">Answers</th>
+                  <th className="border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-white">Blind spot</th>
+                </tr>
+                {[
+                  ['BMI', 'Is my weight unusual for my height?', 'Composition — muscle vs fat'],
+                  ['Waist circumference', 'Am I carrying fat where it does harm?', 'Total body fat elsewhere'],
+                  ['Waist-to-height ratio', 'Quick risk check (keep waist under half your height)', 'Less standardized cut-offs'],
+                  ['Body-fat %', 'What is my weight actually made of?', 'Harder to measure accurately at home']
+                ].map((row) => (
+                  <tr key={row[0]}>
+                    {row.map((cell, i) => (
+                      <td key={i} className="border border-slate-200 px-3 py-2 text-ink-soft dark:border-slate-700 dark:text-slate-300">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-3">
+            The measures are complements, not competitors. A practical home stack: BMI for the big picture, waist
+            for fat placement (the <a href="/body-fat-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">body fat calculator</a>{' '}
+            estimates composition from tape measurements alone), and a weekly weight average for trend. If the
+            goal becomes changing the number rather than reading it, the{' '}
+            <a href="/calorie-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">calorie calculator</a>{' '}
+            translates a target rate of loss or gain into a daily energy budget, and the{' '}
+            <a href="/ideal-weight-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">ideal weight calculator</a>{' '}
+            shows how the four classical formulas frame a target for your height.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">When BMI is the wrong tool entirely</h3>
+          <p className="mt-3">
+            Skip the adult bands during pregnancy, for anyone under 18, and in serious strength athletes — all
+            three break the population assumptions the categories rest on. And if BMI sits far outside the healthy
+            range in either direction, the useful next step is a clinician, not a stricter diet app: rapid
+            unexplained weight change in particular is a medical question before it is a fitness one.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">BMI Calculator FAQ</h2>

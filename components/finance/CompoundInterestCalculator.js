@@ -16,7 +16,9 @@ const FAQ = [
   { question: 'What is compound interest?', answer: 'Compound interest is interest earned on both your original money and on interest already earned. Each period the balance grows, so the next period’s interest is calculated on a larger amount — that is why growth accelerates over time.' },
   { question: 'How often should interest compound?', answer: 'More frequent compounding grows money slightly faster at the same nominal rate: $10,000 at 5% for 10 years becomes $16,289 compounded annually vs $16,470 compounded monthly. The difference is real but small — the rate and time matter far more.' },
   { question: 'What is the Rule of 72?', answer: 'Divide 72 by your annual return to estimate how many years it takes money to double. At 8%, money doubles roughly every 9 years; at 6%, every 12 years.' },
-  { question: 'Does this calculator include taxes or inflation?', answer: 'No — results are pre-tax, nominal returns. Interest in taxable accounts is usually taxed yearly, and inflation reduces buying power. Pair this with the inflation calculator to see results in today’s dollars.' }
+  { question: 'Does this calculator include taxes or inflation?', answer: 'No — results are pre-tax, nominal returns. Interest in taxable accounts is usually taxed yearly, and inflation reduces buying power. Pair this with the inflation calculator to see results in today’s dollars.' },
+  { question: 'Is 7% a realistic return assumption?', answer: 'It is a common planning figure loosely based on long-run US stock market averages, but no savings account pays it and no market guarantees it. Use your account’s actual APY for cash savings, and for investments run the projection at a range (say 5–9%) rather than a single optimistic number.' },
+  { question: 'Why do my contributions earn less than the starting balance?', answer: 'Each contribution only compounds from the month it arrives. A dollar deposited in year 15 of a 20-year plan gets 5 years of growth; a dollar in the starting balance gets all 20. This is why starting earlier with less usually beats starting later with more.' }
 ];
 
 const fmtUSD = (v, digits = 0) =>
@@ -243,6 +245,99 @@ const CompoundInterestCalculator = () => {
             { name: 'Read the breakdown', text: 'The chart splits your final balance into deposits, contributions, and interest — and the table shows every year.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">The three levers, and which one you underrate</h2>
+          <p className="mt-3">
+            Every compound growth projection is built from three inputs — how much goes in, what rate it earns,
+            and how long it stays. People consistently obsess over the middle one, hunting for an extra half
+            percent, while treating time as fixed. The math runs the other way: rate is the input you control
+            least and time is the one that does the heaviest lifting, because compounding is back-loaded — most of
+            the growth happens in the final years, wherever those years fall.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">A worked example: $10,000 plus $200 a month</h3>
+          <p className="mt-3">
+            Dana invests a $10,000 inheritance, adds $200 a month, and assumes 7% — a common long-run planning
+            figure for diversified stock investments. Over 20 years she puts in $58,000 ($10,000 up front,
+            $48,000 in contributions) and the projection reaches{' '}
+            <strong className="text-ink dark:text-white">$144,573</strong>. The interesting part is the
+            composition: $86,573 of the final balance is growth — more than everything she deposited. And the
+            back-loading is stark. If she stopped five years early, at year 15, she would have $91,882: the final
+            five years add $52,691, of which only $12,000 is her own money. Years 1–5 of the same plan add barely
+            a fifth of that.
+          </p>
+          <p className="mt-3">
+            Run her numbers at different rates and the sensitivity shows: $109,333 at 5%, $193,669 at 9%. That
+            spread is why a projection should be a band, not a point — pick a pessimistic and an optimistic rate
+            and plan against the low end.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Mental math that gets the shape right</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Rule of 72 for doubling.</strong> 72 ÷ rate ≈ years to
+              double. At 7%, money doubles roughly every 10 years — so a 40-year horizon means about four
+              doublings of the starting balance, which is how $10,000 becomes a six-figure sum without any
+              contributions at all.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Contributions compound less than principal.</strong>{' '}
+              Each monthly deposit only grows from its own start date, so the average contributed dollar in a
+              20-year plan compounds for about 10 years. This is why doubling the timeline more than doubles the
+              outcome, but doubling contributions merely doubles their part of it.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Frequency is a rounding error next to rate and time.</strong>{' '}
+              Daily versus monthly compounding at the same nominal rate changes the outcome by well under 1% over
+              a decade. Banks resolve this for you anyway: APY already includes the compounding frequency, which
+              is why comparing accounts by APY is safe and comparing by nominal APR is not.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">What to subtract before believing the number</h3>
+          <p className="mt-3">
+            The projection is nominal and gross. Three things stand between it and spendable money. Inflation is
+            the certain one — at typical rates, prices roughly double over 20–25 years, so a distant balance buys
+            about half what the number suggests; the{' '}
+            <a href="/inflation-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">inflation calculator</a>{' '}
+            converts any future figure into today&rsquo;s dollars. Taxes are the account-dependent one: interest
+            in ordinary savings is typically taxed every year (slowing the compounding itself), while retirement
+            accounts defer or remove that drag — the same inputs produce genuinely different outcomes by account
+            type. Fees are the silent one: an expense ratio works exactly like a negative return, compounding
+            against you with the same back-loaded force.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Terms that look interchangeable but aren&rsquo;t</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">APR vs APY.</strong> APR is the nominal rate before
+              compounding; APY is what you actually earn after it. On loans the same distinction runs against you
+              — a credit card&rsquo;s daily compounding makes its effective rate higher than the quoted APR.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Simple vs compound interest.</strong> Simple interest
+              pays only on principal, forever linear. Most real products compound; the big exception is certain
+              bonds and short-term notes, which is why their quoted rates aren&rsquo;t directly comparable.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Average return vs your return.</strong> A fund&rsquo;s
+              published average assumes a lump sum held throughout. With monthly contributions, your personal
+              return depends on when each dollar arrived — money-weighted and time-weighted returns diverge
+              whenever you add or withdraw along the way.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Good uses for this page</h3>
+          <p className="mt-3">
+            Size an emergency fund&rsquo;s growth at a real APY, test whether a savings goal needs more monthly
+            contribution or just more patience, or settle the classic &ldquo;invest the windfall vs spread it
+            out&rdquo; question with two runs. For retirement specifically, the{' '}
+            <a href="/us-401k-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">401(k) calculator</a>{' '}
+            layers employer matching on top of the same compounding engine — usually the highest-return decision
+            available before any rate shopping.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Compound Interest FAQ</h2>
