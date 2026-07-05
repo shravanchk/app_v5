@@ -11,6 +11,40 @@ import { NumberField, SelectField } from '../ui/Field';
 import Card from '../ui/Card';
 const { calculateUKTax } = require('../../utils/taxCalculations');
 
+// Single source for the visible FAQ list and the FAQPage JSON-LD so the
+// schema can never drift from what's on the page. Figures verified against
+// calculateUKTax in utils/taxCalculations.
+const UK_FAQS = [
+  {
+    q: 'What is the Personal Allowance for 2026-27?',
+    a: 'The standard Personal Allowance for 2026-27 is £12,570. This is the amount you can earn tax-free before paying income tax. However, it reduces by £1 for every £2 you earn over £100,000, disappearing entirely at £125,140.'
+  },
+  {
+    q: 'Why did my take-home barely move after a £10,000 pay rise above £100,000?',
+    a: 'Between £100,000 and £125,140 the Personal Allowance tapers away, so each extra £1 is taxed at 40% and also removes 50p of tax-free allowance. Combined with 2% National Insurance, a rise from £100,000 to £110,000 adds only about £3,800 to annual take-home — an effective marginal rate of 62%. Pension contributions that bring adjusted net income back under £100,000 restore the allowance, which is why relief in this band is often described as 60%.'
+  },
+  {
+    q: 'Does paying into my pension reduce National Insurance too?',
+    a: 'Usually not. With net-pay or relief-at-source schemes, contributions reduce income tax but NI is still charged on your full gross salary — that is how this calculator models it. Salary-sacrifice arrangements are the exception: your contractual pay is reduced before both tax and NI, so you also save 8% (or 2% above £50,270) in NI.'
+  },
+  {
+    q: 'Do student loan repayments reduce my income tax?',
+    a: 'No — the two are calculated independently. Student loan repayments take 9% of gross income above your plan’s threshold (6% above £21,000 for postgraduate loans) regardless of how much tax you pay. In practice it behaves like an extra 9% marginal band: a Plan 2 graduate in the higher-rate band keeps just 49p of each extra £1 after 40% tax, 2% NI, and 9% loan.'
+  },
+  {
+    q: 'How do Scottish tax rates differ?',
+    a: 'Scotland sets its own income-tax bands: Starter (19%), Basic (20%), Intermediate (21%), Higher (42%), Advanced (45%), and Top (48%). England, Wales and Northern Ireland have three bands: Basic (20%), Higher (40%), and Additional (45%). National Insurance and student loan rules are identical across the UK — only income tax is devolved.'
+  },
+  {
+    q: 'How is National Insurance calculated?',
+    a: 'Employee Class 1 National Insurance (category A) is charged at 8% on earnings between £12,570 and £50,270, then 2% above £50,270. Unlike income tax, the rate falls at higher incomes, and NI is normally assessed on each pay period rather than the year as a whole.'
+  },
+  {
+    q: 'What are the different Student Loan plans?',
+    a: 'Plan 1 (pre-2012 loans): £26,900 threshold. Plan 2 (2012 onwards, England and Wales): £29,385. Plan 4 (Scotland): £33,795. Plan 5 (courses from August 2023): £25,000. All charge 9% of income above the threshold; Postgraduate loans charge 6% above £21,000, and can stack on top of an undergraduate plan.'
+  }
+];
+
 const UKIncomeTaxCalculator = () => {
   const [income, setIncome] = useState('');
   const [region, setRegion] = useState('england'); // england, scotland, wales, ni
@@ -127,37 +161,16 @@ const UKIncomeTaxCalculator = () => {
           })}
         </script>
 
-        {/* FAQ Schema */}
+        {/* FAQ Schema — generated from UK_FAQS so it always matches the visible FAQ list */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What is the Personal Allowance for 2026-27?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "The standard Personal Allowance for 2026-27 is £12,570. It reduces by £1 for every £2 of adjusted net income above £100,000."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What are the UK income tax rates for 2026-27?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "For England, Wales and Northern Ireland: 20% (£12,571-£50,270), 40% (£50,271-£125,140), 45% (over £125,140). Scotland has different rates with additional bands."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How is National Insurance calculated?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Employee Class 1 National Insurance category A is charged at 8% on earnings between £12,570 and £50,270, then 2% above £50,270."
-                }
-              }
-            ]
+            "mainEntity": UK_FAQS.map(({ q, a }) => ({
+              "@type": "Question",
+              "name": q,
+              "acceptedAnswer": { "@type": "Answer", "text": a }
+            }))
           })}
         </script>
       </Head>
@@ -285,15 +298,176 @@ const UKIncomeTaxCalculator = () => {
           </div>
         </div>
 
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">How UK take-home pay actually gets worked out</h2>
+          <p className="mt-3">
+            Three separate systems act on a UK payslip, and each one uses a different definition of your income.
+            Income tax applies to taxable income — what remains after the Personal Allowance and any pension
+            contributions that qualify for relief. Employee National Insurance ignores all of that and takes a
+            slice of gross pay, assessed per pay period. Student loan repayments ignore both and charge a flat
+            percentage of gross income above a threshold set by your repayment plan. Because the three bases never
+            quite line up, intuitions built on one system routinely fail on the others: a pension contribution
+            that saves 40p per £1 in tax saves nothing in NI under most schemes, and no amount of tax planning
+            changes a student loan deduction.
+          </p>
+          <p className="mt-3">
+            PAYE hides this machinery. Your employer deducts everything before pay lands, so most people only
+            confront the mechanics when something changes — a new job, a pay rise that crosses a band boundary, a
+            pension decision, or a move to Scotland. Those are exactly the moments this calculator is built for.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">A worked example: £58,000 with a pension and a Plan 2 loan</h3>
+          <p className="mt-3">
+            Amelia accepts a £58,000 role in Manchester. She contributes 5% of salary (£2,900) to her workplace
+            pension and, having started university in 2014, repays a Plan 2 student loan. Her 2026-27 payslip
+            builds up like this:
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Personal Allowance:</strong> her income is below
+              £100,000, so she keeps the full £12,570 tax-free.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Income tax:</strong> taxable income is £58,000 − £2,900
+              pension − £12,570 allowance = £42,530. The first £37,700 is taxed at 20% (£7,540); the remaining
+              £4,830 falls in the higher-rate band at 40% (£1,932). Total: <strong className="text-ink dark:text-white">£9,472</strong>.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">National Insurance:</strong> charged on her full gross
+              salary — the pension makes no difference here. 8% of the band between £12,570 and £50,270 is £3,016,
+              plus 2% on the £7,730 above, giving <strong className="text-ink dark:text-white">£3,171</strong>.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Student loan:</strong> 9% of everything over the Plan 2
+              threshold of £29,385 — again on gross pay — comes to <strong className="text-ink dark:text-white">£2,575</strong>.
+            </li>
+          </ul>
+          <p className="mt-3">
+            Net result: <strong className="text-ink dark:text-white">£39,882 a year, about £3,324 a month</strong>,
+            an overall deduction rate of 26.2%. Two readings of those numbers matter more than the numbers
+            themselves. First, the pension: without it her take-home would be £41,622, so the £2,900 going into
+            her pension only costs her £1,740 in spendable income — the higher-rate band is doing 40% of the
+            saving for her. Second, her true marginal rate: each additional £1 she earns loses 40p to tax, 2p to
+            NI, and 9p to her loan. She keeps 49p of every extra pound, which changes how she should think about
+            overtime, bonuses, and salary negotiations.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Why the bands trip people up</h3>
+          <p className="mt-3">
+            UK income tax is marginal: crossing into the 40% band does not re-tax anything below it, so there is
+            no cliff at £50,270 — only the slice above it is taxed at the higher rate. The genuine cliff sits at
+            £100,000, where the Personal Allowance starts tapering away at £1 for every £2 of extra income.
+          </p>
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full min-w-[420px] border-collapse text-[0.9rem]">
+              <tbody>
+                <tr>
+                  <th className="border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-white">Gross income (2026-27)</th>
+                  <th className="border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-white">Income tax on next £1</th>
+                  <th className="border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-white">Employee NI</th>
+                  <th className="border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-white">Combined marginal</th>
+                </tr>
+                {[
+                  ['Up to £12,570', '0%', '0%', '0%'],
+                  ['£12,571 – £50,270', '20%', '8%', '28%'],
+                  ['£50,271 – £100,000', '40%', '2%', '42%'],
+                  ['£100,001 – £125,140', '40% + allowance taper', '2%', '62%'],
+                  ['Over £125,140', '45%', '2%', '47%']
+                ].map((row) => (
+                  <tr key={row[0]}>
+                    {row.map((cell, i) => (
+                      <td key={i} className="border border-slate-200 px-3 py-2 text-ink-soft dark:border-slate-700 dark:text-slate-300">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50/70 p-4 dark:border-amber-800/50 dark:bg-amber-900/20">
+            <strong className="text-ink dark:text-white">The 62% zone in practice:</strong> a pay rise from
+            £100,000 to £110,000 adds only about £3,800 to annual take-home, because each extra £1 is taxed at 40%
+            while also withdrawing 50p of tax-free allowance (an effective 60% before NI). This is why pension
+            contributions are unusually powerful in this band — money sacrificed here gets roughly 60% relief, and
+            bringing adjusted net income back under £100,000 restores the allowance entirely.
+          </p>
+          <p className="mt-3">
+            The other quiet force is threshold freezing. The £12,570 allowance and the £50,270 higher-rate
+            boundary have been frozen since April 2021, so ordinary pay growth pushes more of each salary into
+            higher bands every year without any rate rising — fiscal drag. National Insurance runs in the opposite
+            direction to income tax: its rate <em>falls</em> from 8% to 2% above £50,270, which is why combined
+            marginal rates in the table don&rsquo;t simply climb.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Practical notes</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Check your tax code.</strong> 1257L means the standard
+              allowance is applied. Job changes, company benefits, or untaxed income often produce a different
+              code, and an incorrect one quietly over- or under-deducts until HMRC corrects it. The code is on
+              every payslip.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Pension route matters.</strong> This calculator models
+              tax relief on contributions. Under salary sacrifice, your contractual pay is reduced before both tax
+              and NI, adding an 8% (or 2%) NI saving on top — worth asking your employer about.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Married couples:</strong> if one partner earns under
+              the allowance, Marriage Allowance lets them transfer £1,260 of it to a basic-rate partner.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Child Benefit:</strong> from April 2024 the High Income
+              Child Benefit Charge starts at £60,000 of adjusted net income and removes the benefit entirely by
+              £80,000 — another zone where pension contributions can restore a benefit the headline bands
+              don&rsquo;t show.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Scotland:</strong> only income tax is devolved. If you
+              move across the border, your income-tax bands change but NI and student loan deductions do not.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Terms people mix up</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Marginal vs effective rate.</strong> Amelia&rsquo;s
+              marginal rate is 51% (tax + NI + loan on her next pound); her effective rate is 26.2% (deductions as
+              a share of the whole salary). Negotiations and overtime decisions hinge on the first; budgeting
+              hinges on the second.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Gross vs adjusted net income.</strong> The £100,000
+              taper and the Child Benefit charge test adjusted net income — gross income minus pension
+              contributions and Gift Aid — not your headline salary. That gap is precisely what makes pension
+              planning around those thresholds work.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Tax code vs tax band.</strong> The code (1257L) tells
+              your employer how much allowance to apply; the bands decide the rates above it. A wrong code changes
+              your deductions even though the bands never moved.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Loan repayment vs loan balance.</strong> Student loan
+              deductions are income-contingent: they depend only on earnings above the threshold, not on how much
+              you owe. Two graduates with identical salaries repay identical amounts even if one owes triple the
+              other.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">When this calculator earns its keep</h3>
+          <p className="mt-3">
+            Reach for it when a number is about to change: comparing job offers whose pension terms differ,
+            deciding a contribution percentage near £50,270 or £100,000, sanity-checking your first payslip after
+            a new tax code, or pricing a move between Scotland and the rest of the UK. For a full reference of
+            this year&rsquo;s bands and thresholds, the <a href="/guides/uk-tax-rates-2026-27" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">UK tax rates guide</a>{' '}
+            pairs well with the tables of ready-made results at <a href="/uk/take-home" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">UK take-home by salary</a>.
+          </p>
+        </div>
+
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">UK Tax Calculator FAQ 2026-27</h2>
           <div className="mt-4 grid gap-3">
-            {[
-              { q: 'What is the Personal Allowance for 2026-27?', a: 'The standard Personal Allowance for 2026-27 is £12,570. This is the amount you can earn tax-free before paying income tax. However, it reduces by £1 for every £2 you earn over £100,000.' },
-              { q: 'How do Scottish tax rates differ?', a: 'Scotland has 6 tax bands: Starter (19%), Basic (20%), Intermediate (21%), Higher (42%), Advanced (45%), and Top (48%). This differs from England/Wales/NI which have 3 bands: Basic (20%), Higher (40%), Additional (45%).' },
-              { q: 'How is National Insurance calculated?', a: 'Employee Class 1 National Insurance category A is charged at 8% on earnings between £12,570 and £50,270, and 2% above £50,270. The threshold aligns with the Personal Allowance.' },
-              { q: 'What are the different Student Loan plans?', a: 'Plan 1: £26,900 threshold. Plan 2: £29,385 threshold. Plan 4: £33,795 threshold. Plan 5 (2023+): £25,000 threshold. All charge 9% above threshold, except Postgraduate (6% above £21,000).' }
-            ].map(({ q, a }) => (
+            {UK_FAQS.map(({ q, a }) => (
               <details key={q} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
                 <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{q}</summary>
                 <p className="mt-2 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{a}</p>
