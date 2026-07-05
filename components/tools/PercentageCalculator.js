@@ -14,7 +14,9 @@ const FAQ = [
   { question: 'How do I calculate a percentage of a number?', answer: 'Multiply the number by the percentage and divide by 100. For example, 15% of 80 is 80 × 15 ÷ 100 = 12. A quick mental shortcut: 10% is the number with the decimal moved one place left, then scale from there.' },
   { question: 'How do I work out what percent one number is of another?', answer: 'Divide the part by the whole and multiply by 100. If 25 students out of 200 passed, that is 25 ÷ 200 × 100 = 12.5%.' },
   { question: 'What is the difference between percentage change and percentage points?', answer: 'If a rate moves from 10% to 15%, it rose 5 percentage points — but the percentage change is 50%, because 15 is half again as large as 10. News about interest rates usually means points; discounts usually mean percent.' },
-  { question: 'How do reverse percentages work?', answer: 'To undo a percentage increase, divide instead of multiplying. If a price is $120 after a 20% increase, the original was 120 ÷ 1.20 = $100 — not 120 minus 20%, which would give $96.' }
+  { question: 'How do reverse percentages work?', answer: 'To undo a percentage increase, divide instead of multiplying. If a price is $120 after a 20% increase, the original was 120 ÷ 1.20 = $100 — not 120 minus 20%, which would give $96.' },
+  { question: 'Do two discounts add together?', answer: 'No — they multiply. A 20% discount followed by an extra 15% off leaves you paying 0.80 × 0.85 = 68% of the original, a 32% total discount rather than 35%. On a $250 item that is $170, not $162.50.' },
+  { question: 'Why does falling 25% then rising 25% not get back to the start?', answer: 'Because the second percentage applies to a smaller base. 160 down 25% is 120; 120 up 25% is 150 — still 6.25% short. To recover a 25% loss you actually need a 33.3% gain.' }
 ];
 
 const MODES = [
@@ -199,6 +201,81 @@ const PercentageCalculator = () => {
             { name: 'Read the answer and formula', text: 'The result appears instantly as a sentence, with the exact formula so you can check or reuse it.' }
           ]}
         />
+
+        <article className="mt-10 space-y-8 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+          <section className="space-y-3">
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">One idea, four disguises</h2>
+            <p>
+              Every percentage problem is the same relationship — <em>part = whole × rate</em> — asked from a different
+              direction. Know which of the three pieces you are missing and the formula picks itself:
+            </p>
+            <ul className="list-disc space-y-2 pl-5">
+              <li><strong className="text-ink dark:text-white">Missing the part:</strong> "What is 15% of 80?" → 80 × 15 ÷ 100 = 12. This is the shape of tips, commissions, and deposit calculations.</li>
+              <li><strong className="text-ink dark:text-white">Missing the rate:</strong> "38 out of 50 — what percent?" → 38 ÷ 50 × 100 = 76%. Test scores, conversion rates, savings rates.</li>
+              <li><strong className="text-ink dark:text-white">Comparing two values:</strong> "Rent went from $1,400 to $1,540" → (1,540 − 1,400) ÷ 1,400 × 100 = a 10% increase. Note the old value is always the divisor.</li>
+              <li><strong className="text-ink dark:text-white">Missing the whole:</strong> the reverse-percentage case, the one most people get wrong — covered below.</li>
+            </ul>
+            <p>
+              The calculator's four tabs map to exactly these shapes, and it always prints the formula next to the answer so
+              you can redo the same calculation on the back of a receipt.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">Mental math that actually works</h2>
+            <p>
+              The single most useful trick is that <strong className="text-ink dark:text-white">10% is the number with its
+              decimal point moved one place left</strong>, and everything else is built from that. An 18% tip on a $62 bill:
+              10% is $6.20, 5% is half of that ($3.10), 1% is $0.62. So 18% = 6.20 + 3.10 + 0.62 + 0.62 + 0.62 = $11.16 —
+              which is exactly what 62 × 0.18 gives.
+            </p>
+            <p>
+              The second trick is that percentages commute: <strong className="text-ink dark:text-white">X% of Y always equals
+              Y% of X</strong>. 4% of 75 feels awkward; 75% of 4 is obviously 3. Same answer, because both are just
+              4 × 75 ÷ 100.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">The three classic percentage traps</h2>
+            <p>
+              <strong className="text-ink dark:text-white">Trap 1 — subtracting instead of dividing (reverse percentages).</strong>{' '}
+              A price tag reads $89.99 including 8.25% sales tax, and you want the pre-tax price. Taking 8.25% off $89.99
+              gives $82.57 — wrong. The tax was charged on the <em>original</em> price, so you divide: 89.99 ÷ 1.0825 = $83.13,
+              with $6.86 of tax. Whenever a percentage has already been applied, undo it with division.
+            </p>
+            <p>
+              <strong className="text-ink dark:text-white">Trap 2 — adding stacked percentages.</strong> "20% off, plus an
+              extra 15% off at checkout" is not 35% off. The second discount applies to the already-reduced price:
+              0.80 × 0.85 = 0.68, so you pay 68% — a 32% total discount. On $250, that's $170 rather than the $162.50 a
+              35%-off deal would give. Retailers phrase promotions this way precisely because it sounds bigger than it is.
+            </p>
+            <p>
+              <strong className="text-ink dark:text-white">Trap 3 — percentage points vs percent change.</strong> A savings
+              rate moving from 4% to 6% rose two <em>percentage points</em>, but the <em>percent change</em> is
+              (6 − 4) ÷ 4 = 50%. Headlines exploit the ambiguity in both directions: "rates jumped 50%" and "rates edged up
+              2 points" can describe the same event. The % change tab computes the relative version; just remember which one
+              a headline means before reacting to it.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">Why gains and losses aren't symmetric</h2>
+            <p>
+              Percent changes use whatever number they start from as the base, and that base shifts after every step. Start
+              with 160, lose 25%, and you're at 120. Gain 25% back and you reach 150 — still 6.25% below where you began. The
+              deficit grows fast with size: a 50% fall needs a 100% rise to recover. This is why an investment that "went down
+              30% then up 30%" is quietly still 9% underwater, and why comparing two changes only makes sense when you know
+              their bases.
+            </p>
+            <p>
+              The same base-shifting explains compound growth: 5% per year for three years is not 15% but
+              1.05 × 1.05 × 1.05 − 1 = 15.76%. For money questions where that difference compounds over decades, the{' '}
+              <Link href="/compound-interest-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">compound interest calculator</Link>{' '}
+              does the repeated multiplication for you; for a one-off price change, the increase/decrease tab here is enough.
+            </p>
+          </section>
+        </article>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Percentage FAQ</h2>
