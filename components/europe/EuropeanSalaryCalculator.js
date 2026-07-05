@@ -12,6 +12,16 @@ import Card from '../ui/Card';
 import { cn } from '../ui/cn';
 import { SALARY_SYSTEMS, computeEuropeanSalary } from '../../utils/europeanSalaryCalculations';
 
+const FAQ = [
+  { question: 'How accurate are these salary calculations?', answer: 'These calculations use the tax rates and standard deductions configured in this calculator. Actual take-home pay may vary based on personal circumstances, allowances, and local variations. Consult a tax professional for precise calculations.' },
+  { question: "What's included in social security deductions?", answer: 'Social security typically includes pension contributions, unemployment insurance, health insurance, and disability insurance. The exact components and rates vary significantly between European countries.' },
+  { question: 'Which European country is most tax-efficient for high earners?', answer: 'Switzerland generally has lower overall tax rates, especially for high earners. However, cost of living and available services vary greatly. Consider total compensation packages and living costs, not just tax rates.' },
+  { question: 'Do these calculations include all possible deductions?', answer: 'These are standard calculations for employees. Additional deductions may apply for pension contributions, charitable donations, professional expenses, or other tax-deductible items specific to each country.' },
+  { question: 'Why is the effective rate lower than the top tax band?', answer: 'Progressive systems tax income in slices: the first slice is often tax-free, and higher rates apply only to income above each threshold. A UK earner on £50,000 faces a 40% band but pays about 21% of gross overall once the personal allowance and lower bands are counted.' },
+  { question: 'Why do social contributions matter as much as income tax?', answer: 'In several countries — Germany and France especially — employee social contributions (pension, health, unemployment) take a larger share of a mid-level salary than income tax itself. Comparing countries on headline income-tax rates alone misses most of the story.' },
+  { question: 'Can I compare salaries across countries with this tool?', answer: 'You can compare what each system deducts from the same gross figure, which is the right first step. A fair offer comparison also needs cost of living, what contributions buy (healthcare, pensions), currency, and benefits like employer pension matches or a 13th-month salary.' }
+];
+
 const EuropeanSalaryCalculator = ({
   onBack,
   forcedCountry = null,
@@ -141,37 +151,16 @@ const EuropeanSalaryCalculator = ({
           })}
         </script>
 
-        {/* FAQ Schema */}
+        {/* FAQ Schema — built from the same FAQ list rendered on the page */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "How is net salary calculated in Europe?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Net salary is calculated by deducting income tax, social security contributions, and other mandatory deductions from gross salary. Each European country has different tax rates and social security systems."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Which European country has the highest tax rates?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Belgium and France generally have among the highest effective tax rates in Europe, while Switzerland typically has lower rates. However, this varies significantly based on income level and personal circumstances."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is included in European social security deductions?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Social security typically includes pension contributions, unemployment insurance, health insurance, and disability insurance. The specific components and rates vary by country."
-                }
-              }
-            ]
+            "mainEntity": FAQ.map(({ question, answer }) => ({
+              "@type": "Question",
+              "name": question,
+              "acceptedAnswer": { "@type": "Answer", "text": answer }
+            }))
           })}
         </script>
       </Head>
@@ -332,21 +321,85 @@ const EuropeanSalaryCalculator = ({
           </div>
         )}
 
+        {!forcedCountry && (
+          <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">Same gross, very different net: what actually varies between countries</h2>
+            <p className="mt-3">
+              Run the same €60,000 gross salary through this calculator&rsquo;s eight systems and the spread is
+              startling: about <strong className="text-ink dark:text-white">€46,990 net in the Netherlands</strong>{' '}
+              (a 21.7% effective rate) against roughly{' '}
+              <strong className="text-ink dark:text-white">€28,100 in Belgium</strong> (53.2%) — a gap of nearly
+              €1,600 every month for identical pay. Germany (€37,550) and France (€36,120) cluster in the middle
+              around 37&ndash;40%. Three structural differences, not one, produce that spread, and knowing which
+              one drives your own number is what makes a payslip legible.
+            </p>
+
+            <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">The three levers: bands, contributions, credits</h3>
+            <ul className="mt-3 list-disc space-y-2 pl-5">
+              <li>
+                <strong className="text-ink dark:text-white">Progressive tax bands</strong> get the headlines, but
+                they tax income in slices — the first slice is often free (UK personal allowance £12,570; German
+                Grundfreibetrag €12,348; French first band to €11,600), and top rates apply only above high
+                thresholds. This is why a UK earner on £50,000 sits in a &ldquo;40% band&rdquo; yet keeps about
+                £39,520 — an effective rate of 21%.
+              </li>
+              <li>
+                <strong className="text-ink dark:text-white">Social contributions</strong> are the quiet giant. In
+                Germany, an employee&rsquo;s pension (9.3%), health (~8.75%), unemployment (1.3%), and care (2.4%)
+                contributions take more of a €60,000 salary than income tax does — and unlike tax they start from
+                the first euro, though they also stop at assessment ceilings. France stacks CSG and other social
+                charges to a similar effect. Belgium&rsquo;s combination of both levers at once is what pushes it
+                to the top of the deduction table.
+              </li>
+              <li>
+                <strong className="text-ink dark:text-white">Credits and allowances</strong> pull in the opposite
+                direction. The Dutch system looks steep on paper, but the general credit (algemene heffingskorting)
+                and labour credit (arbeidskorting) refund thousands of euros for low and middle earners — the main
+                reason the Netherlands nets out mildest of the euro countries here at €60,000.
+              </li>
+            </ul>
+
+            <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Reading a cross-border job offer</h3>
+            <p className="mt-3">
+              The right first move is the one this page does: put the same gross through both systems and compare
+              nets. The second move is remembering what the deductions <em>buy</em>, because it differs. German
+              and French contributions fund healthcare with little or no employee top-up and earnings-linked state
+              pensions; a Swiss net salary looks generous partly because mandatory health insurance is paid
+              separately out of pocket (typically CHF 300&ndash;500 a month per adult) and much of the pension
+              runs through occupational schemes. Housing costs then swing the comparison harder than either:
+              Amsterdam and Zurich rents can erase a five-figure net advantage. A sensible checklist for an offer:
+              net monthly pay (this calculator), minus typical rent for an equivalent home, minus out-of-pocket
+              health costs, plus employer pension value and extras like a 13th-month salary — <em>then</em> compare.
+            </p>
+
+            <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Why your real payslip will still differ</h3>
+            <p className="mt-3">
+              This calculator models a standard single employee, and that assumption matters more in some systems
+              than others. France taxes households, not individuals — the <em>quotient familial</em> splits income
+              across family members, so a married earner with children can pay dramatically less than the single
+              figure shown. Germany&rsquo;s marital splitting and church tax move numbers both ways; Swiss totals
+              swing by canton and commune. Country-specific pages for{' '}
+              <a href="/germany-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Germany</a>,{' '}
+              <a href="/france-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">France</a>, and the{' '}
+              <a href="/netherlands-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Netherlands</a>{' '}
+              go deeper on each system, and the{' '}
+              <a href="/uk-income-tax-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">UK income tax calculator</a>{' '}
+              breaks the British payslip into its exact bands. Treat every figure here as a planning estimate to
+              anchor negotiations — the final word belongs to a local payroll slip or tax adviser.
+            </p>
+          </div>
+        )}
+
         {/* FAQ Section */}
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">
             {forcedCountry ? `${selectedCountryName} Salary Calculator FAQ` : 'European Salary Calculator FAQ'}
           </h2>
           <div className="mt-4 grid gap-3">
-            {[
-              { q: 'How accurate are these salary calculations?', a: 'These calculations use the tax rates and standard deductions configured in this calculator. Actual take-home pay may vary based on personal circumstances, allowances, and local variations. Consult a tax professional for precise calculations.' },
-              { q: "What's included in social security deductions?", a: 'Social security typically includes pension contributions, unemployment insurance, health insurance, and disability insurance. The exact components and rates vary significantly between European countries.' },
-              { q: 'Which European country is most tax-efficient for high earners?', a: 'Switzerland generally has lower overall tax rates, especially for high earners. However, cost of living and available services vary greatly. Consider total compensation packages and living costs, not just tax rates.' },
-              { q: 'Do these calculations include all possible deductions?', a: 'These are standard calculations for employees. Additional deductions may apply for pension contributions, charitable donations, professional expenses, or other tax-deductible items specific to each country.' }
-            ].map(({ q, a }) => (
-              <details key={q} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
-                <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{q}</summary>
-                <p className="mt-2 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{a}</p>
+            {FAQ.map(({ question, answer }) => (
+              <details key={question} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{question}</summary>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{answer}</p>
               </details>
             ))}
           </div>

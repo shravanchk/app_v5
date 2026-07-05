@@ -15,7 +15,10 @@ const FAQ = [
   { question: 'How much should I tip at a restaurant in the US?', answer: '15–20% of the pre-tax bill is standard for table service, with 18–20% now the norm in most cities. Tip on the pre-tax amount if you prefer — most people simply tip on the total.' },
   { question: 'Should I tip on the pre-tax or post-tax amount?', answer: 'Etiquette guides say the pre-tax subtotal is fine; the difference is small (a 20% tip on $8 tax is $1.60). Tipping on the after-tax total is a bit more generous and simpler.' },
   { question: 'How much do I tip for delivery, bars, and other services?', answer: 'Common US norms: food delivery 10–15% (minimum $3–5), bartenders $1–2 per drink or 15–20% of the tab, hairdressers 15–20%, taxi/rideshare 10–15%, hotel housekeeping $2–5 per night.' },
-  { question: 'Is a tip required if a service charge is already added?', answer: 'No. If the bill includes an automatic gratuity or service charge (common for parties of 6+), an extra tip is optional — add a little only for exceptional service. Always check the bill first.' }
+  { question: 'Is a tip required if a service charge is already added?', answer: 'No. If the bill includes an automatic gratuity or service charge (common for parties of 6+), an extra tip is optional — add a little only for exceptional service. Always check the bill first.' },
+  { question: 'How do I tip in countries outside the US?', answer: 'Norms vary enormously: in Japan and South Korea tipping can even cause offence; much of Europe includes service in the price, with rounding up or ~5–10% as a courtesy; the UK often adds a 12.5% service charge. When travelling, check local custom — exporting US percentages abroad overpays and can confuse.' },
+  { question: 'Should I tip on the discounted or original amount?', answer: 'On the original, pre-discount amount. A coupon or happy-hour deal reduces what the restaurant charges you, not the work the server did — tip as if the bill were full price.' },
+  { question: 'What is tip creep and do I have to follow suggested amounts?', answer: 'Checkout tablets increasingly suggest 20–30% in situations that never involved tipping, and Pew finds most Americans feel the pressure. Suggested buttons are defaults, not obligations: table service norms (18–20%) have not changed, and counter-service tipping remains genuinely optional.' }
 ];
 
 const PRESETS = [10, 15, 18, 20, 25];
@@ -225,6 +228,79 @@ const TipCalculator = () => {
             { name: 'Split and round', text: 'Set the number of people and optionally round each share up to a whole dollar for easy cash payments.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">The math is easy; the norms are the hard part</h2>
+          <p className="mt-3">
+            The arithmetic behind this page is one line — tip equals bill times percent — and a $60 dinner at 18%
+            splits between two people as $10.80 of tip, a $70.80 total, and $35.40 each. What actually confuses
+            people at the table is never the multiplication; it is knowing which percentage applies, what base to
+            apply it to, and when the answer is &ldquo;none at all&rdquo;. Those are cultural questions with
+            reasonably stable answers, and they are worth knowing cold because you make this decision hundreds of
+            times a year.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Why US tipping works this way</h3>
+          <p className="mt-3">
+            American table-service tipping is not a courtesy layered on a full wage — it usually <em>is</em> the
+            wage. Federal law lets restaurants pay tipped employees a cash wage as low as $2.13 an hour provided
+            tips bring them to the standard minimum; most states are less extreme, but in much of the country the
+            tip line is the majority of a server&rsquo;s income. That is the context behind the firm 18&ndash;20%
+            norm for sit-down service, and why skipping the tip after acceptable service reads as taking the meal
+            at the server&rsquo;s expense. It is also why norms are so much weaker where staff earn full wages —
+            counter service, takeout — and why the same percentage exported to Tokyo or Seoul, where hospitality
+            wages are simply wages, lands somewhere between confusing and rude.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">The base questions, settled</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Pre-tax or post-tax?</strong> Etiquette says the pre-tax
+              subtotal is fine; most people tip on the total because it is the number staring at them. The stakes
+              are small — on a $60 bill with 8% tax, 20% of the tax is only 96 cents — so pick a habit and stop
+              re-litigating it at the table.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Discounted bill?</strong> Tip on the original amount.
+              The coupon reduced the restaurant&rsquo;s revenue, not the server&rsquo;s work.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Service charge on the bill?</strong> That{' '}
+              <em>replaces</em> the tip — common for large parties and increasingly on all checks in some cities.
+              Adding 20% on top of an 18% autograt is a genuine double payment; check the bill before the math.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Bad service?</strong> Adjust within the system: 15%
+              signals disappointment while acknowledging the wage reality; zero is reserved for genuinely hostile
+              service, ideally alongside a word to the manager, since kitchen failures are not the server&rsquo;s doing.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Splitting without the awkward ten minutes</h3>
+          <p className="mt-3">
+            The classic end-of-dinner stall — receipts, phone calculators, someone &ldquo;only had a salad&rdquo; —
+            has two clean solutions. The first is the even split this calculator does by default, which is fair
+            whenever everyone ate roughly comparably. The second is the round-up toggle: take a $73.50 bill at
+            20% among three people, and instead of $29.40 each, everyone pays a flat $30. The extra $1.80 flows
+            to the server (an effective tip of 22.4%, which the calculator reports honestly), and the table is
+            settled in one sentence. Rounding up is almost always worth the pennies: the transaction cost of exact
+            change — in time and goodwill — exceeds the money. For genuinely uneven meals, split the itemized
+            bill first and apply the same percentage to each share; the{' '}
+            <Link href="/percentage-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">percentage calculator</Link>{' '}
+            handles any odd case the presets don&rsquo;t.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Tipping fatigue is real — the norms haven&rsquo;t moved</h3>
+          <p className="mt-3">
+            Checkout tablets now request 25% for handing over a muffin, and Pew&rsquo;s research finds most
+            Americans say tipping is expected in more places than five years ago. It helps to separate the two
+            things happening: the <em>prompts</em> have spread to transactions that were never tipped, while the
+            <em> norms</em> — 18&ndash;20% for table service, a few dollars for deliveries and hotel housekeeping,
+            optional generosity at counters — are basically unchanged. The suggested buttons are defaults chosen
+            by software, not etiquette rulings. Decide your own baseline for each situation once, use the custom
+            percent field for it, and the screen&rsquo;s opinion stops mattering.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Tipping FAQ</h2>

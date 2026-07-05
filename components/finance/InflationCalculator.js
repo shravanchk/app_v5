@@ -16,7 +16,10 @@ const FAQ = [
   { question: 'How is inflation calculated here?', answer: `This calculator uses the Consumer Price Index for All Urban Consumers (CPI-U) annual averages published by the U.S. Bureau of Labor Statistics, covering ${CPI_FIRST_YEAR} through ${CPI_LATEST_YEAR}. The adjusted amount is your dollars multiplied by the ratio of the two years' index values.` },
   { question: 'What does “buying power” mean?', answer: 'Buying power is what your money can actually purchase. If prices double, each dollar buys half as much — its buying power fell 50% even though the dollar amount didn’t change.' },
   { question: 'When was US inflation the highest?', answer: 'The modern peak was 1980, when CPI inflation averaged about 13.5% during the oil-shock era. More recently, 2022 saw roughly 8% — the highest since 1981. The Federal Reserve targets 2% per year.' },
-  { question: 'Why doesn’t this match my personal cost increases?', answer: 'CPI tracks an average urban basket of goods and services. Your personal inflation depends on what you buy — housing, healthcare, and college have outpaced average CPI for decades, while electronics have gotten cheaper.' }
+  { question: 'Why doesn’t this match my personal cost increases?', answer: 'CPI tracks an average urban basket of goods and services. Your personal inflation depends on what you buy — housing, healthcare, and college have outpaced average CPI for decades, while electronics have gotten cheaper.' },
+  { question: 'Why does even 2–3% inflation matter so much over time?', answer: 'Because it compounds. At the 2.54% average that held from 2000 to 2025, prices rose 87% — nearly doubling in 25 years. Small annual rates are deceptive; the horizon does the damage.' },
+  { question: 'Can I convert today’s dollars back to a past year?', answer: 'Yes — use the Swap button. The same CPI ratio works in both directions: $1,000,000 today corresponds to about $120,000 in 1970 dollars, which is how you check claims like "a million isn’t what it used to be."' },
+  { question: 'Does inflation mean my savings are shrinking?', answer: 'Cash loses buying power at the inflation rate, so money earning less than inflation shrinks in real terms even as the number grows. The comparison that matters for any investment or salary is its growth rate minus inflation — the "real" return.' }
 ];
 
 const fmtUSD = (v, digits = 2) =>
@@ -196,6 +199,75 @@ const InflationCalculator = () => {
             { name: 'Read the result', text: 'You get the equivalent amount, the total price change, and the average annual inflation rate between those years.' }
           ]}
         />
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">What a CPI conversion actually tells you</h2>
+          <p className="mt-3">
+            Every result on this page is one ratio: the Consumer Price Index in the end year divided by the index
+            in the start year. The CPI itself is one of the oldest continuous statistics the US government keeps —
+            since 1913, the Bureau of Labor Statistics has priced a representative urban basket of goods and
+            services (rent, food, fuel, medical care, and hundreds of other items) and chained the results into a
+            single index. So when the calculator says $100 in 2000 corresponds to about{' '}
+            <strong className="text-ink dark:text-white">$187 in 2025</strong>, it is saying: the average urban
+            basket that cost $100 then costs $187 now. That is a statement about prices in general — deliberately
+            not about any particular thing, which is both its power and its limitation.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">The quiet violence of small percentages</h3>
+          <p className="mt-3">
+            Between 2000 and 2025 inflation averaged just 2.54% a year — close to the Federal Reserve&rsquo;s 2%
+            target, and low by historical standards. Yet compounded over 25 years it added up to an 87% rise in
+            prices: the dollar lost nearly half its buying power during one working career&rsquo;s first act.
+            Stretch the horizon and the effect steepens — $100 from 1950 corresponds to over $1,300 today, a
+            92.5% loss of buying power at an average of only 3.5% a year. This is the same compound-growth
+            arithmetic that builds investment fortunes, running in reverse against cash. It is why &ldquo;my
+            grandfather bought a house for $12,000&rdquo; stories reveal nothing until converted, and why any
+            salary, pension, or savings plan quoted over decades is meaningless in nominal dollars.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Three honest uses for this calculator</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong className="text-ink dark:text-white">Salary reality checks.</strong> A $50,000 salary in 2015
+              needs to be about $68,000 in 2025 just to buy the same life. If raises fell short of that, the real
+              wage fell even as the nominal one grew — the single most common money illusion there is.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Historical translation.</strong> Old prices, inheritances,
+              movie budgets, &ldquo;record-breaking&rdquo; box office numbers: convert before comparing. Use the
+              Swap button to go backwards — $1,000,000 today corresponds to roughly $120,000 in 1970 dollars.
+            </li>
+            <li>
+              <strong className="text-ink dark:text-white">Setting a real return bar.</strong> Any investment,
+              raise, or interest rate only makes you richer by the amount it beats inflation. A 4% CD during 2022&rsquo;s
+              ~8% inflation lost buying power; the same CD at 2% inflation gains it.
+            </li>
+          </ul>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Where the average hides the story</h3>
+          <p className="mt-3">
+            The long-run average of roughly 3% smooths over wildly different eras: near-zero and even negative
+            inflation in the 1930s, the 13.5% peak of 1980&rsquo;s oil-shock era, the placid 1990s and 2010s, and
+            the 2022 spike to about 8% — visible in the calculator as 2020&ndash;2025 averaging 4.49% against
+            2.54% for the quarter-century. The basket is an average too: housing, healthcare, and education have
+            outrun headline CPI for decades while televisions and software got cheaper, so a renter paying
+            tuition experiences more inflation than the index reports, and a homeowner with grown children less.
+            Treat CPI conversions as the right general-purpose yardstick, not a personal audit.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">The practical response</h3>
+          <p className="mt-3">
+            Inflation is a policy fact you cannot vote down at a personal level; the response is allocation. Cash
+            for emergencies accepts the erosion as the price of liquidity; long-horizon money needs assets with a
+            real expected return. The{' '}
+            <Link href="/compound-interest-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">compound interest calculator</Link>{' '}
+            shows the same exponential math working for you, and comparing its outputs against this page&rsquo;s
+            inflation figures gives the real (after-inflation) picture. For income, the{' '}
+            <Link href="/us-paycheck-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">US paycheck calculator</Link>{' '}
+            turns a nominal raise into take-home terms — the number to hold against the inflation rate when
+            deciding whether you actually got one.
+          </p>
+        </div>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Inflation FAQ</h2>

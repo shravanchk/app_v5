@@ -4,6 +4,15 @@ import { Calendar, Clock, Heart, Star, Gift, Target, TrendingUp, Info } from 'lu
 import AffiliateRecommendations from '../AffiliateRecommendations';
 import { CalcLayout } from '../calculator/CalcLayout';
 
+const FAQ = [
+  { question: 'How do I calculate my exact age?', answer: 'Enter your birth date (and optionally a target date — it defaults to today). The calculator returns your age in completed years, months, and days, plus totals like days lived, hours, and minutes, alongside milestones and your zodiac sign.' },
+  { question: 'How does the calculator handle months of different lengths?', answer: 'It counts completed calendar years and months first, then the leftover days against the actual month lengths involved — the same convention used for official purposes. Leap years are included, which is why total-days figures differ slightly from multiplying years by 365.' },
+  { question: 'What is my age if I was born on 29 February?', answer: 'You age normally — one year per calendar year. In non-leap years, most legal systems treat 1 March as the day a leap-day birthday completes another year (some, like New Zealand, use 28 February). Celebrations are a matter of taste.' },
+  { question: 'What is the difference between completed age and "running" age?', answer: 'Completed age is how many full years you have finished — the figure on forms and official documents. Running age, common in Indian usage, is the year you are currently in: someone aged 35 years 10 months is "running 36". This calculator shows completed age.' },
+  { question: 'How accurate are fun facts like heartbeats and breaths?', answer: 'They are estimates from average resting rates (roughly 70 heartbeats and 12–16 breaths per minute) applied to your exact days lived. Individual rates vary with fitness, health, and age, so treat them as illustrations, not measurements.' },
+  { question: 'Can I calculate age between two past dates?', answer: 'Yes — set the target date to any date you like. This is handy for working out age on a document date, an exam-eligibility cutoff, or how old someone was on a historical event.' }
+];
+
 const AgeCalculator = () => {
   const [activeTab, setActiveTab] = useState('age-calculator');
   
@@ -760,61 +769,16 @@ const AgeCalculator = () => {
           })
         }} />
         
-        {/* FAQ Schema */}
+        {/* FAQ Schema — built from the same FAQ list rendered on the page */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "How do I calculate my exact age?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "To calculate exact age, enter your birth date and the date you want to calculate age for (usually today). Our calculator shows your age in years, months, days, plus total days lived, hours, and minutes. It also includes fun facts and life milestones."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is the face animation feature?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Our unique face animation shows your life journey from baby to your current age stage. You can select your gender (male, female, or neutral) and watch as the emoji face transforms through different life stages - from baby 👶 to child 🧒 to teenager to adult and beyond."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How accurate is this age calculator?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Our age calculator is highly accurate, calculating exact age down to the day. It accounts for leap years and provides precise calculations for days lived, weeks, months, and even hours and minutes."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Can I see my life milestones?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes! Our calculator shows major life milestones like legal adulthood (18), quarter-century (25), retirement age (60), and life expectancy. It shows which milestones you've passed and when upcoming ones will occur."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What fun facts does the calculator show?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "The calculator shows interesting facts like total heartbeats, breaths taken, sunrises/sunsets witnessed, seasons experienced, zodiac sign, and the day of the week you were born on."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Is this age calculator free to use?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes, our age calculator is completely free to use with no registration required. It works on all devices - mobile, tablet, and desktop - with a responsive design."
-                }
-              }
-            ]
+            "mainEntity": FAQ.map(({ question, answer }) => ({
+              "@type": "Question",
+              "name": question,
+              "acceptedAnswer": { "@type": "Answer", "text": answer }
+            }))
           })
         }} />
         
@@ -1519,6 +1483,74 @@ const AgeCalculator = () => {
               )}
             </div>
           )}
+        </div>
+
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">Why &ldquo;how old am I?&rdquo; is a genuinely tricky question</h2>
+          <p className="mt-3">
+            Age feels like the simplest calculation there is, until you try to do it precisely. Months have four
+            different lengths, leap years insert a day every four years (except three times every four hundred),
+            and calendars — not arithmetic — define what a &ldquo;year older&rdquo; means. Take someone born on
+            15 August 1990 asking their age on 5 July 2026. The calculator answers{' '}
+            <strong className="text-ink dark:text-white">35 years, 10 months, 20 days</strong>: 35 complete
+            calendar years on 15 August 2025, ten further complete months to 15 June 2026, and then 20 leftover
+            days counted against June&rsquo;s actual length. The same span expressed as totals
+            is 13,108 days or 1,872 weeks — figures you cannot get by multiplying 35 by 365, because nine leap
+            days sit inside them. Counting completed calendar units first and leftover days last is the
+            convention used by governments, schools, and courts, and it is the one used here.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Completed age vs running age</h3>
+          <p className="mt-3">
+            A frequent source of confusion in India: the person above is 35 by every official measure, but in
+            everyday Indian usage they are &ldquo;running 36&rdquo; — in their 36th year of life, which begins
+            the moment the 35th birthday passes. Insurance premiums are sometimes quoted on &ldquo;age next
+            birthday&rdquo;, school cutoffs on &ldquo;age as on&rdquo; a specific date, and traditional East
+            Asian reckonings once started everyone at one. When a form asks for age, it means completed years —
+            the headline number this calculator shows. When a relative says the baby is &ldquo;running
+            two&rdquo;, the child is one. Knowing which system a question uses matters more than the arithmetic.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Leap-day birthdays and other calendar corner cases</h3>
+          <p className="mt-3">
+            Roughly one in 1,461 people is born on 29 February and legally ages like everyone else — one year
+            per calendar year — with jurisdictions differing only on <em>which day</em> the year completes when
+            there is no 29th: most treat 1 March as the birthday in common years (New Zealand notably uses 28
+            February). Month-end birthdays produce a similar wrinkle: someone born 31 January turns a month
+            older on 28 or 29 February, because the &ldquo;same day next month&rdquo; does not exist. And ages
+            measured <em>between two past dates</em> — for an exam-eligibility cutoff or a document — work
+            exactly the same way; set the target date rather than using today. These edge cases are precisely
+            why doing the calculation by calendar rules, rather than dividing days by 365.25, is worth a
+            calculator at all.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">What the fun facts are really telling you</h3>
+          <p className="mt-3">
+            The heartbeats, breaths, and sunrise counts are estimates built on averages — a resting heart rate
+            near 70 beats a minute puts our 35-year-old around 1.3 billion heartbeats — and their point is
+            perspective, not precision. The milestones tab does the same job more seriously: laying a life out
+            against ages 18, 25, 60, and a chosen life expectancy turns an abstract number into elapsed and
+            remaining time, which is often the nudge that makes long-horizon planning feel urgent. If the
+            milestone that catches your eye is the financial one, that instinct has a natural next step — a
+            35-year-old with 25 years to a retirement at 60 has exactly the input the{' '}
+            <a href="/sip-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">SIP calculator</a>{' '}
+            needs, and the{' '}
+            <a href="/compound-interest-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">compound interest calculator</a>{' '}
+            shows why the years-remaining number matters more than any contribution amount. Time, as both
+            calculators demonstrate, is the one input you cannot raise later.
+          </p>
+        </div>
+
+        <div className="mt-10">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">Age Calculator FAQ</h2>
+          <div className="mt-4 grid gap-3">
+            {FAQ.map(({ question, answer }) => (
+              <details key={question} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{question}</summary>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{answer}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </CalcLayout>
     </>

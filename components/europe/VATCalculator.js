@@ -11,6 +11,16 @@ import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { cn } from '../ui/cn';
 
+const FAQ = [
+  { question: 'What is VAT and how is it calculated?', answer: 'VAT (Value Added Tax) is a consumption tax levied on goods and services. For VAT exclusive amounts, multiply by the VAT rate. For VAT inclusive amounts, divide by (1 + VAT rate).' },
+  { question: 'Which European country has the highest VAT rate?', answer: 'Finland has the highest standard VAT rate at 25.5%, followed by Denmark, Sweden, and Norway at 25%. Ireland and Portugal follow with 23%, while Switzerland has the lowest at 8.1%.' },
+  { question: 'What is the difference between VAT exclusive and inclusive?', answer: 'VAT exclusive means the price before VAT is added. VAT inclusive means the final price with VAT already included. Businesses often work with exclusive prices, while consumers see inclusive prices.' },
+  { question: 'Are VAT rates the same for all products?', answer: "No, most countries have reduced VAT rates for essential items like food, books, and medical supplies. Some items may be VAT-exempt (0%). Check your country's specific VAT rules." },
+  { question: 'Why is extracting VAT not the same as subtracting the percentage?', answer: 'Because VAT was charged on the net price, not the gross. A £120 UK price containing 20% VAT has a net of 120 ÷ 1.20 = £100 and £20 of VAT. Subtracting 20% of £120 would wrongly give £96 — an error of £4 on every £120.' },
+  { question: 'Do businesses actually pay the VAT they collect?', answer: 'Registered businesses charge VAT on sales (output tax) and reclaim VAT paid on purchases (input tax), remitting only the difference. The tax is designed to be borne by the final consumer; businesses act as collectors at each stage of the chain.' },
+  { question: 'Why do prices in the US look lower than Europe for the same item?', answer: 'US sales tax (typically 5–10%) is added at the till, while European shelf prices must include VAT by law. A €119 German price already contains €19 of VAT; a $100 US shelf price will grow at checkout. Comparing shelf prices across the Atlantic compares different things.' }
+];
+
 const VATCalculator = ({ onBack }) => {
   const [amount, setAmount] = useState('');
   const [country, setCountry] = useState('UK');
@@ -136,37 +146,16 @@ const VATCalculator = ({ onBack }) => {
           })}
         </script>
 
-        {/* FAQ Schema */}
+        {/* FAQ Schema — built from the same FAQ list rendered on the page */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What VAT rate does this calculator use for the UK?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "This calculator uses a standard UK VAT rate of 20%. Reduced rates such as 5% and 0% may apply for specific goods and services."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is the VAT rate in Germany?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Germany has a standard VAT rate of 19% and reduced rates of 7% and 0% for specific categories."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How do I calculate VAT inclusive vs exclusive?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "VAT exclusive: Add VAT to the net amount (Net × VAT rate). VAT inclusive: Extract VAT from gross amount (Gross ÷ (1 + VAT rate))."
-                }
-              }
-            ]
+            "mainEntity": FAQ.map(({ question, answer }) => ({
+              "@type": "Question",
+              "name": question,
+              "acceptedAnswer": { "@type": "Answer", "text": answer }
+            }))
           })}
         </script>
       </Head>
@@ -288,19 +277,71 @@ const VATCalculator = ({ onBack }) => {
           </div>
         </div>
 
+        <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">The two directions of every VAT calculation</h2>
+          <p className="mt-3">
+            Every VAT question is one of two operations, and mixing them up is the single most common (and
+            expensive) VAT mistake. <strong className="text-ink dark:text-white">Adding VAT</strong> is
+            multiplication: a UK invoice for £100 of services carries £20 of VAT at 20%, for a £120 total.{' '}
+            <strong className="text-ink dark:text-white">Extracting VAT</strong> from a price that already
+            contains it is <em>division</em>, not subtraction: that £120 gross divided by 1.20 recovers the £100
+            net. The intuitive shortcut — knocking 20% off £120 — gives £96, because it applies the percentage to
+            the wrong base. The error is 4% of every invoice, compounding across a year of receipts; freelancers
+            reconstructing net amounts from gross expenses hit this constantly. The calculator&rsquo;s
+            exclusive/inclusive toggle exists precisely to keep the two directions straight.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Why the map ranges from 8.1% to 25.5%</h3>
+          <p className="mt-3">
+            EU law sets only a floor — a standard rate of at least 15% — and members choose from there, which is
+            how the continent spans Switzerland&rsquo;s 8.1% (not EU-bound at all) to Finland&rsquo;s 25.5%, with
+            the Nordics clustered at 25% and the big four economies between 19% and 22%. The differences are
+            fiscal philosophy made visible: Nordic states lean on broad consumption taxes to fund services, while
+            Switzerland funds more through other channels. For a consumer the practical effect appears at the
+            border: the same €500 (net) laptop totals €595 in Germany at 19% but €622.50 in Ireland at 23% —
+            and cross-border e-commerce within the EU generally charges the <em>destination</em> country&rsquo;s
+            rate, so shopping from a low-VAT country&rsquo;s website does not escape your own rate.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Reduced rates: why your receipt has several percentages</h3>
+          <p className="mt-3">
+            Almost every country runs lower rates for categories deemed essential, which is why a single
+            supermarket receipt can mix three of them. Germany charges 19% on most goods but 7% on food staples
+            and books; France runs 10%, 5.5%, and a special 2.1% (newspapers, some medicines) beneath its 20%
+            standard; the UK zero-rates most food and children&rsquo;s clothing outright. The boundaries produce
+            famous absurdities — in the UK, a plain biscuit is zero-rated food while a chocolate-covered one is
+            standard-rated confectionery. For calculations, the method never changes: apply whichever rate the
+            item carries. This calculator uses each country&rsquo;s standard rate, so for reduced-rate goods,
+            check the rate card above and apply the same exclusive/inclusive logic mentally — or divide by 1.07
+            instead of 1.19 for a German grocery receipt.
+          </p>
+
+          <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">The chain behind the till: why businesses don&rsquo;t &ldquo;pay&rdquo; VAT</h3>
+          <p className="mt-3">
+            VAT&rsquo;s design is easy to see with one worked chain at the German 19% rate. A manufacturer sells
+            components to an assembler for €100 + €19 VAT and remits the €19. The assembler sells the finished
+            device to a retailer for €300 + €57, but reclaims the €19 it paid, remitting €38 — tax on the €200 of
+            value it added. The retailer sells to you for €500 + €95, reclaims €57, remits €38. The state has
+            collected €95 in slices along the chain, and every euro of it came from the final consumer; the
+            businesses were unpaid collectors. That is why registered businesses think in net prices and consumers
+            in gross ones, and why an invoice between VAT-registered firms quoting &ldquo;€300 excl. VAT&rdquo;
+            is normal rather than evasive. If you are quoting or invoicing across that boundary — a freelancer
+            billing consumers, say — being explicit about which price you mean is worth real money; the{' '}
+            <a href="/percentage-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">percentage calculator</a>{' '}
+            covers the general reverse-percentage math, and the{' '}
+            <a href="/european-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">European salary calculator</a>{' '}
+            handles the other big deduction Europeans meet — the one on payslips.
+          </p>
+        </div>
+
         {/* FAQ Section */}
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">VAT Calculator FAQ</h2>
           <div className="mt-4 grid gap-3">
-            {[
-              { q: 'What is VAT and how is it calculated?', a: 'VAT (Value Added Tax) is a consumption tax levied on goods and services. For VAT exclusive amounts, multiply by the VAT rate. For VAT inclusive amounts, divide by (1 + VAT rate).' },
-              { q: 'Which European country has the highest VAT rate?', a: 'Finland has the highest standard VAT rate at 25.5%, followed by Denmark, Sweden, and Norway at 25%. Ireland and Portugal follow with 23%, while Switzerland has the lowest at 8.1%.' },
-              { q: 'What is the difference between VAT exclusive and inclusive?', a: 'VAT exclusive means the price before VAT is added. VAT inclusive means the final price with VAT already included. Businesses often work with exclusive prices, while consumers see inclusive prices.' },
-              { q: 'Are VAT rates the same for all products?', a: "No, most countries have reduced VAT rates for essential items like food, books, and medical supplies. Some items may be VAT-exempt (0%). Check your country's specific VAT rules." }
-            ].map(({ q, a }) => (
-              <details key={q} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
-                <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{q}</summary>
-                <p className="mt-2 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{a}</p>
+            {FAQ.map(({ question, answer }) => (
+              <details key={question} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{question}</summary>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{answer}</p>
               </details>
             ))}
           </div>

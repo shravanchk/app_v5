@@ -22,6 +22,7 @@ Last updated: 2026-07-05
 | Thin content: UK Income Tax (522w), SIP (618w), BMI (524w), Compound (650w), US Paycheck (749w), IRCTC (736w) | Educational articles, engine-verified examples, FAQ schema sync | `b5dddd0`, `afb04b9` |
 | Thin content: US Mortgage (→1,449w, FAQPage schema added), Percentage (→1,302w, +2 FAQs) | Same pattern; all figures computed from the page's own formulas | `fb4862b` |
 | Thin content: health cluster — BMR (548→1,338w), Body Fat (584→1,364w), Calorie (620→1,365w), Ideal Weight (622→1,299w), Macro (629→1,296w), Water (584→1,323w) | Same pattern; worked examples verified against `utils/healthCalculations.js`; +3–4 FAQs each, schema auto-synced | `897c966` |
+| Thin content: European Salary (613→1,316w), EU VAT (727→1,485w), Tip (591→1,387w), Age (146→1,009w), Inflation (851→1,584w) | Same pattern; examples verified against page engines (`europeanSalaryCalculations`, `quickCalculations`, CPI data). Europe + Age pages also had hard-coded Head FAQ schemas that didn't match visible FAQs (Age had *no* visible FAQ — a structured-data violation); all three now render FAQs from the same array the schema is built from | *(this commit)* |
 
 ## Open issues
 
@@ -30,10 +31,12 @@ Last updated: 2026-07-05
 1. **Thin content on remaining calculator pages.**
    Why: "insufficient value" is the stated rejection reason; every indexed thin page
    drags the site-level quality assessment.
-   Fix: continue the pilot pattern. Remaining: European Salary, EU VAT, Tip,
-   Inflation, Age (health cluster done in batch 3; US Mortgage and Percentage in
-   `fb4862b`). Then: remaining India pages (GST reform, HRA, capital gains,
-   gratuity, credit-card pages, salary calculator).
+   Fix: continue the pilot pattern. Non-India batches all done (UK Income Tax, SIP,
+   BMI, Compound, US Paycheck, IRCTC, US Mortgage, Percentage, health cluster,
+   European Salary, EU VAT, Tip, Age, Inflation). Remaining: India pages (GST
+   reform, HRA, capital gains, gratuity, credit-card pages, salary calculator) and
+   the per-country Europe salary pages (DE/FR/NL reuse the shared component; the
+   new article renders on the hub only).
    Impact: high — this is the core complaint.
 
 2. **Legacy static guides (`public/guide-*.html`, 8 files).**
