@@ -19,7 +19,8 @@ Last updated: 2026-07-05
 | `/tools` hub missing from sitemap | Added (now 272 URLs) | `bcfd25b` |
 | Low-value "beta" UK Rail page | Removed + 301 to EU hub | `cc0ddc0` |
 | Stale German salary engine (wrong net figures site-wide) | Rewritten on official §32a EStG | `ce96049` |
-| Thin content: UK Income Tax (522w), SIP (618w), BMI (524w), Compound (650w), US Paycheck (749w), IRCTC (736w) | Educational articles, engine-verified examples, FAQ schema sync | `b5dddd0` + this batch |
+| Thin content: UK Income Tax (522w), SIP (618w), BMI (524w), Compound (650w), US Paycheck (749w), IRCTC (736w) | Educational articles, engine-verified examples, FAQ schema sync | `b5dddd0`, `afb04b9` |
+| Thin content: US Mortgage (→1,449w, FAQPage schema added), Percentage (→1,302w, +2 FAQs) | Same pattern; all figures computed from the page's own formulas | `fb4862b` |
 
 ## Open issues
 
@@ -28,10 +29,10 @@ Last updated: 2026-07-05
 1. **Thin content on remaining calculator pages.**
    Why: "insufficient value" is the stated rejection reason; every indexed thin page
    drags the site-level quality assessment.
-   Fix: continue the pilot pattern. Batch 2 candidates: European Salary, Calorie/TDEE,
-   US Mortgage, EU VAT, Percentage, Tip, BMR, Body Fat, Ideal Weight, Macro, Water,
-   Inflation, Age. Batch 3: remaining India pages (GST reform, HRA, capital gains,
-   gratuity, credit-card pages, salary calculator).
+   Fix: continue the pilot pattern. Batch 2 remaining: European Salary, Calorie/TDEE,
+   EU VAT, Tip, BMR, Body Fat, Ideal Weight, Macro, Water, Inflation, Age
+   (US Mortgage and Percentage done in `fb4862b`). Batch 3: remaining India pages
+   (GST reform, HRA, capital gains, gratuity, credit-card pages, salary calculator).
    Impact: high — this is the core complaint.
 
 2. **Legacy static guides (`public/guide-*.html`, 8 files).**
