@@ -2537,6 +2537,114 @@ body.dark-theme .calculator-info-section a {
   color: #93c5fd;
 }
 
+/* Long-form educational content and visible FAQ on calculator pages.
+   Used by the CalcShell India pages; dark rules mirror .calculator-info-*. */
+.calc-prose {
+  margin-top: 1.9rem;
+  max-width: 68ch;
+}
+.calc-prose h2 {
+  font-size: 1.16rem;
+  font-weight: 700;
+  color: #0f2a43;
+  margin: 1.7rem 0 0.5rem;
+  line-height: 1.3;
+}
+.calc-prose h2:first-child {
+  margin-top: 0;
+}
+.calc-prose h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f2a43;
+  margin: 1.35rem 0 0.4rem;
+}
+.calc-prose p {
+  font-size: 0.92rem;
+  line-height: 1.72;
+  color: #334155;
+  margin: 0 0 0.8rem;
+}
+.calc-prose ul {
+  margin: 0 0 0.9rem;
+  padding-left: 1.2rem;
+}
+.calc-prose li {
+  font-size: 0.92rem;
+  line-height: 1.62;
+  color: #334155;
+  margin-bottom: 0.4rem;
+}
+.calc-prose strong {
+  color: #0f2a43;
+  font-weight: 700;
+}
+.calc-prose a {
+  color: #1d4ed8;
+  text-decoration: none;
+  font-weight: 600;
+}
+.calc-prose a:hover {
+  text-decoration: underline;
+}
+
+.calc-faq {
+  margin-top: 1.9rem;
+}
+.calc-faq-title {
+  font-size: 1.16rem;
+  font-weight: 700;
+  color: #0f2a43;
+  margin: 0 0 0.75rem;
+}
+.calc-faq details {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.7rem;
+  background: #f8fafc;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.6rem;
+}
+.calc-faq summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: #0f2a43;
+  list-style: none;
+}
+.calc-faq summary::-webkit-details-marker {
+  display: none;
+}
+.calc-faq details p {
+  margin: 0.55rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.66;
+  color: #475569;
+}
+
+body.dark-theme .calc-prose h2,
+body.dark-theme .calc-prose h3,
+body.dark-theme .calc-prose strong,
+body.dark-theme .calc-faq-title {
+  color: #e2e8f0;
+}
+body.dark-theme .calc-prose p,
+body.dark-theme .calc-prose li {
+  color: #cbd5e1;
+}
+body.dark-theme .calc-prose a {
+  color: #93c5fd;
+}
+body.dark-theme .calc-faq details {
+  background: #1b2b3e;
+  border-color: #334155;
+}
+body.dark-theme .calc-faq summary {
+  color: #e2e8f0;
+}
+body.dark-theme .calc-faq details p {
+  color: #cbd5e1;
+}
+
 body.dark-theme .result-actions {
   border-top-color: #334155;
 }

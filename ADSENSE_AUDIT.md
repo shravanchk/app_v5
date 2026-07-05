@@ -23,6 +23,7 @@ Last updated: 2026-07-05
 | Thin content: US Mortgage (→1,449w, FAQPage schema added), Percentage (→1,302w, +2 FAQs) | Same pattern; all figures computed from the page's own formulas | `fb4862b` |
 | Thin content: health cluster — BMR (548→1,338w), Body Fat (584→1,364w), Calorie (620→1,365w), Ideal Weight (622→1,299w), Macro (629→1,296w), Water (584→1,323w) | Same pattern; worked examples verified against `utils/healthCalculations.js`; +3–4 FAQs each, schema auto-synced | `897c966` |
 | Thin content: European Salary (613→1,316w), EU VAT (727→1,485w), Tip (591→1,387w), Age (146→1,009w), Inflation (851→1,584w) | Same pattern; examples verified against page engines (`europeanSalaryCalculations`, `quickCalculations`, CPI data). Europe + Age pages also had hard-coded Head FAQ schemas that didn't match visible FAQs (Age had *no* visible FAQ — a structured-data violation); all three now render FAQs from the same array the schema is built from | `7c9c431` |
+| Thin content: India CalcShell pages — HRA (348→1,177w), Gratuity (343→1,160w), Capital Gains (385→1,209w), GST Reform (356→1,125w) | Same pattern; worked examples verified against each page's own `compute` function. **All four also emitted FAQPage JSON-LD with zero visible FAQ on the page** — the same structured-data violation as the Age page. New shared `CalcFAQ` component now renders the same `faqItems` the schema is built from; new `.calc-prose`/`.calc-faq` CSS (dark-mode-safe) added to `common.css` | *(this commit)* |
 
 ## Open issues
 
@@ -31,12 +32,14 @@ Last updated: 2026-07-05
 1. **Thin content on remaining calculator pages.**
    Why: "insufficient value" is the stated rejection reason; every indexed thin page
    drags the site-level quality assessment.
-   Fix: continue the pilot pattern. Non-India batches all done (UK Income Tax, SIP,
-   BMI, Compound, US Paycheck, IRCTC, US Mortgage, Percentage, health cluster,
-   European Salary, EU VAT, Tip, Age, Inflation). Remaining: India pages (GST
-   reform, HRA, capital gains, gratuity, credit-card pages, salary calculator) and
-   the per-country Europe salary pages (DE/FR/NL reuse the shared component; the
-   new article renders on the hub only).
+   Fix: continue the pilot pattern. Done: all non-India batches, plus the four thin
+   India CalcShell pages (HRA, Gratuity, Capital Gains, GST Reform). Already had
+   full article layouts (not thin): GST, EMI, Income Tax (`CalculatorArticleLayout`),
+   Salary, SIP, IRCTC, Tax Regime Comparison, Buy-vs-Rent (`SearchLandingSections`).
+   Remaining candidates: PPF, Credit Card Trap, Credit Card Analyzer, TDS, and the
+   per-country Europe salary pages (DE/FR/NL reuse the shared component; the hub
+   article renders on the hub only). Verify each against its actual rendered content
+   before assuming it is thin — several flagged pages already carry articles.
    Impact: high — this is the core complaint.
 
 2. **Legacy static guides (`public/guide-*.html`, 8 files).**

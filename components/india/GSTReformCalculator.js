@@ -4,6 +4,7 @@ import { Receipt } from 'lucide-react';
 import ResultActions from '../ResultActions';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import CalcShell, { fieldStyles as f, resultStyles as r } from '../calculator/CalcShell';
+import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
 
@@ -27,7 +28,11 @@ const comparePanel = (accent) => ({ flex: '1 1 200px', minWidth: 0, padding: '14
 const faqItems = [
   { question: 'What changed in GST in 2025?', answer: 'Effective 22 September 2025, India moved to a simplified GST structure with two main slabs of 5% and 18%, a 40% rate for sin and luxury goods, and nil-rated essentials. The earlier 12% and 28% slabs were removed, with most items shifting down to 5% or 18%.' },
   { question: 'How do I find the new price after GST 2.0?', answer: 'Take the base (pre-tax) price and apply the new slab. If you only know the old MRP, this calculator first removes the old GST to find the base, then applies the new rate so you can compare like-for-like.' },
-  { question: 'Did all prices fall under GST 2.0?', answer: 'Most goods that moved from 12% to 5% or from 28% to 18% became cheaper. A few items moved into the 40% sin/luxury slab and became more expensive. The direction depends on the specific item’s reclassification.' }
+  { question: 'Did all prices fall under GST 2.0?', answer: 'Most goods that moved from 12% to 5% or from 28% to 18% became cheaper. A few items moved into the 40% sin/luxury slab and became more expensive. The direction depends on the specific item’s reclassification.' },
+  { question: 'Which slabs were removed in GST 2.0?', answer: 'The 12% and 28% slabs were abolished. The structure is now 0% (nil-rated essentials), 5% (merit goods), 18% (standard), and a 40% rate for sin and luxury items such as tobacco, aerated drinks, and high-end cars.' },
+  { question: 'Why can’t I just subtract the rate difference from the price?', answer: 'Because GST applies to the base (pre-tax) price, not the shelf price. To compare fairly you first strip the old GST out of the MRP to recover the base, then apply the new rate. Subtracting “28% minus 18%” from the final price gives the wrong answer.' },
+  { question: 'Will shops always pass the GST cut on to me?', answer: 'Not automatically. A lower slab reduces the tax on the base price, but sellers set the final price and may absorb part of the change through margin. The calculator shows the tax-driven change; your actual saving depends on the retailer’s pricing.' },
+  { question: 'Does a lower GST rate always mean a big saving?', answer: 'The saving is proportional to both the rate cut and the price. Moving an item from 12% to 5% saves about 6.25% of the old price; moving from 28% to 18% saves about 7.8%. On small purchases the rupee amount is modest, but on big-ticket goods it adds up quickly.' }
 ];
 
 const GSTReformCalculator = () => {
@@ -109,6 +114,59 @@ const GSTReformCalculator = () => {
         </div>
 
         <ResultActions title="GST 2.0 price comparison" summaryLines={shareLines} />
+
+        <section className="calc-prose">
+          <h2>What GST 2.0 changed on 22 September 2025</h2>
+          <p>
+            India&rsquo;s Goods and Services Tax was simplified from a four-slab structure (5%, 12%, 18%, 28%) into a
+            leaner one: <strong>0%, 5%, 18%, and a new 40% rate for sin and luxury goods</strong>. The awkward middle
+            slabs of 12% and 28% were removed, with most items reclassified downward — 12% goods largely moving to 5%,
+            and 28% goods to 18%. For everyday shopping the practical question is simple: for a given item, did its slab
+            fall (cheaper) or rise into the 40% bracket (costlier)? This tool answers exactly that, one item at a time.
+          </p>
+
+          <h3>Why you divide before you compare</h3>
+          <p>
+            The one bit of arithmetic people get wrong is comparing an old price to a new rate directly. GST is charged
+            on the <strong>base</strong> (pre-tax) price, so to compare fairly you must first remove the old tax to
+            recover that base, then apply the new rate. If you know only the old MRP, switch the calculator to
+            &ldquo;old MRP&rdquo; mode and it strips the old GST out for you before re-taxing at the new slab —
+            otherwise the comparison is apples to oranges.
+          </p>
+
+          <h3>Worked examples</h3>
+          <ul>
+            <li>
+              <strong>28% → 18% (e.g. a small appliance).</strong> On a ₹1,000 base price, the old price was ₹1,280 and
+              the new price is ₹1,180 — <strong>₹100 cheaper, about 7.8%</strong> off the old price.
+            </li>
+            <li>
+              <strong>12% → 5% (e.g. many packaged goods).</strong> A ₹1,000 base moves from ₹1,120 to ₹1,050 —{' '}
+              <strong>₹70 cheaper, 6.25%</strong>.
+            </li>
+            <li>
+              <strong>18% → 40% (an item reclassified as luxury/sin).</strong> A ₹1,000 base jumps from ₹1,180 to
+              ₹1,400 — <strong>₹220 costlier</strong>. Not everything got cheaper.
+            </li>
+          </ul>
+          <p>
+            Notice the saving scales with the price: 7.8% is nothing on a ₹200 purchase but real money on a ₹40,000
+            television. That is why the reform&rsquo;s impact is felt most on big-ticket goods.
+          </p>
+
+          <h2>What this comparison does and doesn&rsquo;t capture</h2>
+          <p>
+            The figure here isolates the <strong>GST component only</strong>. Whether a shop actually passes the full
+            cut through to you depends on its pricing and margin — a lower slab reduces the tax, not necessarily the
+            sticker price. The correct slab for any specific item also depends on its official classification, which is
+            occasionally disputed. For routine billing where you simply need to add, remove, or reverse-extract GST at
+            the current rates, the <a href="/gst-calculator">GST calculator</a>{' '}handles all three flows with the
+            CGST/SGST/IGST split; this page is the one to use when you want to see how the reform itself moved a
+            price.
+          </p>
+        </section>
+
+        <CalcFAQ items={faqItems} title="GST 2.0 FAQ" />
 
         <CalculatorInfoPanel
           title="Methodology, assumptions, and source references"

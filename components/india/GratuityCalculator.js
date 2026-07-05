@@ -4,6 +4,7 @@ import { Wallet } from 'lucide-react';
 import ResultActions from '../ResultActions';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import CalcShell, { fieldStyles as f, resultStyles as r } from '../calculator/CalcShell';
+import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
 
@@ -24,7 +25,11 @@ const faqItems = [
   { question: 'How is gratuity calculated in India?', answer: 'For employees covered by the Payment of Gratuity Act, gratuity = (15 × last drawn salary × years of service) / 26, where salary means basic pay plus dearness allowance. Service beyond 6 months in the final year is rounded up to a full year.' },
   { question: 'What is the maximum tax-free gratuity?', answer: 'Gratuity is exempt from tax up to ₹20 lakh in a lifetime for covered employees. Amounts above the ₹20 lakh statutory ceiling are taxable as per your slab.' },
   { question: 'Do I need 5 years of service to get gratuity?', answer: 'Generally yes — gratuity is payable after 5 years of continuous service, except in cases of death or disablement, where the 5-year condition is waived.' },
-  { question: 'Is the divisor always 26?', answer: 'For employees covered by the Act the divisor is 26 (working days in a month). For employees not covered by the Act, employers typically use 30 days.' }
+  { question: 'Is the divisor always 26?', answer: 'For employees covered by the Act the divisor is 26 (working days in a month). For employees not covered by the Act, employers typically use 30 days.' },
+  { question: 'Why does the formula divide by 26 and not 30?', answer: 'The Payment of Gratuity Act treats a month as 26 working days (excluding four weekly offs), so 15 days’ pay is calculated as 15/26 of the monthly salary. Dividing by the smaller number makes covered-employee gratuity slightly higher than the 15/30 figure used for those outside the Act.' },
+  { question: 'How does rounding of service years work?', answer: 'Under the Act, only the final year is rounded: more than 6 months counts as a full year, 6 months or less is dropped. So 10 years 7 months counts as 11 years, but 10 years 5 months counts as 10. Earlier years are always counted in full.' },
+  { question: 'Is gratuity taxable above ₹20 lakh?', answer: 'For covered private-sector employees, gratuity is tax-exempt up to a lifetime limit of ₹20 lakh; anything above that is taxed at your slab. Government employees receive gratuity fully tax-free. The limit is cumulative across your career, not per employer.' },
+  { question: 'Do I get gratuity if I resign before 5 years?', answer: 'Generally no — five years of continuous service is the eligibility threshold for resignation or retirement. The only exceptions are death or disablement, where the five-year condition is waived and gratuity is paid for the service completed.' }
 ];
 
 const GratuityCalculator = () => {
@@ -89,6 +94,64 @@ const GratuityCalculator = () => {
         </div>
 
         <ResultActions title="Gratuity estimate" summaryLines={shareLines} />
+
+        <section className="calc-prose">
+          <h2>What gratuity is, and how the 15/26 formula is built</h2>
+          <p>
+            Gratuity is a lump sum an employer pays for long service — a statutory thank-you funded entirely by the
+            employer, with nothing deducted from your salary. For staff covered by the Payment of Gratuity Act, the
+            law fixes the amount at <strong>15 days of last-drawn salary for every completed year of service</strong>.
+            The catch is how &ldquo;15 days&rsquo; salary&rdquo; is computed: the Act treats a working month as 26 days,
+            so a day&rsquo;s pay is your monthly salary divided by 26, and 15 days is{' '}
+            <strong>(15 × last salary × years) ÷ 26</strong>. Salary here means basic pay plus dearness allowance —
+            not gross, not CTC.
+          </p>
+
+          <h3>A worked example</h3>
+          <p>
+            Suppose your last-drawn basic-plus-DA is ₹80,000 a month and you have worked 10 years and 7 months. Because
+            the final part-year exceeds six months, service rounds up to <strong>11 years</strong>. The formula gives
+            (15 × ₹80,000 × 11) ÷ 26 = <strong>₹5,07,692</strong>. Had you left at 10 years and 5 months instead, the
+            final year would drop, service would count as 10 years, and the figure would fall to about ₹4,61,538 — the
+            same salary, roughly ₹46,000 less, decided entirely by two months. When a resignation date is near a
+            six-month boundary, that rounding rule is worth a moment&rsquo;s planning.
+          </p>
+
+          <h3>Covered vs not covered by the Act</h3>
+          <p>
+            The divisor is the tell. Employers <strong>covered by the Act</strong> (broadly, establishments with 10 or
+            more employees) use 26, which makes gratuity slightly higher. Employers <strong>outside the Act</strong>
+            typically compute on a 30-day month, so the same service yields a smaller number. This calculator lets you
+            switch between the two with the checkbox; if you are unsure, most salaried private-sector employees in
+            sizeable companies are covered.
+          </p>
+
+          <h2>The ₹20 lakh ceiling and eligibility</h2>
+          <ul>
+            <li>
+              <strong>Tax-free up to ₹20 lakh.</strong> For covered private-sector employees the exemption is a lifetime
+              cumulative limit of ₹20,00,000; gratuity beyond that is taxed at your slab. Government employees get it
+              fully tax-free. Our example&rsquo;s ₹5,07,692 is comfortably inside the ceiling and entirely exempt.
+            </li>
+            <li>
+              <strong>Five years is the threshold.</strong> Gratuity on resignation or retirement generally needs five
+              years of continuous service. Death and disablement waive that condition, with gratuity paid for the
+              service actually completed.
+            </li>
+            <li>
+              <strong>It is separate from your provident fund.</strong> Gratuity is an employer-borne benefit on top of
+              EPF and any notice-period dues — worth remembering when you reconcile a full-and-final settlement.
+            </li>
+          </ul>
+          <p>
+            Gratuity is one slice of what leaving (or joining) a job is really worth. To see how the rest of a package
+            resolves into monthly cash, the <a href="/salary-calculator">salary calculator</a>{' '}breaks a CTC into
+            in-hand pay, and the <a href="/guides/ctc-to-in-hand-salary">CTC to in-hand guide</a>{' '}explains where each
+            component — including gratuity — sits inside the offer.
+          </p>
+        </section>
+
+        <CalcFAQ items={faqItems} title="Gratuity FAQ" />
 
         <CalculatorInfoPanel
           title="Methodology, assumptions, and source references"

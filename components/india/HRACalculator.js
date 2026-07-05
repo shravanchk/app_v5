@@ -4,6 +4,7 @@ import { Home } from 'lucide-react';
 import ResultActions from '../ResultActions';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import CalcShell, { fieldStyles as f, resultStyles as r } from '../calculator/CalcShell';
+import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
 
@@ -23,7 +24,11 @@ const faqItems = [
   { question: 'How is HRA exemption calculated?', answer: 'HRA exemption is the least of three amounts: (1) actual HRA received, (2) rent paid minus 10% of salary, and (3) 50% of salary in metro cities or 40% in non-metro cities. Salary here means basic pay plus dearness allowance that forms part of salary.' },
   { question: 'Which cities count as metro for HRA?', answer: 'Only Delhi, Mumbai, Kolkata, and Chennai are treated as metro cities for HRA, qualifying for the 50% limit. All other cities use 40%.' },
   { question: 'Can I claim HRA under the new tax regime?', answer: 'No. The HRA exemption is available only under the old tax regime. If you opt for the new regime you cannot claim it, which is one factor in the regime decision.' },
-  { question: 'Do I need rent receipts?', answer: 'Yes. To claim HRA you generally need rent receipts, and your landlord’s PAN if annual rent exceeds ₹1 lakh.' }
+  { question: 'Do I need rent receipts?', answer: 'Yes. To claim HRA you generally need rent receipts, and your landlord’s PAN if annual rent exceeds ₹1 lakh.' },
+  { question: 'Why is my exemption usually the “rent − 10% of salary” figure?', answer: 'For most salaried people this middle condition is the binding one, because actual HRA and the 40–50% cap tend to be generous while rent minus 10% of salary is smaller. It is worth checking: if your rent is very high relative to salary, the 40%/50% cap becomes the limit instead.' },
+  { question: 'Can I claim HRA if I pay rent to my parents?', answer: 'Yes, if the arrangement is genuine — your parents must actually own the home and declare the rent as income, and you should keep receipts and ideally a bank trail. Paying rent to a spouse is generally not accepted by the tax department.' },
+  { question: 'Can I claim both HRA and a home loan?', answer: 'Yes, in valid situations — for example you rent in the city you work in while owning (and repaying a loan on) a house elsewhere, or your own home is genuinely not occupiable for work reasons. Both the HRA exemption and the home-loan interest deduction can then apply under the old regime.' },
+  { question: 'What if I don’t receive HRA as a salary component?', answer: 'Then this exemption does not apply. Self-employed people and salaried employees without an HRA component can instead claim a limited deduction for rent under Section 80GG, which has its own, lower limits.' }
 ];
 
 const HRACalculator = () => {
@@ -96,6 +101,62 @@ const HRACalculator = () => {
         </div>
 
         <ResultActions title="HRA exemption estimate" summaryLines={shareLines} />
+
+        <section className="calc-prose">
+          <h2>How the least-of-three rule actually works</h2>
+          <p>
+            House Rent Allowance is not exempt in full — Section 10(13A) grants exemption equal to the{' '}
+            <strong>least of three amounts</strong>, and the whole game is knowing which of the three is limiting you.
+            The three candidates are the actual HRA in your salary, the rent you pay minus 10% of salary, and a flat
+            50% of salary in the four metro cities (40% elsewhere). Whichever is smallest becomes your exemption; the
+            rest of the HRA is taxable. Because the rule takes a minimum, adding more of any one component only helps
+            up to the point where a different condition takes over.
+          </p>
+
+          <h3>A worked example</h3>
+          <p>
+            Take the calculator&rsquo;s default: a Mumbai employee with basic salary (plus DA) of ₹6,00,000 a year,
+            receiving ₹3,00,000 of HRA and paying ₹2,40,000 in annual rent. The three candidates come out as{' '}
+            <strong>₹3,00,000</strong> (actual HRA), <strong>₹1,80,000</strong> (rent of ₹2,40,000 minus 10% of
+            salary, ₹60,000), and <strong>₹3,00,000</strong> (50% of a ₹6,00,000 salary in a metro). The least is
+            ₹1,80,000, so that much HRA is exempt and the remaining <strong>₹1,20,000 is added to taxable income</strong>.
+            Notice the &ldquo;rent − 10% of salary&rdquo; term is doing the work here, as it does for most people —
+            the actual-HRA and percentage caps are usually the generous ones.
+          </p>
+
+          <h3>The three things people get wrong</h3>
+          <ul>
+            <li>
+              <strong>&ldquo;Salary&rdquo; means basic + DA, not CTC.</strong> Using your full cost-to-company inflates
+              every term and overstates the exemption. Only basic pay and dearness allowance that forms part of
+              retirement benefits count.
+            </li>
+            <li>
+              <strong>Only four cities are metros for HRA.</strong> Delhi, Mumbai, Kolkata, and Chennai qualify for the
+              50% cap. Bengaluru, Hyderabad, Pune, and everywhere else use 40% — a common and costly assumption to get
+              wrong, because it lowers the third candidate.
+            </li>
+            <li>
+              <strong>No rent, no exemption.</strong> The second condition (rent − 10% of salary) turns negative or zero
+              if you pay little or no rent, which drags the minimum to zero. HRA is only exempt to the extent you
+              actually spend on rent.
+            </li>
+          </ul>
+
+          <h2>HRA and the regime decision</h2>
+          <p>
+            The exemption exists <strong>only under the old tax regime</strong>. Under the new regime — now the default —
+            HRA is fully taxable, which is precisely why high-rent employees are often the ones for whom the old regime
+            still wins. A ₹1,80,000 exemption at a 30% marginal rate is roughly ₹54,000 of tax saved a year, and that
+            saving has to be weighed against the new regime&rsquo;s lower slab rates and ₹75,000 standard deduction.
+            The <a href="/guides/old-vs-new-regime-breakeven-fy-2026-27">old vs new regime breakeven guide</a>{' '}works
+            through where the line falls, and the <a href="/salary-calculator">salary calculator</a>{' '}shows your
+            take-home under the new regime for comparison. Keep rent receipts (and your landlord&rsquo;s PAN if annual
+            rent tops ₹1 lakh) — the exemption is only as good as the proof behind it.
+          </p>
+        </section>
+
+        <CalcFAQ items={faqItems} title="HRA exemption FAQ" />
 
         <CalculatorInfoPanel
           title="Methodology, assumptions, and source references"

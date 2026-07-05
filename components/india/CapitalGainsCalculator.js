@@ -4,6 +4,7 @@ import { TrendingUp } from 'lucide-react';
 import ResultActions from '../ResultActions';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import CalcShell, { fieldStyles as f, resultStyles as r } from '../calculator/CalcShell';
+import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
 
@@ -36,7 +37,11 @@ const faqItems = [
   { question: 'What is the capital gains tax on shares in FY 2026-27?', answer: 'For listed equity and equity mutual funds, short-term gains (holding up to 12 months) are taxed at 20%, and long-term gains (over 12 months) at 12.5% on the amount above the ₹1.25 lakh annual exemption. A 4% health and education cess applies on the tax.' },
   { question: 'How is property capital gains tax calculated now?', answer: 'Long-term capital gains on property (held over 24 months) are taxed at 12.5% without indexation. For property acquired before 23 July 2024, resident individuals may instead choose 20% with indexation if that is lower. Short-term property gains are taxed at your income slab rate.' },
   { question: 'Is there an exemption on equity long-term gains?', answer: 'Yes. Long-term capital gains on listed equity and equity mutual funds are exempt up to ₹1.25 lakh per financial year; only the excess is taxed at 12.5%.' },
-  { question: 'Does indexation still apply?', answer: 'For most assets acquired on or after 23 July 2024, indexation was removed and the LTCG rate set at 12.5%. Pre-23 July 2024 property retains an optional 20%-with-indexation route.' }
+  { question: 'Does indexation still apply?', answer: 'For most assets acquired on or after 23 July 2024, indexation was removed and the LTCG rate set at 12.5%. Pre-23 July 2024 property retains an optional 20%-with-indexation route.' },
+  { question: 'What holding period makes a gain long-term?', answer: 'Listed equity shares and equity mutual funds turn long-term after 12 months. Property and most other assets — gold, unlisted shares, debt funds — need 24 months. Selling even a day earlier puts you in the higher short-term bracket.' },
+  { question: 'How does the ₹1.25 lakh equity exemption work?', answer: 'It is an annual exemption on long-term gains from listed equity and equity funds combined. If your total equity LTCG in a financial year is ₹1.25 lakh or less, you pay nothing; only the excess is taxed at 12.5%. It resets each year, which is the basis of “tax harvesting”.' },
+  { question: 'Why is equity short-term tax 20% but long-term only 12.5%?', answer: 'The rules deliberately reward longer holding. Short-term equity gains (Section 111A) are taxed at a flat 20% regardless of your slab, while long-term gains (Section 112A) get both a lower 12.5% rate and the ₹1.25 lakh exemption — a large gap that often makes waiting past 12 months worthwhile.' },
+  { question: 'Can I reduce property capital gains tax?', answer: 'Yes — Sections 54, 54F, and 54EC let you defer or exempt long-term gains by reinvesting in a residential house or in specified bonds within set time limits. These exemptions are not modelled here; this tool shows the tax before any reinvestment relief.' }
 ];
 
 const CapitalGainsCalculator = () => {
@@ -142,6 +147,59 @@ const CapitalGainsCalculator = () => {
         )}
 
         <ResultActions title="Capital gains tax estimate" summaryLines={shareLines} />
+
+        <section className="calc-prose">
+          <h2>Four questions decide your capital gains tax</h2>
+          <p>
+            After the July 2024 overhaul, Indian capital gains tax comes down to four inputs, and getting the first two
+            right settles most of the answer: <strong>what</strong> you sold (listed equity vs property vs everything
+            else), <strong>how long</strong> you held it, the <strong>gain</strong> itself, and — for a couple of cases —
+            your income <strong>slab</strong>. The calculator maps these to the correct section automatically, but
+            knowing the logic stops you from mis-estimating by tens of thousands of rupees.
+          </p>
+
+          <h3>A worked example</h3>
+          <p>
+            Say you sell listed shares for ₹8,00,000 that cost ₹5,00,000, held for more than a year — a{' '}
+            <strong>₹3,00,000 long-term gain</strong>. The first ₹1,25,000 is exempt, leaving ₹1,75,000 taxable at
+            12.5%, which is ₹21,875, plus 4% health-and-education cess of ₹875 — a total of{' '}
+            <strong>₹22,750</strong>, so you keep ₹2,77,250 of the gain. Now hold the identical shares for under a year
+            instead: the whole ₹3,00,000 is short-term, taxed at a flat 20% (Section 111A) with no exemption, giving
+            ₹60,000 plus ₹2,400 cess — <strong>₹62,400</strong>. Same shares, same profit, nearly three times the tax,
+            decided only by the calendar. That gap is the single most valuable thing this page shows.
+          </p>
+
+          <h3>The holding-period cliff</h3>
+          <ul>
+            <li>
+              <strong>Listed equity and equity funds: 12 months.</strong> Cross that line and the rate drops from 20% to
+              12.5% and the ₹1.25 lakh annual exemption unlocks.
+            </li>
+            <li>
+              <strong>Property and most other assets: 24 months.</strong> Long-term property is now 12.5% without
+              indexation; short-term property is taxed at your ordinary slab rate, which can be as high as 30%.
+            </li>
+            <li>
+              <strong>The ₹1.25 lakh equity exemption resets every financial year.</strong> Booking long-term gains up to
+              that limit annually — and reinvesting — is a legitimate way to realise profit tax-free over time.
+            </li>
+          </ul>
+
+          <h2>What changed in July 2024, and what this tool leaves out</h2>
+          <p>
+            For assets bought on or after 23 July 2024, indexation — the old inflation adjustment to purchase cost — was
+            removed, and long-term rates were standardised at 12.5%. Property bought <em>before</em> that date keeps an
+            optional route: resident individuals may choose 20% <strong>with</strong> indexation if it produces a lower
+            tax. This calculator shows the 12.5% without-indexation figure, and it deliberately does not model surcharge
+            on very high incomes, set-off of capital losses, or the reinvestment exemptions under Sections 54, 54F, and
+            54EC — any of which can change what you actually owe. For where these gains sit alongside salary and other
+            income, the <a href="/guides/india-income-tax-2026-27">FY 2026-27 income tax slabs</a>{' '}give the full
+            picture; treat the number here as the pre-relief starting point and confirm the specifics with a
+            professional before you file.
+          </p>
+        </section>
+
+        <CalcFAQ items={faqItems} title="Capital gains tax FAQ" />
 
         <CalculatorInfoPanel
           title="Methodology, assumptions, and source references"
