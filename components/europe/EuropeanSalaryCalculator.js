@@ -22,6 +22,187 @@ const FAQ = [
   { question: 'Can I compare salaries across countries with this tool?', answer: 'You can compare what each system deducts from the same gross figure, which is the right first step. A fair offer comparison also needs cost of living, what contributions buy (healthcare, pensions), currency, and benefits like employer pension matches or a 13th-month salary.' }
 ];
 
+// Per-country educational content. Rendered only on the dedicated country pages
+// (forcedCountry set); the hub uses its own comparison article above. Every euro
+// figure below is computed from this page's own engine (computeEuropeanSalary) for
+// a single, childless employee, so prose and calculator always agree.
+const proseHead = 'font-display text-lg font-semibold text-ink dark:text-white';
+const proseLink = 'font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300';
+
+const COUNTRY_CONTENT = {
+  DE: {
+    faq: [
+      { question: 'Why are social contributions higher than income tax on a German salary?', answer: 'On a mid-level salary such as €60,000, statutory pension, health, unemployment and care contributions total about €13,050 for a single employee, against roughly €9,399 of income tax. Social insurance is charged from the first euro with no tax-free band, so it dominates until income tax catches up at higher salaries.' },
+      { question: 'What is tax class I, and does this calculator use it?', answer: 'Yes. The model assumes Steuerklasse I — a single, childless employee with statutory health insurance and no church tax. Married couples using splitting (class III/V or IV) and parents paying the lower care rate will see different, usually lower, deductions.' },
+      { question: 'When does the solidarity surcharge apply in Germany?', answer: 'Since 2021 the Soli is zero until your annual income-tax bill exceeds about €20,350, then phases in. For a single employee that means roughly €0 up to €80,000 of gross salary; it first appears around €100,000 (about €347 in this model).' }
+    ],
+    article: (
+      <>
+        <h2 className="font-display text-xl font-bold text-ink dark:text-white">How Germany turns €60,000 gross into about €3,129 a month</h2>
+        <p className="mt-3">
+          Put €60,000 of gross salary through the calculator above as a single, childless employee (tax class I) and it
+          returns roughly <strong className="text-ink dark:text-white">€37,551 net a year — about €3,129 a month</strong>,
+          an effective deduction rate of 37.4%. The striking part is the split: income tax takes about €9,399, but social
+          insurance takes about €13,050. For a normal mid-level German salary the state pension, health, unemployment and
+          care contributions cost you more than income tax does.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Where a German salary actually goes</h3>
+        <ul className="mt-3 list-disc space-y-2 pl-5">
+          <li>
+            <strong className="text-ink dark:text-white">Social insurance first, from the first euro.</strong> Pension
+            9.3%, health 8.75%, unemployment 1.3% and care 2.4% (the childless rate) come to about €13,050 on €60,000.
+            Unlike income tax there is no tax-free band, but the contributions stop at assessment ceilings (€101,400 for
+            pension and unemployment, €69,750 for health and care) — which is why the effective rate flattens on high
+            salaries.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">Income tax on a shrinking base.</strong> The §32a EStG tariff is
+            applied not to gross but to taxable income after the employee lump sums and deductible insurance, so the €9,399
+            bill on €60,000 is lower than the headline bands suggest. The Grundfreibetrag (€12,348) is tax-free and the 42%
+            zone only starts at €69,879 of taxable income.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">Solidarity surcharge, now a high-earner tax.</strong> Once a 5.5%
+            add-on for everyone, the Soli is zero until your income-tax bill passes €20,350 — so it stays at €0 through
+            €80,000 of salary and first appears (about €347) around €100,000 gross here.
+          </li>
+        </ul>
+
+        <h3 className={cn('mt-8', proseHead)}>What the effective rate does as pay rises</h3>
+        <p className="mt-3">
+          At €40,000 the calculator shows about €26,887 net (32.8%); at €80,000, €48,035 (40.0%); at €100,000, €58,014
+          (42.0%). The climb is steady rather than sharp because the two big levers act in sequence — social contributions
+          dominate the middle and then plateau at the ceilings, while income tax becomes the marginal cost near and above
+          the 42% zone.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Why your Brutto-Netto will differ</h3>
+        <p className="mt-3">
+          This model assumes tax class I, no children, statutory health insurance and no church tax. A married single-earner
+          using splitting (class III) keeps substantially more; church tax (8&ndash;9% of income tax in most states) and
+          private health insurance move the number the other way; parents pay the lower care rate. For the wider picture,
+          the <a href="/european-salary-calculator" className={proseLink}>European salary calculator</a>{' '}compares the
+          same gross across eight systems, and the{' '}
+          <a href="/uk-income-tax-calculator" className={proseLink}>UK income tax calculator</a>{' '}breaks down the British
+          equivalent. Treat the figure as a planning estimate — your official Lohnabrechnung is the final word.
+        </p>
+      </>
+    )
+  },
+  FR: {
+    faq: [
+      { question: 'Does this France calculator account for the quotient familial?', answer: 'No — it models a single person (one part). France taxes households, so a married or PACS couple and children add parts that lower the income-tax base. A family can pay far less income tax than the single figure shown, though social contributions are unchanged.' },
+      { question: 'Why is French take-home lower than the Netherlands for the same gross?', answer: 'French employee social contributions (social insurance, CSG and unemployment) are heavier — about 21% of gross — and there is no large flat tax credit like the Dutch heffingskorting. On €60,000 France nets about €36,116 versus roughly €46,987 in the Netherlands.' },
+      { question: 'Is French income tax withheld monthly now?', answer: 'Yes. Since the prélèvement à la source reform, income tax is withheld from each payslip rather than settled the following year, so the net figure here is close to what actually reaches your account.' }
+    ],
+    article: (
+      <>
+        <h2 className="font-display text-xl font-bold text-ink dark:text-white">What €60,000 gross becomes in France — about €3,010 a month</h2>
+        <p className="mt-3">
+          Run €60,000 of gross salary through the calculator above and it returns roughly{' '}
+          <strong className="text-ink dark:text-white">€36,116 net a year — about €3,010 a month</strong>, an effective
+          rate of 39.8%. France splits that almost evenly between two very different charges: social contributions of about
+          €12,780 and income tax of about €11,104. Knowing which is which matters, because only one of them is what a French
+          payslip treats as taxable income.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Two layers: cotisations, then impôt</h3>
+        <ul className="mt-3 list-disc space-y-2 pl-5">
+          <li>
+            <strong className="text-ink dark:text-white">Social contributions come off first.</strong> This model applies a
+            combined rate of about 21.3% for the main employee charges — social insurance, CSG and unemployment — roughly
+            €12,780 on €60,000. They fund healthcare, the state pension and unemployment cover, and are deducted before you
+            see the money.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">Income tax on a progressive barème.</strong> The 2026 bands run 0%
+            to €11,600, 11% to €29,579, 30% to €84,577, then 41% and 45%. On €60,000 that is about €11,104. Because the
+            first €11,600 is free and the 30% band only bites above €29,579, the effective income-tax rate stays well below
+            the 30% headline.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">Withheld at source.</strong> Since the prélèvement à la source
+            reform income tax is taken from each payslip rather than the following year, so the net shown here is close to
+            what actually lands each month.
+          </li>
+        </ul>
+
+        <h3 className={cn('mt-8', proseHead)}>The big caveat — France taxes households, not people</h3>
+        <p className="mt-3">
+          This calculator models a single person. France&rsquo;s income tax uses the <em>quotient familial</em>: household
+          income is divided by a number of &ldquo;parts&rdquo; (2 for a married or PACS couple, an extra half-part per
+          child), taxed on that smaller base, then multiplied back. A married earner with two children can pay dramatically
+          less income tax than the single figure shown — sometimes nothing at incomes where a single person pays thousands.
+          The social contributions do not change, but the impôt line can.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Reading the number</h3>
+        <p className="mt-3">
+          At €40,000 the calculator shows about €26,376 net (34.1%); at €80,000, €45,856 (42.7%); at €100,000, €53,899
+          (46.1%). To weigh a French offer against a neighbour&rsquo;s, the{' '}
+          <a href="/european-salary-calculator" className={proseLink}>European salary calculator</a>{' '}runs the same gross
+          through eight systems side by side — useful because France&rsquo;s social contributions are heavier than most
+          while its net can still be middling. Every figure here is a planning estimate for a single employee; a French
+          bulletin de paie or a tax adviser gives the household-adjusted truth.
+        </p>
+      </>
+    )
+  },
+  NL: {
+    faq: [
+      { question: 'Why is the Dutch effective tax rate so low despite a 35.70% first bracket?', answer: 'Two credits do the work: the general tax credit (up to €3,115) and the labour credit (up to €5,685) subtract directly from the tax bill — about €8,800 combined. On €60,000 that cuts a €21,813 gross tax to roughly €13,013, an effective rate of 21.7%.' },
+      { question: 'Does this calculator include the 30% ruling for expats?', answer: 'No. The 30% ruling, which exempts part of a qualifying incoming employee’s salary from tax, is not modelled. Those who qualify would keep more than the figure shown here.' },
+      { question: 'Are the Dutch tax credits really a flat amount?', answer: 'This model applies the maximum general and labour credits as a flat sum, which is accurate for low-to-middle incomes. In reality both taper as income rises, so at higher salaries the true tax is somewhat higher and net a little lower than shown.' }
+    ],
+    article: (
+      <>
+        <h2 className="font-display text-xl font-bold text-ink dark:text-white">Why €60,000 gross nets nearly €47,000 in the Netherlands</h2>
+        <p className="mt-3">
+          Put €60,000 of gross salary through the calculator above and it returns about{' '}
+          <strong className="text-ink dark:text-white">€46,987 net a year — roughly €3,916 a month</strong>, an effective
+          rate of just 21.7%. That is the mildest of the euro-zone systems this tool models, and the reason is not low tax
+          rates (Box 1 starts at 35.70%) but two large tax credits that refund thousands of euros.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>High rates, then big credits</h3>
+        <ul className="mt-3 list-disc space-y-2 pl-5">
+          <li>
+            <strong className="text-ink dark:text-white">Box 1 looks steep.</strong> The 2026 brackets are 35.70% to
+            €38,883, 37.56% to €78,426, then 49.50% — and the first bracket already bundles national insurance into that
+            combined rate. On €60,000 the gross tax works out to about €21,813.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">Then the credits arrive.</strong> The general tax credit (algemene
+            heffingskorting, up to €3,115) and the labour credit (arbeidskorting, up to €5,685) subtract directly from the
+            tax bill — here a flat €8,800 — cutting the actual tax to about €13,013. Credits are the whole story: they are
+            why a system with a 35.70% entry rate produces a 21.7% effective rate at €60,000.
+          </li>
+        </ul>
+
+        <h3 className={cn('mt-8', proseHead)}>How the effective rate climbs</h3>
+        <p className="mt-3">
+          At €40,000 the calculator shows about €34,499 net (13.8%); at €80,000, €59,287 (25.9%); at €100,000, €69,387
+          (30.6%). The rate rises faster than in Germany or France because the flat credit is a shrinking share of a larger
+          salary — €8,800 relieves a huge fraction of a €40,000 tax bill but only a slice of a €100,000 one.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Where the estimate is optimistic</h3>
+        <p className="mt-3">
+          Two simplifications matter. First, this model applies the maximum credits as a flat amount, but in reality both
+          the general and labour credits taper away as income rises — so at higher salaries the true tax is a little higher
+          and the net a little lower than shown. Second, the 30% ruling for qualifying incoming expats (which exempts part
+          of salary from tax) is not modelled and would push net higher for those who qualify. For a cross-border
+          comparison, the <a href="/european-salary-calculator" className={proseLink}>European salary calculator</a>{' '}puts
+          the Dutch number beside seven other systems, and the{' '}
+          <a href="/uk-income-tax-calculator" className={proseLink}>UK income tax calculator</a>{' '}does the British
+          breakdown. As always, a Dutch loonstrook or the Belastingdienst&rsquo;s own tools give the exact figure.
+        </p>
+      </>
+    )
+  }
+};
+
 const EuropeanSalaryCalculator = ({
   onBack,
   forcedCountry = null,
@@ -66,6 +247,11 @@ const EuropeanSalaryCalculator = ({
 
   const selectedCountry = SALARY_SYSTEMS[country] || SALARY_SYSTEMS.UK;
   const selectedCountryName = selectedCountry.country;
+  const countryContent = forcedCountry ? COUNTRY_CONTENT[forcedCountry] : null;
+  // FAQ shown and emitted as schema: country-specific questions first (on the
+  // dedicated pages), then the shared list. Schema is always built from this
+  // same array so structured data matches what renders.
+  const activeFaq = countryContent ? [...countryContent.faq, ...FAQ] : FAQ;
   const canonicalUrl = `https://upaman.com${canonicalPath}`;
   const resolvedTitle = seoTitle || (forcedCountry
     ? `${selectedCountryName} Salary Calculator | Net Salary After Tax | Upaman`
@@ -156,7 +342,7 @@ const EuropeanSalaryCalculator = ({
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": FAQ.map(({ question, answer }) => ({
+            "mainEntity": activeFaq.map(({ question, answer }) => ({
               "@type": "Question",
               "name": question,
               "acceptedAnswer": { "@type": "Answer", "text": answer }
@@ -390,13 +576,20 @@ const EuropeanSalaryCalculator = ({
           </div>
         )}
 
+        {/* Country-specific article (dedicated country pages only) */}
+        {countryContent && (
+          <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
+            {countryContent.article}
+          </div>
+        )}
+
         {/* FAQ Section */}
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">
             {forcedCountry ? `${selectedCountryName} Salary Calculator FAQ` : 'European Salary Calculator FAQ'}
           </h2>
           <div className="mt-4 grid gap-3">
-            {FAQ.map(({ question, answer }) => (
+            {activeFaq.map(({ question, answer }) => (
               <details key={question} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
                 <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{question}</summary>
                 <p className="mt-2 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{answer}</p>

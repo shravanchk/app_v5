@@ -25,6 +25,7 @@ Last updated: 2026-07-05
 | Thin content: European Salary (613→1,316w), EU VAT (727→1,485w), Tip (591→1,387w), Age (146→1,009w), Inflation (851→1,584w) | Same pattern; examples verified against page engines (`europeanSalaryCalculations`, `quickCalculations`, CPI data). Europe + Age pages also had hard-coded Head FAQ schemas that didn't match visible FAQs (Age had *no* visible FAQ — a structured-data violation); all three now render FAQs from the same array the schema is built from | `7c9c431` |
 | Thin content: India CalcShell pages — HRA (348→1,177w), Gratuity (343→1,160w), Capital Gains (385→1,209w), GST Reform (356→1,125w) | Same pattern; worked examples verified against each page's own `compute` function. **All four also emitted FAQPage JSON-LD with zero visible FAQ on the page** — the same structured-data violation as the Age page. New shared `CalcFAQ` component now renders the same `faqItems` the schema is built from; new `.calc-prose`/`.calc-faq` CSS (dark-mode-safe) added to `common.css` | `a44a27d` |
 | Thin content: PPF (474→1,406w) | Same pattern; worked examples verified against the page's `calculatePPFProjection` engine. PPF had a projection table but **no FAQ and no FAQPage schema at all** — added both the visible FAQ and matching JSON-LD, plus an EEE/tax-equivalent-yield article and the deposit-timing (5th-of-month) explanation | `f2a74af` |
+| Thin content: per-country Europe salary pages — Germany (→1,810w), France (→1,764w), Netherlands (→1,731w) | These reuse the shared `EuropeanSalaryCalculator` with `forcedCountry`; the hub article/comparison were gated to the hub, so the country pages rendered only the widget + generic FAQ. Added a `COUNTRY_CONTENT` map (per-country article + 3 country-specific FAQs) rendered only when `forcedCountry` is set. Every euro figure verified against `computeEuropeanSalary` (DE €60k→€37,551 net; FR €60k→€36,116; NL €60k→€46,987). FAQ schema now built from the same country+shared array shown on each page (10 entries each); hub unchanged (7) | `PENDING` |
 
 ## Open issues
 
@@ -34,13 +35,14 @@ Last updated: 2026-07-05
    Why: "insufficient value" is the stated rejection reason; every indexed thin page
    drags the site-level quality assessment.
    Fix: continue the pilot pattern. Done: all non-India batches, the four thin India
-   CalcShell pages (HRA, Gratuity, Capital Gains, GST Reform), and PPF. Already had
-   full article layouts (not thin): GST, EMI, Income Tax (`CalculatorArticleLayout`),
-   Salary, SIP, IRCTC, Tax Regime Comparison, Buy-vs-Rent (`SearchLandingSections`),
-   Credit Card Trap (`SearchLandingSections`). Remaining: Credit Card Analyzer (a
-   large interactive expense tool — has real functionality, not low-value, but carries
-   no educational prose/FAQ) and the per-country Europe salary pages (DE/FR/NL reuse
-   the shared component; the hub article renders on the hub only). Verify each against
+   CalcShell pages (HRA, Gratuity, Capital Gains, GST Reform), PPF, and the per-country
+   Europe salary pages (Germany, France, Netherlands — now carry country-specific
+   articles + FAQs gated on `forcedCountry`). Already had full article layouts (not
+   thin): GST, EMI, Income Tax (`CalculatorArticleLayout`), Salary, SIP, IRCTC, Tax
+   Regime Comparison, Buy-vs-Rent (`SearchLandingSections`), Credit Card Trap
+   (`SearchLandingSections`). Remaining: Credit Card Analyzer (a large interactive
+   expense tool — has real functionality, not low-value, but carries no educational
+   prose/FAQ) is the only calculator page still without an article. Verify each against
    its actual rendered content before assuming it is thin — several flagged pages
    already carry articles.
    Impact: high — this is the core complaint.
