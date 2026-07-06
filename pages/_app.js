@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import Head from 'next/head';
 import SiteFooter from '../components/home/SiteFooter';
 import Navbar from '../components/home/Navbar';
 import '../styles/globals.css';
@@ -42,6 +43,17 @@ export default function App({ Component, pageProps }) {
 
   return (
     <div style={{ minHeight: '100vh' }} className={!isHome && !isEmbed ? 'bg-slate-50 dark:bg-slate-950' : undefined}>
+      {/* Site-wide default social preview image (1200×630 PNG). Individual pages
+          set their own og:title/description/url; the image is shared. */}
+      <Head>
+        <meta key="og:image" property="og:image" content="https://upaman.com/og-image.png" />
+        <meta key="og:image:width" property="og:image:width" content="1200" />
+        <meta key="og:image:height" property="og:image:height" content="630" />
+        <meta key="og:image:type" property="og:image:type" content="image/png" />
+        <meta key="og:image:alt" property="og:image:alt" content="Upaman — free financial calculators and guides" />
+        <meta key="twitter:image" name="twitter:image" content="https://upaman.com/og-image.png" />
+        <meta key="twitter:image:alt" name="twitter:image:alt" content="Upaman — free financial calculators and guides" />
+      </Head>
       {!hideChrome && <Navbar />}
       <Component {...pageProps} />
       {!hideChrome && <SiteFooter />}

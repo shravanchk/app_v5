@@ -188,8 +188,8 @@ export const generateSEOData = (...args) => {
 
   if (ogImage) {
     ogTags['og:image'] = window.location.origin + ogImage;
-    ogTags['og:image:width'] = '512';
-    ogTags['og:image:height'] = '512';
+    ogTags['og:image:width'] = '1200';
+    ogTags['og:image:height'] = '630';
   }
 
   Object.entries(ogTags).forEach(([property, content]) => {

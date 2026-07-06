@@ -168,7 +168,6 @@ const ComprehensiveLoanCalculator = React.memo(() => {
         <meta property="og:description" content="Calculate EMI for home, car & personal loans with prepayment impact and amortization schedule." />
         <meta property="og:url" content="https://upaman.com/loan-calculator" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />

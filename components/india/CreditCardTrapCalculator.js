@@ -189,15 +189,12 @@ const CreditCardTrapCalculator = () => {
         />
         <meta property="og:url" content="https://upaman.com/credit-card-trap-calculator" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
-        <meta property="og:image:alt" content="Credit Card Trap Calculator - Upaman" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Credit Card Trap Calculator | Upaman" />
         <meta
           name="twitter:description"
           content="Estimate payoff time and interest impact with minimum due vs fixed monthly payment."
         />
-        <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>

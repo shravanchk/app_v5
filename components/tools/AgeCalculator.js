@@ -723,16 +723,12 @@ const AgeCalculator = () => {
         <meta property="og:description" content="Calculate exact age with life milestones and face animation. Free age calculator by Upaman." />
         <meta property="og:url" content="https://upaman.com/age-calculator" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
-        <meta property="og:image:alt" content="Age Calculator - Upaman" />
         <meta property="og:site_name" content="Upaman" />
         
         {/* Twitter Cards */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Age Calculator | Free Age Calculator | Upaman" />
         <meta name="twitter:description" content="Calculate exact age with life milestones and zodiac sign. Free age calculator by Upaman." />
-        <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
-        <meta name="twitter:image:alt" content="Age Calculator - Upaman" />
         
         {/* Schema Markup */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{

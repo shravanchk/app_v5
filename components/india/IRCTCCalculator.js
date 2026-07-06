@@ -261,12 +261,9 @@ const IRCTCCalculator = () => {
         <meta property="og:description" content="Calculate IRCTC booking & payment gateway charges for all classes." />
         <meta property="og:url" content="https://upaman.com/irctc-calculator" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
-        <meta property="og:image:alt" content="IRCTC Booking Charges Calculator" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="IRCTC Booking Charges Calculator | Upaman" />
         <meta name="twitter:description" content="IRCTC train ticket booking fee & convenience charge calculator." />
-        <meta name="twitter:image" content="https://upaman.com/upaman-elephant-logo.svg" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>

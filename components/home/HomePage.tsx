@@ -38,7 +38,7 @@ export default function HomePage() {
         <meta property="og:description" content="Calculate, compare, and decide. Free financial calculators, workflows and guides." />
         <meta property="og:url" content="https://upaman.com/" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://upaman.com/upaman-elephant-logo.svg" />
+        <meta key="og:image" property="og:image" content="https://upaman.com/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />

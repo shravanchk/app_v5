@@ -89,8 +89,14 @@ Last updated: 2026-07-05
    not fabricated individuals.
    Impact: medium.
 
-5. **`og:image` is the SVG logo.** Social scrapers and some search features ignore
-   SVG. Fix: one 1200×630 PNG, referenced site-wide.
+5. **`og:image` is the SVG logo.** ✅ **RESOLVED** (`PENDING`). Social scrapers and some
+   search features ignore SVG, so share cards were blank. Generated a branded
+   1200×630 `public/og-image.png` (elephant logo + wordmark + tagline, rendered with
+   `sharp`) and wired it site-wide via a default `<Head>` in `_app.js` (og:image +
+   width/height/type/alt + twitter:image). Removed the old SVG og:image overrides from
+   the 4 calculators and the homepage that set their own; also bumped the dormant
+   `getSEOTags` dims from 512² to 1200×630. Swept all 275 built pages: each now has
+   exactly one og:image pointing at the PNG, zero SVG og:images, no duplicates.
    Impact: low-medium (indirect).
 
 ### Low
