@@ -4,6 +4,7 @@ import { Droplets } from 'lucide-react';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
@@ -208,7 +209,7 @@ const WaterIntakeCalculator = () => {
 
         <div className="mt-8">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Health & Wellness Review Desk (Upaman)"
             reviewedOn="July 3, 2026"
             scope="Rule-of-thumb estimate (35 ml/kg + exercise and climate adjustments) for healthy adults; medical conditions, medications, pregnancy, and endurance events change fluid needs."

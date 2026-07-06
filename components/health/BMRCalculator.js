@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { PulseBadge, HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
@@ -245,7 +246,7 @@ const BMRCalculator = () => {
 
         <div className="mt-8">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Health & Wellness Review Desk (Upaman)"
             reviewedOn="July 2, 2026"
             scope="Population equations (Mifflin-St Jeor 1990; Roza & Shizgal 1984); individual BMR varies with body composition and genetics."

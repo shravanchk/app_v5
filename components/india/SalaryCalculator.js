@@ -3,6 +3,7 @@ import Head from 'next/head';
 import AffiliateRecommendations from '../AffiliateRecommendations';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { PieBreakdownChart, ComparisonBars } from '../calculator/ResultVisualizations';
 import SearchLandingSections from '../calculator/SearchLandingSections';
 import ResultActions from '../ResultActions';
@@ -212,7 +213,7 @@ const SalaryCalculator = () => {
 
         <div className="mt-10 space-y-6">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Compensation and Payroll Review Desk (Upaman)"
             reviewedOn="June 28, 2026"
             scope="Salary outputs are planning estimates based on modeled structure, deduction assumptions, and city normalization."

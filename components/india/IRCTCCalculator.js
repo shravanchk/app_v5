@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Head from 'next/head';
 import { Calendar } from 'lucide-react';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import SearchLandingSections from '../calculator/SearchLandingSections';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 import { CalcLayout } from '../calculator/CalcLayout';
@@ -589,8 +590,8 @@ END:VCALENDAR`}
 
         <div className="mt-8">
           <EEATPanel
-            author="Upaman Research Team"
-            reviewer="Travel Utility Review Desk (Upaman)"
+            author={editorialProfiles.researchTeam}
+            reviewer={editorialProfiles.travelReviewDesk}
             reviewedOn="March 7, 2026"
             scope="Booking-window output is based on modeled IRCTC timing rules and should be verified against official portal notices."
             sources={[

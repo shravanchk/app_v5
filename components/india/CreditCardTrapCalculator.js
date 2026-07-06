@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { TrendingDown, Clock } from 'lucide-react';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import ResultActions from '../ResultActions';
 import { ComparisonBars } from '../calculator/ResultVisualizations';
 import SearchLandingSections from '../calculator/SearchLandingSections';
@@ -323,7 +324,7 @@ const CreditCardTrapCalculator = () => {
           />
 
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Debt and Credit Behavior Review Desk (Upaman)"
             reviewedOn="June 28, 2026"
             scope="Models revolving credit payoff scenarios with fixed APR assumptions and no new spending."

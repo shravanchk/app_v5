@@ -76,10 +76,17 @@ Last updated: 2026-07-05
    taper/soli callouts. Remaining optional polish: sitemap priority tuning.
    Impact: medium — the hidden-FAQ-schema violation is now fixed everywhere.
 
-4. **Author/E-E-A-T depth unverified.** `/authors/*` pages exist plus editorial,
-   methodology, corrections, review-process pages (good coverage — better than most
-   applicants). Verify author pages carry real bios and are linked from content
-   (EEATPanel names them but check hyperlinks).
+4. **Author/E-E-A-T depth.** ✅ **RESOLVED.** `/authors/*` pages exist (3 team/desk
+   profiles with real bios) plus editorial, methodology, corrections, review-process
+   pages — good coverage. The gap was hyperlinks: the EEATPanel *named* the author but
+   every calculator/tool passed `author="Upaman Research Team"` as a plain string, so
+   the byline was unlinked and the author pages were orphaned from content. Fix
+   (`PENDING`): pointed the 16 calculator/tool bylines at the existing
+   `editorialProfiles.researchTeam` object (which the panel renders as a link), and
+   linked the IRCTC travel reviewer to `travelReviewDesk`. All three author pages now
+   have inbound content links (research team 22 pages, finance desk 6, travel desk 1);
+   workflows already linked both author and reviewer. Bios are honest org/desk profiles,
+   not fabricated individuals.
    Impact: medium.
 
 5. **`og:image` is the SVG logo.** Social scrapers and some search features ignore

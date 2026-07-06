@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { Scale } from 'lucide-react';
 import SearchLandingSections from '../calculator/SearchLandingSections';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { PieBreakdownChart, ComparisonBars } from '../calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
@@ -176,7 +177,7 @@ const TaxRegimeComparisonCalculator = () => {
 
         <div className="mt-8 space-y-6">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Tax Policy Review Desk (Upaman)"
             reviewedOn="June 28, 2026"
             scope="This tool compares old vs new Indian tax regime for FY 2026-27 using slab math, standard deductions, cess, rebate, and marginal-relief checks."

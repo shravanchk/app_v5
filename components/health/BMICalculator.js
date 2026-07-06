@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { BandScale, HealthDisclaimer, toneText, RelatedHealthLinks } from '../health/HealthKit';
@@ -265,7 +266,7 @@ const BMICalculator = () => {
 
         <div className="mt-8">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Health & Wellness Review Desk (Upaman)"
             reviewedOn="July 2, 2026"
             scope="BMI formula and WHO adult categories as published; a screening estimate, not a medical assessment."

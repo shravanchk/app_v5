@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { CycleRing, HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
@@ -159,7 +160,7 @@ const PeriodCalculator = () => {
 
         <div className="mt-8">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Health & Wellness Review Desk (Upaman)"
             reviewedOn="July 2, 2026"
             scope="Calendar-method estimates (ovulation ≈ 14 days before next period); real cycles vary — not a contraceptive or diagnostic tool."

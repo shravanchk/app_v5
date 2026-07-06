@@ -4,6 +4,7 @@ import AffiliateRecommendations from '../AffiliateRecommendations';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import CalculatorArticleLayout from '../calculator/CalculatorArticleLayout';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { PieBreakdownChart } from '../calculator/ResultVisualizations';
 import ResultActions from '../ResultActions';
 import SavedScenarios from '../SavedScenarios';
@@ -324,7 +325,7 @@ const ComprehensiveLoanCalculator = React.memo(() => {
         summary={(<p style={{ margin: 0 }}>Start with calculator-first EMI and prepayment analysis, then review full educational notes on formulas, examples, mistakes, and decision tips below the tool.</p>)}
         trustPanel={(
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Credit and Lending Review Desk (Upaman)"
             reviewedOn="June 28, 2026"
             scope="Covers fixed-rate EMI projections and prepayment scenario estimates for education and planning."

@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { TrimesterTrack, HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
@@ -180,7 +181,7 @@ const PregnancyDueDateCalculator = () => {
 
         <div className="mt-8">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Health & Wellness Review Desk (Upaman)"
             reviewedOn="July 2, 2026"
             scope="Naegele's rule with cycle adjustment (or conception + 266 days); a dating ultrasound is more accurate and takes precedence."

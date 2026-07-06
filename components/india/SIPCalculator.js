@@ -4,6 +4,7 @@ import AffiliateRecommendations from '../AffiliateRecommendations';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import ResultActions from '../ResultActions';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { PieBreakdownChart, ComparisonBars } from '../calculator/ResultVisualizations';
 import SearchLandingSections from '../calculator/SearchLandingSections';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
@@ -392,7 +393,7 @@ const SIPCalculator = () => {
 
         <div className="mt-10 space-y-6">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Investment Methodology Review Desk (Upaman)"
             reviewedOn="June 28, 2026"
             scope="SIP projections are deterministic scenarios based on constant return assumptions and periodic contributions."

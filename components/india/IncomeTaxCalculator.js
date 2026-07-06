@@ -4,6 +4,7 @@ import AffiliateRecommendations from '../AffiliateRecommendations';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import CalculatorArticleLayout from '../calculator/CalculatorArticleLayout';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { PieBreakdownChart, ComparisonBars } from '../calculator/ResultVisualizations';
 import ResultActions from '../ResultActions';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
@@ -325,7 +326,7 @@ const IncomeTaxCalculator = () => {
         title="Income Tax Calculator India (FY 2026-27): Old vs New Regime With Worked Examples"
         summary={(<p style={{ margin: 0 }}>Estimate salary and business tax, compare old vs new regime, and review take-home impact quickly. Use the calculator first, then scroll for detailed explanation, examples, FAQ, and methodology.</p>)}
         trustPanel={(
-          <EEATPanel author="Upaman Research Team" reviewer="Tax Policy Review Desk (Upaman)" reviewedOn="June 28, 2026" scope="Covers slab-based tax planning estimates for salaried and business users under FY 2026-27 / AY 2027-28 assumptions." sources={eeatSources} />
+          <EEATPanel author={editorialProfiles.researchTeam} reviewer="Tax Policy Review Desk (Upaman)" reviewedOn="June 28, 2026" scope="Covers slab-based tax planning estimates for salaried and business users under FY 2026-27 / AY 2027-28 assumptions." sources={eeatSources} />
         )}
         intro={(
           <>

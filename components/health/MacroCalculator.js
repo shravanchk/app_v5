@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { HealthDisclaimer, RelatedHealthLinks, toneText } from '../health/HealthKit';
@@ -263,7 +264,7 @@ const MacroCalculator = () => {
 
         <div className="mt-8">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Health & Wellness Review Desk (Upaman)"
             reviewedOn="July 3, 2026"
             scope="Calorie target from Mifflin-St Jeor TDEE with a ±500 kcal/day cap; macro splits are common templates (4/4/9 kcal per gram), not individualized prescriptions."

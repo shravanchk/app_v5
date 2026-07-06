@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
 import EEATPanel from '../calculator/EEATPanel';
+import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
@@ -221,7 +222,7 @@ const IdealWeightCalculator = () => {
 
         <div className="mt-8">
           <EEATPanel
-            author="Upaman Research Team"
+            author={editorialProfiles.researchTeam}
             reviewer="Health & Wellness Review Desk (Upaman)"
             reviewedOn="July 3, 2026"
             scope="Height-based population formulas (Devine 1974; Robinson 1983; Miller 1983; Hamwi 1964) and the WHO adult BMI range; none account for body composition or frame size."
