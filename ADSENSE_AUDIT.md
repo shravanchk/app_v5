@@ -96,9 +96,16 @@ Last updated: 2026-07-05
 ### Low
 
 6. **Sitemap `lastmod` values stale** on pages updated during the redesign.
-   Fix: one-time bulk refresh; keep honest going forward.
+   ✅ **DONE** (`PENDING`). Honest, targeted refresh: bumped `lastmod` to 2026-07-06 for
+   the 193 pages actually edited in this review cycle's batches (172 programmatic
+   templates + 4 Europe salary calculators + Credit Card Analyzer + 16 author-linked
+   calculators). Pages not touched this cycle keep their real dates. XML re-validated,
+   272 URLs unchanged.
 7. **robots.txt itemized Allow list is stale noise** (harmless — `Allow: /` governs).
-   Fix: trim to `Allow: /` + sitemap line.
+   ✅ **DONE** (`PENDING`). Trimmed from ~110 lines to 21: dropped the entire itemized
+   `Allow` list (it still referenced the 8 deleted `/guide-*.html` files — actively
+   pointing crawlers at dead URLs), kept `Allow: /`, the legitimate `Disallow` hygiene
+   block, and the `Sitemap:` line.
 8. **AdSense script now site-wide**: verify Auto ads (once approved) don't render on
    thin programmatic pages in a layout-shifting way; CLS is a CWV input.
 9. **Accessibility sweep pending**: forms have labels and details/summary FAQs are
