@@ -89,7 +89,7 @@ Last updated: 2026-07-05
    not fabricated individuals.
    Impact: medium.
 
-5. **`og:image` is the SVG logo.** ✅ **RESOLVED** (`PENDING`). Social scrapers and some
+5. **`og:image` is the SVG logo.** ✅ **RESOLVED** (`b255e8c`). Social scrapers and some
    search features ignore SVG, so share cards were blank. Generated a branded
    1200×630 `public/og-image.png` (elephant logo + wordmark + tagline, rendered with
    `sharp`) and wired it site-wide via a default `<Head>` in `_app.js` (og:image +
