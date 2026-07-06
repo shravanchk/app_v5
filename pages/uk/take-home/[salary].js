@@ -54,34 +54,23 @@ export default function UKTakeHomePage({ salary, net, monthly, weekly, incomeTax
     { label: 'Take-home pay', annual: net, monthly: net / 12, strong: true }
   ];
 
+  const faqItems = [
+    {
+      q: `How much is ${gbp(salary)} after tax in the UK?`,
+      a: `In the 2026-27 tax year, a ${gbp(salary)} salary in England, Wales, or Northern Ireland leaves ${gbp(net)} per year after ${gbp(incomeTax)} income tax and ${gbp(ni)} employee National Insurance — about ${gbp(monthly)} per month or ${gbp(weekly)} per week, an effective deduction rate of ${effectiveRate}%.`
+    },
+    {
+      q: `What is ${gbp(salary)} per month after tax?`,
+      a: `${gbp(salary)} a year works out to about ${gbp(monthly)} per month after tax and National Insurance in 2026-27, assuming a standard tax code with no pension or student loan deductions.`
+    },
+    {
+      q: `What is ${gbp(salary)} per hour?`,
+      a: `${gbp(salary)} a year is £${hourly.toFixed(2)} per hour before tax, based on a 37.5-hour week (1,950 working hours per year).`
+    }
+  ];
   const faqSchema = {
     '@context': 'https://schema.org', '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `How much is ${gbp(salary)} after tax in the UK?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `In the 2026-27 tax year, a ${gbp(salary)} salary in England, Wales, or Northern Ireland leaves ${gbp(net)} per year after ${gbp(incomeTax)} income tax and ${gbp(ni)} employee National Insurance — about ${gbp(monthly)} per month or ${gbp(weekly)} per week, an effective deduction rate of ${effectiveRate}%.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `What is ${gbp(salary)} per month after tax?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `${gbp(salary)} a year works out to about ${gbp(monthly)} per month after tax and National Insurance in 2026-27, assuming a standard tax code with no pension or student loan deductions.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `What is ${gbp(salary)} per hour?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `${gbp(salary)} a year is £${hourly.toFixed(2)} per hour before tax, based on a 37.5-hour week (1,950 working hours per year).`
-        }
-      }
-    ]
+    mainEntity: faqItems.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } }))
   };
   const breadcrumbSchema = {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
@@ -181,6 +170,18 @@ export default function UKTakeHomePage({ salary, net, monthly, weekly, incomeTax
               student loan options, browse <a href="/uk/take-home" className={linkCls}>other UK salary levels</a>,
               compare with <a href="/european-salary-calculator" className={linkCls}>other European countries</a>, or
               read the <a href="/guides/uk-tax-rates-2026-27" className={linkCls}>UK tax rates guide for 2026-27</a>.
+            </div>
+
+            <div className="mt-8">
+              <h2 className="font-display text-xl font-bold text-ink dark:text-white">Frequently asked questions</h2>
+              <div className="mt-4 grid gap-3">
+                {faqItems.map(({ q, a }) => (
+                  <details key={q} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                    <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{q}</summary>
+                    <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted dark:text-slate-400">{a}</p>
+                  </details>
+                ))}
+              </div>
             </div>
 
             <p className="mt-6 flex justify-between text-[0.95rem]">

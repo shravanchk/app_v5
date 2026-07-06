@@ -63,14 +63,18 @@ Last updated: 2026-07-05
 
 ### Medium
 
-3. **Template repetition across ~126 programmatic pages** (after-taxes 26, paycheck 52,
-   uk/take-home 26, germany/take-home 26, tax-on-salary 46+).
+3. **Template repetition across ~172 programmatic pages** (after-taxes 25, paycheck 51,
+   uk/take-home 25, germany/take-home 25, tax-on-salary 46). ✅ **Largely addressed.**
    Why: Google's scaled-content guidance; pages differ mainly by numbers.
-   Mitigation already present: per-page FAQ answers embed page-specific figures;
-   tables genuinely differ. Fix: add 2–3 salary-band-specific prose observations per
-   template tier (e.g., taper note already varies). Do not add boilerplate.
-   Impact: medium — programmatic pages are common on approved sites, but during a
-   quality-focused review they dilute; consider deprioritizing in sitemap priorities.
+   Done (`PENDING` commit): all five templates emitted FAQPage JSON-LD but rendered
+   **no visible FAQ** — a structured-data violation across every page. Refactored each
+   into a single `faqItems` array that builds both the schema and a visible FAQ
+   section, so they always match. Each page now carries 3 page-specific questions with
+   its own figures (state spread, monthly, per-hour; old-vs-new-regime and tax-free
+   status for India; solidarity/no-tax-state conditional branches), which is genuine
+   per-page visible content, not boilerplate. UK/Germany already carried band-specific
+   taper/soli callouts. Remaining optional polish: sitemap priority tuning.
+   Impact: medium — the hidden-FAQ-schema violation is now fixed everywhere.
 
 4. **Author/E-E-A-T depth unverified.** `/authors/*` pages exist plus editorial,
    methodology, corrections, review-process pages (good coverage — better than most

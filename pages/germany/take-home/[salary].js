@@ -63,34 +63,23 @@ export default function GermanyTakeHomePage({ salary, net, monthly, incomeTax, s
     { label: 'Net salary (Netto)', annual: net, strong: true }
   ];
 
+  const faqItems = [
+    {
+      q: `How much is ${eur(salary)} after tax in Germany?`,
+      a: `In 2026, a single employee (tax class I, childless, statutory insurance, no church tax) earning ${eur(salary)} gross takes home about ${eur(net)} per year — ${eur(monthly)} per month. Deductions are ${eur(incomeTax)} income tax${soli > 0 ? `, ${eur(soli)} solidarity surcharge,` : ' and'} ${eur(social)} social insurance (pension, unemployment, health, and care), an overall deduction rate of ${effectiveRate}%.`
+    },
+    {
+      q: `What is ${eur(salary)} brutto in netto per month?`,
+      a: `${eur(salary)} brutto per year is about ${eur(monthly)} netto per month in 2026 for a single employee in tax class I with statutory health insurance and no church tax.`
+    },
+    {
+      q: `What is ${eur(salary)} per hour in Germany?`,
+      a: `${eur(salary)} a year is €${hourly.toFixed(2)} per hour before tax, based on a 40-hour week (2,080 working hours per year).`
+    }
+  ];
   const faqSchema = {
     '@context': 'https://schema.org', '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `How much is ${eur(salary)} after tax in Germany?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `In 2026, a single employee (tax class I, childless, statutory insurance, no church tax) earning ${eur(salary)} gross takes home about ${eur(net)} per year — ${eur(monthly)} per month. Deductions are ${eur(incomeTax)} income tax${soli > 0 ? `, ${eur(soli)} solidarity surcharge,` : ' and'} ${eur(social)} social insurance (pension, unemployment, health, and care), an overall deduction rate of ${effectiveRate}%.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `What is ${eur(salary)} brutto in netto per month?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `${eur(salary)} brutto per year is about ${eur(monthly)} netto per month in 2026 for a single employee in tax class I with statutory health insurance and no church tax.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `What is ${eur(salary)} per hour in Germany?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `${eur(salary)} a year is €${hourly.toFixed(2)} per hour before tax, based on a 40-hour week (2,080 working hours per year).`
-        }
-      }
-    ]
+    mainEntity: faqItems.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } }))
   };
   const breadcrumbSchema = {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
@@ -190,6 +179,18 @@ export default function GermanyTakeHomePage({ salary, net, monthly, incomeTax, s
               <a href="/uk/take-home" className={linkCls}>UK take-home pay</a> or{' '}
               <a href="/european-salary-calculator" className={linkCls}>seven other European countries</a>, or see
               all <a href="/eu-calculators" className={linkCls}>UK &amp; Europe calculators</a>.
+            </div>
+
+            <div className="mt-8">
+              <h2 className="font-display text-xl font-bold text-ink dark:text-white">Frequently asked questions</h2>
+              <div className="mt-4 grid gap-3">
+                {faqItems.map(({ q, a }) => (
+                  <details key={q} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                    <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{q}</summary>
+                    <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted dark:text-slate-400">{a}</p>
+                  </details>
+                ))}
+              </div>
             </div>
 
             <p className="mt-6 flex justify-between text-[0.95rem]">

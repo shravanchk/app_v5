@@ -64,26 +64,23 @@ export default function SalaryAfterTaxesPage({ salary, rows, best, lowest, feder
   const title = `${usd(salary)} After Taxes 2026 | Take-Home Pay by State | Upaman`;
   const desc = `How much is ${usd(salary)} a year after taxes? In 2026 a single filer keeps ${usd(lowest.net)}–${usd(best.net)} depending on state (${usd(best.monthly)}/month in no-tax states). Full 50-state table.`;
 
+  const faqItems = [
+    {
+      q: `How much is ${usd(salary)} a year after taxes?`,
+      a: `In 2026, a single filer earning ${usd(salary)} takes home between ${usd(lowest.net)} and ${usd(best.net)} per year depending on the state. In states with no income tax (Texas, Florida, Washington and six others) that is ${usd(best.net)} per year, or about ${usd(best.monthly)} per month, after federal income tax (${usd(federal.incomeTax)}), Social Security (${usd(federal.socialSecurity)}), and Medicare (${usd(federal.medicare)}).`
+    },
+    {
+      q: `What is ${usd(salary)} a year per hour?`,
+      a: `${usd(salary)} a year is $${hourly.toFixed(2)} per hour before taxes, based on a standard 2,080-hour work year (40 hours × 52 weeks).`
+    },
+    {
+      q: `Which states have the highest and lowest take-home on ${usd(salary)}?`,
+      a: `On a ${usd(salary)} salary the nine no-income-tax states (Texas, Florida, Washington and others) give the highest take-home at ${usd(best.net)} a year. ${lowest.name} is the lowest in this table at ${usd(lowest.net)} — a difference of ${usd(best.net - lowest.net)} a year purely from state income tax.`
+    }
+  ];
   const faqSchema = {
     '@context': 'https://schema.org', '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `How much is ${usd(salary)} a year after taxes?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `In 2026, a single filer earning ${usd(salary)} takes home between ${usd(lowest.net)} and ${usd(best.net)} per year depending on the state. In states with no income tax (Texas, Florida, Washington and six others) that is ${usd(best.net)} per year, or about ${usd(best.monthly)} per month, after federal income tax (${usd(federal.incomeTax)}), Social Security (${usd(federal.socialSecurity)}), and Medicare (${usd(federal.medicare)}).`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `What is ${usd(salary)} a year per hour?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `${usd(salary)} a year is $${hourly.toFixed(2)} per hour before taxes, based on a standard 2,080-hour work year (40 hours × 52 weeks).`
-        }
-      }
-    ]
+    mainEntity: faqItems.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } }))
   };
   const breadcrumbSchema = {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
@@ -176,6 +173,18 @@ export default function SalaryAfterTaxesPage({ salary, rows, best, lowest, feder
               <a href="/after-taxes" className={linkCls}>other salary levels</a>,{' '}
               <a href="/paycheck" className={linkCls}>take-home pay by state</a>, or learn{' '}
               <a href="/guides/how-to-read-your-paycheck" className={linkCls}>how every paycheck deduction works</a>.
+            </div>
+
+            <div className="mt-8">
+              <h2 className="font-display text-xl font-bold text-ink dark:text-white">Frequently asked questions</h2>
+              <div className="mt-4 grid gap-3">
+                {faqItems.map(({ q, a }) => (
+                  <details key={q} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                    <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{q}</summary>
+                    <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted dark:text-slate-400">{a}</p>
+                  </details>
+                ))}
+              </div>
             </div>
 
             <p className="mt-6 flex justify-between text-[0.95rem]">

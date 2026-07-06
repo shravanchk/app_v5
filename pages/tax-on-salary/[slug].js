@@ -72,12 +72,25 @@ export default function TaxOnSalaryPage(props) {
     publisher: { '@type': 'Organization', name: 'Upaman' },
     datePublished: '2026-06-28', dateModified: '2026-06-28', mainEntityOfPage: canonical
   };
+  const faqItems = [
+    {
+      q: `How much tax on ₹${lakh} lakh salary in FY 2026-27?`,
+      a: `Under the new regime, a ₹${lakh} lakh salary has ${inr(newTax)} income tax for FY 2026-27 after the ₹75,000 standard deduction (taxable income ${inr(newTaxable)}). Monthly take-home is about ${inr(monthlyTakeHome)}.`
+    },
+    {
+      q: `Is a ₹${lakh} lakh salary tax-free under the new regime?`,
+      a: newTax === 0
+        ? `Yes. After the ₹75,000 standard deduction and the Section 87A rebate, the tax on a ₹${lakh} lakh salary is nil under the new regime for FY 2026-27.`
+        : `No. The Section 87A rebate makes salaries up to ₹12 lakh taxable income effectively tax-free, but a ₹${lakh} lakh salary is above that, so ${inr(newTax)} of tax applies for FY 2026-27${newRebate > 0 ? ` even after a partial rebate of ${inr(newRebate)}` : ''}.`
+    },
+    {
+      q: `Is the old or new regime better for a ₹${lakh} lakh salary?`,
+      a: `With no deductions beyond the standard deduction, the old regime tax on a ₹${lakh} lakh salary is about ${inr(oldTaxNoInvest)} versus ${inr(newTax)} under the new regime. The old regime only wins once your 80C, 80D, HRA and home-loan deductions are large enough to close that gap.`
+    }
+  ];
   const faqSchema = {
     '@context': 'https://schema.org', '@type': 'FAQPage',
-    mainEntity: [{
-      '@type': 'Question', name: `How much tax on ₹${lakh} lakh salary in FY 2026-27?`,
-      acceptedAnswer: { '@type': 'Answer', text: `Under the new regime, a ₹${lakh} lakh salary has ${inr(newTax)} income tax for FY 2026-27 after the ₹75,000 standard deduction (taxable income ${inr(newTaxable)}). Monthly take-home is about ${inr(monthlyTakeHome)}.` }
-    }]
+    mainEntity: faqItems.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } }))
   };
 
   return (
@@ -153,6 +166,16 @@ export default function TaxOnSalaryPage(props) {
               <a href="/salary-calculator">Salary Calculator</a> for monthly take-home. Related:{' '}
               <a href="/guides/standard-deduction-fy-2026-27">standard deduction</a> and{' '}
               <a href="/guides/marginal-relief-new-regime-fy-2026-27">marginal relief</a>.
+            </div>
+
+            <h2 className="mt-9 font-display text-xl font-bold tracking-tight text-ink dark:text-white">Frequently asked questions</h2>
+            <div className="mt-4 grid gap-3">
+              {faqItems.map(({ q, a }) => (
+                <details key={q} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                  <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{q}</summary>
+                  <p className="text-[0.95rem] leading-relaxed text-ink-muted dark:text-slate-400">{a}</p>
+                </details>
+              ))}
             </div>
 
             <p className="mt-6 flex justify-between text-[0.95rem]">

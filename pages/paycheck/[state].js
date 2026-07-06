@@ -70,16 +70,24 @@ export default function StatePaycheckPage({ code, name, slug, type, taxSummary, 
   const title = `Take-Home Pay in ${name} 2026 | Salary After Taxes | Upaman`;
   const desc = `What is take-home pay in ${name}? A $75,000 salary leaves about ${usd(example.net)} after taxes in 2026 (${usd(example.monthly)}/month). See net pay for $40k–$150k salaries.`;
 
+  const hundredK = rows.find((r) => r.salary === 100000);
+  const faqItems = [
+    {
+      q: `How much is $75,000 after taxes in ${name}?`,
+      a: `In 2026, a single filer earning $75,000 in ${name} takes home about ${usd(example.net)} per year (${usd(example.monthly)}/month, ${usd(example.biweekly)} bi-weekly) after federal income tax, Social Security, Medicare${type !== 'none' ? ', and state income tax' : ''} — an effective tax rate of ${example.effectiveRate}%.`
+    },
+    {
+      q: `Does ${name} have a state income tax?`,
+      a: taxSummary
+    },
+    {
+      q: `What is $100,000 after taxes in ${name}?`,
+      a: `A single filer earning $100,000 in ${name} takes home about ${usd(hundredK.net)} a year in 2026 — ${usd(hundredK.monthly)} a month, an effective tax rate of ${hundredK.effectiveRate}%${type !== 'none' ? ` including ${usd(hundredK.stateTax)} of state income tax` : ' (there is no state income tax to add)'}.`
+    }
+  ];
   const faqSchema = {
     '@context': 'https://schema.org', '@type': 'FAQPage',
-    mainEntity: [{
-      '@type': 'Question',
-      name: `How much is $75,000 after taxes in ${name}?`,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: `In 2026, a single filer earning $75,000 in ${name} takes home about ${usd(example.net)} per year (${usd(example.monthly)}/month, ${usd(example.biweekly)} bi-weekly) after federal income tax, Social Security, Medicare${type !== 'none' ? ', and state income tax' : ''} — an effective tax rate of ${example.effectiveRate}%.`
-      }
-    }]
+    mainEntity: faqItems.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } }))
   };
   const breadcrumbSchema = {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
@@ -166,6 +174,18 @@ export default function StatePaycheckPage({ code, name, slug, type, taxSummary, 
               401(k) contributions, and weekly/bi-weekly views. Or compare{' '}
               <a href="/paycheck" className={linkCls}>take-home pay in every state</a> and{' '}
               <a href="/after-taxes" className={linkCls}>by salary level</a>.
+            </div>
+
+            <div className="mt-8">
+              <h2 className="font-display text-xl font-bold text-ink dark:text-white">Frequently asked questions</h2>
+              <div className="mt-4 grid gap-3">
+                {faqItems.map(({ q, a }) => (
+                  <details key={q} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                    <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{q}</summary>
+                    <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted dark:text-slate-400">{a}</p>
+                  </details>
+                ))}
+              </div>
             </div>
 
             <p className="mt-6 flex justify-between text-[0.95rem]">
