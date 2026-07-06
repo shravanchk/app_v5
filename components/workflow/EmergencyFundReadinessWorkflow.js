@@ -438,7 +438,7 @@ const EmergencyFundReadinessWorkflow = () => {
             )}
             faqItems={faqItems}
             relatedLinks={[
-              { label: 'Emergency Fund Readiness Guide', href: '/guide-emergency-fund-readiness.html' },
+              { label: 'Emergency Fund Readiness Guide', href: '/guides/emergency-fund-readiness' },
               { label: 'Prepay vs Invest Workflow', href: '/prepay-vs-invest-workflow' },
               { label: 'Car Ownership Cost Guide', href: '/guides/car-ownership-cost-guide' }
             ]}

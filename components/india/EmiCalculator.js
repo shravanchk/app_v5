@@ -137,9 +137,9 @@ const ComprehensiveLoanCalculator = React.memo(() => {
     { name: 'Loan Calculator', item: 'https://upaman.com/loan-calculator' },
   ]);
   const relatedGuides = [
-    { label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' },
+    { label: 'EMI prepayment strategy guide', href: '/guides/emi-prepayment-strategy' },
     { label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' },
-    { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' },
+    { label: 'Credit card minimum due trap guide', href: '/guides/credit-card-minimum-due-trap' },
   ];
   const nextStepTools = [
     { label: 'Home loan readiness workflow', href: '/home-loan-readiness-workflow' },
@@ -301,7 +301,7 @@ const ComprehensiveLoanCalculator = React.memo(() => {
             formulas={['EMI = P × r × (1+r)^n / ((1+r)^n - 1)', 'Amortization: monthly interest = outstanding × monthly rate']}
             assumptions={['Interest rate stays constant through the selected tenure', 'Prepayment scenarios keep tenure fixed and estimate EMI impact', 'Results are planning estimates, not lender-sanctioned repayment schedules']}
             sources={[{ label: 'RBI Financial Education (loan basics)', url: 'https://www.rbi.org.in/financialeducation/' }]}
-            guideLinks={[{ label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' }, { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' }]}
+            guideLinks={[{ label: 'EMI prepayment strategy guide', href: '/guides/emi-prepayment-strategy' }, { label: 'Credit card minimum due trap guide', href: '/guides/credit-card-minimum-due-trap' }]}
           />
         </div>
       

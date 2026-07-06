@@ -262,7 +262,7 @@ const PPFCalculator = () => {
             formulas={['Monthly accrual approximation with annual interest crediting', 'Year-wise rolling balance: opening + contribution + accrued interest']}
             assumptions={['Yearly contribution used for projection is capped at ₹1,50,000', 'Interest rate is assumed constant for the selected tenure', 'This is a planning projection and may differ from official passbook posting logic']}
             sources={[{ label: 'National Savings Institute (PPF scheme)', url: 'https://www.nsiindia.gov.in/' }, { label: 'India Post - Public Provident Fund', url: 'https://www.indiapost.gov.in/' }]}
-            guideLinks={[{ label: 'PPF vs SIP choice guide', href: '/guide-ppf-vs-sip-choice.html' }, { label: 'SIP step-up planning guide', href: '/guide-sip-step-up-planning.html' }]}
+            guideLinks={[{ label: 'PPF vs SIP choice guide', href: '/guides/ppf-vs-sip-choice' }, { label: 'SIP step-up planning guide', href: '/guides/sip-step-up-planning' }]}
           />
         </div>
       

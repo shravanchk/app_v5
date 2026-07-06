@@ -27,6 +27,7 @@ Last updated: 2026-07-05
 | Thin content: PPF (474→1,406w) | Same pattern; worked examples verified against the page's `calculatePPFProjection` engine. PPF had a projection table but **no FAQ and no FAQPage schema at all** — added both the visible FAQ and matching JSON-LD, plus an EEE/tax-equivalent-yield article and the deposit-timing (5th-of-month) explanation | `f2a74af` |
 | Thin content: per-country Europe salary pages — Germany (→1,810w), France (→1,764w), Netherlands (→1,731w) | These reuse the shared `EuropeanSalaryCalculator` with `forcedCountry`; the hub article/comparison were gated to the hub, so the country pages rendered only the widget + generic FAQ. Added a `COUNTRY_CONTENT` map (per-country article + 3 country-specific FAQs) rendered only when `forcedCountry` is set. Every euro figure verified against `computeEuropeanSalary` (DE €60k→€37,551 net; FR €60k→€36,116; NL €60k→€46,987). FAQ schema now built from the same country+shared array shown on each page (10 entries each); hub unchanged (7) | `fa56d0d` |
 | Thin content: Credit Card Analyzer (→1,310w) | The last calculator page without prose — a bespoke interactive multi-currency expense tracker. Added an always-visible educational article (50/30/20 budgeting, reading budget-vs-actual, multi-currency caveats, avoiding revolving interest) plus a 5-item FAQ and matching FAQPage JSON-LD. No numeric claims fabricated (it is a tracker, not a fixed-formula calculator); figures are framed as illustrative. Cross-links to `/us-credit-card-payoff-calculator` and `/credit-card-trap-calculator` | `9ff75ab` |
+| Legacy static guides migrated (8 files) | Migrated all 8 `public/guide-*.html` standalone pages into `/guides/*` (GuidePageLayout — full site chrome, dark-mode-safe prose, reviewed-on byline, Article schema). Content preserved faithfully with a new shared `Callout` component for the old `.box`/`.note` blocks. Rewrote all internal links (10 components) from `/guide-*.html` to `/guides/*`; updated the 8 sitemap URLs (+ bumped lastmod); added 8 `301` redirects to `_redirects`; added the guides to the `/guides` index (new "Saving & investing" group); deleted the legacy HTML so redirects take effect | `PENDING` |
 
 ## Open issues
 
@@ -48,13 +49,17 @@ Last updated: 2026-07-05
    template repetition.)
    Impact: high — this was the core complaint.
 
-2. **Legacy static guides (`public/guide-*.html`, 8 files).**
+2. **Legacy static guides (`public/guide-*.html`, 8 files).** ✅ **RESOLVED.**
    Why: pre-redesign standalone HTML with different design/navigation than the site;
-   reviewers see inconsistent quality and orphan-ish templates. They are indexed
+   reviewers saw inconsistent quality and orphan-ish templates. They were indexed
    (in sitemap, linked from SIP/EMI pages).
-   Fix: either migrate content into `/guides/*` (GuidePageLayout) and 301 the old
-   URLs, or visually refresh them. Migration recommended.
-   Impact: high-medium — quality inconsistency is very visible.
+   Fix (done): all 8 migrated into `/guides/*` (GuidePageLayout — full site chrome,
+   dark mode, Article schema), internal links rewritten, sitemap URLs updated, `301`
+   redirects added in `_redirects`, and the legacy HTML deleted. Content preserved via
+   a shared `Callout` component for the old highlighted boxes. Note: the `301`s rely on
+   the host honouring `public/_redirects` (Netlify-style); confirm the production host
+   applies it, or add the equivalent redirect rules for whatever platform serves the site.
+   Impact: high-medium — quality inconsistency was very visible.
 
 ### Medium
 

@@ -451,7 +451,7 @@ const PrepayVsInvestWorkflow = () => {
             )}
             faqItems={faqItems}
             relatedLinks={[
-              { label: 'Prepay vs Invest Decision Guide', href: '/guide-prepay-vs-invest-decision.html' },
+              { label: 'Prepay vs Invest Decision Guide', href: '/guides/prepay-vs-invest-decision' },
               { label: 'Emergency Fund Readiness Workflow', href: '/emergency-fund-readiness-workflow' },
               { label: 'How Much EMI Is Safe Guide', href: '/guides/how-much-emi-is-safe' }
             ]}

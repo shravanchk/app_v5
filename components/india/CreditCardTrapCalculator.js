@@ -352,8 +352,8 @@ const CreditCardTrapCalculator = () => {
               { label: 'RBI financial literacy resources', url: 'https://www.rbi.org.in/financialeducation/' }
             ]}
             guideLinks={[
-              { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' },
-              { label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' }
+              { label: 'Credit card minimum due trap guide', href: '/guides/credit-card-minimum-due-trap' },
+              { label: 'EMI prepayment strategy guide', href: '/guides/emi-prepayment-strategy' }
             ]}
           />
           <SearchLandingSections
@@ -382,7 +382,7 @@ const CreditCardTrapCalculator = () => {
             relatedLinks={[
               { label: 'Loan EMI Calculator', href: '/loan-calculator' },
               { label: 'Prepay vs Invest Workflow', href: '/prepay-vs-invest-workflow' },
-              { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' }
+              { label: 'Credit card minimum due trap guide', href: '/guides/credit-card-minimum-due-trap' }
             ]}
           />
         </div>

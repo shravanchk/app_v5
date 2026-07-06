@@ -304,7 +304,7 @@ const IncomeTaxCalculator = () => {
             formulas={['Slab-wise marginal tax computation by regime', 'Health and education cess applied after base tax', 'Section 87A rebate logic applied where eligible']}
             assumptions={['Rates and slab structures are modeled for FY 2026-27 / AY 2027-28; Budget 2026 retained the prior-year slabs', 'Surcharge, special incomes, and complex exemptions are not fully modeled', 'Use results for planning; file taxes using official utilities or a qualified advisor']}
             sources={[{ label: 'Income Tax Department (India)', url: 'https://www.incometax.gov.in/' }, { label: 'Union Budget 2026', url: 'https://www.indiabudget.gov.in/' }, { label: 'CBDT notifications and circulars', url: 'https://incometaxindia.gov.in/' }]}
-            guideLinks={[{ label: 'Old vs new regime guide', href: '/guide-income-tax-regime-choice.html' }, { label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' }]}
+            guideLinks={[{ label: 'Old vs new regime guide', href: '/guides/income-tax-regime-choice' }, { label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' }]}
           />
         </div>
       

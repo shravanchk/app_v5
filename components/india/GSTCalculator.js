@@ -81,9 +81,9 @@ const GSTCalculator = () => {
     featureList: ['Add GST Calculator', 'Remove GST Calculator', 'Reverse GST Calculator', 'GST Breakdown'],
   };
   const relatedGuides = [
-    { label: 'GST calculation decisions in context', href: '/guide-income-tax-regime-choice.html' },
-    { label: 'EMI prepayment strategy guide', href: '/guide-emi-prepayment-strategy.html' },
-    { label: 'Credit card minimum due trap guide', href: '/guide-credit-card-minimum-due-trap.html' },
+    { label: 'GST calculation decisions in context', href: '/guides/income-tax-regime-choice' },
+    { label: 'EMI prepayment strategy guide', href: '/guides/emi-prepayment-strategy' },
+    { label: 'Credit card minimum due trap guide', href: '/guides/credit-card-minimum-due-trap' },
   ];
 
   const rateOptions = commonGSTRates;
@@ -204,7 +204,7 @@ const GSTCalculator = () => {
             formulas={['Add GST: GST = amount × rate / 100; total = amount + GST', 'Remove GST: base = inclusive × 100 / (100 + rate); GST = inclusive - base']}
             assumptions={['Rate is applied uniformly to the full amount entered', 'Complex classification/composition-scheme scenarios are out of scope', 'Use official filing portals and professional advice for compliance decisions']}
             sources={[{ label: 'CBIC GST portal', url: 'https://www.cbic-gst.gov.in/' }, { label: 'GST common portal', url: 'https://www.gst.gov.in/' }]}
-            guideLinks={[{ label: 'Income tax regime choice guide', href: '/guide-income-tax-regime-choice.html' }]}
+            guideLinks={[{ label: 'Income tax regime choice guide', href: '/guides/income-tax-regime-choice' }]}
           />
         </div>
       

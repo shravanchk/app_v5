@@ -22,6 +22,7 @@ const GROUPS = [
       { title: 'Old vs New Regime Breakeven', desc: 'How many deductions you need before the old regime wins.', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' },
       { title: 'Marginal Relief, New Regime', desc: 'How marginal relief works just above the ₹12 lakh threshold.', href: '/guides/marginal-relief-new-regime-fy-2026-27' },
       { title: 'CTC to In-Hand Salary', desc: 'How your cost-to-company becomes monthly take-home pay.', href: '/guides/ctc-to-in-hand-salary' },
+      { title: 'Old vs New Tax Regime FY 2026-27', desc: 'Choose a regime using realistic, repeatable deductions — not best-case assumptions.', href: '/guides/income-tax-regime-choice' },
       { title: 'Tax on Salary by Income (₹5L–₹50L)', desc: 'Pick any salary for a full new-regime slab breakdown.', href: '/tax-on-salary' },
     ]
   },
@@ -29,8 +30,20 @@ const GROUPS = [
     heading: 'Loans, spending & decisions',
     guides: [
       { title: 'How Much EMI Is Actually Safe', desc: 'Set a safe EMI cap built around buffers, not lender maximums.', href: '/guides/how-much-emi-is-safe' },
+      { title: 'EMI Prepayment Strategy', desc: 'When prepaying wins, and how to protect liquidity while doing it.', href: '/guides/emi-prepayment-strategy' },
+      { title: 'Prepay Loan vs Invest', desc: 'Weigh guaranteed debt cost against risk-adjusted return and liquidity.', href: '/guides/prepay-vs-invest-decision' },
+      { title: 'Credit Card Minimum Due Trap', desc: 'Why the minimum barely dents debt, and how to exit revolving balances.', href: '/guides/credit-card-minimum-due-trap' },
       { title: 'How to Compare Job Offers', desc: 'A framework that goes beyond headline salary.', href: '/guides/how-to-compare-job-offers' },
       { title: 'Car Ownership Cost Guide', desc: 'The true running cost of a car beyond its sticker price.', href: '/guides/car-ownership-cost-guide' },
+      { title: 'IRCTC Booking Strategy', desc: 'A preparation system for regular and Tatkal train bookings.', href: '/guides/irctc-booking-strategy' },
+    ]
+  },
+  {
+    heading: 'Saving & investing',
+    guides: [
+      { title: 'Emergency Fund Readiness', desc: 'Set a risk-based runway, size the corpus gap, and close it on a plan.', href: '/guides/emergency-fund-readiness' },
+      { title: 'PPF vs SIP Choice', desc: 'Split stability and growth by mapping goals to timelines and risk.', href: '/guides/ppf-vs-sip-choice' },
+      { title: 'SIP Step-up Planning', desc: 'Match investing to salary growth with an annual step-up.', href: '/guides/sip-step-up-planning' },
     ]
   },
   {

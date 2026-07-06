@@ -635,7 +635,7 @@ END:VCALENDAR`}
               { label: 'Age Calculator (Travel age checks)', href: '/age-calculator' },
               { label: 'Income Tax Calculator', href: '/income-tax-calculator' },
               { label: 'Loan & EMI Calculator', href: '/loan-calculator' },
-              { label: 'IRCTC and Booking Strategy Guide', href: '/guide-irctc-booking-strategy.html' }
+              { label: 'IRCTC and Booking Strategy Guide', href: '/guides/irctc-booking-strategy' }
             ]}
           />
         </div>

@@ -409,14 +409,14 @@ const SIPCalculator = () => {
             formulas={['Future value uses monthly compounding for recurring contributions', 'Goal SIP uses PMT-based reverse calculation for required monthly amount']}
             assumptions={['Expected return is constant through the full tenure', 'No entry/exit load, tax, or fund-level expense variations are modeled', 'Results are estimates for planning, not guaranteed investment outcomes']}
             sources={[{ label: 'SEBI investor awareness', url: 'https://investor.sebi.gov.in/' }, { label: 'AMFI investor education', url: 'https://www.amfiindia.com/investor-corner/knowledge-center' }]}
-            guideLinks={[{ label: 'SIP step-up planning guide', href: '/guide-sip-step-up-planning.html' }, { label: 'PPF vs SIP guide', href: '/guide-ppf-vs-sip-choice.html' }]}
+            guideLinks={[{ label: 'SIP step-up planning guide', href: '/guides/sip-step-up-planning' }, { label: 'PPF vs SIP guide', href: '/guides/ppf-vs-sip-choice' }]}
           />
           <SearchLandingSections
             intro={(<><p>SIP planning is most effective when you model both contribution behaviour and target outcomes. This SIP calculator supports regular SIP, goal-based planning, and SIP vs lumpsum comparison in one workflow.</p><p>If you are searching for a SIP step-up calculator or goal SIP calculator, this page helps you estimate required monthly investment, return contribution, and how annual step-up changes long-term outcomes.</p></>)}
             example={(<p>Assume ₹15,000 monthly SIP for 15 years at expected 12% annual return. The calculator projects total invested amount, expected corpus, and returns. Add a 10% yearly step-up to compare how progressive contribution growth can improve final corpus without a large first-year commitment.</p>)}
             formula={(<p>SIP mode uses periodic compounding across monthly contributions. Goal mode reverses compounding logic to estimate required monthly SIP for a target corpus. Comparison mode evaluates recurring SIP and one-time lumpsum under the same return horizon for consistent decision support.</p>)}
             faqItems={seoFaqItems}
-            relatedLinks={[{ label: 'PPF Calculator', href: '/ppf-calculator' }, { label: 'Salary Calculator', href: '/salary-calculator' }, { label: 'SIP Step-up Planning Guide', href: '/guide-sip-step-up-planning.html' }]}
+            relatedLinks={[{ label: 'PPF Calculator', href: '/ppf-calculator' }, { label: 'Salary Calculator', href: '/salary-calculator' }, { label: 'SIP Step-up Planning Guide', href: '/guides/sip-step-up-planning' }]}
           />
         </div>
       
