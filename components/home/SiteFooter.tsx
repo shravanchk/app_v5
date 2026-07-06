@@ -33,6 +33,7 @@ const COLUMNS: Col[] = [
       { label: 'Traditional vs Roth 401(k)', href: '/guides/traditional-vs-roth-401k' },
       { label: 'UK Tax Rates 2026-27', href: '/guides/uk-tax-rates-2026-27' },
       { label: 'India FY 2026-27 Tax Slabs', href: '/guides/india-income-tax-2026-27' },
+      { label: 'Blog', href: '/blog' },
     ],
   },
   {
