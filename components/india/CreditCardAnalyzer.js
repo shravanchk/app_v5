@@ -23,6 +23,15 @@ import {
   Globe
 } from 'lucide-react';
 import HomeButton from '../HomeButton';
+import { buildFaqSchema } from '../../utils/faqSchema';
+
+const FAQ = [
+  { question: 'Is my expense data private?', answer: 'Yes. This tracker runs entirely in your browser — expenses, budgets and category settings stay on your device and are not sent to a server. Clearing your browser data or switching devices will not carry the entries over, so export a copy if you want a permanent record.' },
+  { question: 'How should I set category budgets?', answer: 'A common starting point is the 50/30/20 rule: about 50% of take-home pay for needs (groceries, transport, bills), 30% for wants (dining, entertainment, travel), and 20% for saving or debt repayment. Split those totals across the categories here, then adjust after a month of real data.' },
+  { question: 'How does the multi-currency conversion work?', answer: 'Expenses are converted to your selected display currency using indicative exchange rates so a card statement mixing, say, USD subscriptions and local spending reads as one number. Rates move constantly and card networks add a markup, so treat the converted totals as planning figures rather than the exact amount billed.' },
+  { question: 'Does this tool calculate credit card interest?', answer: 'No — it tracks spending against budgets, not interest on a revolving balance. If you carry a balance, use a payoff calculator: this is a budgeting tool meant to help you spend within your means so interest never starts accruing in the first place.' },
+  { question: 'Why track spending by category at all?', answer: 'Totals hide behaviour; categories reveal it. Seeing that dining or subscriptions quietly consumed a third of a month is what turns a vague sense of overspending into a specific, fixable line — which is the whole point of comparing budget against actual.' }
+];
 
 const CreditCardAnalyzer = () => {
   const [expenses, setExpenses] = useState([]);
@@ -480,6 +489,10 @@ const CreditCardAnalyzer = () => {
               }
             })
           }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(FAQ)) }}
         />
       </Head>
 
@@ -1007,6 +1020,77 @@ const CreditCardAnalyzer = () => {
             </div>
           </div>
         )}
+
+        {/* Educational article */}
+        <div className="px-6 pb-6">
+          <div className="max-w-3xl mx-auto text-[0.95rem] leading-relaxed text-gray-700">
+            <h2 className="text-2xl font-bold text-gray-900">Turning a credit card statement into a budget you can act on</h2>
+            <p className="mt-3">
+              A credit card statement is a list of what already happened; a budget is a plan for what happens next. This
+              expense tracker sits between the two — you record spending as it occurs, assign each amount to a category,
+              and watch how the running total compares with the monthly budget you set. The value is not the arithmetic
+              (any calculator can add up receipts) but the <strong className="text-gray-900">structure</strong>: seeing
+              spending sorted into groceries, dining, transport, subscriptions and the rest turns a single intimidating
+              balance into a handful of specific, fixable lines.
+            </p>
+
+            <h3 className="mt-8 text-lg font-semibold text-gray-900">Start with the 50/30/20 split</h3>
+            <p className="mt-3">
+              If you have never set category budgets before, the 50/30/20 rule is a reliable first draft. Of your
+              take-home pay, roughly <strong className="text-gray-900">50% covers needs</strong> — housing, groceries,
+              transport, utilities and minimum debt payments; <strong className="text-gray-900">30% covers wants</strong>
+              — dining out, entertainment, travel and shopping; and the remaining
+              <strong className="text-gray-900"> 20% goes to saving or paying down debt</strong>. Translate those three
+              buckets into the categories in this tool, enter them as monthly budgets, then let a month of real data
+              correct your guesses. Almost everyone discovers one &ldquo;wants&rdquo; category — usually dining or
+              subscriptions — quietly running at double what they assumed.
+            </p>
+
+            <h3 className="mt-8 text-lg font-semibold text-gray-900">Read budget-versus-actual, not just the total</h3>
+            <p className="mt-3">
+              The headline figure — spent so far against total budget — tells you whether you are on track this month,
+              but the category breakdown tells you <em>why</em>. A card that is 90% through its budget on the 20th of the
+              month is a warning; a card that is 90% through because one category blew its limit while others sat unused
+              is a plan you can rebalance. Checking the tracker weekly rather than at statement time is what makes that
+              adjustment possible while it still matters, instead of a post-mortem after the bill arrives.
+            </p>
+
+            <h3 className="mt-8 text-lg font-semibold text-gray-900">Multi-currency, and what the numbers really mean</h3>
+            <p className="mt-3">
+              If your spending mixes currencies — a card that carries local purchases alongside dollar-priced
+              subscriptions, or a trip abroad — the currency conversion here collapses everything into one comparable
+              figure so your budget still makes sense. Two honest caveats: exchange rates move continuously, and card
+              networks add a conversion markup (often around 1&ndash;3%) plus, in many cases, a foreign-transaction fee.
+              So the converted totals are the right tool for <em>planning and comparison</em>, not a prediction of the
+              exact amount your issuer will bill. When precision matters, reconcile against the posted statement.
+            </p>
+
+            <h3 className="mt-8 text-lg font-semibold text-gray-900">Budgeting is how you avoid interest, not repay it</h3>
+            <p className="mt-3">
+              The point of tracking spending against a budget is to keep the card paid in full each cycle, so revolving
+              interest never begins — the cheapest debt is the one you do not take on. If you are already carrying a
+              balance, that is a different problem with a different tool: the{' '}
+              <a href="/us-credit-card-payoff-calculator" className="font-medium text-blue-600 underline underline-offset-2 hover:text-blue-700">credit card payoff calculator</a>{' '}
+              shows how long a balance takes to clear at a given payment, and the{' '}
+              <a href="/credit-card-trap-calculator" className="font-medium text-blue-600 underline underline-offset-2 hover:text-blue-700">credit card minimum-payment trap</a>{' '}
+              lays out why paying only the minimum keeps a balance alive for years. Use those to dig out; use this tracker
+              to make sure you never need them again.
+            </p>
+          </div>
+
+          {/* FAQ */}
+          <div className="max-w-3xl mx-auto mt-10">
+            <h2 className="text-2xl font-bold text-gray-900">Frequently asked questions</h2>
+            <div className="mt-4 grid gap-3">
+              {FAQ.map(({ question, answer }) => (
+                <details key={question} className="group rounded-lg border border-gray-200 bg-white p-4">
+                  <summary className="cursor-pointer list-none font-semibold text-gray-900 marker:hidden">{question}</summary>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
