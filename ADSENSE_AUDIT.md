@@ -66,7 +66,7 @@ Last updated: 2026-07-05
 3. **Template repetition across ~172 programmatic pages** (after-taxes 25, paycheck 51,
    uk/take-home 25, germany/take-home 25, tax-on-salary 46). ✅ **Largely addressed.**
    Why: Google's scaled-content guidance; pages differ mainly by numbers.
-   Done (`PENDING` commit): all five templates emitted FAQPage JSON-LD but rendered
+   Done (`e0db39b`): all five templates emitted FAQPage JSON-LD but rendered
    **no visible FAQ** — a structured-data violation across every page. Refactored each
    into a single `faqItems` array that builds both the schema and a visible FAQ
    section, so they always match. Each page now carries 3 page-specific questions with
