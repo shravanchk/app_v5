@@ -81,7 +81,7 @@ Last updated: 2026-07-05
    pages — good coverage. The gap was hyperlinks: the EEATPanel *named* the author but
    every calculator/tool passed `author="Upaman Research Team"` as a plain string, so
    the byline was unlinked and the author pages were orphaned from content. Fix
-   (`PENDING`): pointed the 16 calculator/tool bylines at the existing
+   (`78704d5`): pointed the 16 calculator/tool bylines at the existing
    `editorialProfiles.researchTeam` object (which the panel renders as a link), and
    linked the IRCTC travel reviewer to `travelReviewDesk`. All three author pages now
    have inbound content links (research team 22 pages, finance desk 6, travel desk 1);
