@@ -3,6 +3,19 @@ import Head from 'next/head';
 import { Calendar, Clock, Heart, Star, Gift, Target, TrendingUp, Info } from 'lucide-react';
 import AffiliateRecommendations from '../AffiliateRecommendations';
 import { CalcLayout } from '../calculator/CalcLayout';
+import Card from '../ui/Card';
+import { cn } from '../ui/cn';
+
+const fieldLabel = 'mb-1.5 flex items-center gap-1.5 text-sm font-medium text-ink-soft dark:text-slate-300';
+const fieldInput =
+  'w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-[0.95rem] text-ink shadow-sm outline-none ' +
+  'transition focus:border-brand-400 focus:ring-2 focus:ring-brand-500/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100';
+const sectionHeading =
+  'mb-6 flex items-center justify-center gap-2 text-center font-display text-xl font-bold text-ink sm:text-2xl dark:text-white';
+const statCard =
+  'rounded-xl border border-slate-200 bg-white p-4 text-center transition duration-200 ' +
+  'hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-card ' +
+  'dark:border-slate-700 dark:bg-slate-800/60 dark:hover:border-slate-600';
 
 const FAQ = [
   { question: 'How do I calculate my exact age?', answer: 'Enter your birth date (and optionally a target date — it defaults to today). The calculator returns your age in completed years, months, and days, plus totals like days lived, hours, and minutes, alongside milestones and your zodiac sign.' },
@@ -469,8 +482,8 @@ const AgeCalculator = () => {
           />
           <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#06b6d4" />
+              <stop offset="0%" stopColor="#2563eb" />
+              <stop offset="100%" stopColor="#0f766e" />
             </linearGradient>
           </defs>
         </svg>
@@ -484,7 +497,7 @@ const AgeCalculator = () => {
           <div style={{
             fontSize: `${size * 0.15}px`,
             fontWeight: '700',
-            color: '#374151',
+            color: '#64748b',
             animation: `countUp 1s ease-out ${delay + 0.5}s both`
           }}>
             {percentage.toFixed(1)}%
@@ -524,8 +537,8 @@ const AgeCalculator = () => {
           { age: 5, emoji: '🧒', label: 'Child', color: '#34d399' },
           { age: 13, emoji: '🧑‍🎓', label: 'Teen', color: '#60a5fa' },
           { age: 20, emoji: '🧑‍💼', label: 'Young Adult', color: '#a78bfa' },
-          { age: 30, emoji: '🧑‍�', label: 'Adult', color: '#f87171' },
-          { age: 45, emoji: '�‍🏫', label: 'Middle Aged', color: '#fb923c' },
+          { age: 30, emoji: '🧑', label: 'Adult', color: '#f87171' },
+          { age: 45, emoji: '🧑‍🏫', label: 'Middle Aged', color: '#fb923c' },
           { age: 65, emoji: '🧓', label: 'Senior', color: '#94a3b8' }
         ]
       };
@@ -568,103 +581,51 @@ const AgeCalculator = () => {
     const currentFace = faceStages[currentStage] || faceStages[0];
 
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '1rem',
-        padding: '2rem',
-        background: `linear-gradient(135deg, ${currentFace.color}20, ${currentFace.color}10)`,
-        borderRadius: '2rem',
-        border: `3px solid ${currentFace.color}40`,
-        animation: `scaleIn 1s ease-out ${delay}s both`
-      }}>
-        <div style={{
-          fontSize: '5rem',
-          animation: currentStage <= targetStage ? 'ageTransition 0.8s ease-out' : 'none',
-          transform: 'scale(1)',
-          filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))',
-          position: 'relative'
-        }}>
+      <div
+        className="flex h-full w-full flex-col items-center gap-4 rounded-2xl border border-slate-200/70 bg-white p-8 text-center shadow-soft dark:border-slate-700/70 dark:bg-slate-800/70"
+        style={{ animation: `scaleIn 1s ease-out ${delay}s both` }}
+      >
+        <div
+          className="relative leading-none"
+          style={{
+            fontSize: '5rem',
+            animation: currentStage <= targetStage ? 'ageTransition 0.8s ease-out' : 'none',
+            filter: 'drop-shadow(0 4px 8px rgba(15, 42, 67, 0.12))'
+          }}
+        >
           {currentFace.emoji}
-          
-          {/* Glow effect for current stage */}
-          {currentStage === targetStage && (
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              animation: 'glow 2s ease-in-out infinite',
-              zIndex: -1
-            }} />
-          )}
         </div>
-        
-        <div style={{
-          textAlign: 'center',
-          animation: `fadeInUp 0.5s ease-out ${delay + 0.5}s both`
-        }}>
-          <div style={{
-            fontSize: '1.5rem',
-            fontWeight: '700',
-            color: currentFace.color,
-            marginBottom: '0.5rem'
-          }}>
+
+        <div style={{ animation: `fadeInUp 0.5s ease-out ${delay + 0.5}s both` }}>
+          <div className="font-display text-xl font-bold tracking-tight text-ink dark:text-white">
             {currentFace.label}
           </div>
-          <div style={{
-            fontSize: '1rem',
-            color: '#6b7280',
-            fontWeight: '500'
-          }}>
+          <div className="mt-1 text-sm font-medium text-ink-muted dark:text-slate-400">
             Age {currentAge} Years
           </div>
         </div>
 
         {/* Progress indicator */}
-        <div style={{
-          display: 'flex',
-          gap: '0.5rem',
-          marginTop: '1rem'
-        }}>
+        <div className="mt-1 flex gap-2">
           {faceStages.map((stage, index) => (
             <div
               key={index}
-              style={{
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
-                background: index <= currentStage 
-                  ? `linear-gradient(135deg, ${stage.color}, ${stage.color}80)`
-                  : '#e5e7eb',
-                transition: 'all 0.3s ease',
-                transform: index === currentStage ? 'scale(1.3)' : 'scale(1)',
-                boxShadow: index === currentStage ? `0 0 10px ${stage.color}60` : 'none'
-              }}
+              className={cn(
+                'h-2.5 w-2.5 rounded-full transition-all duration-300',
+                index <= currentStage ? 'bg-brand-500 dark:bg-brand-400' : 'bg-slate-200 dark:bg-slate-600'
+              )}
+              style={{ transform: index === currentStage ? 'scale(1.3)' : 'scale(1)' }}
               title={`${stage.label} (${stage.age}+ years)`}
             />
           ))}
         </div>
 
         {/* Life stage description */}
-        <div style={{
-          marginTop: '1rem',
-          padding: '1rem',
-          background: 'rgba(255, 255, 255, 0.8)',
-          borderRadius: '1rem',
-          textAlign: 'center',
-          maxWidth: '300px',
-          animation: `fadeInUp 0.5s ease-out ${delay + 1}s both`
-        }}>
-          <div style={{
-            fontSize: '0.9rem',
-            color: '#374151',
-            lineHeight: '1.4'
-          }}>
+        <div
+          className="mt-1 max-w-[300px] rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60"
+          style={{ animation: `fadeInUp 0.5s ease-out ${delay + 1}s both` }}
+        >
+          <div className="text-sm leading-relaxed text-ink-soft dark:text-slate-300">
             {getLifeStageDescription(currentAge, currentFace.label, gender)}
           </div>
         </div>
@@ -849,88 +810,53 @@ const AgeCalculator = () => {
           </button>
         </div>
 
-        <div className="mobile-card-content">
+        <div>
           {/* Age Calculator Tab */}
           {activeTab === 'age-calculator' && (
             <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
-              <h2 style={{
-                fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
-                fontWeight: '700',
-                color: '#1e293b',
-                textAlign: 'center',
-                marginBottom: '2rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem'
-              }}>
-                <Heart 
-                  size={24} 
-                  style={{ 
-                    color: '#0f766e',
-                    animation: 'heartbeat 2s ease-in-out infinite' 
-                  }} 
-                />
+              <h2 className={sectionHeading}>
+                <Heart size={22} className="text-brand-600 dark:text-brand-300" />
                 Exact Age Calculator
               </h2>
 
               {/* Input Section */}
-              <div style={{
-                background: 'linear-gradient(135deg, #eef9f8, #dff3f1)',
-                padding: 'clamp(1rem, 4vw, 2rem)',
-                borderRadius: '1.25rem',
-                marginBottom: '2rem',
-                border: '1px solid #b8e2dc'
-              }}>
-                <div className="responsive-grid">
+              <Card className="mb-8 p-5">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <div>
-                    <label className="input-label">
-                      <Gift size={16} style={{ color: '#0f766e', marginRight: '0.25rem' }} />
+                    <label className={fieldLabel}>
+                      <Gift size={16} className="text-brand-600 dark:text-brand-300" />
                       Birth Date
                     </label>
                     <input
                       type="date"
                       value={ageParams.birthDate}
                       onChange={(e) => setAgeParams(prev => ({...prev, birthDate: e.target.value}))}
-                      className="calculator-input mobile-input"
-                      style={{
-                        border: '2px solid #0f766e',
-                        borderRadius: '0.75rem'
-                      }}
+                      className={fieldInput}
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="input-label">
-                      <Calendar size={16} style={{ color: '#0f766e', marginRight: '0.25rem' }} />
+                    <label className={fieldLabel}>
+                      <Calendar size={16} className="text-brand-600 dark:text-brand-300" />
                       Calculate Age On
                     </label>
                     <input
                       type="date"
                       value={ageParams.targetDate}
                       onChange={(e) => setAgeParams(prev => ({...prev, targetDate: e.target.value}))}
-                      className="calculator-input mobile-input"
-                      style={{
-                        border: '2px solid #0f766e',
-                        borderRadius: '0.75rem'
-                      }}
+                      className={fieldInput}
                     />
                   </div>
 
                   <div>
-                    <label className="input-label">
-                      <Star size={16} style={{ color: '#0f766e', marginRight: '0.25rem' }} />
+                    <label className={fieldLabel}>
+                      <Star size={16} className="text-brand-600 dark:text-brand-300" />
                       Gender (Optional)
                     </label>
                     <select
                       value={ageParams.gender}
                       onChange={(e) => setAgeParams(prev => ({...prev, gender: e.target.value}))}
-                      className="calculator-input mobile-input"
-                      style={{
-                        border: '2px solid #0f766e',
-                        borderRadius: '0.75rem',
-                        backgroundColor: 'white'
-                      }}
+                      className={fieldInput}
                     >
                       <option value="neutral">👤 Neutral</option>
                       <option value="male">👨 Male</option>
@@ -938,7 +864,7 @@ const AgeCalculator = () => {
                     </select>
                   </div>
                 </div>
-              </div>
+              </Card>
 
               {/* Results Section */}
               {(ageResult || isCalculating) && (
@@ -946,23 +872,12 @@ const AgeCalculator = () => {
                   animation: 'fadeInUp 0.6s ease-out 0.2s both'
                 }}>
                   {isCalculating ? (
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      padding: '3rem',
-                      background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
-                      borderRadius: '1rem',
-                      marginBottom: '2rem'
-                    }}>
+                    <Card className="mb-8 flex flex-col items-center p-12">
                       <div style={{
-                        width: '60px',
-                        height: '60px',
-                        border: '4px solid transparent',
-                        borderTop: '4px solid #0f2a43',
-                        borderRight: '4px solid #1d4e89',
-                        borderBottom: '4px solid #0f766e',
-                        borderLeft: '4px solid #b45309',
+                        width: '56px',
+                        height: '56px',
+                        border: '4px solid #e2e8f0',
+                        borderTopColor: '#1d4e89',
                         borderRadius: '50%',
                         animation: 'spin 1s linear infinite',
                         marginBottom: '1rem'
@@ -970,167 +885,53 @@ const AgeCalculator = () => {
                       <style>
                         {`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}
                       </style>
-                      <p style={{ 
-                        fontSize: '1.1rem', 
-                        fontWeight: '500', 
-                        color: '#374151',
-                        textAlign: 'center'
-                      }}>
+                      <p className="text-center text-base font-medium text-ink-muted dark:text-slate-400">
                         Calculating your life journey...
                       </p>
-                    </div>
+                    </Card>
                   ) : ageResult && (
                     <>
                       {/* Face Animation & Age Display */}
-                      <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                        gap: '2rem',
-                        marginBottom: '2rem',
-                        animation: 'fadeInUp 0.6s ease-out 0.2s both'
-                      }}>
-                        {/* Face Animation */}
-                        <div style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}>
+                      <div className="mb-6 grid items-stretch gap-5 lg:grid-cols-2">
+                        <div className="flex items-center justify-center">
                           <FaceAnimation currentAge={ageResult.years} gender={ageParams.gender} delay={0.5} />
                         </div>
 
-                        {/* Age Statistics */}
-                        <div style={{
-                          background: `linear-gradient(135deg, ${ageResult.lifeStage.color}20, ${ageResult.lifeStage.color}10)`,
-                          padding: '2rem',
-                          borderRadius: '1.5rem',
-                          textAlign: 'center',
-                          border: `2px solid ${ageResult.lifeStage.color}40`,
-                          animation: 'scaleIn 0.8s ease-out 0.8s both',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}>
-                          <h3 style={{
-                            fontSize: 'clamp(2.5rem, 6vw, 4rem)',
-                            fontWeight: '800',
-                            color: ageResult.lifeStage.color,
-                            marginBottom: '1rem',
-                            textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                          }}>
+                        <Card className="flex flex-col justify-center p-8 text-center">
+                          <div className="font-display text-5xl font-extrabold tracking-tight text-ink sm:text-6xl dark:text-white">
                             <AnimatedCounter value={ageResult.years} delay={1.0} /> Years
-                          </h3>
-                          <div style={{
-                            fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
-                            fontWeight: '600',
-                            color: '#374151',
-                            marginBottom: '1rem'
-                          }}>
+                          </div>
+                          <div className="mt-2 text-xl font-semibold text-ink-soft sm:text-2xl dark:text-slate-300">
                             <AnimatedCounter value={ageResult.months} delay={1.2} /> Months, {' '}
                             <AnimatedCounter value={ageResult.days} delay={1.4} /> Days
                           </div>
-                          
+
                           {/* Zodiac and Birth Info */}
-                          <div style={{
-                            background: 'rgba(255, 255, 255, 0.7)',
-                            padding: '1rem',
-                            borderRadius: '1rem',
-                            marginTop: '1rem',
-                            width: '100%',
-                            animation: `fadeInUp 0.5s ease-out 1.6s both`
-                          }}>
-                            <div style={{
-                              fontSize: '1.1rem',
-                              fontWeight: '600',
-                              color: '#374151',
-                              marginBottom: '0.5rem'
-                            }}>
-                              🌟 {ageResult.zodiacSign}
-                            </div>
-                            <div style={{
-                              fontSize: '0.95rem',
-                              color: '#6b7280'
-                            }}>
-                              Born on a {ageResult.dayOfWeekBorn}
-                            </div>
+                          <div className="mx-auto mt-5 inline-flex flex-wrap items-center justify-center gap-x-4 gap-y-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-800/60">
+                            <span className="text-base font-semibold text-ink dark:text-white">🌟 {ageResult.zodiacSign}</span>
+                            <span className="text-sm text-ink-muted dark:text-slate-400">Born on a {ageResult.dayOfWeekBorn}</span>
                           </div>
-                        </div>
+                        </Card>
                       </div>
 
                       {/* Statistics Grid */}
-                      <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-                        gap: '1rem',
-                        marginBottom: '2rem'
-                      }}>
+                      <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
                         {[
-                          { 
-                            label: 'Total Days', 
-                            value: ageResult.totalDays, 
-                            icon: '📅', 
-                            color: '#3b82f6',
-                            delay: 0.1
-                          },
-                          { 
-                            label: 'Total Weeks', 
-                            value: ageResult.totalWeeks, 
-                            icon: '🗓️', 
-                            color: '#10b981',
-                            delay: 0.2
-                          },
-                          { 
-                            label: 'Total Hours', 
-                            value: ageResult.totalHours, 
-                            suffix: '+',
-                            icon: '⏰', 
-                            color: '#f59e0b',
-                            delay: 0.3
-                          },
-                          { 
-                            label: 'Total Minutes', 
-                            value: ageResult.totalMinutes, 
-                            suffix: '+',
-                            icon: '⏱️', 
-                            color: '#ef4444',
-                            delay: 0.4
-                          }
+                          { label: 'Total Days', value: ageResult.totalDays, icon: '📅', delay: 0.1 },
+                          { label: 'Total Weeks', value: ageResult.totalWeeks, icon: '🗓️', delay: 0.2 },
+                          { label: 'Total Hours', value: ageResult.totalHours, suffix: '+', icon: '⏰', delay: 0.3 },
+                          { label: 'Total Minutes', value: ageResult.totalMinutes, suffix: '+', icon: '⏱️', delay: 0.4 }
                         ].map((stat) => (
-                          <div
-                            key={stat.label}
-                            style={{
-                              background: `linear-gradient(135deg, ${stat.color}15, ${stat.color}05)`,
-                              border: `2px solid ${stat.color}30`,
-                              borderRadius: '1rem',
-                              padding: '1.5rem 1rem',
-                              textAlign: 'center',
-                              animation: `fadeInUp 0.6s ease-out ${stat.delay}s both`,
-                              cursor: 'pointer',
-                              transition: 'transform 0.3s ease'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                          >
-                            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-                              {stat.icon}
-                            </div>
-                            <div style={{
-                              fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
-                              fontWeight: '700',
-                              color: stat.color,
-                              marginBottom: '0.25rem'
-                            }}>
-                              <AnimatedCounter 
-                                value={stat.value} 
+                          <div key={stat.label} className={statCard}>
+                            <div className="mb-1 text-2xl">{stat.icon}</div>
+                            <div className="font-display text-xl font-bold tracking-tight text-ink sm:text-2xl dark:text-white">
+                              <AnimatedCounter
+                                value={stat.value}
                                 suffix={stat.suffix || ''}
-                                delay={stat.delay + 0.5} 
+                                delay={stat.delay + 0.5}
                               />
                             </div>
-                            <div style={{
-                              fontSize: '0.85rem',
-                              color: '#6b7280',
-                              fontWeight: '500'
-                            }}>
+                            <div className="mt-0.5 text-xs font-medium uppercase tracking-wide text-ink-muted dark:text-slate-400">
                               {stat.label}
                             </div>
                           </div>
@@ -1138,93 +939,48 @@ const AgeCalculator = () => {
                       </div>
 
                       {/* Next Birthday Countdown */}
-                      <div style={{
-                        background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
-                        padding: '1.5rem',
-                        borderRadius: '1rem',
-                        marginBottom: '2rem',
-                        textAlign: 'center',
-                        animation: 'fadeInUp 0.6s ease-out 0.8s both'
-                      }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎂</div>
-                        <h3 style={{
-                          fontSize: '1.25rem',
-                          fontWeight: '600',
-                          color: '#92400e',
-                          marginBottom: '0.5rem'
-                        }}>
-                          Next Birthday Countdown
-                        </h3>
-                        <div style={{
-                          fontSize: '1.5rem',
-                          fontWeight: '700',
-                          color: '#d97706'
-                        }}>
+                      <Card className="mb-6 border-brand-200 bg-brand-50/60 p-6 text-center dark:border-brand-800/60 dark:bg-brand-900/20">
+                        <div className="mb-1 text-3xl">🎂</div>
+                        <h3 className="text-lg font-semibold text-ink dark:text-white">Next Birthday Countdown</h3>
+                        <div className="mt-1 font-display text-2xl font-bold text-brand-700 dark:text-brand-300">
                           <AnimatedCounter value={ageResult.daysToNextBirthday} delay={1.0} /> Days to Go!
                         </div>
-                        <div style={{
-                          fontSize: '0.9rem',
-                          color: '#92400e',
-                          marginTop: '0.5rem'
-                        }}>
-                          {ageResult.nextBirthday.toLocaleDateString('en-US', { 
-                            weekday: 'long', 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
+                        <div className="mt-1 text-sm text-ink-muted dark:text-slate-400">
+                          {ageResult.nextBirthday.toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
                           })}
                         </div>
-                      </div>
+                      </Card>
 
                       {/* Fun Facts Section */}
-                      <div style={{
-                        background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
-                        borderRadius: '1rem',
-                        padding: '1.5rem',
-                        animation: 'fadeInUp 0.6s ease-out 1.0s both'
-                      }}>
-                        <h3 style={{
-                          fontSize: '1.25rem',
-                          fontWeight: '600',
-                          marginBottom: '1.5rem',
-                          color: '#374151',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem'
-                        }}>
-                          <Star size={20} style={{ color: '#fbbf24' }} />
+                      <Card className="p-6">
+                        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-ink dark:text-white">
+                          <Star size={20} className="text-amber-500" />
                           Fun Facts About You
                         </h3>
 
-                        <div style={{
-                          display: 'grid',
-                          gap: '0.75rem'
-                        }}>
+                        <div className="grid gap-2.5">
                           {ageResult.funFacts.map((fact, index) => (
                             <div
                               key={index}
-                              style={{
-                                background: 'white',
-                                padding: '1rem',
-                                borderRadius: '0.75rem',
-                                border: '1px solid #e5e7eb',
-                                animation: `fadeInUp 0.4s ease-out ${1.2 + index * 0.1}s both`,
-                                fontSize: '0.95rem',
-                                color: '#374151'
-                              }}
+                              className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-ink-soft dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300"
+                              style={{ animation: 'fadeInUp 0.4s ease-out both', animationDelay: `${index * 60}ms` }}
                             >
                               ✨ {fact}
                             </div>
                           ))}
                         </div>
-                      </div>
+                      </Card>
 
                       {/* Affiliate Recommendations */}
-                      <div style={{ animation: 'fadeInUp 0.6s ease-out 1.8s both' }}>
-                        <AffiliateRecommendations 
-                          calculatorType="age" 
+                      <div className="mt-6">
+                        <AffiliateRecommendations
+                          calculatorType="age"
                           result={ageResult}
-                          isDarkMode={false} 
+                          isDarkMode={false}
                         />
                       </div>
                     </>
@@ -1237,234 +993,134 @@ const AgeCalculator = () => {
           {/* Life Events Tab */}
           {activeTab === 'life-events' && (
             <div style={{ animation: 'fadeInUp 0.4s ease-out' }}>
-              <h2 style={{
-                fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
-                fontWeight: '700',
-                color: '#1e293b',
-                textAlign: 'center',
-                marginBottom: '2rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem'
-              }}>
-                <TrendingUp size={24} style={{ color: '#1d4e89' }} />
-                Life Milestones & Timeline
+              <h2 className={sectionHeading}>
+                <TrendingUp size={22} className="text-brand-600 dark:text-brand-300" />
+                Life Milestones &amp; Timeline
               </h2>
 
               {/* Input Section */}
-              <div style={{
-                background: 'linear-gradient(135deg, #eef2fb, #e4ebf7)',
-                padding: 'clamp(1rem, 4vw, 2rem)',
-                borderRadius: '1.25rem',
-                marginBottom: '2rem',
-                border: '1px solid #c8d7ec'
-              }}>
-                <div className="responsive-grid">
+              <Card className="mb-8 p-5">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <div>
-                    <label className="input-label">
-                      <Gift size={16} style={{ color: '#1d4e89', marginRight: '0.25rem' }} />
+                    <label className={fieldLabel}>
+                      <Gift size={16} className="text-brand-600 dark:text-brand-300" />
                       Birth Date
                     </label>
                     <input
                       type="date"
                       value={lifeEventsParams.birthDate}
                       onChange={(e) => setLifeEventsParams(prev => ({...prev, birthDate: e.target.value}))}
-                      className="calculator-input mobile-input"
-                      style={{
-                        border: '2px solid #1d4e89',
-                        borderRadius: '0.75rem'
-                      }}
+                      className={fieldInput}
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="input-label">
-                      <Target size={16} style={{ color: '#1d4e89', marginRight: '0.25rem' }} />
+                    <label className={fieldLabel}>
+                      <Target size={16} className="text-brand-600 dark:text-brand-300" />
                       Retirement Age
                     </label>
                     <input
                       type="number"
                       value={lifeEventsParams.retirementAge}
                       onChange={(e) => setLifeEventsParams(prev => ({...prev, retirementAge: parseInt(e.target.value) || 60}))}
-                      className="calculator-input mobile-input"
+                      className={fieldInput}
                       min="50"
                       max="80"
-                      style={{
-                        border: '2px solid #1d4e89',
-                        borderRadius: '0.75rem'
-                      }}
                     />
                   </div>
 
                   <div>
-                    <label className="input-label">
-                      <Heart size={16} style={{ color: '#1d4e89', marginRight: '0.25rem' }} />
+                    <label className={fieldLabel}>
+                      <Heart size={16} className="text-brand-600 dark:text-brand-300" />
                       Life Expectancy
                     </label>
                     <input
                       type="number"
                       value={lifeEventsParams.lifeExpectancy}
                       onChange={(e) => setLifeEventsParams(prev => ({...prev, lifeExpectancy: parseInt(e.target.value) || 75}))}
-                      className="calculator-input mobile-input"
+                      className={fieldInput}
                       min="60"
                       max="100"
-                      style={{
-                        border: '2px solid #1d4e89',
-                        borderRadius: '0.75rem'
-                      }}
                     />
                   </div>
                 </div>
-              </div>
+              </Card>
 
               {/* Life Progress */}
               {lifeEventsResult && (
-                <div style={{
-                  animation: 'fadeInUp 0.6s ease-out 0.2s both'
-                }}>
-                  <div style={{
-                    background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
-                    padding: '2rem',
-                    borderRadius: '1.5rem',
-                    textAlign: 'center',
-                    marginBottom: '2rem'
-                  }}>
-                    <h3 style={{
-                      fontSize: '1.5rem',
-                      fontWeight: '600',
-                      color: '#0f2a43',
-                      marginBottom: '1.5rem'
-                    }}>
+                <div>
+                  <Card className="mb-6 p-8 text-center">
+                    <h3 className="mb-6 font-display text-xl font-bold text-ink dark:text-white">
                       Your Life Journey Progress
                     </h3>
-                    
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      gap: '2rem',
-                      flexWrap: 'wrap'
-                    }}>
-                      <ProgressCircle 
-                        percentage={lifeEventsResult.lifeProgress} 
-                        size={150} 
+
+                    <div className="flex flex-wrap items-center justify-center gap-8">
+                      <ProgressCircle
+                        percentage={lifeEventsResult.lifeProgress}
+                        size={150}
                         delay={0.5}
                       />
-                      <div style={{ textAlign: 'left' }}>
-                        <div style={{
-                          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-                          fontWeight: '700',
-                          color: '#0f2a43',
-                          marginBottom: '0.5rem'
-                        }}>
+                      <div className="text-left">
+                        <div className="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl dark:text-white">
                           <AnimatedCounter value={lifeEventsResult.currentAge} delay={1} /> Years Old
                         </div>
-                        <div style={{
-                          fontSize: '1.1rem',
-                          color: '#1d4e89',
-                          marginBottom: '0.25rem'
-                        }}>
+                        <div className="mt-1 text-base text-brand-700 dark:text-brand-300">
                           <AnimatedCounter value={lifeEventsResult.remainingYears} delay={1.2} /> Years Remaining
                         </div>
-                        <div style={{
-                          fontSize: '0.95rem',
-                          color: '#334155'
-                        }}>
+                        <div className="mt-0.5 text-sm text-ink-muted dark:text-slate-400">
                           <AnimatedCounter value={lifeEventsResult.seasonsExperienced} delay={1.4} /> Seasons Experienced
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Card>
 
                   {/* Milestones Timeline */}
-                  <div style={{
-                    background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
-                    borderRadius: '1rem',
-                    padding: '1.5rem'
-                  }}>
-                    <h3 style={{
-                      fontSize: '1.25rem',
-                      fontWeight: '600',
-                      marginBottom: '1.5rem',
-                      color: '#374151',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
-                    }}>
-                      <Info size={20} style={{ color: '#06b6d4' }} />
+                  <Card className="p-6">
+                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-ink dark:text-white">
+                      <Info size={20} className="text-brand-600 dark:text-brand-300" />
                       Life Milestones Timeline
                     </h3>
 
-                    <div style={{
-                      display: 'grid',
-                      gap: '1rem'
-                    }}>
+                    <div className="grid gap-3">
                       {lifeEventsResult.milestones.map((milestone, index) => (
                         <div
                           key={milestone.age}
-                          style={{
-                            background: milestone.isPassed ? '#f0fdf4' : 'white',
-                            border: `2px solid ${milestone.isPassed ? '#10b981' : '#e5e7eb'}`,
-                            borderRadius: '0.75rem',
-                            padding: '1rem',
-                            animation: `fadeInUp 0.4s ease-out ${0.4 + index * 0.1}s both`,
-                            position: 'relative',
-                            opacity: milestone.isPassed ? 0.8 : 1
-                          }}
+                          className={cn(
+                            'relative rounded-xl border p-4',
+                            milestone.isPassed
+                              ? 'border-emerald-200 bg-emerald-50/70 dark:border-emerald-800/50 dark:bg-emerald-900/15'
+                              : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800/60'
+                          )}
+                          style={{ animation: 'fadeInUp 0.4s ease-out both', animationDelay: `${index * 60}ms` }}
                         >
                           {milestone.isPassed && (
-                            <div style={{
-                              position: 'absolute',
-                              top: '0.5rem',
-                              right: '0.5rem',
-                              background: '#10b981',
-                              color: 'white',
-                              borderRadius: '50%',
-                              width: '24px',
-                              height: '24px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '0.8rem'
-                            }}>
+                            <div className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-xs text-white">
                               ✓
                             </div>
                           )}
-                          
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '1rem',
-                            flexWrap: 'wrap'
-                          }}>
-                            <div style={{ fontSize: '2rem' }}>
-                              {milestone.emoji}
-                            </div>
-                            <div style={{ flex: 1, minWidth: '200px' }}>
-                              <div style={{
-                                fontSize: '1.1rem',
-                                fontWeight: '600',
-                                color: milestone.isPassed ? '#059669' : '#374151',
-                                marginBottom: '0.25rem'
-                              }}>
+
+                          <div className="flex flex-wrap items-center gap-4">
+                            <div className="text-3xl">{milestone.emoji}</div>
+                            <div className="min-w-[200px] flex-1">
+                              <div className={cn(
+                                'text-base font-semibold',
+                                milestone.isPassed ? 'text-emerald-700 dark:text-emerald-400' : 'text-ink dark:text-white'
+                              )}>
                                 Age {milestone.age}: {milestone.event}
                               </div>
-                              <div style={{
-                                fontSize: '0.9rem',
-                                color: milestone.isPassed ? '#065f46' : '#6b7280',
-                                marginBottom: '0.5rem'
-                              }}>
+                              <div className={cn(
+                                'text-sm',
+                                milestone.isPassed ? 'text-emerald-800/80 dark:text-emerald-300/80' : 'text-ink-muted dark:text-slate-400'
+                              )}>
                                 {milestone.description}
                               </div>
-                              <div style={{
-                                fontSize: '0.85rem',
-                                color: milestone.isPassed ? '#0f766e' : '#1d4e89',
-                                fontWeight: '500'
-                              }}>
-                                {milestone.isPassed 
+                              <div className={cn(
+                                'mt-1 text-sm font-medium',
+                                milestone.isPassed ? 'text-teal-700 dark:text-teal-400' : 'text-brand-700 dark:text-brand-300'
+                              )}>
+                                {milestone.isPassed
                                   ? `✅ Completed on ${milestone.date.toLocaleDateString()}`
-                                  : milestone.yearsUntil > 0 
+                                  : milestone.yearsUntil > 0
                                     ? `🎯 In ${milestone.yearsUntil} years (${milestone.daysUntil.toLocaleString()} days)`
                                     : `🎯 This year! (${milestone.daysUntil} days)`
                                 }
@@ -1474,7 +1130,7 @@ const AgeCalculator = () => {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </Card>
                 </div>
               )}
             </div>

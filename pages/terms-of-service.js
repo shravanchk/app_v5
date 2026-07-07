@@ -43,8 +43,8 @@ export default function TermsOfServicePage() {
       <h2 style={headingTwoStyle}>Contact</h2>
       <p>
         For terms-related questions, email{' '}
-        <a href="mailto:terms@upaman.com" style={{ color: '#1d4e89', fontWeight: 700, textDecoration: 'none' }}>
-          terms@upaman.com
+        <a href="mailto:upaman.org@gmail.com" style={{ color: '#1d4e89', fontWeight: 700, textDecoration: 'none' }}>
+          upaman.org@gmail.com
         </a>.
       </p>
 

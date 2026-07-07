@@ -162,7 +162,7 @@ const USCreditCardPayoffCalculator = () => {
         title="US Credit Card Payoff Calculator"
         subtitle="Compare the minimum payment with a fixed monthly payment plan to clear card debt faster."
       >
-        <div className="grid gap-5 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
           <Card className="p-5 lg:col-span-2">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <NumberField id="c-bal" label="Current balance" prefix="$" value={inputs.balance} onChange={(v) => set('balance', v)} />

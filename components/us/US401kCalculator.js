@@ -133,7 +133,7 @@ const US401kCalculator = () => {
         title="US 401(k) Calculator"
         subtitle="Project your retirement balance with employee contributions, employer match, and long-term growth assumptions."
       >
-        <div className="grid gap-5 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
           <Card className="p-5 lg:col-span-2">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <NumberField id="k-cage" label="Current age" min={18} max={80} value={inputs.currentAge} onChange={(v) => set('currentAge', v)} />

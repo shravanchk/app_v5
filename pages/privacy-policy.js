@@ -39,8 +39,8 @@ export default function PrivacyPolicyPage() {
       <h2 style={headingTwoStyle}>Contact</h2>
       <p>
         For privacy-related questions, email{' '}
-        <a href="mailto:privacy@upaman.com" style={{ color: '#1d4e89', fontWeight: 700, textDecoration: 'none' }}>
-          privacy@upaman.com
+        <a href="mailto:upaman.org@gmail.com" style={{ color: '#1d4e89', fontWeight: 700, textDecoration: 'none' }}>
+          upaman.org@gmail.com
         </a>.
       </p>
 

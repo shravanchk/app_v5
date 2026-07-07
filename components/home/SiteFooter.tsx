@@ -54,6 +54,7 @@ const COLUMNS: Col[] = [
       { label: 'Editorial Policy', href: '/editorial-policy' },
       { label: 'Privacy Policy', href: '/privacy-policy' },
       { label: 'Contact', href: '/contact' },
+      { label: 'Send Feedback', href: '/feedback' },
     ],
   },
 ];

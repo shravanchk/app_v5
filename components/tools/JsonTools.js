@@ -1,7 +1,34 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
 import ResultActions from '../ResultActions';
+import HowToSection from '../calculator/HowToSection';
+import { CalcLayout } from '../calculator/CalcLayout';
+import Card from '../ui/Card';
+import { cn } from '../ui/cn';
+import { buildFaqSchema } from '../../utils/faqSchema';
+
+const FAQ = [
+  { question: 'Is my JSON data sent to a server?', answer: 'No. Every action — validate, format, convert, diff — runs entirely in your browser with JavaScript. Nothing is uploaded, logged, or stored, so it is safe to paste API payloads, tokens, or private data.' },
+  { question: 'What is the difference between Format, Minify, and Validate?', answer: 'Validate checks that your JSON parses and reports the exact line and column of any syntax error. Format (pretty-print) re-indents valid JSON with 2 or 4 spaces for readability. Minify strips all optional whitespace to produce the smallest possible single-line JSON for transport.' },
+  { question: 'How do Flatten and Unflatten paths work?', answer: 'Flatten converts nested JSON into a single-level object using dot notation for keys and [index] for array elements — for example user.goals[0].name. Unflatten reverses that, rebuilding the nested object or array structure from those flat path keys.' },
+  { question: 'What is a JSON Patch diff?', answer: 'JSON Patch Diff compares your Base JSON against the Target panel and outputs a list of add, remove, and replace operations that transform one into the other. The output follows RFC 6902, so you can apply it with any standard JSON Patch library.' },
+  { question: 'Can it convert between JSON, CSV, and YAML?', answer: 'Yes. JSON→CSV flattens an array of objects into rows, CSV→JSON maps a header row into keys and infers primitive types, and JSON↔YAML converts between the two formats. Use "Use output as input" to chain conversions.' },
+  { question: 'Is there a size limit?', answer: 'There is no hard limit, but because processing happens on your device, very large payloads (several megabytes) may be slower on low-memory devices. The tool shows the input size in KB after each run.' },
+  { question: 'Does it work offline?', answer: 'Once the page has loaded, all transformations run locally, so the tools keep working even without an active network connection.' }
+];
+
+const utilityBtn =
+  'inline-flex items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold ' +
+  'text-ink-soft transition hover:border-slate-300 hover:bg-slate-50 ' +
+  'dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:border-slate-600';
+
+const editorLabel = 'mb-1.5 block text-xs font-bold uppercase tracking-[0.03em] text-ink-muted dark:text-slate-400';
+
+const editorArea =
+  'min-h-[320px] w-full resize-y rounded-xl border border-slate-200 bg-white p-3 font-mono text-[0.82rem] ' +
+  'leading-relaxed text-ink outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-500/30 ' +
+  'dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100';
 
 const SAMPLE_SNIPPETS = {
   portfolio: `{
@@ -543,55 +570,16 @@ const createJsonPatch = (source, target, currentPath = '') => {
 };
 
 const JsonTools = () => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('theme') === 'dark';
-  });
   const [inputText, setInputText] = useState(SAMPLE_SNIPPETS.portfolio);
   const [targetText, setTargetText] = useState(SAMPLE_SNIPPETS.portfolioTarget);
   const [outputText, setOutputText] = useState('');
   const [indentSize, setIndentSize] = useState(2);
   const [activeAction, setActiveAction] = useState('validate');
-  const [viewportWidth, setViewportWidth] = useState(() => {
-    if (typeof window === 'undefined') return 1280;
-    return window.innerWidth;
-  });
   const [isWorking, setIsWorking] = useState(false);
   const [status, setStatus] = useState({
     type: 'info',
     message: 'Pick an operation and run it. Processing stays in your browser.'
   });
-  const isCompactLayout = viewportWidth <= 768;
-  const isTabletLayout = viewportWidth > 768 && viewportWidth <= 1100;
-
-  useEffect(() => {
-    document.body.classList.toggle('dark-theme', isDarkMode);
-  }, [isDarkMode]);
-
-  useEffect(() => {
-    const syncTheme = () => {
-      const savedTheme = localStorage.getItem('theme');
-      setIsDarkMode(savedTheme === 'dark');
-    };
-
-    window.addEventListener('upaman-theme-change', syncTheme);
-    window.addEventListener('storage', syncTheme);
-    return () => {
-      window.removeEventListener('upaman-theme-change', syncTheme);
-      window.removeEventListener('storage', syncTheme);
-    };
-  }, []);
-
-  useEffect(() => {
-    const syncLayout = () => {
-      setViewportWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', syncLayout);
-    return () => {
-      window.removeEventListener('resize', syncLayout);
-    };
-  }, []);
 
   const runAction = (actionId) => {
     setActiveAction(actionId);
@@ -817,11 +805,11 @@ const JsonTools = () => {
     }
   };
 
-  const statusColor = useMemo(() => {
-    if (status.type === 'success') return { bg: '#dcfce7', border: '#86efac', text: '#166534' };
-    if (status.type === 'warning') return { bg: '#fef9c3', border: '#fde047', text: '#854d0e' };
-    if (status.type === 'error') return { bg: '#fee2e2', border: '#fca5a5', text: '#991b1b' };
-    return { bg: '#e0f2fe', border: '#7dd3fc', text: '#0c4a6e' };
+  const statusClasses = useMemo(() => {
+    if (status.type === 'success') return 'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800/60 dark:bg-emerald-900/25 dark:text-emerald-300';
+    if (status.type === 'warning') return 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800/60 dark:bg-amber-900/25 dark:text-amber-300';
+    if (status.type === 'error') return 'border-red-200 bg-red-50 text-red-800 dark:border-red-800/60 dark:bg-red-900/25 dark:text-red-300';
+    return 'border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-800/60 dark:bg-sky-900/25 dark:text-sky-300';
   }, [status.type]);
 
   const summaryLines = useMemo(() => {
@@ -875,31 +863,11 @@ const JsonTools = () => {
         ? 'CSV Output'
         : 'Output';
 
-  const actionGridColumns = isCompactLayout
-    ? '1fr'
-    : isTabletLayout
-      ? 'repeat(2, minmax(0, 1fr))'
-      : 'repeat(auto-fit, minmax(280px, 1fr))';
-  const editorGridColumns = (isCompactLayout || (isTabletLayout && activeAction === 'jsonPatchDiff'))
-    ? '1fr'
-    : isTabletLayout
-      ? '1fr 1fr'
-      : 'repeat(auto-fit, minmax(320px, 1fr))';
-  const editorMinHeight = isCompactLayout ? '270px' : isTabletLayout ? '320px' : '410px';
-  const editorPadding = isCompactLayout ? '0.78rem' : '0.9rem';
-  const editorFontSize = isCompactLayout ? '0.78rem' : '0.82rem';
-  const utilityButtonStyle = isCompactLayout
-    ? { minHeight: '2.2rem', padding: '0 0.72rem', fontSize: '0.75rem' }
-    : isTabletLayout
-      ? { minHeight: '2.15rem', padding: '0 0.7rem', fontSize: '0.76rem' }
-      : { minHeight: '2rem' };
-
   return (
-    <div
-      className="calculator-container"
-      style={{
-        paddingTop: isCompactLayout ? '1rem' : isTabletLayout ? '1.2rem' : '1.5rem'
-      }}
+    <CalcLayout
+      eyebrow="Developer Tools"
+      title="JSON Tools Studio"
+      subtitle="Format, validate, convert, and diff structured data in one workspace — built for fast API debugging and reliable payload cleanup."
     >
       <Head>
         <title>JSON Formatter, Validator and Transformer | Upaman JSON Tools</title>
@@ -944,417 +912,204 @@ const JsonTools = () => {
             })
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(FAQ)) }}
+        />
       </Head>
 
-      <style>{`
-        @keyframes jsonPulse {
-          0%, 100% { transform: scale(1); opacity: 0.95; }
-          50% { transform: scale(1.04); opacity: 1; }
-        }
-        @keyframes jsonShimmer {
-          0% { background-position: -140% 0; }
-          100% { background-position: 140% 0; }
-        }
-        @keyframes jsonFadeUp {
-          0% { opacity: 0; transform: translateY(8px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation: none !important;
-            transition: none !important;
-          }
-        }
-      `}</style>
+      <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 dark:border-brand-800/60 dark:bg-brand-900/20 dark:text-brand-300">
+        <span aria-hidden="true">⚡</span> 100% browser-side processing
+      </div>
 
-      <div style={{ maxWidth: '1260px', margin: '0 auto', padding: isCompactLayout ? '0 0.55rem 1.7rem' : isTabletLayout ? '0 0.7rem 2rem' : '0 0.8rem 2.4rem' }}>
-        <div
-          style={{
-            borderRadius: '1.2rem',
-            border: `1px solid ${isDarkMode ? '#33516f' : '#d3dee9'}`,
-            background: isDarkMode ? 'rgba(17, 33, 50, 0.85)' : 'rgba(255, 255, 255, 0.9)',
-            boxShadow: isDarkMode
-              ? '0 18px 40px rgba(0,0,0,0.44)'
-              : '0 16px 34px rgba(9, 30, 66, 0.18)',
-            overflow: 'hidden'
-          }}
-        >
-          <div
-            style={{
-              padding: isCompactLayout ? '1.15rem 0.9rem 1rem' : isTabletLayout ? '1.35rem 1rem 1.15rem' : '1.6rem 1.2rem 1.3rem',
-              background: isDarkMode
-                ? 'linear-gradient(135deg, #0f2a43 0%, #115e59 100%)'
-                : 'linear-gradient(135deg, #0f2a43 0%, #1d4e89 70%, #0f766e 100%)',
-              color: '#f8fafc'
-            }}
-          >
-            <h1 style={{ margin: 0, fontSize: 'clamp(1.4rem, 3.2vw, 2rem)', letterSpacing: '0.01em' }}>
-              JSON Tools Studio
-            </h1>
-            <p style={{ margin: '0.55rem 0 0', opacity: 0.92, lineHeight: 1.55 }}>
-              Format, validate, convert, and diff structured data in one workspace. Built for fast API debugging and reliable payload cleanup.
-            </p>
-            <div
-              style={{
-                marginTop: '0.9rem',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.45rem',
-                borderRadius: '999px',
-                border: '1px solid rgba(255,255,255,0.35)',
-                background: 'rgba(255,255,255,0.12)',
-                padding: '0.3rem 0.7rem',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                animation: 'jsonPulse 2s ease-in-out infinite'
-              }}
-            >
-              ⚡ 100% browser-side processing
-            </div>
+      <div className="space-y-5">
+        <Card className="p-4 sm:p-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="flex items-center gap-2 text-sm font-semibold text-ink-soft dark:text-slate-300">
+              Indent:
+              <select
+                value={indentSize}
+                onChange={(e) => setIndentSize(Number(e.target.value))}
+                className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-ink outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-500/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              >
+                <option value={2}>2 spaces</option>
+                <option value={4}>4 spaces</option>
+              </select>
+            </label>
+            <button type="button" onClick={runSelectedAction} className={utilityBtn} title="Run currently selected action (Ctrl/Cmd + Enter)" aria-label="Run selected action">
+              Run selected action
+            </button>
+            <button type="button" onClick={() => setInputText(SAMPLE_SNIPPETS.portfolio)} className={utilityBtn} title="Load portfolio JSON sample data">
+              Sample: Portfolio JSON
+            </button>
+            <button type="button" onClick={() => setInputText(SAMPLE_SNIPPETS.flat)} className={utilityBtn} title="Load flattened JSON sample">
+              Sample: Flat Paths
+            </button>
+            <button type="button" onClick={() => setInputText(SAMPLE_SNIPPETS.csv)} className={utilityBtn} title="Load CSV sample input">
+              Sample: CSV
+            </button>
+            <button type="button" onClick={() => setInputText(SAMPLE_SNIPPETS.yaml)} className={utilityBtn} title="Load YAML sample input">
+              Sample: YAML
+            </button>
+            <button type="button" onClick={() => setTargetText(SAMPLE_SNIPPETS.portfolioTarget)} className={utilityBtn} title="Load target JSON sample for patch diff">
+              Sample: Diff Target
+            </button>
+            <button type="button" onClick={useOutputAsInput} className={utilityBtn} title="Move output into input for chained transforms">
+              Use output as input
+            </button>
+            <button type="button" onClick={copyOutput} className={utilityBtn} title="Copy output to clipboard">
+              Copy output
+            </button>
+            <button type="button" onClick={clearAll} className={utilityBtn} title="Clear input, target, and output">
+              Clear
+            </button>
           </div>
 
-          <div style={{ padding: isCompactLayout ? '0.8rem 0.75rem 1.05rem' : isTabletLayout ? '0.9rem 0.9rem 1.1rem' : '1rem 1rem 1.25rem' }}>
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: isCompactLayout ? '0.45rem' : isTabletLayout ? '0.5rem' : '0.55rem',
-                marginBottom: isCompactLayout ? '0.75rem' : '0.9rem'
-              }}
-            >
-              <label style={{ fontSize: '0.82rem', fontWeight: 600, color: isDarkMode ? '#cbd5e1' : '#334155' }}>
-                Indent:
-                <select
-                  value={indentSize}
-                  onChange={(e) => setIndentSize(Number(e.target.value))}
-                  style={{
-                    marginLeft: '0.4rem',
-                    borderRadius: '0.45rem',
-                    border: `1px solid ${isDarkMode ? '#4b6480' : '#cbd5e1'}`,
-                    background: isDarkMode ? '#16283c' : '#ffffff',
-                    color: isDarkMode ? '#e2e8f0' : '#1e293b',
-                    padding: '0.35rem 0.5rem'
-                  }}
-                >
-                  <option value={2}>2 spaces</option>
-                  <option value={4}>4 spaces</option>
-                </select>
-              </label>
-              <button
-                type="button"
-                onClick={runSelectedAction}
-                className="result-action-button"
-                style={utilityButtonStyle}
-                title="Run currently selected action (Ctrl/Cmd + Enter)"
-                aria-label="Run selected action"
-              >
-                Run selected action
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setInputText(SAMPLE_SNIPPETS.portfolio)}
-                className="result-action-button"
-                style={utilityButtonStyle}
-                title="Load portfolio JSON sample data"
-              >
-                Sample: Portfolio JSON
-              </button>
-              <button
-                type="button"
-                onClick={() => setInputText(SAMPLE_SNIPPETS.flat)}
-                className="result-action-button"
-                style={utilityButtonStyle}
-                title="Load flattened JSON sample"
-              >
-                Sample: Flat Paths
-              </button>
-              <button
-                type="button"
-                onClick={() => setInputText(SAMPLE_SNIPPETS.csv)}
-                className="result-action-button"
-                style={utilityButtonStyle}
-                title="Load CSV sample input"
-              >
-                Sample: CSV
-              </button>
-              <button
-                type="button"
-                onClick={() => setInputText(SAMPLE_SNIPPETS.yaml)}
-                className="result-action-button"
-                style={utilityButtonStyle}
-                title="Load YAML sample input"
-              >
-                Sample: YAML
-              </button>
-              <button
-                type="button"
-                onClick={() => setTargetText(SAMPLE_SNIPPETS.portfolioTarget)}
-                className="result-action-button"
-                style={utilityButtonStyle}
-                title="Load target JSON sample for patch diff"
-              >
-                Sample: Diff Target
-              </button>
-              <button type="button" onClick={useOutputAsInput} className="result-action-button" style={utilityButtonStyle} title="Move output into input for chained transforms">
-                Use output as input
-              </button>
-              <button type="button" onClick={copyOutput} className="result-action-button" style={utilityButtonStyle} title="Copy output to clipboard">
-                Copy output
-              </button>
-              <button type="button" onClick={clearAll} className="result-action-button" style={utilityButtonStyle} title="Clear input, target, and output">
-                Clear
-              </button>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: actionGridColumns,
-                gap: isCompactLayout ? '0.55rem' : '0.85rem',
-                marginBottom: isCompactLayout ? '0.8rem' : '0.95rem'
-              }}
-            >
-              {ACTIONS.map((action, index) => (
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {ACTIONS.map((action) => {
+              const active = activeAction === action.id;
+              return (
                 <button
                   key={action.id}
                   type="button"
                   onClick={() => runAction(action.id)}
-                  aria-pressed={activeAction === action.id}
+                  aria-pressed={active}
                   aria-label={`${action.label}. ${action.hint}`}
                   title={action.hint}
-                  style={{
-                    textAlign: 'left',
-                    borderRadius: '0.8rem',
-                    border: `1px solid ${
-                      activeAction === action.id
-                        ? (isDarkMode ? '#4fd1c5' : '#0f766e')
-                        : (isDarkMode ? '#30485f' : '#d7e1eb')
-                    }`,
-                    background: activeAction === action.id
-                      ? (isDarkMode ? 'linear-gradient(135deg, rgba(15, 118, 110, 0.24), rgba(29, 78, 137, 0.28))' : 'linear-gradient(135deg, rgba(15, 118, 110, 0.11), rgba(29, 78, 137, 0.12))')
-                      : (isDarkMode ? 'rgba(17, 33, 50, 0.78)' : 'rgba(255, 255, 255, 0.82)'),
-                    color: isDarkMode ? '#e2e8f0' : '#1e293b',
-                    padding: isCompactLayout ? '0.62rem 0.72rem' : '0.72rem 0.82rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: activeAction === action.id
-                      ? (isDarkMode ? '0 10px 18px rgba(15, 118, 110, 0.2)' : '0 8px 16px rgba(15, 118, 110, 0.14)')
-                      : 'none',
-                    animation: `jsonFadeUp 0.3s ease ${index * 20}ms both`
-                  }}
+                  className={cn(
+                    'rounded-xl border p-3 text-left transition',
+                    active
+                      ? 'border-brand-400 bg-brand-50/70 shadow-sm dark:border-brand-500/70 dark:bg-brand-900/20'
+                      : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800/60 dark:hover:border-slate-600'
+                  )}
                 >
-                  <div style={{ fontSize: isCompactLayout ? '0.84rem' : '0.88rem', fontWeight: 700 }}>
-                    {action.emoji} {action.label}
-                  </div>
-                  <div style={{ fontSize: isCompactLayout ? '0.72rem' : '0.74rem', marginTop: '0.18rem', opacity: 0.86 }}>
-                    {action.hint}
-                  </div>
+                  <div className="text-sm font-bold text-ink dark:text-white">{action.emoji} {action.label}</div>
+                  <div className="mt-0.5 text-xs text-ink-muted dark:text-slate-400">{action.hint}</div>
                 </button>
-              ))}
-            </div>
-            <p style={{ margin: isCompactLayout ? '-0.1rem 0 0.65rem' : '-0.1rem 0 0.8rem', fontSize: '0.78rem', color: isDarkMode ? '#93a6bb' : '#526377' }}>
-              {modeGuide}
-            </p>
-            <p style={{ margin: '-0.25rem 0 0.72rem', fontSize: '0.75rem', color: isDarkMode ? '#8fa4bb' : '#5f7389' }}>
-              Shortcut: <strong>Ctrl/Cmd + Enter</strong> runs the selected action from any editor panel.
-            </p>
+              );
+            })}
+          </div>
 
-            <div
-              role="status"
-              aria-live={status.type === 'error' ? 'assertive' : 'polite'}
-              aria-atomic="true"
-              aria-busy={isWorking}
-              style={{
-                borderRadius: '0.8rem',
-                border: `1px solid ${statusColor.border}`,
-                background: statusColor.bg,
-                color: statusColor.text,
-                padding: '0.68rem 0.8rem',
-                fontSize: '0.84rem',
-                fontWeight: 600,
-                marginBottom: isCompactLayout ? '0.75rem' : '0.95rem',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              {isWorking && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-                    backgroundSize: '200% 100%',
-                    animation: 'jsonShimmer 1.2s linear infinite'
-                  }}
-                />
-              )}
-              <span style={{ position: 'relative' }}>{status.message}</span>
-            </div>
+          <p className="mt-4 text-sm text-ink-muted dark:text-slate-400">{modeGuide}</p>
+          <p className="mt-1 text-xs text-ink-muted dark:text-slate-500">
+            Shortcut: <strong className="font-semibold text-ink-soft dark:text-slate-300">Ctrl/Cmd + Enter</strong> runs the selected action from any editor panel.
+          </p>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: editorGridColumns,
-                gap: isCompactLayout ? '0.75rem' : '0.9rem'
-              }}
-            >
-              <div>
-                <label
-                  htmlFor="json-tools-input"
-                  style={{
-                    display: 'block',
-                    marginBottom: '0.45rem',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
-                    color: isDarkMode ? '#94a3b8' : '#475569',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.03em'
-                  }}
-                >
-                  {inputLabel}
-                </label>
-                <textarea
-                  id="json-tools-input"
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  onKeyDown={handleEditorKeyDown}
-                  spellCheck={false}
-                  aria-label={inputLabel}
-                  style={{
-                    width: '100%',
-                    minHeight: editorMinHeight,
-                    borderRadius: '0.8rem',
-                    border: `1px solid ${isDarkMode ? '#35506b' : '#cbd5e1'}`,
-                    background: isDarkMode ? '#0f1f31' : '#ffffff',
-                    color: isDarkMode ? '#e2e8f0' : '#1e293b',
-                    padding: editorPadding,
-                    fontFamily: '\'IBM Plex Mono\', \'SFMono-Regular\', Menlo, Consolas, monospace',
-                    fontSize: editorFontSize,
-                    lineHeight: 1.5,
-                    resize: 'vertical'
-                  }}
-                  placeholder={inputPlaceholder}
-                />
-              </div>
+          <div
+            role="status"
+            aria-live={status.type === 'error' ? 'assertive' : 'polite'}
+            aria-atomic="true"
+            aria-busy={isWorking}
+            className={cn('mt-4 rounded-xl border px-3.5 py-2.5 text-sm font-semibold', statusClasses)}
+          >
+            {status.message}
+          </div>
+        </Card>
 
-              {activeAction === 'jsonPatchDiff' && (
-                <div>
-                  <label
-                    htmlFor="json-tools-target"
-                    style={{
-                      display: 'block',
-                      marginBottom: '0.45rem',
-                      fontSize: '0.78rem',
-                      fontWeight: 700,
-                      color: isDarkMode ? '#94a3b8' : '#475569',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.03em'
-                    }}
-                  >
-                    Target JSON
-                  </label>
-                  <textarea
-                    id="json-tools-target"
-                    value={targetText}
-                    onChange={(e) => setTargetText(e.target.value)}
-                    onKeyDown={handleEditorKeyDown}
-                    spellCheck={false}
-                    aria-label="Target JSON"
-                    style={{
-                      width: '100%',
-                      minHeight: editorMinHeight,
-                      borderRadius: '0.8rem',
-                      border: `1px solid ${isDarkMode ? '#35506b' : '#cbd5e1'}`,
-                      background: isDarkMode ? '#0f1f31' : '#ffffff',
-                      color: isDarkMode ? '#e2e8f0' : '#1e293b',
-                      padding: editorPadding,
-                      fontFamily: '\'IBM Plex Mono\', \'SFMono-Regular\', Menlo, Consolas, monospace',
-                      fontSize: editorFontSize,
-                      lineHeight: 1.5,
-                      resize: 'vertical'
-                    }}
-                    placeholder="Paste target JSON for patch generation..."
-                  />
-                </div>
-              )}
-
-              <div>
-                <label
-                  htmlFor="json-tools-output"
-                  style={{
-                    display: 'block',
-                    marginBottom: '0.45rem',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
-                    color: isDarkMode ? '#94a3b8' : '#475569',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.03em'
-                  }}
-                >
-                  {outputLabel}
-                </label>
-                <textarea
-                  id="json-tools-output"
-                  value={outputText}
-                  onChange={(e) => setOutputText(e.target.value)}
-                  onKeyDown={handleEditorKeyDown}
-                  spellCheck={false}
-                  aria-label={outputLabel}
-                  style={{
-                    width: '100%',
-                    minHeight: editorMinHeight,
-                    borderRadius: '0.8rem',
-                    border: `1px solid ${isDarkMode ? '#35506b' : '#cbd5e1'}`,
-                    background: isDarkMode ? '#0f1f31' : '#ffffff',
-                    color: isDarkMode ? '#e2e8f0' : '#1e293b',
-                    padding: editorPadding,
-                    fontFamily: '\'IBM Plex Mono\', \'SFMono-Regular\', Menlo, Consolas, monospace',
-                    fontSize: editorFontSize,
-                    lineHeight: 1.5,
-                    resize: 'vertical'
-                  }}
-                  placeholder="Transformed output appears here..."
-                />
-              </div>
-            </div>
-
-            <ResultActions
-              title="JSON tools summary"
-              summaryLines={summaryLines}
-              fileName="upaman-json-tools-summary.txt"
+        <div className={cn('grid gap-4', activeAction === 'jsonPatchDiff' ? 'lg:grid-cols-3' : 'lg:grid-cols-2')}>
+          <div>
+            <label htmlFor="json-tools-input" className={editorLabel}>{inputLabel}</label>
+            <textarea
+              id="json-tools-input"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={handleEditorKeyDown}
+              spellCheck={false}
+              aria-label={inputLabel}
+              className={editorArea}
+              placeholder={inputPlaceholder}
             />
+          </div>
 
-            <CalculatorInfoPanel
-              title="Methodology, assumptions, and source references"
-              credibilityScope="This developer utility processes data entirely in your browser; output depends only on the input you provide and the documented transformation rules below."
-              inputs={[
-                'Input accepts JSON, CSV, and YAML (for YAML→JSON action)',
-                'JSON Patch Diff compares source JSON against target JSON panel',
-                'Conversion actions infer primitive value types where possible'
-              ]}
-              formulas={[
-                'Validation uses strict JSON.parse behavior',
-                'Sort keys uses recursive lexicographic ordering',
-                'Flatten/unflatten use dot notation with [index] for arrays',
-                'JSON Patch Diff outputs add/remove/replace operations compatible with RFC6902'
-              ]}
-              assumptions={[
-                'CSV parser assumes first row is header',
-                'YAML parser supports common indentation-based YAML structures',
-                'Unflatten expects object keys in dot/bracket path format',
-                'Large payloads may be slower on low-memory devices'
-              ]}
-              sources={[
-                { label: 'RFC 8259 - The JSON Data Interchange Format', url: 'https://www.rfc-editor.org/rfc/rfc8259' },
-                { label: 'ECMA-404 JSON specification', url: 'https://www.ecma-international.org/publications-and-standards/standards/ecma-404/' },
-                { label: 'RFC 6902 - JSON Patch', url: 'https://www.rfc-editor.org/rfc/rfc6902' }
-              ]}
+          {activeAction === 'jsonPatchDiff' && (
+            <div>
+              <label htmlFor="json-tools-target" className={editorLabel}>Target JSON</label>
+              <textarea
+                id="json-tools-target"
+                value={targetText}
+                onChange={(e) => setTargetText(e.target.value)}
+                onKeyDown={handleEditorKeyDown}
+                spellCheck={false}
+                aria-label="Target JSON"
+                className={editorArea}
+                placeholder="Paste target JSON for patch generation..."
+              />
+            </div>
+          )}
+
+          <div>
+            <label htmlFor="json-tools-output" className={editorLabel}>{outputLabel}</label>
+            <textarea
+              id="json-tools-output"
+              value={outputText}
+              onChange={(e) => setOutputText(e.target.value)}
+              onKeyDown={handleEditorKeyDown}
+              spellCheck={false}
+              aria-label={outputLabel}
+              className={editorArea}
+              placeholder="Transformed output appears here..."
             />
           </div>
         </div>
+
+        <ResultActions
+          title="JSON tools summary"
+          summaryLines={summaryLines}
+          fileName="upaman-json-tools-summary.txt"
+        />
+
+        <CalculatorInfoPanel
+          title="Methodology, assumptions, and source references"
+          credibilityScope="This developer utility processes data entirely in your browser; output depends only on the input you provide and the documented transformation rules below."
+          inputs={[
+            'Input accepts JSON, CSV, and YAML (for YAML→JSON action)',
+            'JSON Patch Diff compares source JSON against target JSON panel',
+            'Conversion actions infer primitive value types where possible'
+          ]}
+          formulas={[
+            'Validation uses strict JSON.parse behavior',
+            'Sort keys uses recursive lexicographic ordering',
+            'Flatten/unflatten use dot notation with [index] for arrays',
+            'JSON Patch Diff outputs add/remove/replace operations compatible with RFC6902'
+          ]}
+          assumptions={[
+            'CSV parser assumes first row is header',
+            'YAML parser supports common indentation-based YAML structures',
+            'Unflatten expects object keys in dot/bracket path format',
+            'Large payloads may be slower on low-memory devices'
+          ]}
+          sources={[
+            { label: 'RFC 8259 - The JSON Data Interchange Format', url: 'https://www.rfc-editor.org/rfc/rfc8259' },
+            { label: 'ECMA-404 JSON specification', url: 'https://www.ecma-international.org/publications-and-standards/standards/ecma-404/' },
+            { label: 'RFC 6902 - JSON Patch', url: 'https://www.rfc-editor.org/rfc/rfc6902' }
+          ]}
+        />
+
+        <HowToSection
+          heading="How to use JSON Tools Studio"
+          name="How to format and validate JSON with Upaman JSON Tools"
+          description="Format, validate, convert, and diff JSON entirely in your browser."
+          steps={[
+            { name: 'Paste your data', text: 'Drop JSON (or CSV/YAML for conversion actions) into the Input panel.' },
+            { name: 'Pick an action', text: 'Choose Validate, Format, Minify, convert, or JSON Patch Diff from the action grid.' },
+            { name: 'Run it', text: 'Click the action or press Ctrl/Cmd + Enter to process instantly on your device.' },
+            { name: 'Reuse or copy', text: 'Copy the output, or use it as the next input to chain multiple transforms.' }
+          ]}
+        />
+
+        <section className="mt-10" aria-label="JSON Tools frequently asked questions">
+          <h2 className="font-display text-xl font-bold text-ink dark:text-white">JSON Tools FAQ</h2>
+          <div className="mt-4 grid gap-3">
+            {FAQ.map(({ question, answer }) => (
+              <details key={question} className="group rounded-xl border border-slate-200/70 bg-white p-4 dark:border-slate-700/70 dark:bg-slate-800/70">
+                <summary className="cursor-pointer list-none font-semibold text-ink marker:hidden dark:text-white">{question}</summary>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
       </div>
-    </div>
+    </CalcLayout>
   );
 };
 
