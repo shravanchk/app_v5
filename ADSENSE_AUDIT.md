@@ -51,9 +51,11 @@ Last updated: 2026-07-05
    **Correction (2026-07-10):** this was marked resolved prematurely — a word-count
    sweep of the built US pages found five calculators (Refinance, Auto Loan, 401(k),
    Savings & CD, Credit Card Payoff) at 417–554 words with no article and no FAQPage
-   schema. All five upgraded in `76958f6` (now 1,260–1,454w); the sweep now shows every
-   calculator page ≥1,000 words with exactly one FAQPage schema. Lesson recorded:
-   verify "all pages done" claims against the built HTML, not the batch list.
+   schema. All five upgraded in `76958f6` (now 1,264–1,454w). A full-site sweep after
+   that fix confirms every **US** calculator page is now ≥1,000 words with exactly one
+   FAQPage schema; the remaining sub-1,000-word calculator/tool/workflow pages are
+   tracked as issue #10 below. Lesson recorded: verify "all pages done" claims against
+   the built HTML, not the batch list.
    Impact: high — this was the core complaint.
 
 2. **Legacy static guides (`public/guide-*.html`, 8 files).** ✅ **RESOLVED.**
@@ -124,6 +126,22 @@ Last updated: 2026-07-05
 9. **Accessibility sweep pending**: forms have labels and details/summary FAQs are
    keyboard-friendly; a full audit (contrast, focus traps in search modal, aria on
    animated charts) hasn't been run.
+10. **Remaining sub-1,000-word calculator/tool/workflow pages** (full-build sweep,
+   2026-07-10). Found by the same word-count sweep that caught the five US calculators.
+   Interactive pages still content-light, in ascending order: Unit Converter (370w, no
+   FAQ), Scientific Calculator (392w, no FAQ), Statistics Calculator (414w, no FAQ),
+   Buy vs Rent (449w), Period Calculator (565w), Pregnancy Due Date (578w), Tax Regime
+   Comparison (582w), Salary Calculator (711w), JSON Tools (904w), Credit Card Trap
+   (953w), and the six older workflows (Emergency Fund 529w, Prepay vs Invest 549w,
+   Job Offer 585w, Home Loan Readiness 604w, Rent vs Buy 619w, Car Ownership 757w —
+   all have FAQ schema but thin articles). Hub/index/policy pages (tools, workflows,
+   guides, us/india/eu-calculators, after-taxes, tax-on-salary, paycheck indexes,
+   legal pages) are navigation and deliberately excluded. `home-preview` (685w) is a
+   noindex, unlinked dev page — harmless, consider deleting before approval anyway.
+   Fix: same engine-verified article + FAQ pattern, prioritized by traffic; the three
+   generic tools may warrant lighter treatment (usage-focused articles, no FAQ schema
+   pressure). Impact: medium — these are secondary pages, but the reviewer sees the
+   same site-level quality signal.
 
 ## Process recommendations
 
