@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import {
   Train, Calculator, TrendingUp, PiggyBank, Target, Wallet, Home, Car,
-  Landmark, Repeat, Receipt, Percent, LineChart, ArrowLeftRight, ShieldCheck, CreditCard,
+  Landmark, Repeat, Receipt, Percent, LineChart, ArrowLeftRight, ShieldCheck, CreditCard, Hourglass,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
 
@@ -35,6 +35,7 @@ const cards = [
   { title: 'Buy vs Rent Calculator', description: 'Estimate break-even timeline for buying vs renting using EMI and rent growth.', icon: Home, path: '/buy-vs-rent-calculator', tint: T.indigo, tags: ['Break-even', 'EMI vs rent', 'Home decision'] },
   { title: 'Prepay vs Invest Workflow', description: 'Compare whether monthly surplus should prepay debt or be invested for growth.', icon: ArrowLeftRight, path: '/prepay-vs-invest-workflow', tint: T.violet, tags: ['Debt vs investing', 'Risk-adjusted', 'Surplus'] },
   { title: 'FD vs SIP Workflow', description: 'Compare fixed deposit and SIP on post-tax maturity with a horizon-aware verdict.', icon: Landmark, path: '/fd-vs-sip-workflow', tint: T.indigo, tags: ['Post-tax view', 'LTCG vs slab', 'Verdict'] },
+  { title: 'Retirement Readiness Workflow', description: 'Find the corpus your lifestyle needs at 60 and whether your savings are on track to build it.', icon: Hourglass, path: '/retirement-readiness-workflow', tint: T.teal, tags: ['Corpus target', 'Readiness score', 'Monthly plan'] },
   { title: 'Emergency Fund Readiness', description: 'Find your target runway, current gap, and monthly plan to build a safer corpus.', icon: ShieldCheck, path: '/emergency-fund-readiness-workflow', tint: T.emerald, tags: ['Runway target', 'Gap to target', 'Milestones'] },
   { title: 'Rent vs Buy Decision', description: 'Compare renting versus buying with break-even year, affordability, and cash buffer.', icon: ArrowLeftRight, path: '/rent-vs-buy-workflow', tint: T.sky, tags: ['Break-even', 'Cash buffer', 'Housing'] },
   { title: 'Car Ownership Cost', description: 'Estimate fuel, toll, parking, EMI, and upkeep cost of running a car.', icon: Car, path: '/car-ownership-cost-workflow', tint: T.rose, tags: ['Fuel expense', 'Transport budget', 'Running cost'] },

@@ -35,6 +35,19 @@ const marketIN = {
     remainingYears: 15,
     monthlySurplus: 25000,
     expectedReturn: 11
+  },
+
+  retirementDefaults: {
+    currentAge: 30,
+    retireAge: 60,
+    lifeExpectancy: 85,
+    monthlyExpenses: 50000,
+    inflationPct: 6,
+    preRetReturnPct: 11,
+    postRetReturnPct: 7,
+    currentCorpus: 500000,
+    monthlySaving: 20000,
+    stepUpPct: 5
   }
 };
 

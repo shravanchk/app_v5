@@ -23,6 +23,7 @@ const COLUMNS: Col[] = [
       { label: 'Buy vs Rent', href: '/rent-vs-buy-workflow' },
       { label: 'Prepay or Invest', href: '/prepay-vs-invest-workflow' },
       { label: 'FD vs SIP', href: '/fd-vs-sip-workflow' },
+      { label: 'Retirement Readiness', href: '/retirement-readiness-workflow' },
       { label: 'Job Offer Decision', href: '/job-offer-workflow' },
       { label: 'Emergency Fund', href: '/emergency-fund-readiness-workflow' },
     ],

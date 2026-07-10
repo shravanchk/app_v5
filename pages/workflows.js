@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Home, ArrowLeftRight, PiggyBank, Briefcase, ShieldCheck, Car, Clock, Landmark } from 'lucide-react';
+import { Home, ArrowLeftRight, PiggyBank, Briefcase, ShieldCheck, Car, Clock, Landmark, Hourglass } from 'lucide-react';
 import { CalcLayout } from '../components/calculator/CalcLayout';
 import Card from '../components/ui/Card';
 
@@ -10,6 +10,8 @@ const FLOWS = [
   { icon: ArrowLeftRight, title: 'Buy vs Rent', desc: 'Compare the total cost of buying versus renting for your city.', href: '/rent-vs-buy-workflow', time: '4 min', tint: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30' },
   { icon: PiggyBank, title: 'Prepay Loan or Invest', desc: 'See whether prepaying or investing builds more wealth.', href: '/prepay-vs-invest-workflow', time: '3 min', tint: 'text-violet-600 bg-violet-50 dark:bg-violet-900/30' },
   { icon: Landmark, title: 'FD vs SIP Benefit', desc: 'Compare fixed deposit and SIP on post-tax maturity value.', href: '/fd-vs-sip-workflow', time: '3 min', tint: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30' },
+  { icon: Hourglass, title: 'Retirement Readiness (India)', desc: 'Corpus your lifestyle needs vs where your savings are headed.', href: '/retirement-readiness-workflow', time: '4 min', tint: 'text-teal-600 bg-teal-50 dark:bg-teal-900/30' },
+  { icon: Hourglass, title: 'Retirement Readiness (US)', desc: 'Is your nest egg on track? Readiness score and monthly plan.', href: '/us-retirement-readiness-workflow', time: '4 min', tint: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30' },
   { icon: Briefcase, title: 'Job Offer Decision', desc: 'Compare offers on salary, growth and lifestyle factors.', href: '/job-offer-workflow', time: '5 min', tint: 'text-amber-600 bg-amber-50 dark:bg-amber-900/30' },
   { icon: ShieldCheck, title: 'Emergency Fund Readiness', desc: 'Find out if your safety net covers a real shock.', href: '/emergency-fund-readiness-workflow', time: '3 min', tint: 'text-sky-600 bg-sky-50 dark:bg-sky-900/30' },
   { icon: Car, title: 'Car Ownership Cost', desc: 'Look beyond the sticker price to the true running cost.', href: '/car-ownership-cost-workflow', time: '4 min', tint: 'text-rose-600 bg-rose-50 dark:bg-rose-900/30' },

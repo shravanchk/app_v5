@@ -72,6 +72,8 @@ const INDEX: Item[] = [
   { label: 'Buy vs Rent Decision', href: '/rent-vs-buy-workflow', group: 'Workflow', k: 'house property should i buy or rent' },
   { label: 'Prepay Loan or Invest', href: '/prepay-vs-invest-workflow', group: 'Workflow', k: 'extra money emi prepayment sip decision' },
   { label: 'FD vs SIP Benefit', href: '/fd-vs-sip-workflow', group: 'Workflow', k: 'fixed deposit mutual fund rd post tax ltcg comparison' },
+  { label: 'Retirement Readiness (India)', href: '/retirement-readiness-workflow', group: 'Workflow', k: 'retirement corpus how much to retire india pension planning' },
+  { label: 'Retirement Readiness (US)', href: '/us-retirement-readiness-workflow', group: 'Workflow', k: 'retirement on track 401k nest egg how much do i need to retire' },
   { label: 'Job Offer Decision', href: '/job-offer-workflow', group: 'Workflow', k: 'compare offers salary hike switch company' },
   { label: 'Emergency Fund Readiness', href: '/emergency-fund-readiness-workflow', group: 'Workflow', k: 'savings buffer months expenses' },
   { label: 'Car Ownership Cost', href: '/car-ownership-cost-workflow', group: 'Workflow', k: 'total cost fuel insurance maintenance' },

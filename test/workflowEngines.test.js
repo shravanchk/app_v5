@@ -13,7 +13,14 @@ const {
   depositVsInvestmentVerdict
 } = require('../utils/engines/depositVsInvestment');
 const { comparePrepayVsInvest, prepayVsInvestVerdict } = require('../utils/engines/prepayVsInvest');
+const {
+  corpusForGrowingWithdrawals,
+  savingsFvWithStepUp,
+  assessRetirementReadiness,
+  retirementReadinessVerdict
+} = require('../utils/engines/retirementReadiness');
 const { marketIN } = require('../utils/markets/in');
+const { marketUS } = require('../utils/markets/us');
 
 const closeTo = (actual, expected, tolerance = 1) => {
   assert.ok(
@@ -147,4 +154,59 @@ test('prepay verdict: close outcomes → hybrid', () => {
     prepayVsInvestVerdict({ prepayCorpus: 100, investCorpus: 105, loanRate: 8, adjustedReturn: 8.5 }).code,
     'hybrid'
   );
+});
+
+// --- retirement readiness, pinned to the worked examples documented on
+// /retirement-readiness-workflow (India) and /us-retirement-readiness-workflow ---
+
+test('step-up savings FV reduces to ordinary annuity when step-up is 0', () => {
+  closeTo(
+    savingsFvWithStepUp(10000, 12, 120, 0),
+    fvOfMonthlyAtAnnualPct(10000, 12, 120),
+    0.01
+  );
+});
+
+test('growing-withdrawal corpus equals expense × years when return equals inflation', () => {
+  closeTo(corpusForGrowingWithdrawals(1000000, 6, 6, 25), 25000000, 0.01);
+});
+
+test('India defaults match documented worked example (126.3% ready)', () => {
+  const r = assessRetirementReadiness(marketIN.retirementDefaults);
+  assert.equal(r.yearsToRetire, 30);
+  assert.equal(r.retirementYears, 25);
+  closeTo(r.monthlyExpenseAtRetirement, 287175, 2);
+  closeTo(r.requiredCorpus, 77148478, 5);
+  closeTo(r.projectedCorpus, 97448883, 5);
+  closeTo(r.readinessRatio, 1.263, 0.001);
+  assert.equal(r.extraMonthlyNeeded, 0);
+  closeTo(r.sustainableMonthlyToday, 63157, 2);
+});
+
+test('India without step-up falls to 87.5% and needs ₹3,427 more per month', () => {
+  const r = assessRetirementReadiness({ ...marketIN.retirementDefaults, stepUpPct: 0 });
+  closeTo(r.readinessRatio, 0.875, 0.001);
+  closeTo(r.shortfall, 9611935, 5);
+  closeTo(r.extraMonthlyNeeded, 3427, 2);
+});
+
+test('US defaults match documented worked example (137.5% ready)', () => {
+  const r = assessRetirementReadiness(marketUS.retirementDefaults);
+  assert.equal(r.yearsToRetire, 35);
+  closeTo(r.requiredCorpus, 2165053, 3);
+  closeTo(r.projectedCorpus, 2976545, 3);
+  closeTo(r.readinessRatio, 1.375, 0.001);
+});
+
+test('US starting at 45 drops to 48.6% and needs $1,305 more per month', () => {
+  const r = assessRetirementReadiness({ ...marketUS.retirementDefaults, currentAge: 45 });
+  closeTo(r.readinessRatio, 0.486, 0.001);
+  closeTo(r.extraMonthlyNeeded, 1305, 2);
+});
+
+test('readiness verdict boundaries', () => {
+  assert.equal(retirementReadinessVerdict({ readinessRatio: 1.0 }).code, 'on-track');
+  assert.equal(retirementReadinessVerdict({ readinessRatio: 0.9 }).code, 'close');
+  assert.equal(retirementReadinessVerdict({ readinessRatio: 0.6 }).code, 'behind');
+  assert.equal(retirementReadinessVerdict({ readinessRatio: 0.3 }).code, 'far-behind');
 });
