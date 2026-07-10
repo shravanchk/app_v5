@@ -4,7 +4,7 @@ Working document. Issues found while upgrading calculator pages into educational
 resources. Items are **not** auto-fixed unless noted; severity reflects estimated
 impact on AdSense approval probability.
 
-Last updated: 2026-07-05
+Last updated: 2026-07-10
 
 ## Already fixed (this review cycle)
 
@@ -30,6 +30,10 @@ Last updated: 2026-07-05
 | Legacy static guides migrated (8 files) | Migrated all 8 `public/guide-*.html` standalone pages into `/guides/*` (GuidePageLayout — full site chrome, dark-mode-safe prose, reviewed-on byline, Article schema). Content preserved faithfully with a new shared `Callout` component for the old `.box`/`.note` blocks. Rewrote all internal links (10 components) from `/guide-*.html` to `/guides/*`; updated the 8 sitemap URLs (+ bumped lastmod); added 8 `301` redirects to `_redirects`; added the guides to the `/guides` index (new "Saving & investing" group); deleted the legacy HTML so redirects take effect | `0445552` |
 | New `/blog` section (3 launch posts) | Added a distinct editorial blog (nav + footer links, index page with `Blog` JSON-LD, new `BlogPostLayout` mirroring the guides design, `BlogPosting` schema, linked author/reviewer byline). Framed as *timely/data-driven* analysis to stay distinct from the evergreen `/guides`. Three launch posts (US/EU/India mix), every figure engine-verified: US $100k take-home by state (735w), €60k keep-rate across 8 EU systems (671w), old-vs-new regime FY 2026-27 break-even (763w). Added to sitemap. | `5b1baf7` |
 | Thin content: 5 US calculators missed by every batch — Refinance (426→1,264w), Auto Loan (430→1,288w), 401(k) (515→1,417w), Savings & CD (417→1,333w), Credit Card Payoff (554→1,454w). All five had HowTo + InfoPanel but **no article and no FAQPage schema**; issue #1 below had been marked resolved prematurely | Same pattern as prior batches: FAQ array feeding both visible `<details>` and FAQPage JSON-LD, per-topic article, every figure computed from each page's own formulas and verified against the live widget (refinance break-even 2y 4m; 401(k) $2,439,809 projection; CC minimum-payment 100-year cap with $190,638 interest). No IRS limits, APR tables, or FDIC dollar amounts hardcoded | `76958f6` |
+| Issue #10 batch A: 3 generic tools — Unit Converter (370→1,370w), Scientific (392→1,297w), Statistics (414→1,405w). All three had **no FAQPage schema** | Usage-focused articles + 6-item FAQ each with FAQPage JSON-LD; figures from each tool's own constants (binary GB gap 931.32, default-dataset CI [16.57, 24.10]), verified live | `d459d6d` |
+| Issue #10 batch B: health — Period (565→1,295w), Pregnancy Due Date (578→1,315w) | YMYL-conservative 4-section articles + 2 FAQs each (schema via `buildFaqSchema`); calendar-method scope, qualitative clinical guidance; examples verified live (LMP Jan 1 2026 → Oct 8 2026; Jun 1 → next period Jun 29) | `9410b7a` |
+| Issue #10 batch C: Buy vs Rent (449→1,173w), Tax Regime (582→1,156w), Salary (711→1,173w), JSON Tools (904→1,203w), CC Trap (953→1,409w) | Multi-paragraph intro/example/formula + 3–4 FAQs each via existing schema builders; all figures replicated from each page's model and checked live (break-even yr 4 / sensitivity yr 8–13; regime crossover ≈₹5.4L deductions at ₹15L; CTC ₹12L → ₹86,827/mo; CC 15y vs 2y). Honest-limits paragraphs where models flatter one side | `bd6df0a` |
+| Issue #10 batch D: 6 older workflows — Emergency Fund (529→1,057w), Prepay vs Invest (549→1,024w), Job Offer (585→1,085w), Home Loan Readiness (604→1,129w), Rent vs Buy (619→1,071w), Car Ownership (757→1,306w) | Default-scenario walkthroughs traced through each model + 3–4 FAQs (via `SearchLandingSections`, no duplicate schema); all verdicts/figures verified live (hybrid verdict, "not ready" gap ₹18,78,410, "rent for now" despite yr-6 break-even, car ₹44,031/mo true cost) | `3649039` |
 
 ## Open issues
 
@@ -127,21 +131,19 @@ Last updated: 2026-07-05
    keyboard-friendly; a full audit (contrast, focus traps in search modal, aria on
    animated charts) hasn't been run.
 10. **Remaining sub-1,000-word calculator/tool/workflow pages** (full-build sweep,
-   2026-07-10). Found by the same word-count sweep that caught the five US calculators.
-   Interactive pages still content-light, in ascending order: Unit Converter (370w, no
-   FAQ), Scientific Calculator (392w, no FAQ), Statistics Calculator (414w, no FAQ),
-   Buy vs Rent (449w), Period Calculator (565w), Pregnancy Due Date (578w), Tax Regime
-   Comparison (582w), Salary Calculator (711w), JSON Tools (904w), Credit Card Trap
-   (953w), and the six older workflows (Emergency Fund 529w, Prepay vs Invest 549w,
-   Job Offer 585w, Home Loan Readiness 604w, Rent vs Buy 619w, Car Ownership 757w —
-   all have FAQ schema but thin articles). Hub/index/policy pages (tools, workflows,
-   guides, us/india/eu-calculators, after-taxes, tax-on-salary, paycheck indexes,
-   legal pages) are navigation and deliberately excluded. `home-preview` (685w) is a
+   2026-07-10). ✅ **RESOLVED** (2026-07-10, same day) — all 16 pages upgraded across
+   four commits: batch A generic tools `d459d6d`, batch B health `9410b7a`, batch C
+   India/tools `bd6df0a`, batch D workflows `3649039` (fixed-rows above have details).
+   Verified against the built HTML, not the batch list: a fresh full-site sweep after
+   batch D shows **every indexed interactive page ≥1,000 words**; the only remaining
+   sub-1,000-word pages are policy/legal/contact pages and the `/paycheck` state index,
+   all navigation/boilerplate and deliberately out of scope. Original list for the
+   record: Unit Converter (370w, no FAQ), Scientific (392w, no FAQ), Statistics (414w,
+   no FAQ), Buy vs Rent (449w), Period (565w), Pregnancy Due Date (578w), Tax Regime
+   (582w), Salary (711w), JSON Tools (904w), Credit Card Trap (953w), and six older
+   workflows (Emergency Fund 529w, Prepay vs Invest 549w, Job Offer 585w, Home Loan
+   604w, Rent vs Buy 619w, Car Ownership 757w). `home-preview` (685w) remains a
    noindex, unlinked dev page — harmless, consider deleting before approval anyway.
-   Fix: same engine-verified article + FAQ pattern, prioritized by traffic; the three
-   generic tools may warrant lighter treatment (usage-focused articles, no FAQ schema
-   pressure). Impact: medium — these are secondary pages, but the reviewer sees the
-   same site-level quality signal.
 
 ## Process recommendations
 
