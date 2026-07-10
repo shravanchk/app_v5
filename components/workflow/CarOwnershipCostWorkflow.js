@@ -281,6 +281,18 @@ const CarOwnershipCostWorkflow = () => {
     {
       question: 'When does a cheaper commute option become worth considering?',
       answer: 'If the cheaper option saves a meaningful amount every month and your current car budget is crowding out savings, emergency funds, or debt reduction, it is worth testing.'
+    },
+    {
+      question: 'Why does the workflow count depreciation when it never leaves my bank account?',
+      answer: 'Because it leaves your net worth instead. On the default ₹12 lakh car depreciating 12% a year, ₹12,000 a month of value quietly disappears — more than the fuel, tolls, and parking combined. You feel it all at once at resale time rather than monthly, which is exactly why budgets that ignore it look healthier than they are. Counting it monthly is what makes the ownership number honest.'
+    },
+    {
+      question: 'Does “sell the car” follow from a bad number here?',
+      answer: 'Not necessarily — the workflow is a measurement, not a mandate. A car can be worth a genuine premium for safety, family logistics, or time. The question it forces is whether you know the size of the premium you are paying: if the true monthly cost is double your safe transport budget, that is a decision to make deliberately, not a default to drift into. Partial fixes — driving fewer days, a cheaper vehicle at replacement time, or restructuring the loan — often close most of the gap.'
+    },
+    {
+      question: 'How should I use the per-day drive cost?',
+      answer: 'It converts a monthly abstraction into a daily choice. The model divides your variable costs — fuel, tolls, parking — across office days, so you can price a single decision like “drive today or take the metro”. Hybrid work makes this concrete: each home-working day saves one day of variable cost, and the workflow shows the monthly effect of a four-day saving directly.'
     }
   ];
 
@@ -550,20 +562,48 @@ const CarOwnershipCostWorkflow = () => {
               </>
             )}
             example={(
-              <p>
-                Suppose you drive a 36 km round trip for 22 office days, your car returns 16 km per litre, and fuel is
-                priced at 105 per litre. That gives a monthly fuel bill of roughly 5,200. Once EMI, parking, tolls,
-                insurance, and depreciation are added, the true transport cost becomes much higher than the fuel number
-                alone.
-              </p>
+              <>
+                <p>
+                  Suppose you drive a 36 km round trip for 22 office days, your car returns 16 km per litre, and fuel is
+                  priced at 105 per litre. That gives a monthly fuel bill of roughly 5,200. Once EMI, parking, tolls,
+                  insurance, and depreciation are added, the true transport cost becomes much higher than the fuel number
+                  alone.
+                </p>
+                <p>
+                  Stack the default numbers and watch the picture invert. The commute itself — 792 km of driving — costs
+                  ₹9,198 a month in fuel, tolls, and parking. But the car costs ₹44,031: add ₹2,500 maintenance, ₹2,333
+                  of monthly insurance, ₹12,000 of depreciation on a ₹12 lakh vehicle losing 12% a year, and the ₹18,000
+                  EMI. The commute is barely a fifth of the total; the two biggest line items — EMI and depreciation —
+                  have nothing to do with how far you drive. Against a safe transport budget of ₹19,200 (16% of a ₹1.2
+                  lakh income), this owner is spending 36.7% of in-hand pay on mobility.
+                </p>
+                <p>
+                  The alternative-commute comparison completes the story: at ₹5,500 a month for cabs and metro, the car
+                  costs ₹38,531 more every month — about ₹4.6 lakh a year. That number is not an instruction to sell;
+                  it is the honest price tag of the convenience, and the per-day view (₹418 per office day of variable
+                  cost) shows what each individual drive-vs-metro choice is worth.
+                </p>
+              </>
             )}
             formula={(
-              <p>
-                Core flow: monthly commute distance = round-trip distance multiplied by office days. Fuel cost =
-                monthly distance divided by fuel efficiency, multiplied by fuel price. True ownership cost = fuel +
-                tolls + parking + maintenance + monthly insurance + monthly depreciation + EMI. The tool then compares
-                this against a safer transport-budget target and an alternative commute benchmark.
-              </p>
+              <>
+                <p>
+                  Core flow: monthly commute distance = round-trip distance multiplied by office days. Fuel cost =
+                  monthly distance divided by fuel efficiency, multiplied by fuel price. True ownership cost = fuel +
+                  tolls + parking + maintenance + monthly insurance + monthly depreciation + EMI. The tool then compares
+                  this against a safer transport-budget target and an alternative commute benchmark.
+                </p>
+                <p>
+                  The safe budget takes the lower of two limits: a regional share of in-hand income, and whatever room
+                  remains after fixed expenses and a safety buffer — so a high earner with heavy rent does not get told a
+                  big car is fine just because the percentage works. Depreciation is annualized straight-line on the
+                  car&rsquo;s current value; it slightly overstates the loss on an old car and understates it on a new
+                  one, but it keeps the model transparent and errs toward caution. Costs that do not vary with driving
+                  (EMI, insurance, depreciation) stay in the monthly total but out of the per-day figure, which is why
+                  driving less saves less than people hope — and why the biggest savings decisions happen at purchase
+                  time, not at the fuel pump.
+                </p>
+              </>
             )}
             faqItems={seoFaqItems}
             relatedLinks={[

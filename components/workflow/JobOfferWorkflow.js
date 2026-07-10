@@ -293,6 +293,18 @@ const JobOfferWorkflow = () => {
     {
       question: 'What should I do if the real gain is small?',
       answer: 'That usually means you should negotiate harder, delay the switch, or compare non-cash factors more carefully before deciding.'
+    },
+    {
+      question: 'How can a 50% raise translate into a much smaller real improvement?',
+      answer: 'Three leaks between the headline and your wallet: progressive tax takes a larger share of the higher package, deductions scale with pay, and a move to a costlier city dilutes every rupee’s purchasing power. In the India default here, an ₹8 lakh to ₹12 lakh jump — 50% on paper — improves monthly in-hand by about ₹29,900, but the cost-adjusted gain after moving from a Tier-2 city to a metro is roughly ₹16,000. Real, but nearly half the raise evaporates before it improves your life.'
+    },
+    {
+      question: 'What does the workflow’s tax model include, and what should I not rely on it for?',
+      answer: 'It applies a simplified progressive bracket estimate with employee contributions and location-linked charges — enough to compare two offers on a like-for-like basis, which is its job. It is not a filing-grade computation: it ignores your personal deductions, regime choice, and employer-specific structure. Use the salary calculator and income tax calculator for those; use this page for the switch/negotiate/decline decision.'
+    },
+    {
+      question: 'Should non-cash factors override the number?',
+      answer: 'Sometimes, and the workflow deliberately leaves room for that. A small real gain plus better learning, title, or stability can be a good trade — the danger is making that trade unknowingly. Get the cash-flow answer first, then decide consciously how much career upside you are buying with it.'
     }
   ];
   const locationOptions = Object.entries(regionConfig.locationTiers).map(([key, config]) => ({
@@ -523,18 +535,45 @@ const JobOfferWorkflow = () => {
               </>
             )}
             example={(
-              <p>
-                If one role increases take-home by 18,000 per month but rent and fixed costs rise by 12,000 after a move,
-                the practical gain is much smaller than the offer headline suggests. That is exactly the kind of mismatch
-                this workflow is designed to expose.
-              </p>
+              <>
+                <p>
+                  If one role increases take-home by 18,000 per month but rent and fixed costs rise by 12,000 after a move,
+                  the practical gain is much smaller than the offer headline suggests. That is exactly the kind of mismatch
+                  this workflow is designed to expose.
+                </p>
+                <p>
+                  The India defaults show the full anatomy. Moving from ₹8 lakh in a Tier-2 city to ₹12 lakh in a metro is
+                  a 50% raise on paper. Modeled monthly in-hand rises from about ₹63,060 to ₹92,979 — a gain of ₹29,919,
+                  meaningfully less than the headline because tax on the new package more than triples. Then the location
+                  adjustment does its work: the Tier-2 salary was stretching further (the model prices that city at 82%
+                  of metro costs), so in like-for-like purchasing power the improvement is roughly ₹16,000 a month.
+                  Still a clear &ldquo;accept&rdquo; on these inputs — the surplus after ₹35,000 of fixed costs is
+                  healthy — but the negotiation should be anchored on ₹16,000, not on &ldquo;50%&rdquo;.
+                </p>
+                <p>
+                  Try the reversal too: the same switch with the cities swapped often produces a startlingly good real
+                  gain, which is why remote roles and Tier-2 relocations at modest raises can beat metro offers with
+                  bigger numbers on them.
+                </p>
+              </>
             )}
             formula={(
-              <p>
-                Core flow: estimate monthly net pay after modeled tax, employee contribution, and local charges; adjust the
-                output by cost-of-living assumptions; subtract fixed expenses; then translate the remaining surplus into a
-                simple recommendation and allocation plan.
-              </p>
+              <>
+                <p>
+                  Core flow: estimate monthly net pay after modeled tax, employee contribution, and local charges; adjust the
+                  output by cost-of-living assumptions; subtract fixed expenses; then translate the remaining surplus into a
+                  simple recommendation and allocation plan.
+                </p>
+                <p>
+                  The recommendation tiers are deliberately blunt. A negative in-hand change says do not switch on money
+                  grounds at all. A positive change with a thin cost-adjusted gain says negotiate — you are being paid in
+                  headline, not in purchasing power. A good real gain with tight leftover surplus flags budget risk
+                  before you commit to the new city&rsquo;s rents. Only when both the real gain and the monthly surplus
+                  clear their thresholds does the workflow say accept outright — and then the allocation plan puts the
+                  new surplus to work across investing, emergency buffer, and debt according to your risk profile,
+                  because the first three months after a raise are when lifestyle inflation locks in.
+                </p>
+              </>
             )}
             faqItems={faqItems}
             relatedLinks={[

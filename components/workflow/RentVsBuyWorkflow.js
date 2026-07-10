@@ -149,6 +149,14 @@ const RentVsBuyWorkflow = () => {
     {
       question: 'What if buying is cheaper on paper but my monthly buffer looks weak?',
       answer: 'That usually means buying may still be financially stressful despite a long-run advantage. Monthly resilience still matters.'
+    },
+    {
+      question: 'How is this workflow different from the buy vs rent calculator?',
+      answer: 'The calculator answers one question — which path is cheaper over time. This workflow layers two more on top: whether the buy path fits your monthly budget with a safety buffer intact, and whether your planned stay is long enough to recover the one-time entry costs it charges (stamp duty, registration, brokerage). That is why the workflow can tell you to rent even when the calculator says buying wins — both answers are correct, at different altitudes.'
+    },
+    {
+      question: 'Why does planned stay duration dominate the outcome?',
+      answer: 'Because buying front-loads costs that only time can amortize. The down payment stops earning elsewhere immediately, closing costs are sunk on day one, and early EMIs are mostly interest rather than equity. Every additional year spreads those fixed costs thinner while rent keeps escalating — which is why the same inputs can flip from “renting fits better” to “buying looks stronger” purely by changing how long you expect to stay.'
     }
   ];
 
@@ -579,17 +587,45 @@ const RentVsBuyWorkflow = () => {
               </>
             )}
             example={(
-              <p>
-                A household may find that buying beats renting after year seven, but if the expected stay is only four years
-                or the buy path leaves too little monthly buffer, renting can still be the safer decision today.
-              </p>
+              <>
+                <p>
+                  A household may find that buying beats renting after year seven, but if the expected stay is only four years
+                  or the buy path leaves too little monthly buffer, renting can still be the safer decision today.
+                </p>
+                <p>
+                  The India defaults show the workflow&rsquo;s most instructive verdict: buying wins the wealth math and
+                  still gets told to wait. On a ₹1 crore home with 20% down at 8.5% over 20 years, the long-run
+                  comparison favors buying — effective cost breaks even with renting in year 6, comfortably inside the
+                  8-year planned stay, and by year 8 the buy path&rsquo;s cost net of equity is around ₹29.8 lakh against
+                  ₹41.6 lakh of cumulative rent. Yet the verdict is &ldquo;rent for now,&rdquo; because the monthly side
+                  fails: EMI of ₹69,426 plus ownership overhead makes roughly ₹81,900 of housing spend on a ₹1.5 lakh
+                  income, blowing through the 35% comfort budget of ₹52,500 by nearly ₹29,400 a month.
+                </p>
+                <p>
+                  That tension is the point. A pure cost comparison says buy; a cash-flow check says this particular buyer
+                  would spend eight years house-poor to capture that gain. The workflow surfaces both numbers and lets
+                  the stricter one make the call — the wealth math only counts if you can breathe while it compounds.
+                </p>
+              </>
             )}
             formula={(
-              <p>
-                Core flow: estimate total buy outflow using EMI, down payment, closing costs, and ownership overhead; compare
-                it with cumulative rent outflow; subtract built home equity to estimate effective buy cost; then evaluate the
-                result against planned stay and monthly buffer protection.
-              </p>
+              <>
+                <p>
+                  Core flow: estimate total buy outflow using EMI, down payment, closing costs, and ownership overhead; compare
+                  it with cumulative rent outflow; subtract built home equity to estimate effective buy cost; then evaluate the
+                  result against planned stay and monthly buffer protection.
+                </p>
+                <p>
+                  Unlike a simple calculator, the workflow charges the buy path its one-time entry costs — stamp duty,
+                  registration, and brokerage are modeled as a region-appropriate percentage of the price (7% in India,
+                  ₹7 lakh on the default home), which is cash that renting never spends and that short stays never
+                  recover. The decision then runs three gates in order: if buying breaks the monthly comfort budget or
+                  the safety buffer, rent for now regardless of long-run math; if the effective-cost break-even lands
+                  within your planned stay, buying is stronger; otherwise renting fits better for this stretch. Stay
+                  duration is deliberately the tiebreaker rather than an afterthought — it is the input most people can
+                  actually control.
+                </p>
+              </>
             )}
             faqItems={faqItems}
             relatedLinks={[

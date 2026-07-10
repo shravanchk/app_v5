@@ -157,6 +157,18 @@ const HomeLoanReadinessWorkflow = () => {
     {
       question: 'Why does tenure sensitivity matter?',
       answer: 'A longer tenure can reduce EMI pressure but usually increases total interest. You need both the monthly view and the cost-over-time view.'
+    },
+    {
+      question: 'The bank offered me a bigger loan than this workflow says is safe. Who is right?',
+      answer: 'You are asking different questions. The lender assesses whether you can repay them — often approving housing ratios well above what leaves a household comfortable. This workflow assesses whether you can repay them and still absorb a car repair, a fee hike, and a bad month, which is why its caps are deliberately tighter. When the two disagree, the disagreement itself is the information.'
+    },
+    {
+      question: 'What should I do with an “almost ready” verdict?',
+      answer: 'Treat it as a shopping-phase answer, not a rejection. The gap shown is monthly and specific: a somewhat larger down payment, a slightly cheaper property, or a modest tenure extension each close it. Run the tenure table and the down-payment number before assuming you need a higher income — most near-misses are solved on the property side, not the salary side.'
+    },
+    {
+      question: 'Why does the safe EMI get reduced by an overhead percentage?',
+      answer: 'Because the EMI is not the cost of owning — it is the cost of borrowing. Maintenance, property tax, society or HOA charges, and insurance land on the same monthly budget, so the workflow reserves a region-appropriate slice of your housing capacity for them before sizing the loan. Skipping this step is how buyers end up house-poor on paper-affordable EMIs.'
     }
   ];
 
@@ -463,18 +475,46 @@ const HomeLoanReadinessWorkflow = () => {
               </>
             )}
             example={(
-              <p>
-                If your in-hand income is strong but fixed commitments are already high, the workflow may still show that
-                the target property is not comfortably affordable. In that case the issue is not income alone, but the
-                remaining room after existing obligations and ownership overhead.
-              </p>
+              <>
+                <p>
+                  If your in-hand income is strong but fixed commitments are already high, the workflow may still show that
+                  the target property is not comfortably affordable. In that case the issue is not income alone, but the
+                  remaining room after existing obligations and ownership overhead.
+                </p>
+                <p>
+                  The India defaults are a deliberately realistic near-miss. On ₹1,00,000 monthly in-hand with ₹40,000 of
+                  fixed expenses and a ₹7,000 existing EMI, the balanced profile caps safe housing spend at ₹33,000 a
+                  month — the 40% income ratio binds before the buffer rule does. After setting aside the 5% ownership
+                  overhead, that funds a safe EMI of about ₹31,429, which at 8.5% over 20 years services a ₹36.2 lakh
+                  loan. Add the ₹15 lakh down payment and the comfortable property budget is roughly ₹51 lakh — but the
+                  target is ₹70 lakh. That property needs a ₹55 lakh loan with a ₹47,730 EMI, leaving ₹2,883 a month
+                  after everything. The verdict: not ready yet, short by about ₹18.8 lakh of loan headroom.
+                </p>
+                <p>
+                  What makes the workflow useful is that the gap is specific. ₹18.8 lakh more down payment closes it; so
+                  does a target closer to ₹51 lakh; the tenure table shows how much (and how little) stretching to 25 or
+                  30 years buys. A lender, checking income ratios alone, might well approve this loan — which is
+                  precisely the difference between approval and affordability this page exists to show.
+                </p>
+              </>
             )}
             formula={(
-              <p>
-                Core flow: estimate disposable income after fixed expenses and existing debt, cap housing exposure using
-                a profile-based affordability ratio, adjust for ownership overhead, then compare that safe payment against
-                the payment required for the selected property, rate, and tenure.
-              </p>
+              <>
+                <p>
+                  Core flow: estimate disposable income after fixed expenses and existing debt, cap housing exposure using
+                  a profile-based affordability ratio, adjust for ownership overhead, then compare that safe payment against
+                  the payment required for the selected property, rate, and tenure.
+                </p>
+                <p>
+                  Two guardrails run in parallel and the stricter one wins: a cap on housing payments as a share of income
+                  (35–45% depending on risk profile), and a rule that preserves a slice of your current disposable income
+                  as breathing room (10–30%, again by profile). The ownership overhead is added on top of the EMI because
+                  maintenance, property tax, and insurance arrive whether or not the spreadsheet included them. The
+                  readiness verdict then requires both conditions — the loan fits within safe capacity <em>and</em> the
+                  month-end leftover clears a minimum buffer — before it says proceed; &ldquo;almost ready&rdquo; means
+                  the monthly gap is small enough that a modest down-payment increase or price adjustment closes it.
+                </p>
+              </>
             )}
             faqItems={faqItems}
             relatedLinks={[

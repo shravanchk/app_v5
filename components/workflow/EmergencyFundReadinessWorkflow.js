@@ -91,11 +91,23 @@ const EmergencyFundReadinessWorkflow = () => {
     },
     {
       question: 'Where should an emergency fund be kept?',
-      answer: 'Emergency funds are usually strongest in high-liquidity, low-volatility instruments rather than long-lock investments.'
+      answer: 'Emergency funds are usually strongest in high-liquidity, low-volatility instruments rather than long-lock investments. The test is simple: could you access most of it within a day or two, without a penalty and without selling something at a loss? Instruments that fail that test — equity funds, long-lock deposits, property — can be excellent investments while being poor emergency vehicles. It is also worth keeping the fund in a separate account from daily spending, purely so it stays psychologically off-limits.'
     },
     {
       question: 'Should I invest or prepay debt before building emergency savings?',
       answer: 'In most cases, a thin emergency buffer increases risk. Build a basic safety layer first, then optimize debt or investing decisions.'
+    },
+    {
+      question: 'Why does the workflow cap the target at 12 months?',
+      answer: 'Beyond roughly a year of expenses, additional cash stops buying meaningful safety and starts costing real returns — money parked in liquid instruments lags what long-term investments earn. If your risk factors push the raw target past the cap, the better response is usually addressing the risk itself (insurance, income diversification) rather than hoarding more cash.'
+    },
+    {
+      question: 'What counts as “monthly essentials”?',
+      answer: 'The number you could not avoid spending in a bad month: rent or EMI, groceries, utilities, insurance premiums, school fees, minimum debt payments, and transport. It deliberately excludes discretionary spending — an emergency budget is not your normal budget. Most people find their essentials are 60–75% of what they actually spend, which meaningfully shrinks the target corpus.'
+    },
+    {
+      question: 'Why does the recommended contribution change as my fund grows?',
+      answer: 'The workflow allocates your surplus in phases: 80% of surplus while coverage is under three months (the danger zone), 65% while you are between three months and your target, and 35% for topping up beyond it. The idea is to front-load safety when you are most exposed and release money back toward investing as the buffer matures.'
     }
   ];
 
@@ -421,20 +433,47 @@ const EmergencyFundReadinessWorkflow = () => {
                 <p>
                   This workflow converts those risk factors into a clearer runway target and a practical monthly funding plan.
                 </p>
+                <p>
+                  The popular &ldquo;six months of expenses&rdquo; rule is a median dressed up as advice. Six months is
+                  generous for a dual-income salaried couple with good health insurance, and dangerously thin for a
+                  self-employed single earner supporting parents. The interesting question is never the average — it is
+                  which side of it your household sits on, and each step in this workflow exists to answer exactly that.
+                </p>
               </>
             )}
             example={(
-              <p>
-                Two households with the same monthly expenses can need very different buffers. A salaried dual-income
-                household with insurance needs less runway than a variable-income single-earner household supporting dependents.
-              </p>
+              <>
+                <p>
+                  Two households with the same monthly expenses can need very different buffers. A salaried dual-income
+                  household with insurance needs less runway than a variable-income single-earner household supporting dependents.
+                </p>
+                <p>
+                  Trace the default inputs to see the mechanics. Monthly essentials of ₹45,000 with a salaried job at
+                  medium market risk, health insurance in place, a second household income, and one dependent lands on a
+                  target of 6 months — ₹2,70,000. An existing fund of ₹1,20,000 covers 2.7 months, which is below the
+                  three-month danger line, so the plan allocates 80% of the ₹30,000 monthly surplus — ₹24,000 — and closes
+                  the ₹1,50,000 gap in about 7 months. Flip two answers — self-employed instead of salaried, no health
+                  insurance — and the same expenses demand a materially longer runway; the workflow recomputes the whole
+                  plan instantly.
+                </p>
+              </>
             )}
             formula={(
-              <p>
-                Core flow: start from monthly essentials, adjust target months using job risk, income stability, insurance,
-                household structure, and dependents, then compare the target corpus with current liquid reserves to estimate
-                gap and timeline to target.
-              </p>
+              <>
+                <p>
+                  Core flow: start from monthly essentials, adjust target months using job risk, income stability, insurance,
+                  household structure, and dependents, then compare the target corpus with current liquid reserves to estimate
+                  gap and timeline to target.
+                </p>
+                <p>
+                  The target begins at a four-month base and moves with each risk answer — higher for volatile income,
+                  layoff-prone industries, single-income households, and dependents; lower when health insurance already
+                  absorbs the most common financial shock. The result is clamped between 3 and 12 months: never less
+                  than a quarter of runway, never more than a year of idle cash. The funding plan then splits your
+                  surplus by phase — aggressive while coverage is critical, moderate while building, light once the
+                  target is met — so the recommendation stays realistic instead of demanding your entire surplus forever.
+                </p>
+              </>
             )}
             faqItems={faqItems}
             relatedLinks={[
