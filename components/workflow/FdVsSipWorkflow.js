@@ -12,115 +12,46 @@ import { WorkflowSteps, HowToNote, DecisionBanner, ActionList } from '../workflo
 import { buildBreadcrumbSchema } from '../../utils/schema';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 
-// FY 2026-27 equity taxation, kept in sync with CapitalGainsCalculator:
-// Section 112A LTCG 12.5% above the ₹1.25 lakh annual exemption,
-// Section 111A STCG 20%, plus 4% health and education cess on the tax.
-const LTCG_RATE = 0.125;
-const LTCG_EXEMPTION = 125000;
-const STCG_RATE = 0.2;
-const CESS = 1.04;
+const {
+  depositOutcome,
+  investmentOutcome,
+  depositVsInvestmentVerdict
+} = require('../../utils/engines/depositVsInvestment');
+const { marketIN, formatCurrencyIN } = require('../../utils/markets/in');
 
-const formatCurrency = (amount) =>
-  new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0
-  }).format(amount);
+const formatCurrency = formatCurrencyIN;
 
-// Banks credit FD/RD interest quarterly; convert the card rate to an effective annual yield.
-const fdEffectiveAnnual = (cardRate) => Math.pow(1 + cardRate / 100 / 4, 4) - 1;
-
-const annualToMonthly = (annualYield) => Math.pow(1 + annualYield, 1 / 12) - 1;
-
-// Ordinary annuity: deposits at the end of each month.
-const fvMonthly = (amount, monthlyRate, months) => {
-  if (amount <= 0 || months <= 0) return 0;
-  if (monthlyRate === 0) return amount * months;
-  return amount * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
-};
-
-const fdOutcome = ({ mode, amount, years, fdRate, slabRate }) => {
-  const months = Math.max(1, Math.round(years * 12));
-  const grossYield = fdEffectiveAnnual(fdRate);
-  // Interest is taxed at slab rate (plus cess) on accrual every year, so the
-  // post-tax path compounds at a reduced yield rather than taking one hit at maturity.
-  const netYield = grossYield * (1 - (slabRate / 100) * CESS);
-
-  const contributions = mode === 'monthly' ? amount * months : amount;
-  const preTax =
-    mode === 'monthly'
-      ? fvMonthly(amount, annualToMonthly(grossYield), months)
-      : amount * Math.pow(1 + grossYield, years);
-  const postTax =
-    mode === 'monthly'
-      ? fvMonthly(amount, annualToMonthly(netYield), months)
-      : amount * Math.pow(1 + netYield, years);
-
-  return {
-    contributions,
-    preTax,
-    postTax,
-    tax: Math.max(0, preTax - postTax),
-    grossYield,
-    netYield
-  };
-};
-
-const sipOutcome = ({ mode, amount, years, expectedReturn }) => {
-  const months = Math.max(1, Math.round(years * 12));
-  const contributions = mode === 'monthly' ? amount * months : amount;
-  const preTax =
-    mode === 'monthly'
-      ? fvMonthly(amount, expectedReturn / 100 / 12, months)
-      : amount * Math.pow(1 + expectedReturn / 100, years);
-
-  const gains = Math.max(0, preTax - contributions);
-  const isLongTerm = years >= 1;
-  const taxableGain = isLongTerm ? Math.max(0, gains - LTCG_EXEMPTION) : gains;
-  const tax = taxableGain * (isLongTerm ? LTCG_RATE : STCG_RATE) * CESS;
-
-  return {
-    contributions,
-    preTax,
-    gains,
-    tax,
-    postTax: preTax - tax,
-    isLongTerm
-  };
-};
-
-const recommendationFor = ({ fdPost, sipPost, years }) => {
-  const sipEdge = fdPost > 0 ? sipPost / fdPost - 1 : 0;
-
-  if (years <= 3 && sipPost > fdPost) {
-    return {
-      label: 'FD is the safer pick for this horizon',
-      tone: 'warning',
-      reason: `The SIP path projects ${(sipEdge * 100).toFixed(1)}% more on paper, but at three years or less a single market drawdown can erase that edge. Equity needs time; guaranteed FD interest does not.`
-    };
-  }
-
-  if (fdPost >= sipPost) {
-    return {
-      label: 'FD comes out ahead after tax',
-      tone: 'positive',
-      reason: 'With your return and slab assumptions, the guaranteed FD path beats the projected SIP path even before considering market risk. There is no reason to take equity risk for a lower expected outcome.'
-    };
-  }
-
-  if (sipEdge > 0.15 && years >= 5) {
-    return {
-      label: 'SIP has a clear post-tax edge',
-      tone: 'info',
-      reason: `The SIP path projects ${(sipEdge * 100).toFixed(1)}% more after tax over this horizon. Capital-gains treatment plus the ₹1.25 lakh exemption compounds in its favour — provided you can hold through downturns.`
-    };
-  }
-
-  return {
+// India-specific copy for each verdict code produced by the engine.
+const recommendationCopy = {
+  'deposit-short-horizon': (sipEdge) => ({
+    label: 'FD is the safer pick for this horizon',
+    tone: 'warning',
+    reason: `The SIP path projects ${(sipEdge * 100).toFixed(1)}% more on paper, but at three years or less a single market drawdown can erase that edge. Equity needs time; guaranteed FD interest does not.`
+  }),
+  'deposit-wins': () => ({
+    label: 'FD comes out ahead after tax',
+    tone: 'positive',
+    reason: 'With your return and slab assumptions, the guaranteed FD path beats the projected SIP path even before considering market risk. There is no reason to take equity risk for a lower expected outcome.'
+  }),
+  'investment-clear-edge': (sipEdge) => ({
+    label: 'SIP has a clear post-tax edge',
+    tone: 'info',
+    reason: `The SIP path projects ${(sipEdge * 100).toFixed(1)}% more after tax over this horizon. Capital-gains treatment plus the ₹1.25 lakh exemption compounds in its favour — provided you can hold through downturns.`
+  }),
+  hybrid: () => ({
     label: 'Use a hybrid split',
     tone: 'warning',
     reason: 'The post-tax outcomes are close. Splitting between an FD (certainty) and a SIP (growth) balances both — and lets you raise the equity share as your comfort grows.'
-  };
+  })
+};
+
+const recommendationFor = ({ fdPost, sipPost, years }) => {
+  const { code, investEdge } = depositVsInvestmentVerdict({
+    depositPost: fdPost,
+    investPost: sipPost,
+    years
+  });
+  return recommendationCopy[code](investEdge);
 };
 
 const FdVsSipWorkflow = () => {
@@ -185,8 +116,14 @@ const FdVsSipWorkflow = () => {
       slabRate: Number(inputs.slabRate) || 0
     };
 
-    const fd = fdOutcome(parsed);
-    const sip = sipOutcome(parsed);
+    const fd = depositOutcome(
+      { mode: parsed.mode, amount: parsed.amount, years: parsed.years, ratePct: parsed.fdRate, marginalRatePct: parsed.slabRate },
+      marketIN
+    );
+    const sip = investmentOutcome(
+      { mode: parsed.mode, amount: parsed.amount, years: parsed.years, expectedReturnPct: parsed.expectedReturn },
+      marketIN
+    );
     const recommendation = recommendationFor({ fdPost: fd.postTax, sipPost: sip.postTax, years: parsed.years });
 
     return {

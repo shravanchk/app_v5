@@ -12,44 +12,8 @@ import { WorkflowSteps, HowToNote, DecisionBanner, ActionList } from '../workflo
 import { buildBreadcrumbSchema } from '../../utils/schema';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 
-const regionSettings = {
-  india: {
-    label: 'India',
-    locale: 'en-IN',
-    currency: 'INR',
-    defaults: {
-      outstandingLoan: 3500000,
-      annualLoanRate: 8.5,
-      remainingYears: 15,
-      monthlySurplus: 25000,
-      expectedReturn: 11
-    }
-  },
-  us: {
-    label: 'United States',
-    locale: 'en-US',
-    currency: 'USD',
-    defaults: {
-      outstandingLoan: 260000,
-      annualLoanRate: 6.6,
-      remainingYears: 20,
-      monthlySurplus: 500,
-      expectedReturn: 8
-    }
-  },
-  eu: {
-    label: 'EU/UK (Generic)',
-    locale: 'en-IE',
-    currency: 'EUR',
-    defaults: {
-      outstandingLoan: 220000,
-      annualLoanRate: 4.8,
-      remainingYears: 20,
-      monthlySurplus: 400,
-      expectedReturn: 7
-    }
-  }
-};
+const { markets, formatCurrencyFor } = require('../../utils/markets');
+const { comparePrepayVsInvest, prepayVsInvestVerdict } = require('../../utils/engines/prepayVsInvest');
 
 const riskHaircut = {
   conservative: 2,
@@ -58,7 +22,7 @@ const riskHaircut = {
 };
 
 const getRegionDefaults = (regionKey) => {
-  const defaults = regionSettings[regionKey]?.defaults;
+  const defaults = markets[regionKey]?.prepayVsInvestDefaults;
   return {
     outstandingLoan: defaults?.outstandingLoan ?? 0,
     annualLoanRate: defaults?.annualLoanRate ?? 0,
@@ -68,79 +32,25 @@ const getRegionDefaults = (regionKey) => {
   };
 };
 
-const formatCurrency = (amount, regionConfig) =>
-  new Intl.NumberFormat(regionConfig.locale, {
-    style: 'currency',
-    currency: regionConfig.currency,
-    maximumFractionDigits: 0
-  }).format(amount);
-
-const emiForLoan = (principal, annualRate, months) => {
-  if (principal <= 0 || months <= 0) return 0;
-  const monthlyRate = annualRate / 100 / 12;
-  if (monthlyRate === 0) return principal / months;
-  const growth = Math.pow(1 + monthlyRate, months);
-  return (principal * monthlyRate * growth) / (growth - 1);
-};
-
-const futureValueOfMonthly = (amount, annualRate, months) => {
-  if (amount <= 0 || months <= 0) return 0;
-  const monthlyRate = annualRate / 100 / 12;
-  if (monthlyRate === 0) return amount * months;
-  return amount * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
-};
-
-const simulateLoan = (principal, annualRate, baselineEmi, extraPayment = 0, maxMonths = 0) => {
-  const monthlyRate = annualRate / 100 / 12;
-  let outstanding = principal;
-  let monthsUsed = 0;
-  let totalInterest = 0;
-
-  while (outstanding > 0.01 && monthsUsed < maxMonths + 240) {
-    const interest = outstanding * monthlyRate;
-    const payable = outstanding + interest;
-    const payment = Math.min(payable, baselineEmi + extraPayment);
-    const principalPaid = Math.max(0, payment - interest);
-
-    outstanding = Math.max(0, outstanding - principalPaid);
-    totalInterest += interest;
-    monthsUsed += 1;
-
-    if (maxMonths > 0 && monthsUsed >= maxMonths && extraPayment === 0) {
-      break;
-    }
-  }
-
-  return {
-    monthsUsed,
-    totalInterest,
-    outstanding
-  };
-};
-
-const recommendationFor = ({ prepayCorpus, investCorpus, loanRate, adjustedReturn }) => {
-  if (prepayCorpus > investCorpus * 1.1 || loanRate - adjustedReturn >= 2) {
-    return {
-      label: 'Prepay first, then invest',
-      tone: 'positive',
-      reason: 'Your debt cost is high relative to expected risk-adjusted return. Reducing guaranteed interest drag is stronger.'
-    };
-  }
-
-  if (investCorpus > prepayCorpus * 1.1 && adjustedReturn > loanRate) {
-    return {
-      label: 'Invest surplus first',
-      tone: 'info',
-      reason: 'Expected risk-adjusted portfolio growth is stronger than loan-cost savings in this setup.'
-    };
-  }
-
-  return {
+const recommendationCopy = {
+  'prepay-first': {
+    label: 'Prepay first, then invest',
+    tone: 'positive',
+    reason: 'Your debt cost is high relative to expected risk-adjusted return. Reducing guaranteed interest drag is stronger.'
+  },
+  'invest-first': {
+    label: 'Invest surplus first',
+    tone: 'info',
+    reason: 'Expected risk-adjusted portfolio growth is stronger than loan-cost savings in this setup.'
+  },
+  hybrid: {
     label: 'Use a hybrid split',
     tone: 'warning',
     reason: 'Both options are close. Split surplus between loan prepayment and disciplined investing to balance certainty and growth.'
-  };
+  }
 };
+
+const recommendationFor = (verdictInputs) => recommendationCopy[prepayVsInvestVerdict(verdictInputs).code];
 
 const PrepayVsInvestWorkflow = () => {
   const [step, setStep] = useState(1);
@@ -151,9 +61,9 @@ const PrepayVsInvestWorkflow = () => {
     riskProfile: 'balanced'
   });
 
-  const regionConfig = regionSettings[inputs.region];
+  const regionConfig = markets[inputs.region];
   const set = (field, value) => setInputs((prev) => ({ ...prev, [field]: value }));
-  const fmt = (value) => formatCurrency(value, regionConfig);
+  const fmt = formatCurrencyFor(regionConfig);
 
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', item: 'https://upaman.com/' },
@@ -182,25 +92,17 @@ const PrepayVsInvestWorkflow = () => {
     const expectedReturn = Math.max(0, Number(inputs.expectedReturn) || 0);
     const adjustedReturn = Math.max(0, expectedReturn - riskHaircut[inputs.riskProfile]);
 
-    const baselineEmi = emiForLoan(outstandingLoan, annualLoanRate, remainingMonths);
-    const baseline = simulateLoan(outstandingLoan, annualLoanRate, baselineEmi, 0, remainingMonths);
-    const prepay = simulateLoan(outstandingLoan, annualLoanRate, baselineEmi, monthlySurplus, 0);
-
-    const monthsSaved = Math.max(0, baseline.monthsUsed - prepay.monthsUsed);
-    const interestSaved = Math.max(0, baseline.totalInterest - prepay.totalInterest);
-    const postCloseMonths = Math.max(0, remainingMonths - prepay.monthsUsed);
-
-    const investOnlyCorpus = futureValueOfMonthly(monthlySurplus, adjustedReturn, remainingMonths);
-    const prepayThenInvestCorpus = futureValueOfMonthly(
-      Math.max(0, baselineEmi + monthlySurplus),
-      adjustedReturn,
-      postCloseMonths
-    );
-    const corpusDelta = prepayThenInvestCorpus - investOnlyCorpus;
+    const comparison = comparePrepayVsInvest({
+      outstandingLoan,
+      annualLoanRate,
+      remainingMonths,
+      monthlySurplus,
+      adjustedReturn
+    });
 
     const recommendation = recommendationFor({
-      prepayCorpus: prepayThenInvestCorpus,
-      investCorpus: investOnlyCorpus,
+      prepayCorpus: comparison.prepayThenInvestCorpus,
+      investCorpus: comparison.investOnlyCorpus,
       loanRate: annualLoanRate,
       adjustedReturn
     });
@@ -212,15 +114,7 @@ const PrepayVsInvestWorkflow = () => {
       monthlySurplus,
       expectedReturn,
       adjustedReturn,
-      baselineEmi,
-      baselineInterest: baseline.totalInterest,
-      prepayInterest: prepay.totalInterest,
-      monthsSaved,
-      interestSaved,
-      postCloseMonths,
-      investOnlyCorpus,
-      prepayThenInvestCorpus,
-      corpusDelta,
+      ...comparison,
       recommendation
     };
   }, [inputs]);
@@ -268,11 +162,7 @@ const PrepayVsInvestWorkflow = () => {
                   label="Region"
                   value={inputs.region}
                   onChange={(v) => setInputs((prev) => ({ ...prev, region: v, ...getRegionDefaults(v) }))}
-                  options={[
-                    { value: 'india', label: 'India' },
-                    { value: 'us', label: 'United States' },
-                    { value: 'eu', label: 'EU/UK (Generic)' }
-                  ]}
+                  options={Object.entries(markets).map(([value, market]) => ({ value, label: market.label }))}
                 />
                 <NumberField
                   id="pi-loan"
