@@ -88,7 +88,10 @@ const SalaryCalculator = () => {
   const comparisonShareLines = comparisonResult ? [`Current salary: ${formatCurrency(comparisonResult.currentSalary)}`, `New offer: ${formatCurrency(comparisonResult.newSalary)}`, `Nominal change: ${comparisonResult.percentageIncrease.toFixed(1)}%`, `Cost-adjusted change: ${comparisonResult.realPercentageIncrease.toFixed(1)}%`] : [];
 
   const seoFaqItems = [
-    { question: 'How do I estimate 15 LPA or 20 LPA in-hand salary?', answer: 'Enter your annual CTC and review monthly take-home after modeled deductions. Use city and PF settings to approximate your specific payroll context.' },
+    { question: 'How do I estimate 15 LPA or 20 LPA in-hand salary?', answer: 'Enter your annual CTC and review monthly take-home after modeled deductions. Use city and PF settings to approximate your specific payroll context. Under this model’s default metro structure, ₹15 lakh CTC works out to about ₹1,05,940 a month in hand and ₹20 lakh to about ₹1,33,312.' },
+    { question: 'Why does the take-home percentage fall as CTC rises?', answer: 'Progressive tax. At ₹12 lakh CTC the model shows an 86.8% take-home ratio because income tax is zero after the new-regime rebate; at ₹15 lakh it is 84.8%, and at ₹20 lakh it is 80.0% as slab tax scales up. PF and professional tax grow roughly in proportion to salary, so the widening gap is almost entirely tax.' },
+    { question: 'Where does the rest of my CTC go if it never reaches my bank account?', answer: 'Into employer-side contributions that are part of CTC but not part of gross salary: the employer’s PF match and the gratuity provision. On ₹12 lakh CTC the model books about ₹90,774 a year there. It is not money lost — PF compounds in your name and gratuity pays out after qualifying service — but it explains most of the standing gap between CTC ÷ 12 and your payslip.' },
+    { question: 'Why does the calculator show zero income tax at ₹12 lakh CTC?', answer: 'After the component split, employee PF, and the new-regime standard deduction, taxable income lands in the Section 87A rebate zone for FY 2026-27, so computed tax is cancelled in full. The deductions you still see at that level are PF and professional tax, not income tax. See the linked guide on ₹12 lakh salary for the full walkthrough.' },
     { question: 'Why can in-hand salary differ from this calculator?', answer: 'Actual payroll depends on employer structure, allowance policy, tax declarations, and state-specific deductions. Treat outputs as planning estimates.' },
     { question: 'Can I compare two job offers here?', answer: 'Yes. Use the comparison tab to evaluate nominal and cost-adjusted salary difference between two offers and city contexts.' },
   ];
@@ -230,8 +233,38 @@ const SalaryCalculator = () => {
           />
           <SearchLandingSections
             intro={(<><p>Salary decisions are among the highest-impact financial choices for most professionals, especially during job switches. A useful CTC to in-hand salary calculator should do more than just one net number. It should show deduction components, monthly cash flow impact, and salary-comparison context. This page is structured for that decision workflow.</p><p>Use it to estimate take-home from annual CTC, compare offers across city contexts, and review how deduction assumptions influence your real monthly spending capacity.</p></>)}
-            example={(<p>Suppose your offer is ₹15,00,000 CTC in a metro city with standard PF setup. Enter values, then review monthly in-hand and annual take-home. Next, compare with an alternate ₹17,00,000 offer in a different city. The comparison panel highlights nominal raise vs cost-adjusted raise, which is often more useful for final negotiation decisions.</p>)}
-            formula={(<p>The model uses component-split estimation for basic, HRA, and allowances, then applies deduction roll-up (PF, tax assumptions, and selected statutory fields) to estimate net annual and monthly salary. Offer comparison mode additionally normalizes outcomes using city cost multipliers for practical purchasing-power context.</p>)}
+            example={(
+              <>
+                <p>
+                  Walk through the default: ₹12,00,000 CTC in a metro with the standard 12% PF setup. The model splits
+                  that into ₹5,40,000 basic, ₹2,70,000 HRA, and ₹2,99,226 special allowance, with the employer&rsquo;s PF
+                  match and gratuity provision absorbing the rest of the CTC. Deductions from gross are modest at this
+                  level — ₹64,800 of employee PF and ₹2,500 professional tax, with income tax at zero thanks to the
+                  new-regime rebate — leaving about ₹86,827 a month in hand, an 86.8% take-home ratio.
+                </p>
+                <p>
+                  Step the same structure up and watch tax take over: ₹15 lakh CTC yields roughly ₹1,05,940 a month
+                  (84.8% of CTC) with ₹31,754 of annual income tax, while ₹20 lakh yields about ₹1,33,312 a month
+                  (80.0%) with ₹1,38,468 of tax. The pattern is worth internalizing before any negotiation: each
+                  additional lakh of CTC delivers progressively less than the last one to your bank account, so a raise
+                  quoted in CTC terms always sounds bigger than it spends.
+                </p>
+              </>
+            )}
+            formula={(
+              <>
+                <p>The model uses component-split estimation for basic, HRA, and allowances, then applies deduction roll-up (PF, tax assumptions, and selected statutory fields) to estimate net annual and monthly salary. Offer comparison mode additionally normalizes outcomes using city cost multipliers for practical purchasing-power context.</p>
+                <p>
+                  The split assumptions are deliberately typical rather than universal: basic is modeled at 45% of CTC,
+                  HRA at half of basic, employee PF at your chosen percentage of basic (matched by the employer inside
+                  CTC), and the gratuity provision at 4.81% of basic — the standard actuarial rate payroll teams use.
+                  Income tax is computed on the FY 2026-27 new regime through the same engine as the income-tax
+                  calculator, including the standard deduction, rebate, and cess. If your offer letter shows a different
+                  basic percentage or a flexible-benefits bucket, expect your payslip to differ from this estimate in
+                  the same direction — the structure, not the arithmetic, is where real offers diverge.
+                </p>
+              </>
+            )}
             faqItems={seoFaqItems}
             relatedLinks={[{ label: 'Income Tax Calculator (India)', href: '/income-tax-calculator' }, { label: 'Tax Regime Comparison Tool', href: '/tax-regime-comparison' }, { label: 'CTC to In-hand Salary Guide', href: '/guides/ctc-to-in-hand-salary' }]}
           />

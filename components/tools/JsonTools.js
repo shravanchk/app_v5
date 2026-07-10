@@ -1097,6 +1097,42 @@ const JsonTools = () => {
           ]}
         />
 
+        <article className="mt-10 space-y-8 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+          <section>
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">The errors Validate catches most often</h2>
+            <p className="mt-3">
+              JSON is stricter than the JavaScript object syntax it resembles, and nearly every &ldquo;invalid
+              JSON&rdquo; moment traces to one of a handful of habits. Trailing commas after the last item are legal in
+              modern JavaScript but not in JSON. Keys must be double-quoted — <span className="font-mono">name:</span>{' '}
+              fails where <span className="font-mono">&quot;name&quot;:</span> parses. Single-quoted strings, comments,{' '}
+              <span className="font-mono">undefined</span>, and <span className="font-mono">NaN</span> are all fine in a
+              JS console and all rejected here, because the JSON specification simply does not include them. When
+              Validate reports a line and column, look one character <em>earlier</em> than the position it names —
+              parsers typically fail on the first character that no longer fits, which sits just after the actual
+              mistake.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">Chaining transforms is the real workflow</h2>
+            <p className="mt-3">
+              The individual actions are ordinary; the &ldquo;use output as input&rdquo; button is what makes this a
+              studio. A CSV export from a spreadsheet becomes structured JSON in one step, flattens to dot-notation
+              paths in a second so you can grep a single field, and un-flattens back after editing. An API response
+              formats for reading, then minifies for pasting into a curl command. And when a deploy changes a config,
+              JSON Patch Diff against the old version produces an RFC 6902 operation list — a precise, machine-applicable
+              statement of <em>what changed</em>, which is often more useful in a pull request or incident note than two
+              full files side by side.
+            </p>
+            <p className="mt-3">
+              Everything runs locally in your browser, which is not just a privacy nicety — it changes what you can
+              safely paste. Payloads with bearer tokens, personally identifiable data, or internal URLs never leave your
+              machine, so the tool is usable for exactly the debugging sessions where an online formatter would be a
+              policy violation. It also means the page keeps working when your connection does not.
+            </p>
+          </section>
+        </article>
+
         <section className="mt-10" aria-label="JSON Tools frequently asked questions">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">JSON Tools FAQ</h2>
           <div className="mt-4 grid gap-3">

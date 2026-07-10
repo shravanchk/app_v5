@@ -82,6 +82,18 @@ const TaxRegimeComparisonCalculator = () => {
       answer: 'In many cases old regime performs better when eligible deductions are substantial, but exact outcome depends on income and deduction mix.'
     },
     {
+      question: 'How much in deductions do I need before the old regime wins?',
+      answer: 'More than most people expect. At a ₹15 lakh salary, this tool’s engine finds the crossover at roughly ₹5.4 lakh of combined deductions (80C, 80D, HRA exemption, and others) on top of the old regime’s standard deduction; at ₹25 lakh it is around ₹8 lakh. A full 80C plus typical 80D alone gets nowhere near that — it usually takes a large HRA exemption or home-loan interest to tip the balance.'
+    },
+    {
+      question: 'Why does the new regime show zero tax for my income?',
+      answer: 'At lower incomes the Section 87A rebate cancels the computed slab tax entirely under the new regime. For example, a ₹12 lakh salary with the new standard deduction lands in the rebate zone and shows ₹0 payable, while the same profile owes ₹80,600 under the old regime even after a full deduction bundle. The rebate is applied automatically in this comparison.'
+    },
+    {
+      question: 'Can I switch regimes every year?',
+      answer: 'Salaried taxpayers can generally choose afresh each year at filing time, so a regime choice is not permanent — re-run this comparison whenever your salary or deductions change materially. Taxpayers with business or professional income face restrictions on switching back once they opt out; confirm the current rules on incometax.gov.in before deciding.'
+    },
+    {
       question: 'Does this include cess and rebate?',
       answer: 'Yes. The calculator applies cess and basic rebate logic after slab computation for practical planning output.'
     },
@@ -186,25 +198,61 @@ const TaxRegimeComparisonCalculator = () => {
 
           <SearchLandingSections
             intro={(
-              <p>
-                Choosing between old and new tax regime is a high-value decision for salaried professionals. This tool
-                helps you compare both regimes using salary, deductions, and rebate logic so you can choose the regime
-                that minimizes annual tax outflow for your current profile.
-              </p>
+              <>
+                <p>
+                  Choosing between old and new tax regime is a high-value decision for salaried professionals. This tool
+                  helps you compare both regimes using salary, deductions, and rebate logic so you can choose the regime
+                  that minimizes annual tax outflow for your current profile.
+                </p>
+                <p>
+                  The choice is really a trade: the old regime lets you shrink taxable income with deductions — 80C
+                  investments, health insurance under 80D, HRA exemption, home-loan interest — while the new regime
+                  offers lower slab rates, a larger standard deduction, and a more generous rebate, but takes most
+                  deduction doors away. Which side wins is pure arithmetic on your specific numbers, and the answer
+                  changes at different income levels even for the same deduction habits. That is why this page asks for
+                  your actual deduction amounts instead of offering a rule of thumb.
+                </p>
+                <p>
+                  One habit worth building: run this comparison at declaration time <em>and</em> again before filing.
+                  Deductions people plan in April (a full 80C, rent receipts for HRA) do not always materialize by
+                  March, and a regime chosen on optimistic assumptions can quietly become the wrong one.
+                </p>
+              </>
             )}
             example={(
-              <p>
-                For example, with ₹18,00,000 salary and moderate deductions, the comparison can show whether old regime
-                deduction benefits outweigh simplified slab treatment in the new regime. Update deductions to test best
-                and worst-case filing scenarios before declaration deadlines.
-              </p>
+              <>
+                <p>
+                  Take the defaults: ₹15 lakh salary with ₹1.5 lakh in 80C, ₹25,000 in 80D, ₹1.2 lakh of HRA exemption,
+                  and ₹30,000 of other deductions. That is a fairly disciplined deduction profile — ₹3.75 lakh trimmed
+                  off taxable income including the standard deduction — yet the new regime still wins: ₹97,500 against
+                  ₹1,56,000, a saving of ₹58,500 a year. With no deductions at all, the gap widens to ₹1,59,900.
+                </p>
+                <p>
+                  So where is the crossover? Using this same engine, the old regime only pulls ahead at a ₹15 lakh
+                  salary once combined deductions (beyond its ₹50,000 standard deduction) exceed roughly ₹5.4 lakh —
+                  territory usually reached only with a substantial HRA exemption in a metro or large home-loan
+                  interest. At ₹25 lakh, the bar rises to around ₹8 lakh. And at ₹12 lakh, the comparison is not close:
+                  the new regime&rsquo;s rebate takes the bill to zero while the old regime, even fully loaded with the
+                  default deduction bundle, still owes ₹80,600.
+                </p>
+              </>
             )}
             formula={(
-              <p>
-                Both regimes use slab-wise marginal tax computation. Old regime applies standard deduction plus eligible
-                deduction buckets before slab tax. New regime applies its configured standard deduction and slab rates.
-                Cess and rebate checks are applied after base slab tax to derive final payable tax.
-              </p>
+              <>
+                <p>
+                  Both regimes use slab-wise marginal tax computation. Old regime applies standard deduction plus eligible
+                  deduction buckets before slab tax. New regime applies its configured standard deduction and slab rates.
+                  Cess and rebate checks are applied after base slab tax to derive final payable tax.
+                </p>
+                <p>
+                  The deduction inputs are capped where the law caps them — 80C at ₹1.5 lakh and the 80D field at the
+                  standard individual limit — so overtyping a larger number will not flatter the old regime. HRA
+                  exemption is taken as you enter it because the exempt amount depends on your rent, salary structure,
+                  and city; compute it first with the HRA calculator and paste the result here. The comparison covers
+                  salary income only — capital gains are taxed separately under their own rules regardless of regime,
+                  so they belong in the capital gains calculator, not in this salary field.
+                </p>
+              </>
             )}
             faqItems={faqItems}
             relatedLinks={relatedLinks}

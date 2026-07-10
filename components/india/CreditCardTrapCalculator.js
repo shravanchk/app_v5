@@ -144,6 +144,18 @@ const CreditCardTrapCalculator = () => {
     {
       question: 'Can this calculator replace lender statements?',
       answer: 'No. Use it for planning and habit correction. Final repayment and billing values should be validated with official card statements.'
+    },
+    {
+      question: 'Why does the payoff stretch so long when the minimum due keeps getting paid?',
+      answer: 'Because the minimum due is a percentage of the balance, it shrinks as the balance shrinks — so your repayment effort automatically decays every month. On the default ₹2.5 lakh balance, the first minimum due is ₹12,875, of which ₹7,500 is that month’s interest; only ₹5,375 touches the principal. As payments fall, the interest share stays heavy, and the simulation runs 15 years. A fixed payment breaks this decay: the same rupee amount every month means an ever-growing principal share.'
+    },
+    {
+      question: 'What if I cannot afford a large fixed payment?',
+      answer: 'The comparison is not between ₹15,000 and nothing — it is between any fixed amount and a shrinking percentage. Even holding your payment constant at the first month’s minimum due (instead of letting it decay) dramatically shortens the payoff. Pick the largest number you can sustain every single month, and raise it when income improves; the schedule table shows exactly what each level buys you.'
+    },
+    {
+      question: 'Would a balance transfer or EMI conversion be better?',
+      answer: 'Often, yes — converting revolving card debt into a fixed-tenure loan at a lower rate attacks both problems at once: the rate drops and the payment stops decaying. This calculator tells you the cost of staying put, which is the number to compare any transfer offer against. Check processing fees and the post-offer rate before switching, and validate terms with the issuer.'
     }
   ];
   const softwareSchema = buildSoftwareApplicationSchema({
@@ -356,18 +368,39 @@ const CreditCardTrapCalculator = () => {
           />
           <SearchLandingSections
             intro={(
-              <p>
-                Credit card debt grows quickly when repayments stay near minimum due. This page compares minimum-due
-                payoff vs a fixed repayment plan so you can choose a practical monthly strategy before interest costs
-                compound further.
-              </p>
+              <>
+                <p>
+                  Credit card debt grows quickly when repayments stay near minimum due. This page compares minimum-due
+                  payoff vs a fixed repayment plan so you can choose a practical monthly strategy before interest costs
+                  compound further.
+                </p>
+                <p>
+                  The trap has a precise mechanism, and it is not the interest rate alone — it is the interaction between
+                  a high rate and a <em>shrinking</em> payment. The minimum due is typically a small percentage of the
+                  outstanding balance, so as you pay the balance down, the card asks for less each month, and your
+                  repayment effort decays exactly when it should be compounding. Card interest is also far costlier than
+                  any other mainstream consumer credit: the default 36% APR here means 3% a month, so a ₹2.5 lakh balance
+                  generates ₹7,500 of interest in the very first month. Check your own statement&rsquo;s monthly rate and
+                  multiply by twelve — the number surprises most cardholders.
+                </p>
+              </>
             )}
             example={(
-              <p>
-                For a ₹2.5 lakh balance at high APR, minimum due can stretch payoff over years with heavy interest.
-                Increasing monthly payment to a fixed target shortens payoff horizon and reduces total interest. Use the
-                side-by-side result cards to set an achievable but aggressive payment plan.
-              </p>
+              <>
+                <p>
+                  Run the defaults and read the two cards side by side. A ₹2.5 lakh balance at 36% APR with a 5% minimum
+                  due takes <strong>15 years</strong> to clear on the minimum path and accumulates ₹3,40,355.73 of interest
+                  — more than the original debt. The first month explains why: the minimum due is ₹12,875, but ₹7,500 of
+                  it is interest, so only ₹5,375 reduces what you owe, and next month the card asks for slightly less.
+                </p>
+                <p>
+                  Now hold the payment fixed at ₹15,000 — barely ₹2,000 above that first minimum due — and the same debt
+                  clears in <strong>2 years</strong> with ₹1,01,801.47 of interest: ₹2,38,554 saved and 13 years of
+                  repayment avoided, from refusing to let the payment decay. Push to ₹25,000 and it is 13 months and
+                  ₹51,688.67 of interest. The lesson generalizes: against a percentage-based minimum, the constancy of your payment
+                  matters nearly as much as its size.
+                </p>
+              </>
             )}
             formula={(
               <p>

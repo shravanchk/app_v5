@@ -203,25 +203,72 @@ const BuyVsRentCalculator = () => {
 
           <SearchLandingSections
             intro={(
-              <p>
-                Buy vs rent is not just an EMI question. It is a long-term cash-flow and wealth decision that depends on
-                rent growth, property appreciation, down payment, and holding period. This calculator helps you compare
-                effective costs and identify when buying may become financially favorable.
-              </p>
+              <>
+                <p>
+                  Buy vs rent is not just an EMI question. It is a long-term cash-flow and wealth decision that depends on
+                  rent growth, property appreciation, down payment, and holding period. This calculator helps you compare
+                  effective costs and identify when buying may become financially favorable.
+                </p>
+                <p>
+                  The comparison people usually make — EMI against this month&rsquo;s rent — is the least informative
+                  version of the question. In the default scenario here, the EMI on a ₹1 crore home is ₹69,426 a month
+                  against ₹35,000 rent, which makes buying look nearly twice as expensive. But the EMI is fixed for
+                  twenty years while rent escalates: at 6% annual increases, that ₹35,000 becomes over ₹1 lakh a month
+                  by year twenty, and a year of rent grows from ₹4.2 lakh to ₹12.7 lakh. Meanwhile part of every EMI is
+                  not a cost at all — it is a transfer into your own equity. The honest comparison needs both effects,
+                  which is what the effective-cost framing below does.
+                </p>
+                <p>
+                  The other thing this calculator makes visible is how sensitive the answer is. The same home, loan, and
+                  rent produce a break-even in year 4 with 5% appreciation — and year 8 if appreciation is 3%. Nobody
+                  knows which of those the next two decades will deliver, so treat the tool as a way to find which
+                  assumption your decision hinges on, not as a verdict.
+                </p>
+              </>
             )}
             example={(
-              <p>
-                If home price is ₹1 crore with 20% down payment and rent is ₹35,000/month, you can test how different
-                rent-growth and appreciation assumptions change break-even year. This is useful before committing to
-                long-tenure home loans or deciding to keep renting.
-              </p>
+              <>
+                <p>
+                  Work through the defaults: a ₹1 crore home with 20% down means ₹20 lakh upfront and an ₹80 lakh loan at
+                  8.5% over 20 years, giving an EMI of ₹69,426. Over the full 20-year analysis the buy side pays out about
+                  ₹2.36 crore — down payment, 240 EMIs totalling roughly ₹1.67 crore, and ownership overhead — while the
+                  rent side pays about ₹1.54 crore in escalating rent. On raw outflow, renting looks ₹80 lakh cheaper.
+                </p>
+                <p>
+                  But at 5% appreciation the home is worth about ₹2.65 crore at year 20, and with the loan fully repaid,
+                  all of it is equity. Net of that equity, buying&rsquo;s effective cost is actually negative — the owner
+                  ends the period wealthier than everything they paid in — and the model finds break-even in year 4. Now
+                  stress it: drop appreciation to 3% and break-even slips to year 8. Cut rent to ₹25,000 (a lower
+                  rent-to-price ratio, common in metro India) and it slips to year 6. Do both and it is year 13 — a
+                  horizon longer than many people keep their first flat. Same city, same loan, opposite conclusions.
+                </p>
+                <p>
+                  That last scenario is worth dwelling on. Annual rent of ₹3 lakh on a ₹1 crore property is a 3% gross
+                  rental yield, which is typical of large Indian metros — and low yields are precisely the markets where
+                  renting is cheap relative to owning. If your city rents at 4%+ of property value, buying tends to win
+                  much sooner.
+                </p>
+              </>
             )}
             formula={(
-              <p>
-                EMI is computed using reducing-balance amortization. Buying outflow combines down payment, EMI, and
-                ownership overhead assumptions. Renting outflow compounds yearly by rent increase. Break-even is estimated
-                where buy effective cost (cash outflow minus accumulated home equity) becomes lower than rent outflow.
-              </p>
+              <>
+                <p>
+                  EMI is computed using reducing-balance amortization. Buying outflow combines down payment, EMI, and
+                  ownership overhead assumptions — the overhead is modeled at 1.5% of the home&rsquo;s current value per
+                  year, covering maintenance, property tax, insurance, and society charges, so it rises as the property
+                  appreciates (about ₹1.5 lakh in year one on a ₹1 crore home). Renting outflow compounds yearly by the
+                  rent-increase rate. Break-even is the first year-end where buy effective cost — cumulative cash outflow
+                  minus accumulated home equity — falls below cumulative rent paid.
+                </p>
+                <p>
+                  Two simplifications keep the model transparent, and both flatter the buy side slightly. First, the down
+                  payment&rsquo;s opportunity cost is not counted: ₹20 lakh left invested elsewhere would compound on the
+                  rent path, and the model ignores that return. Second, transaction costs — stamp duty, registration,
+                  brokerage, and the eventual cost of selling — are excluded, and they matter most at short holding
+                  periods. If the break-even year looks marginal for your inputs, these two omissions are the tiebreaker,
+                  and they break toward renting.
+                </p>
+              </>
             )}
             faqItems={[
               {
@@ -235,6 +282,18 @@ const BuyVsRentCalculator = () => {
               {
                 question: 'Should I decide only based on this result?',
                 answer: 'No. Combine this with liquidity, job stability, location preference, and emergency fund readiness before final decision.'
+              },
+              {
+                question: 'Why does the model favor buying more than I expected?',
+                answer: 'Two deliberate simplifications lean that way: the down payment’s opportunity cost (what ₹20 lakh would earn if invested instead) is not counted, and one-time transaction costs like stamp duty, registration, and eventual selling costs are excluded. If your break-even year looks marginal, mentally push it later — both omissions favor the buy side.'
+              },
+              {
+                question: 'What is the quickest sanity check for my city?',
+                answer: 'Gross rental yield: a full year’s rent divided by the property price. Where yields are low — around 2–3%, common in large metros — renting is cheap relative to owning, and break-even arrives late. Where annual rent approaches 4% or more of the price, buying tends to win much sooner. You can test this directly by varying the rent input against a fixed home price.'
+              },
+              {
+                question: 'Does the analysis period need to match the loan tenure?',
+                answer: 'No, and separating them is informative. Run the analysis at 5 years to see the picture if you might relocate — short horizons favor renting because the down payment and early interest-heavy EMIs have had no time to convert into equity. Run it at the full tenure to see the long-hold picture where equity accumulation dominates.'
               }
             ]}
             relatedLinks={[
