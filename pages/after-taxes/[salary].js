@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Container from '../../components/ui/Container';
-const { computePaycheck, US_STATES, stateSlug } = require('../../utils/usPaycheckCalculations');
+const { computePaycheck, US_STATES, stateSlug, FEDERAL_2026, FICA_2026 } = require('../../utils/usPaycheckCalculations');
 const { SALARY_LEVELS } = require('../../utils/salaryLevels');
 
 const usd = (n) => `$${Math.round(n).toLocaleString('en-US')}`;
@@ -37,6 +37,41 @@ export async function getStaticProps({ params }) {
   const fed = computePaycheck({ grossAnnual: salary, stateCode: 'TX', filingStatus: 'single' });
   const lowest = rows.reduce((min, r) => (r.net < min.net ? r : min), rows[0]);
 
+  // ---- level-specific analysis (all from the same engine/constants) ----
+  const fedTaxable = Math.max(0, salary - FEDERAL_2026.standardDeduction.single);
+  const bracket = FEDERAL_2026.brackets.single.find((b) => fedTaxable >= b.min && fedTaxable < b.max);
+  const bracketTop = bracket.max === Infinity ? null : Math.round(bracket.max + FEDERAL_2026.standardDeduction.single);
+  const netPlus1000 = computePaycheck({ grossAnnual: salary + 1000, stateCode: 'TX', filingStatus: 'single' }).netAnnual;
+  const keepPer1000Fed = Math.round(netPlus1000 - base.net);
+  const aboveSsCap = salary > FICA_2026.ssWageBase;
+  const aboveAddlMedicare = salary > FICA_2026.additionalThreshold.single;
+  const ladder = {
+    prevLevel: null,
+    nextLevel: null
+  };
+  if (idx > 0) {
+    const p = SALARY_LEVELS[idx - 1];
+    const pNet = computePaycheck({ grossAnnual: p, stateCode: 'TX', filingStatus: 'single' }).netAnnual;
+    ladder.prevLevel = { salary: p, netGain: Math.round(base.net - pNet), grossGain: salary - p };
+  }
+  if (idx < SALARY_LEVELS.length - 1) {
+    const n = SALARY_LEVELS[idx + 1];
+    const nNet = computePaycheck({ grossAnnual: n, stateCode: 'TX', filingStatus: 'single' }).netAnnual;
+    ladder.nextLevel = { salary: n, netGain: Math.round(nNet - base.net), grossGain: n - salary };
+  }
+  const analysis = {
+    bracketRate: bracket.rate,
+    bracketTop,
+    keepPer1000Fed,
+    aboveSsCap,
+    ssWageBase: FICA_2026.ssWageBase,
+    aboveAddlMedicare,
+    addlMedicareThreshold: FICA_2026.additionalThreshold.single,
+    spread: base.net - lowest.net,
+    spreadPct: Number((((base.net - lowest.net) / salary) * 100).toFixed(1)),
+    ladder
+  };
+
   return {
     props: {
       salary,
@@ -49,6 +84,7 @@ export async function getStaticProps({ params }) {
         medicare: Math.round(fed.medicare)
       },
       hourly: Number((salary / 2080).toFixed(2)),
+      analysis,
       prev: idx > 0 ? SALARY_LEVELS[idx - 1] : null,
       next: idx < SALARY_LEVELS.length - 1 ? SALARY_LEVELS[idx + 1] : null
     }
@@ -59,7 +95,7 @@ const thCls = 'border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semi
 const tdCls = 'border border-slate-200 px-3 py-2 text-ink-soft dark:border-slate-700 dark:text-slate-300';
 const linkCls = 'font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300';
 
-export default function SalaryAfterTaxesPage({ salary, rows, best, lowest, federal, hourly, prev, next }) {
+export default function SalaryAfterTaxesPage({ salary, rows, best, lowest, federal, hourly, analysis, prev, next }) {
   const canonical = `https://upaman.com/after-taxes/${salary}`;
   const title = `${usd(salary)} After Taxes 2026 | Take-Home Pay by State | Upaman`;
   const desc = `How much is ${usd(salary)} a year after taxes? In 2026 a single filer keeps ${usd(lowest.net)}–${usd(best.net)} depending on state (${usd(best.monthly)}/month in no-tax states). Full 50-state table.`;
@@ -76,6 +112,14 @@ export default function SalaryAfterTaxesPage({ salary, rows, best, lowest, feder
     {
       q: `Which states have the highest and lowest take-home on ${usd(salary)}?`,
       a: `On a ${usd(salary)} salary the nine no-income-tax states (Texas, Florida, Washington and others) give the highest take-home at ${usd(best.net)} a year. ${lowest.name} is the lowest in this table at ${usd(lowest.net)} — a difference of ${usd(best.net - lowest.net)} a year purely from state income tax.`
+    },
+    {
+      q: `What federal tax bracket is ${usd(salary)} in for 2026?`,
+      a: `After the ${usd(FEDERAL_2026.standardDeduction.single)} standard deduction, a single filer earning ${usd(salary)} is in the ${analysis.bracketRate}% federal bracket. That is the marginal rate — only the top slice of income is taxed at it${analysis.bracketTop ? `, and it applies until gross salary passes roughly ${usd(analysis.bracketTop)}` : ''}. In a no-state-tax state, each extra $1,000 earned at this level keeps about ${usd(analysis.keepPer1000Fed)}.`
+    },
+    {
+      q: `Does a raise from ${usd(salary)} get eaten by taxes?`,
+      a: `${analysis.ladder.nextLevel ? `Partly, but far less than the "next bracket" myth suggests: moving from ${usd(salary)} to ${usd(analysis.ladder.nextLevel.salary)} adds ${usd(analysis.ladder.nextLevel.netGain)} of take-home out of the ${usd(analysis.ladder.nextLevel.grossGain)} gross increase (no-state-tax case). Only the new dollars are taxed at the higher marginal rate — the rest of your income keeps its lower rates.` : `Only the new dollars are taxed at your marginal rate — crossing into a higher bracket never reduces the take-home on income you already earn. At this level each extra $1,000 keeps about ${usd(analysis.keepPer1000Fed)} before state tax.`}`
     }
   ];
   const faqSchema = {
@@ -165,6 +209,43 @@ export default function SalaryAfterTaxesPage({ salary, rows, best, lowest, feder
                 </tbody>
               </table>
             </div>
+
+            <h2 className="mt-8 font-display text-xl font-bold text-ink dark:text-white">What happens to the next dollar at {usd(salary)}</h2>
+            <p className="mt-3">
+              After the {usd(FEDERAL_2026.standardDeduction.single)} federal standard deduction, {usd(salary)} puts a single filer in the{' '}
+              <strong>{analysis.bracketRate}% federal bracket</strong>
+              {analysis.bracketTop
+                ? ` — and stays there until gross pay passes roughly ${usd(analysis.bracketTop)}`
+                : ' — the top of the schedule'}
+              . Only the dollars inside that bracket are taxed at that rate, which is why the effective rate in the
+              headline box is well below it. In practical terms: in a no-state-tax state, each additional $1,000 earned
+              at this level keeps about <strong>{usd(analysis.keepPer1000Fed)}</strong>
+              {analysis.aboveSsCap
+                ? ` — and note that Social Security tax no longer applies, because ${usd(salary)} is past the ${usd(analysis.ssWageBase)} wage base, so raises here keep more than they did on the way up`
+                : ''}
+              {analysis.aboveAddlMedicare
+                ? `${analysis.aboveSsCap ? ', though' : ' —'} the 0.9% additional Medicare tax applies above ${usd(analysis.addlMedicareThreshold)}`
+                : ''}
+              .
+            </p>
+            {analysis.ladder.prevLevel || analysis.ladder.nextLevel ? (
+              <p className="mt-3">
+                {analysis.ladder.prevLevel
+                  ? `Stepping up from ${usd(analysis.ladder.prevLevel.salary)} to ${usd(salary)} added ${usd(analysis.ladder.prevLevel.netGain)} of annual take-home out of a ${usd(analysis.ladder.prevLevel.grossGain)} gross increase. `
+                  : ''}
+                {analysis.ladder.nextLevel
+                  ? `The next step, ${usd(salary)} to ${usd(analysis.ladder.nextLevel.salary)}, would add about ${usd(analysis.ladder.nextLevel.netGain)} of the ${usd(analysis.ladder.nextLevel.grossGain)} raise (no-state-tax case). `
+                  : ''}
+                Crossing a bracket line never taxes your existing income more — only the new dollars — so a raise is
+                always worth taking; it just spends smaller than it reads.
+              </p>
+            ) : null}
+            <p className="mt-3">
+              Where you live moves the outcome by up to <strong>{usd(analysis.spread)}</strong> a year at this salary —{' '}
+              {analysis.spreadPct}% of gross, entirely from state and average local income taxes. That spread is wide
+              enough to matter in a relocation decision but narrower than cost-of-living differences between the same
+              states, which is why the table below is a starting point rather than a verdict.
+            </p>
 
             <div className="mt-6 rounded-2xl border border-brand-200 bg-brand-50/60 p-5 dark:border-brand-800/60 dark:bg-brand-900/20">
               <strong className="text-ink dark:text-white">Get your exact number:</strong> the{' '}

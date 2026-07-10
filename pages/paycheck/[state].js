@@ -34,6 +34,62 @@ export async function getStaticProps({ params }) {
   // headline example: $75k single
   const example = rows.find((r) => r.salary === 75000);
 
+  // ---- cross-state comparison at $75k (computed from the same engine) ----
+  const all75 = Object.keys(US_STATES)
+    .map((c) => ({
+      code: c,
+      name: US_STATES[c].name,
+      slug: stateSlug(c),
+      net: computePaycheck({ grossAnnual: 75000, stateCode: c, filingStatus: 'single' }).netAnnual
+    }))
+    .sort((a, b) => b.net - a.net);
+  const myNet75 = all75.find((s) => s.code === code).net;
+  const rank = all75.filter((s) => s.net > myNet75 + 0.5).length + 1; // competition ranking, ties share a rank
+  const bestNet = all75[0].net;
+  const medianNet = all75[Math.floor(all75.length / 2)].net;
+  const noTaxCount = Object.values(US_STATES).filter((s) => s.type === 'none').length;
+  const gapVsBest = Math.round(bestNet - myNet75);
+  const gapVsMedian = Math.round(myNet75 - medianNet);
+  const higherNeighbor = [...all75].reverse().find((s) => s.net > myNet75 + 0.5) || null;
+  const lowerNeighbor = all75.find((s) => s.net < myNet75 - 0.5) || null;
+  const comparison = {
+    rank,
+    totalRanked: all75.length,
+    gapVsBest,
+    gapVsMedian,
+    noTaxCount,
+    higherNeighbor: higherNeighbor ? { name: higherNeighbor.name, slug: higherNeighbor.slug, gap: Math.round(higherNeighbor.net - myNet75) } : null,
+    lowerNeighbor: lowerNeighbor ? { name: lowerNeighbor.name, slug: lowerNeighbor.slug, gap: Math.round(myNet75 - lowerNeighbor.net) } : null
+  };
+
+  // ---- marginal math: what an extra $1,000 keeps at $75k ----
+  const net76 = computePaycheck({ grossAnnual: 76000, stateCode: code, filingStatus: 'single' }).netAnnual;
+  const keepPer1000 = Math.round(net76 - myNet75);
+
+  // ---- structure detail for prose (from the same US_STATES config the engine taxes with) ----
+  const structure = { type: st.type };
+  if (st.type === 'flat') {
+    structure.rate = st.rate;
+    structure.stdDeduction = st.stdDeduction || 0;
+    structure.usesFederalDeduction = Boolean(st.usesFederalDeduction);
+    structure.effState75 = Number(((example.stateTax / 75000) * 100).toFixed(2));
+  } else if (st.type === 'brackets') {
+    const taxable75 = Math.max(0, 75000 - (st.stdDeduction || 0));
+    const bracket75 = st.brackets.find((b) => taxable75 >= b.min && taxable75 < b.max);
+    structure.bracketCount = st.brackets.length;
+    structure.bottomRate = st.brackets.find((b) => b.rate > 0)?.rate ?? 0;
+    structure.topRate = st.brackets[st.brackets.length - 1].rate;
+    structure.topThreshold = st.brackets[st.brackets.length - 1].min;
+    structure.stdDeduction = st.stdDeduction || 0;
+    structure.usesFederalDeduction = Boolean(st.usesFederalDeduction);
+    structure.bracket75Rate = bracket75 ? bracket75.rate : structure.topRate;
+    structure.localAvgRate = st.localAvgRate || null;
+  }
+  const row40 = rows.find((r) => r.salary === 40000);
+  const row150 = rows.find((r) => r.salary === 150000);
+  structure.effState40 = Number(((row40.stateTax / 40000) * 100).toFixed(2));
+  structure.effState150 = Number(((row150.stateTax / 150000) * 100).toFixed(2));
+
   let taxSummary;
   if (st.type === 'none') {
     taxSummary = `${st.name} has no state income tax on wages, so your paycheck is reduced only by federal income tax, Social Security, and Medicare.`;
@@ -55,6 +111,9 @@ export async function getStaticProps({ params }) {
       taxSummary,
       rows,
       example,
+      comparison,
+      keepPer1000,
+      structure,
       prev: idx > 0 ? { name: US_STATES[codesSorted[idx - 1]].name, slug: stateSlug(codesSorted[idx - 1]) } : null,
       next: idx < codesSorted.length - 1 ? { name: US_STATES[codesSorted[idx + 1]].name, slug: stateSlug(codesSorted[idx + 1]) } : null
     }
@@ -65,7 +124,7 @@ const thCls = 'border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semi
 const tdCls = 'border border-slate-200 px-3 py-2 text-ink-soft dark:border-slate-700 dark:text-slate-300';
 const linkCls = 'font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300';
 
-export default function StatePaycheckPage({ code, name, slug, type, taxSummary, rows, example, prev, next }) {
+export default function StatePaycheckPage({ code, name, slug, type, taxSummary, rows, example, comparison, keepPer1000, structure, prev, next }) {
   const canonical = `https://upaman.com/paycheck/${slug}`;
   const title = `Take-Home Pay in ${name} 2026 | Salary After Taxes | Upaman`;
   const desc = `What is take-home pay in ${name}? A $75,000 salary leaves about ${usd(example.net)} after taxes in 2026 (${usd(example.monthly)}/month). See net pay for $40k–$150k salaries.`;
@@ -83,8 +142,32 @@ export default function StatePaycheckPage({ code, name, slug, type, taxSummary, 
     {
       q: `What is $100,000 after taxes in ${name}?`,
       a: `A single filer earning $100,000 in ${name} takes home about ${usd(hundredK.net)} a year in 2026 — ${usd(hundredK.monthly)} a month, an effective tax rate of ${hundredK.effectiveRate}%${type !== 'none' ? ` including ${usd(hundredK.stateTax)} of state income tax` : ' (there is no state income tax to add)'}.`
-    }
+    },
+    {
+      q: `How much of a $1,000 raise do I keep in ${name}?`,
+      a: `At a $75,000 salary, a single filer in ${name} keeps about ${usd(keepPer1000)} of each additional $1,000 earned in 2026 — the rest goes to federal income tax${type !== 'none' ? ', state income tax,' : ''} and Medicare. Raises are taxed at your marginal rate, not your (lower) effective rate, which is why a raise always feels smaller than the offer letter.`
+    },
+    type === 'none'
+      ? {
+          q: `Is a $75,000 salary really worth more in ${name}?`,
+          a: `In paycheck terms, yes: ${name} ties the other ${comparison.noTaxCount - 1} no-income-tax states for the highest take-home in the country, keeping about ${usd(comparison.gapVsMedian)} more per year at $75,000 than the median state. States without a wage income tax generally lean more on sales and property taxes instead, so the full cost-of-living picture depends on how you spend and whether you own a home — but none of those show up as paycheck deductions.`
+        }
+      : structure.type === 'flat'
+        ? {
+            q: `What does ${name}'s flat tax mean for my paycheck?`,
+            a: `Every dollar of taxable wage income is taxed at the same ${structure.rate}% rate, so the state takes the same share of a raise whether you earn $40,000 or $150,000 — the table's effective state rate barely moves (${structure.effState40}% at $40k, ${structure.effState150}% at $150k). ${structure.stdDeduction ? `The ${usd(structure.stdDeduction)} standard deduction shields the first slice of income, which is why the effective state rate at $75,000 (${structure.effState75}%) sits below the headline rate.` : `With no standard deduction, the headline rate is effectively the real rate from the first dollar.`}`
+          }
+        : {
+            q: `What state tax bracket is a $75,000 salary in ${name}?`,
+            a: `After the state's ${structure.stdDeduction ? usd(structure.stdDeduction) : '$0'} standard deduction, a $75,000 single filer falls in ${name}'s ${structure.bracket75Rate}% bracket. That is the marginal rate — only income inside that bracket is taxed at it, so the average (effective) state rate is lower. ${name}'s top ${structure.topRate}% rate only applies to taxable income above ${usd(structure.topThreshold)}.`
+          }
   ];
+  if (structure.localAvgRate) {
+    faqItems.push({
+      q: `Are local taxes included in these ${name} numbers?`,
+      a: `Yes — an average ${structure.localAvgRate}% local income tax is included on top of the state brackets, because nearly all wage earners in ${name} pay one. Your county's actual rate may be somewhat higher or lower, so treat these figures as a representative middle case.`
+    });
+  }
   const faqSchema = {
     '@context': 'https://schema.org', '@type': 'FAQPage',
     mainEntity: faqItems.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } }))
@@ -167,6 +250,98 @@ export default function StatePaycheckPage({ code, name, slug, type, taxSummary, 
                 </tbody>
               </table>
             </div>
+
+            <h2 className="mt-8 font-display text-xl font-bold text-ink dark:text-white">How {name} taxes a paycheck</h2>
+            {type === 'none' ? (
+              <>
+                <p className="mt-3">
+                  {name} is one of {comparison.noTaxCount} states with no income tax on wages, which makes its paycheck
+                  math unusually clean: the only deductions are federal income tax, Social Security, and Medicare. The
+                  entire {example.effectiveRate}% effective rate at $75,000 is federal — the state line in your pay stub
+                  simply does not exist. That also means every figure in the table above ties for the best in the
+                  country; no state can beat it, only match it.
+                </p>
+                <p className="mt-3">
+                  The advantage is easy to price. Compared with the median state, the same $75,000 salary keeps about{' '}
+                  {usd(comparison.gapVsMedian)} more per year here — money that arrives in every paycheck rather than at
+                  refund time. And because there is no state bracket system, a raise is taxed only by the federal
+                  schedule: at $75,000, each extra $1,000 earned puts about {usd(keepPer1000)} in your pocket.
+                </p>
+                <p className="mt-3">
+                  One honest caveat: no wage tax does not mean no taxes. States that skip the income tax generally lean
+                  harder on sales and property taxes, which never appear in a paycheck but do appear in a budget. For
+                  comparing job offers on take-home pay, though, {name} starts ahead.
+                </p>
+              </>
+            ) : structure.type === 'flat' ? (
+              <>
+                <p className="mt-3">
+                  {name} is a flat-tax state: wage income is taxed at {structure.rate}% regardless of how much you earn.
+                  {structure.stdDeduction
+                    ? ` A ${usd(structure.stdDeduction)} standard deduction${structure.usesFederalDeduction ? ' (matched to the federal one)' : ''} shields the first slice of income, so the effective state rate at $75,000 works out to ${structure.effState75}% — noticeably under the headline number.`
+                    : ` There is no state standard deduction, so the headline rate is close to the real rate from the first dollar of wages.`}
+                </p>
+                <p className="mt-3">
+                  The signature of a flat tax is visible in the table: the effective state rate barely moves between
+                  $40,000 ({structure.effState40}%) and $150,000 ({structure.effState150}%), where a progressive state
+                  would show a steady climb. All of the progressivity in your total tax bill comes from the federal
+                  brackets. At $75,000, an extra $1,000 of salary keeps about {usd(keepPer1000)} after federal, state,
+                  and Medicare take their marginal share.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="mt-3">
+                  {name} runs a progressive schedule with {structure.bracketCount} brackets, from{' '}
+                  {structure.bottomRate}% at the bottom to {structure.topRate}% at the top.
+                  {structure.stdDeduction
+                    ? ` After the ${usd(structure.stdDeduction)} state standard deduction${structure.usesFederalDeduction ? ' (matched to the federal one)' : ''}, a`
+                    : ' With no state standard deduction, a'}{' '}
+                  $75,000 single filer lands in the {structure.bracket75Rate}% bracket — that is the rate on the{' '}
+                  <em>next</em> dollar, not on all of them, which is why the state's average bite is smaller. The top{' '}
+                  {structure.topRate}% rate only touches taxable income above {usd(structure.topThreshold)}.
+                  {structure.localAvgRate
+                    ? ` These figures also include an average ${structure.localAvgRate}% local income tax, which nearly all ${name} wage earners pay on top of the state schedule.`
+                    : ''}
+                </p>
+                <p className="mt-3">
+                  You can read the progressivity directly off the table: the effective state{structure.localAvgRate ? '-plus-local' : ''} rate climbs from{' '}
+                  {structure.effState40}% at $40,000 to {structure.effState150}% at $150,000. That climb is the
+                  practical difference between a progressive state and a flat-tax one, where the share would hold
+                  steady. At $75,000, each additional $1,000 of salary keeps about {usd(keepPer1000)} once federal,
+                  state, and Medicare marginal rates are applied.
+                </p>
+              </>
+            )}
+
+            <h2 className="mt-8 font-display text-xl font-bold text-ink dark:text-white">How {name} compares with other states</h2>
+            <p className="mt-3">
+              {comparison.rank === 1
+                ? `On a $75,000 salary, ${name} shares the #1 take-home ranking among the 50 states and D.C. with the other no-income-tax states.`
+                : `On a $75,000 salary, ${name} ranks #${comparison.rank} of ${comparison.totalRanked} among the states and D.C. for take-home pay, ${usd(comparison.gapVsBest)} a year behind the no-income-tax states${comparison.gapVsMedian >= 0 ? ` and ${usd(Math.abs(comparison.gapVsMedian))} ahead of the median state` : ` and ${usd(Math.abs(comparison.gapVsMedian))} behind the median state`}.`}
+              {comparison.higherNeighbor && comparison.lowerNeighbor
+                ? ` The nearest state above it is ${comparison.higherNeighbor.name} (${usd(comparison.higherNeighbor.gap)} more per year); just below sits ${comparison.lowerNeighbor.name}, ${usd(comparison.lowerNeighbor.gap)} behind.`
+                : comparison.higherNeighbor
+                  ? ` The nearest state above it is ${comparison.higherNeighbor.name} (${usd(comparison.higherNeighbor.gap)} more per year).`
+                  : comparison.lowerNeighbor
+                    ? ` The nearest state with an income tax, ${comparison.lowerNeighbor.name}, trails it by ${usd(comparison.lowerNeighbor.gap)} a year.`
+                    : ''}{' '}
+              Rankings compare state and average local income taxes only — cost of living, housing, and sales taxes move
+              real affordability in ways a paycheck never shows.
+            </p>
+            {(comparison.higherNeighbor || comparison.lowerNeighbor) && (
+              <p className="mt-3">
+                Comparing a specific move? See{' '}
+                {comparison.higherNeighbor && (
+                  <a href={`/paycheck/${comparison.higherNeighbor.slug}`} className={linkCls}>take-home pay in {comparison.higherNeighbor.name}</a>
+                )}
+                {comparison.higherNeighbor && comparison.lowerNeighbor && ' or '}
+                {comparison.lowerNeighbor && (
+                  <a href={`/paycheck/${comparison.lowerNeighbor.slug}`} className={linkCls}>take-home pay in {comparison.lowerNeighbor.name}</a>
+                )}
+                , or line every state up at once on the <a href="/paycheck" className={linkCls}>state comparison index</a>.
+              </p>
+            )}
 
             <div className="mt-6 rounded-2xl border border-brand-200 bg-brand-50/60 p-5 dark:border-brand-800/60 dark:bg-brand-900/20">
               <strong className="text-ink dark:text-white">Get your exact number:</strong> the{' '}
