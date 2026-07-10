@@ -417,7 +417,7 @@ const SIPCalculator = () => {
             example={(<p>Assume ₹15,000 monthly SIP for 15 years at expected 12% annual return. The calculator projects total invested amount, expected corpus, and returns. Add a 10% yearly step-up to compare how progressive contribution growth can improve final corpus without a large first-year commitment.</p>)}
             formula={(<p>SIP mode uses periodic compounding across monthly contributions. Goal mode reverses compounding logic to estimate required monthly SIP for a target corpus. Comparison mode evaluates recurring SIP and one-time lumpsum under the same return horizon for consistent decision support.</p>)}
             faqItems={seoFaqItems}
-            relatedLinks={[{ label: 'PPF Calculator', href: '/ppf-calculator' }, { label: 'Salary Calculator', href: '/salary-calculator' }, { label: 'SIP Step-up Planning Guide', href: '/guides/sip-step-up-planning' }]}
+            relatedLinks={[{ label: 'PPF Calculator', href: '/ppf-calculator' }, { label: 'FD vs SIP Workflow', href: '/fd-vs-sip-workflow' }, { label: 'Salary Calculator', href: '/salary-calculator' }, { label: 'SIP Step-up Planning Guide', href: '/guides/sip-step-up-planning' }]}
           />
         </div>
       
