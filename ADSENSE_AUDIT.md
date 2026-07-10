@@ -96,8 +96,17 @@ Last updated: 2026-07-10
    nearest-neighbor cross-links, marginal raise math, and 1–2 type-specific FAQs
    (~800–910w, unique-word count tripled); after-taxes levels get federal-bracket
    position, threshold-conditional SS-cap/additional-Medicare notes, ladder deltas
-   vs adjacent levels, and 2 level FAQs (~1,130–1,160w). UK/Germany/tax-on-salary
-   templates retain their earlier band-specific callouts and remain acceptable.
+   vs adjacent levels, and 2 level FAQs (~1,130–1,160w). The same check then showed
+   UK/Germany/tax-on-salary were *not* acceptable after all (482–550w, 17–19 unique
+   words between adjacent levels — the band callouts were conditional one-liners).
+   Third pass (`b782acf`): all three now compute level-specific marginal analysis
+   from their engines — UK band placement incl. the 60% allowance-taper branch,
+   German §32a marginal keep with three-way contribution-ceiling branches, India
+   rebate/marginal-relief/normal-slab branches plus a binary-searched old-regime
+   break-even deduction per level — each with ladder deltas and +2 FAQs
+   (now 703–828w). All five templates done; branch rendering verified across
+   category boundaries. ✅ **RESOLVED** — remaining optional polish: sitemap
+   priority tuning only.
    Impact: medium — the hidden-FAQ-schema violation is now fixed everywhere.
 
 4. **Author/E-E-A-T depth.** ✅ **RESOLVED.** `/authors/*` pages exist (3 team/desk
