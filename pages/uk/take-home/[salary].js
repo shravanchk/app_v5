@@ -17,6 +17,32 @@ export async function getStaticProps({ params }) {
   const idx = UK_SALARY_LEVELS.indexOf(salary);
   const r = calculateUKTax({ grossIncome: salary });
 
+  // ---- marginal analysis, derived numerically from the same engine ----
+  const plus = calculateUKTax({ grossIncome: salary + 1000 });
+  const keepPer1000 = Math.round(plus.netIncome - r.netIncome);
+  const marginalTaxPct = Math.round((plus.incomeTax - r.incomeTax) / 10);
+  const marginalNiPct = Math.round((plus.nationalInsurance - r.nationalInsurance) / 10);
+  const band =
+    marginalTaxPct <= 0
+      ? { label: 'within the personal allowance', note: 'no income tax on the next pound' }
+      : marginalTaxPct <= 25
+        ? { label: 'the basic-rate band', note: null }
+        : marginalTaxPct <= 42
+          ? { label: 'the higher-rate band', note: null }
+          : marginalTaxPct >= 55
+            ? { label: 'the allowance-taper zone', note: 'the tapering personal allowance pushes the true marginal rate to 60%' }
+            : { label: 'the additional-rate band', note: null };
+
+  const ladder = { prevLevel: null, nextLevel: null };
+  if (idx > 0) {
+    const p = UK_SALARY_LEVELS[idx - 1];
+    ladder.prevLevel = { salary: p, netGain: Math.round(r.netIncome - calculateUKTax({ grossIncome: p }).netIncome), grossGain: salary - p };
+  }
+  if (idx < UK_SALARY_LEVELS.length - 1) {
+    const n = UK_SALARY_LEVELS[idx + 1];
+    ladder.nextLevel = { salary: n, netGain: Math.round(calculateUKTax({ grossIncome: n }).netIncome - r.netIncome), grossGain: n - salary };
+  }
+
   return {
     props: {
       salary,
@@ -30,6 +56,7 @@ export async function getStaticProps({ params }) {
       effectiveRate: Number(r.effectiveRate.toFixed(1)),
       hourly: Number((salary / 1950).toFixed(2)),
       plan2Loan: Math.round(Math.max(0, salary - 29385) * 0.09),
+      analysis: { keepPer1000, marginalTaxPct, marginalNiPct, band, ladder },
       prev: idx > 0 ? UK_SALARY_LEVELS[idx - 1] : null,
       next: idx < UK_SALARY_LEVELS.length - 1 ? UK_SALARY_LEVELS[idx + 1] : null
     }
@@ -40,7 +67,7 @@ const thCls = 'border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semi
 const tdCls = 'border border-slate-200 px-3 py-2 text-ink-soft dark:border-slate-700 dark:text-slate-300';
 const linkCls = 'font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300';
 
-export default function UKTakeHomePage({ salary, net, monthly, weekly, incomeTax, ni, allowance, taxable, effectiveRate, hourly, plan2Loan, prev, next }) {
+export default function UKTakeHomePage({ salary, net, monthly, weekly, incomeTax, ni, allowance, taxable, effectiveRate, hourly, plan2Loan, analysis, prev, next }) {
   const canonical = `https://upaman.com/uk/take-home/${salary}`;
   const title = `${gbp(salary)} After Tax UK 2026-27 | Take-Home Pay | Upaman`;
   const desc = `How much is ${gbp(salary)} after tax in the UK? In 2026-27 you take home ${gbp(net)} a year — ${gbp(monthly)} a month, ${gbp(weekly)} a week — after ${gbp(incomeTax)} income tax and ${gbp(ni)} National Insurance.`;
@@ -66,6 +93,14 @@ export default function UKTakeHomePage({ salary, net, monthly, weekly, incomeTax
     {
       q: `What is ${gbp(salary)} per hour?`,
       a: `${gbp(salary)} a year is £${hourly.toFixed(2)} per hour before tax, based on a 37.5-hour week (1,950 working hours per year).`
+    },
+    {
+      q: `What tax band is ${gbp(salary)} in?`,
+      a: `At ${gbp(salary)}, the next pound earned falls in ${analysis.band.label}: the marginal deduction is ${analysis.marginalTaxPct}% income tax plus ${analysis.marginalNiPct}% National Insurance, so a £1,000 pay rise keeps about ${gbp(analysis.keepPer1000)}.${analysis.band.note ? ` Note: ${analysis.band.note}.` : ''} Bands apply per slice of income, so income below the band boundaries keeps its lower rates.`
+    },
+    {
+      q: `How much of a pay rise do I keep at ${gbp(salary)}?`,
+      a: `${analysis.ladder.nextLevel ? `Moving from ${gbp(salary)} to ${gbp(analysis.ladder.nextLevel.salary)} adds about ${gbp(analysis.ladder.nextLevel.netGain)} of annual take-home out of the ${gbp(analysis.ladder.nextLevel.grossGain)} gross increase.` : `At this level each extra £1,000 keeps about ${gbp(analysis.keepPer1000)}.`} Only the new pounds are taxed at the marginal rate — a rise never reduces the take-home on income you already earn, though salary-sacrifice pension contributions can be unusually valuable where the marginal rate is high.`
     }
   ];
   const faqSchema = {
@@ -163,6 +198,27 @@ export default function UKTakeHomePage({ salary, net, monthly, weekly, incomeTax
               <a href="/uk-income-tax-calculator" className={linkCls}>UK Income Tax Calculator</a> covers pensions,
               all student loan plans, and Scottish rates.
             </p>
+
+            <h2 className="mt-8 font-display text-xl font-bold text-ink dark:text-white">What happens to the next pound at {gbp(salary)}</h2>
+            <p className="mt-3">
+              The next pound earned at {gbp(salary)} sits in <strong>{analysis.band.label}</strong>: it loses{' '}
+              {analysis.marginalTaxPct}% to income tax and {analysis.marginalNiPct}% to National Insurance, so a £1,000
+              pay rise keeps about <strong>{gbp(analysis.keepPer1000)}</strong>.
+              {analysis.band.note ? ` This is the stretch of UK income where ${analysis.band.note} — worth knowing before negotiating a rise that lands inside it.` : ''}{' '}
+              Marginal is not average: the {effectiveRate}% effective rate in the headline box blends this top slice with
+              the personal allowance and any lower bands underneath, which is why the two numbers differ.
+            </p>
+            {analysis.ladder.prevLevel || analysis.ladder.nextLevel ? (
+              <p className="mt-3">
+                {analysis.ladder.prevLevel
+                  ? `Stepping up from ${gbp(analysis.ladder.prevLevel.salary)} to ${gbp(salary)} added ${gbp(analysis.ladder.prevLevel.netGain)} of annual take-home out of a ${gbp(analysis.ladder.prevLevel.grossGain)} gross rise. `
+                  : ''}
+                {analysis.ladder.nextLevel
+                  ? `The next step, to ${gbp(analysis.ladder.nextLevel.salary)}, would keep about ${gbp(analysis.ladder.nextLevel.netGain)} of the ${gbp(analysis.ladder.nextLevel.grossGain)} increase. `
+                  : ''}
+                Crossing a band boundary never re-taxes the income below it — only the new slice pays the higher rate.
+              </p>
+            ) : null}
 
             <div className="mt-6 rounded-2xl border border-brand-200 bg-brand-50/60 p-5 dark:border-brand-800/60 dark:bg-brand-900/20">
               <strong className="text-ink dark:text-white">Get your exact number:</strong> use the{' '}

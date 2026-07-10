@@ -35,6 +35,25 @@ export async function getStaticProps({ params }) {
     tax: Math.round(b.tax)
   }));
 
+  // ---- level-specific analysis from the same engine ----
+  const taxPlusLakh = Math.round(calculateIndianIncomeTax(Math.max(0, salary + 100000 - NEW_STD), 'new').totalTax);
+  const keepPerLakh = 100000 - (taxPlusLakh - newTax);
+  const taxedSlabs = breakdown.filter((b) => b.tax > 0);
+  const marginalSlabRate = taxedSlabs.length ? taxedSlabs[taxedSlabs.length - 1].rate : 0;
+  // deductions (beyond the old regime's standard deduction) needed for old to match new
+  let breakEvenDeductions = null;
+  if (newTax > 0) {
+    let lo = 0;
+    let hi = salary;
+    while (hi - lo > 500) {
+      const mid = (lo + hi) / 2;
+      const t = calculateIndianIncomeTax(Math.max(0, salary - OLD_STD - mid), 'old').totalTax;
+      if (t <= newTax) hi = mid;
+      else lo = mid;
+    }
+    breakEvenDeductions = hi < salary - 500 ? Math.round(hi / 1000) * 1000 : null;
+  }
+
   return {
     props: {
       lakh,
@@ -47,6 +66,7 @@ export async function getStaticProps({ params }) {
       newCess: Math.round(newRes.cess),
       oldTaxNoInvest,
       breakdown,
+      analysis: { keepPerLakh, marginalSlabRate, breakEvenDeductions },
       prevLakh: lakh > MIN_LAKH ? lakh - 1 : null,
       nextLakh: lakh < MAX_LAKH ? lakh + 1 : null
     }
@@ -57,7 +77,7 @@ const thCls = 'border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semi
 const tdCls = 'border border-slate-200 px-3 py-2 text-ink-soft dark:border-slate-700 dark:text-slate-300';
 
 export default function TaxOnSalaryPage(props) {
-  const { lakh, salary, newTaxable, newTax, newSlabTax, newRebate, newRelief, newCess, oldTaxNoInvest, breakdown, prevLakh, nextLakh } = props;
+  const { lakh, salary, newTaxable, newTax, newSlabTax, newRebate, newRelief, newCess, oldTaxNoInvest, breakdown, analysis, prevLakh, nextLakh } = props;
   const monthlyTakeHome = (salary - newTax) / 12;
   const effRate = salary > 0 ? (newTax / salary) * 100 : 0;
   const canonical = `https://upaman.com/tax-on-salary/${slugFor(lakh)}`;
@@ -86,6 +106,20 @@ export default function TaxOnSalaryPage(props) {
     {
       q: `Is the old or new regime better for a ₹${lakh} lakh salary?`,
       a: `With no deductions beyond the standard deduction, the old regime tax on a ₹${lakh} lakh salary is about ${inr(oldTaxNoInvest)} versus ${inr(newTax)} under the new regime. The old regime only wins once your 80C, 80D, HRA and home-loan deductions are large enough to close that gap.`
+    },
+    {
+      q: `How much of a raise do I keep at ₹${lakh} lakh?`,
+      a: newRelief > 0
+        ? `Less than usual — ₹${lakh} lakh sits in the marginal-relief zone just above the rebate threshold, where each extra rupee of income can add nearly a rupee of tax until the relief phases out. A ₹1 lakh raise from here keeps about ${inr(analysis.keepPerLakh)}. Once income clears the relief zone, normal slab arithmetic resumes.`
+        : `A ₹1 lakh raise from ₹${lakh} lakh keeps about ${inr(analysis.keepPerLakh)} under the new regime — the new income lands in the ${analysis.marginalSlabRate}% slab (plus cess)${newTax === 0 ? ', though at this level the Section 87A rebate still wipes the total tax to nil' : ''}. Only the new income is taxed at that slab rate; crossing a slab never re-taxes what you already earn.`
+    },
+    {
+      q: `How much in deductions would make the old regime win at ₹${lakh} lakh?`,
+      a: newTax === 0
+        ? `None can — the new regime is already nil at ₹${lakh} lakh after the rebate, and no amount of 80C or HRA paperwork beats zero. The old regime only becomes interesting at higher salaries with very large deductions.`
+        : analysis.breakEvenDeductions
+          ? `Roughly ${inr(analysis.breakEvenDeductions)} of deductions beyond the old regime's ₹50,000 standard deduction — the point where old-regime tax falls to the new regime's ${inr(newTax)}. That typically takes a full 80C plus substantial HRA exemption or home-loan interest; run your actual numbers in the regime comparison tool before deciding.`
+          : `A very large amount — at this level the gap is wide enough that realistic deductions rarely close it. Run your actual numbers in the regime comparison tool if you have unusually large HRA or home-loan interest.`
     }
   ];
   const faqSchema = {
@@ -151,6 +185,35 @@ export default function TaxOnSalaryPage(props) {
                 </tbody>
               </table>
             </div>
+
+            <h2 className="mt-9 font-display text-xl font-bold tracking-tight text-ink dark:text-white">What happens to the next rupee at ₹{lakh} lakh</h2>
+            {newRelief > 0 ? (
+              <p>
+                ₹{lakh} lakh sits in the most unusual stretch of the new-regime schedule: the{' '}
+                <strong>marginal-relief zone</strong> just above the rebate threshold. Marginal relief caps the tax at
+                the amount by which income exceeds the threshold — that is the {inr(newRelief)} credit in the table —
+                but it also means each additional rupee of salary adds nearly a rupee of tax until the relief phases
+                out. A ₹1 lakh raise from here keeps only about <strong>{inr(analysis.keepPerLakh)}</strong>. If you can
+                steer income into deductions (employer NPS, for instance) at this level, the effective return is
+                exceptional; once you clear the zone, normal slab arithmetic resumes.
+              </p>
+            ) : newTax === 0 ? (
+              <p>
+                At ₹{lakh} lakh, the Section 87A rebate cancels the slab tax entirely — the effective rate is zero, and
+                that remains true for every salary up to the rebate threshold. A ₹1 lakh raise from here keeps about{' '}
+                <strong>{inr(analysis.keepPerLakh)}</strong>. The number worth internalizing before the next appraisal:
+                tax-free today does not mean tax-free after the raise, and salaries just past the threshold enter a
+                marginal-relief zone where raises are taxed unusually heavily for a stretch.
+              </p>
+            ) : (
+              <p>
+                The top slice of a ₹{lakh} lakh salary falls in the <strong>{analysis.marginalSlabRate}% slab</strong>,
+                so a ₹1 lakh raise keeps about <strong>{inr(analysis.keepPerLakh)}</strong> after slab tax and cess.
+                Marginal is not average: the {effRate.toFixed(2)}% effective rate blends this top slice with the
+                tax-free and lower slabs beneath it, which is why the two numbers look so different. Crossing into a
+                higher slab never re-taxes income below it — only the new rupees pay the new rate.
+              </p>
+            )}
 
             <h2 className="mt-9 font-display text-xl font-bold tracking-tight text-ink dark:text-white">New vs old regime</h2>
             <p>

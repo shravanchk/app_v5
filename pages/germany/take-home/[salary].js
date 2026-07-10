@@ -23,6 +23,21 @@ export async function getStaticProps({ params }) {
   const pensionBase = Math.min(salary, de.ceilings.pensionUnemployment);
   const healthBase = Math.min(salary, de.ceilings.healthCare);
 
+  // ---- marginal analysis from the same engine ----
+  const plus = computeEuropeanSalary('DE', salary + 1000);
+  const keepPer1000 = Math.round(plus.netAnnual - r.netAnnual);
+  const aboveHealthCeiling = salary > de.ceilings.healthCare;
+  const abovePensionCeiling = salary > de.ceilings.pensionUnemployment;
+  const ladder = { prevLevel: null, nextLevel: null };
+  if (idx > 0) {
+    const p = DE_SALARY_LEVELS[idx - 1];
+    ladder.prevLevel = { salary: p, netGain: Math.round(r.netAnnual - computeEuropeanSalary('DE', p).netAnnual), grossGain: salary - p };
+  }
+  if (idx < DE_SALARY_LEVELS.length - 1) {
+    const n = DE_SALARY_LEVELS[idx + 1];
+    ladder.nextLevel = { salary: n, netGain: Math.round(computeEuropeanSalary('DE', n).netAnnual - r.netAnnual), grossGain: n - salary };
+  }
+
   return {
     props: {
       salary,
@@ -37,6 +52,14 @@ export async function getStaticProps({ params }) {
       social: Math.round(r.breakdown.socialSecurity),
       effectiveRate: Number(r.effectiveRate.toFixed(1)),
       hourly: Number((salary / 2080).toFixed(2)),
+      analysis: {
+        keepPer1000,
+        aboveHealthCeiling,
+        abovePensionCeiling,
+        healthCeiling: de.ceilings.healthCare,
+        pensionCeiling: de.ceilings.pensionUnemployment,
+        ladder
+      },
       prev: idx > 0 ? DE_SALARY_LEVELS[idx - 1] : null,
       next: idx < DE_SALARY_LEVELS.length - 1 ? DE_SALARY_LEVELS[idx + 1] : null
     }
@@ -47,7 +70,7 @@ const thCls = 'border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semi
 const tdCls = 'border border-slate-200 px-3 py-2 text-ink-soft dark:border-slate-700 dark:text-slate-300';
 const linkCls = 'font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300';
 
-export default function GermanyTakeHomePage({ salary, net, monthly, incomeTax, soli, pension, unemployment, health, care, social, effectiveRate, hourly, prev, next }) {
+export default function GermanyTakeHomePage({ salary, net, monthly, incomeTax, soli, pension, unemployment, health, care, social, effectiveRate, hourly, analysis, prev, next }) {
   const canonical = `https://upaman.com/germany/take-home/${salary}`;
   const title = `${eur(salary)} After Tax Germany 2026 | Net Salary (Brutto/Netto) | Upaman`;
   const desc = `How much is ${eur(salary)} after tax in Germany? In 2026 a single employee nets ${eur(net)} a year (${eur(monthly)} a month) after ${eur(incomeTax)} income tax and ${eur(social)} social insurance. Full brutto-to-netto breakdown.`;
@@ -75,6 +98,14 @@ export default function GermanyTakeHomePage({ salary, net, monthly, incomeTax, s
     {
       q: `What is ${eur(salary)} per hour in Germany?`,
       a: `${eur(salary)} a year is €${hourly.toFixed(2)} per hour before tax, based on a 40-hour week (2,080 working hours per year).`
+    },
+    {
+      q: `How much of a raise do I keep at ${eur(salary)} in Germany?`,
+      a: `About ${eur(analysis.keepPer1000)} of each additional €1,000 at this level. ${analysis.ladder.nextLevel ? `Moving from ${eur(salary)} to ${eur(analysis.ladder.nextLevel.salary)} would add roughly ${eur(analysis.ladder.nextLevel.netGain)} of annual netto out of the ${eur(analysis.ladder.nextLevel.grossGain)} gross increase.` : ''} The §32a tariff is a continuous formula, so the marginal rate creeps up smoothly with income — there is no cliff where a raise suddenly costs you money.`
+    },
+    {
+      q: `Do the solidarity surcharge and contribution ceilings apply at ${eur(salary)}?`,
+      a: `${soli > 0 ? `Yes on the surcharge: this level pays ${eur(soli)} of solidarity surcharge, since it sits above the exemption zone that spares most earners.` : `No solidarity surcharge — at this level the exemption zone covers it entirely, as it does for the large majority of employees.`} ${analysis.abovePensionCeiling ? `Both social-insurance ceilings are passed (health/care at ${eur(analysis.healthCeiling)}, pension/unemployment at ${eur(analysis.pensionCeiling)}), so contributions are capped at their maximums.` : analysis.aboveHealthCeiling ? `The health/care ceiling (${eur(analysis.healthCeiling)}) is passed, so those contributions are capped; pension and unemployment continue until ${eur(analysis.pensionCeiling)}.` : `Salary is below both contribution ceilings, so all four social-insurance contributions apply to the full gross.`}`
     }
   ];
   const faqSchema = {
@@ -172,6 +203,31 @@ export default function GermanyTakeHomePage({ salary, net, monthly, incomeTax, s
               <a href="/germany-salary-calculator" className={linkCls}>Germany Salary Calculator</a> lets you try
               your own gross amount.
             </p>
+
+            <h2 className="mt-8 font-display text-xl font-bold text-ink dark:text-white">What happens to the next euro at {eur(salary)}</h2>
+            <p className="mt-3">
+              German income tax has no bracket table — the §32a tariff is a continuous formula, so the marginal rate
+              rises smoothly with income instead of jumping at thresholds. At {eur(salary)}, a €1,000 raise keeps about{' '}
+              <strong>{eur(analysis.keepPer1000)}</strong> after income tax
+              {soli > 0 ? ', solidarity surcharge,' : ''} and social insurance.
+              {analysis.abovePensionCeiling
+                ? ` Both contribution ceilings are behind you at this level — health and care stopped at ${eur(analysis.healthCeiling)}, pension and unemployment at ${eur(analysis.pensionCeiling)} — so raises here face income tax${soli > 0 ? ' and soli' : ''} only, and keep more than they did on the way up.`
+                : analysis.aboveHealthCeiling
+                  ? ` Health and care contributions stopped at the ${eur(analysis.healthCeiling)} ceiling, but pension and unemployment still apply until ${eur(analysis.pensionCeiling)} — a middle zone where each raise keeps a little more than the last.`
+                  : ` All four social-insurance contributions still apply at this level, which is why the marginal keep-rate is lower than at salaries past the contribution ceilings.`}
+            </p>
+            {analysis.ladder.prevLevel || analysis.ladder.nextLevel ? (
+              <p className="mt-3">
+                {analysis.ladder.prevLevel
+                  ? `Stepping up from ${eur(analysis.ladder.prevLevel.salary)} to ${eur(salary)} added ${eur(analysis.ladder.prevLevel.netGain)} of annual netto out of a ${eur(analysis.ladder.prevLevel.grossGain)} gross increase. `
+                  : ''}
+                {analysis.ladder.nextLevel
+                  ? `The next step, to ${eur(analysis.ladder.nextLevel.salary)}, would keep about ${eur(analysis.ladder.nextLevel.netGain)} of the ${eur(analysis.ladder.nextLevel.grossGain)} raise. `
+                  : ''}
+                Because the tariff is progressive per slice, a raise never lowers the netto on income you already earn —
+                the &ldquo;higher bracket&rdquo; fear has no mechanism here.
+              </p>
+            ) : null}
 
             <div className="mt-6 rounded-2xl border border-brand-200 bg-brand-50/60 p-5 dark:border-brand-800/60 dark:bg-brand-900/20">
               <strong className="text-ink dark:text-white">Keep exploring:</strong> browse{' '}
