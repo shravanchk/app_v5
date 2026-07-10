@@ -210,3 +210,59 @@ test('readiness verdict boundaries', () => {
   assert.equal(retirementReadinessVerdict({ readinessRatio: 0.6 }).code, 'behind');
   assert.equal(retirementReadinessVerdict({ readinessRatio: 0.3 }).code, 'far-behind');
 });
+
+// --- US mortgage payoff vs invest, pinned to the worked example documented on
+// /us-mortgage-payoff-vs-invest-workflow ($260k @ 6.6%, 20y, $500/mo extra) ---
+
+test('US mortgage defaults match documented worked example (balanced, 7% adjusted)', () => {
+  const c = comparePrepayVsInvest({
+    outstandingLoan: marketUS.prepayVsInvestDefaults.outstandingLoan,
+    annualLoanRate: marketUS.prepayVsInvestDefaults.annualLoanRate,
+    remainingMonths: marketUS.prepayVsInvestDefaults.remainingYears * 12,
+    monthlySurplus: marketUS.prepayVsInvestDefaults.monthlySurplus,
+    adjustedReturn: 7
+  });
+  closeTo(c.baselineEmi, 1953.83, 0.01);
+  closeTo(c.baselineInterest, 208918.58, 1);
+  closeTo(c.prepayInterest, 131053.59, 1);
+  closeTo(c.interestSaved, 77864.99, 1);
+  assert.equal(c.monthsSaved, 80);
+  closeTo(c.investOnlyCorpus, 260463.33, 1);
+  closeTo(c.prepayThenInvestCorpus, 249242.58, 1);
+  assert.equal(
+    prepayVsInvestVerdict({
+      prepayCorpus: c.prepayThenInvestCorpus,
+      investCorpus: c.investOnlyCorpus,
+      loanRate: 6.6,
+      adjustedReturn: 7
+    }).code,
+    'hybrid'
+  );
+});
+
+test('US mortgage verdict flips across the documented risk dial', () => {
+  const run = (adjustedReturn) => {
+    const c = comparePrepayVsInvest({
+      outstandingLoan: 260000,
+      annualLoanRate: 6.6,
+      remainingMonths: 240,
+      monthlySurplus: 500,
+      adjustedReturn
+    });
+    return {
+      delta: c.investOnlyCorpus - c.prepayThenInvestCorpus,
+      code: prepayVsInvestVerdict({
+        prepayCorpus: c.prepayThenInvestCorpus,
+        investCorpus: c.investOnlyCorpus,
+        loanRate: 6.6,
+        adjustedReturn
+      }).code
+    };
+  };
+  const conservative = run(6);
+  closeTo(conservative.delta, -9621, 5); // prepay path ahead
+  assert.equal(conservative.code, 'hybrid');
+  const aggressive = run(8);
+  closeTo(aggressive.delta, 36273, 5); // invest path ahead
+  assert.equal(aggressive.code, 'invest-first');
+});

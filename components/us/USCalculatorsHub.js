@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Landmark, RefreshCcw, Car, PiggyBank, Wallet, CreditCard, BadgeDollarSign, TrendingUp, Banknote, Table2, Hourglass,
+  Landmark, RefreshCcw, Car, PiggyBank, Wallet, CreditCard, BadgeDollarSign, TrendingUp, Banknote, Table2, Hourglass, Scale,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
 
@@ -22,6 +22,7 @@ const cards = [
   { title: 'US Auto Loan Calculator', description: 'Calculate the monthly car payment using sales tax, trade-in value, fees, APR, and term.', icon: Car, path: '/us-auto-loan-calculator', tint: T.sky, tags: ['Car financing', 'APR impact', 'Total cost'] },
   { title: 'US 401(k) Calculator', description: 'Project your retirement balance with salary growth, contribution rate, and employer match.', icon: PiggyBank, path: '/us-401k-calculator', tint: T.emerald, tags: ['Retirement planning', 'Employer match', 'Projection table'] },
   { title: 'US Retirement Readiness Workflow', description: 'Compare the nest egg your lifestyle needs with where your savings are headed, and get a monthly plan.', icon: Hourglass, path: '/us-retirement-readiness-workflow', tint: T.emerald, tags: ['Readiness score', 'Inflation-aware', 'Monthly plan'] },
+  { title: 'Mortgage Payoff vs Invest Workflow', description: 'Extra principal payments or the market? Interest saved, months saved, and final portfolio on the same timeline.', icon: Scale, path: '/us-mortgage-payoff-vs-invest-workflow', tint: T.violet, tags: ['Risk-adjusted', 'Same-horizon', 'Verdict + plan'] },
   { title: 'US Savings & CD Calculator', description: 'Estimate savings APY growth and CD maturity value across your deposit timeline.', icon: Wallet, path: '/us-savings-cd-calculator', tint: T.amber, tags: ['APY growth', 'CD maturity', 'Interest estimate'] },
   { title: 'US Credit Card Payoff Calculator', description: 'Compare minimum payment and fixed payment plans to clear card debt faster.', icon: CreditCard, path: '/us-credit-card-payoff-calculator', tint: T.rose, tags: ['Debt payoff', 'APR impact', 'Interest saved'] },
   { title: 'Compound Interest Calculator', description: 'Project savings growth with monthly contributions and daily to annual compounding.', icon: TrendingUp, path: '/compound-interest-calculator', tint: T.violet, tags: ['Growth chart', 'Contributions', 'Rule of 72'] },
