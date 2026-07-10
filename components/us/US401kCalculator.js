@@ -11,6 +11,36 @@ import { formatCurrency } from '../../utils/calculations';
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
 
+// All figures computed with this page's own projection loop on the default
+// inputs: age 32→65, $45,000 balance, $90,000 salary, 10% contribution,
+// 50% match up to 6%, 7% return, 3% salary growth.
+const K401_FAQS = [
+  {
+    q: 'How much will my 401(k) be worth at retirement?',
+    a: 'It depends on contribution rate, match, return, and above all time. The default profile here — a 32-year-old with $45,000 saved, earning $90,000, contributing 10% with a 50%-up-to-6% match at a 7% return — projects about $2.44 million at 65. Of that, only $495,701 is the saver’s own money; growth contributes $1.75 million.'
+  },
+  {
+    q: 'How does a 401(k) employer match work?',
+    a: 'A common design is "50% of what you contribute, up to 6% of salary" — the default here. On a $90,000 salary, contributing at least 6% earns the full $2,700 a year of employer money in year one, rising with salary. It is a guaranteed 50% first-year return on those dollars, before any market growth.'
+  },
+  {
+    q: 'What happens if I contribute below the match cap?',
+    a: 'You permanently forfeit free money. Cutting the default contribution to 3% halves the match to $1,350 in year one, and the projected balance falls from $1.82 million (at 6%) to $1.12 million — the widening gap is both the missing dollars and their decades of lost compounding. Whatever else your budget does, contributing to the match cap is the priority.'
+  },
+  {
+    q: 'Does this calculator enforce IRS contribution limits?',
+    a: 'No — deliberately. Annual employee deferral limits and age-50 catch-up amounts change from year to year, so the model applies your chosen percentage without a cap and leaves the current figures to irs.gov. High earners with high contribution rates should check whether the modeled contribution exceeds the current limit.'
+  },
+  {
+    q: 'What annual return should I assume?',
+    a: 'The 7% default reflects a diversified, equity-heavy portfolio’s long-run expectation, not a promise — and not a smooth path. Fees come straight out of return, so a fund charging 1% more costs you exactly 1% of compounding per year. If your plan’s funds are expensive, model a lower return and consider the cheapest broad-index options available.'
+  },
+  {
+    q: 'What is the 4% rule shown under the projection?',
+    a: 'A rough sustainability heuristic: withdrawing 4% of the starting balance in the first retirement year (then adjusting for inflation) has historically survived most 30-year retirements. On the projected $2.44 million, that is about $97,592 a year. Treat it as a sanity check, not a plan — the retirement readiness workflow models the withdrawal phase properly.'
+  }
+];
+
 const US401kCalculator = () => {
   const [inputs, setInputs] = useState({
     currentAge: 32,
@@ -126,6 +156,20 @@ const US401kCalculator = () => {
           name="twitter:description"
           content="Estimate retirement balance and contribution impact with a 401(k) projection model."
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: K401_FAQS.map((item) => ({
+                '@type': 'Question',
+                name: item.q,
+                acceptedAnswer: { '@type': 'Answer', text: item.a }
+              }))
+            })
+          }}
+        />
       </Head>
 
       <CalcLayout
@@ -218,6 +262,84 @@ const US401kCalculator = () => {
             <ResultActions title="US 401(k) Calculator Summary" summaryLines={summaryLines} fileName="us-401k-calculator-summary.txt" />
           </div>
         </div>
+
+        <article className="mt-10 space-y-8 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Three engines build the balance — and one does most of the work</h2>
+            <p>
+              Run the default profile — 32 years old, $45,000 already saved, $90,000 salary, contributing 10% with a
+              50%-up-to-6% employer match, 7% return, 3% raises — and the projection lands at about
+              <strong> $2.44 million at 65</strong>. Decompose it and the hierarchy is striking: the saver&rsquo;s own
+              paycheck deferrals total $495,701 over 33 years, the employer adds $148,710, and investment growth
+              contributes <strong>$1.75 million — roughly 72% of the ending balance</strong>.
+            </p>
+            <p>
+              That decomposition is the strategy. Contributions are the seed, but time invested is the fertilizer, and
+              the early dollars matter disproportionately because they compound longest. It is also why cashing out a
+              401(k) when changing jobs is so expensive: a mid-career withdrawal doesn&rsquo;t just remove dollars, it
+              removes decades from those dollars.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">The match is the best return you will ever get</h2>
+            <p>
+              An employer match is a 50% (or 100%) first-year return handed out for participating. On the default
+              salary, contributing at least 6% collects <strong>$2,700 of employer money in year one</strong>, and the
+              amount rises with every raise. Contribute only 3% and the match halves to $1,350 — and the projection
+              shows what the combination costs over a career: the balance at 65 falls from $1.82 million (contributing
+              exactly to the 6% cap) to <strong>$1.12 million</strong>, a $700,000 gap built from the smaller paycheck
+              deferrals, the forfeited match, and 33 years of compounding on both.
+            </p>
+            <p>
+              The order of operations for most savers is therefore: contribute to the match cap before anything else,
+              then raise the rate as the budget allows. Between the 6%-cap plan and the 10% default plan lies another
+              $620,000 of projected balance — about $155,000 at retirement for every extra percentage point of salary
+              contributed, on these assumptions.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Reading the projection honestly</h2>
+            <p>
+              The year-by-year table applies your return to the opening balance plus half of each year&rsquo;s
+              contributions — a standard approximation for money arriving through the year. Reality will be lumpier:
+              7% is a long-run average that arrives as +20% years and −15% years, and the sequence matters more as the
+              balance grows. Salary growth compounds quietly too; at 3% raises, the $90,000 salary is about $233,000
+              by the final working year, which is why later-career contribution dollars look so large in the table.
+            </p>
+            <p>
+              What the model deliberately omits: IRS deferral limits and catch-up amounts (they change yearly — check
+              irs.gov if you contribute aggressively), plan fees (subtract them from your return assumption), employer
+              vesting schedules, loans, and the traditional-versus-Roth tax question, which deserves its own decision
+              and has a dedicated guide on this site.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">From balance to retirement income</h2>
+            <p>
+              A projected balance only matters as the income it can produce. The 4% heuristic shown with the results
+              translates the default projection into roughly $97,592 of first-year withdrawals. That is a sanity
+              check, not a plan: it ignores Social Security, taxes on withdrawals, and your actual expenses. To test
+              whether the projected balance funds <em>your</em> lifestyle — inflated to retirement age and drawn down
+              over your actual horizon — run the US retirement readiness workflow with this calculator&rsquo;s output
+              as the starting corpus.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Frequently asked questions</h2>
+            <div className="space-y-3">
+              {K401_FAQS.map((item) => (
+                <details key={item.q} className="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+                  <summary className="cursor-pointer font-semibold text-ink dark:text-white">{item.q}</summary>
+                  <p className="mt-2">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        </article>
 
         <div className="mt-8">
           <CalculatorInfoPanel

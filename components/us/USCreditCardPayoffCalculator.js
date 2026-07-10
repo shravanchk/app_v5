@@ -13,6 +13,35 @@ const MAX_MONTHS = 1200;
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
 
+// All figures computed with this page's own month-by-month simulation on the
+// default inputs: $10,000 balance, 24% APR, 2% minimum with $35 floor, $350 fixed plan.
+const CC_PAYOFF_FAQS = [
+  {
+    q: 'Why does paying the minimum take so long?',
+    a: 'Because the minimum is designed to barely outrun interest. On $10,000 at 24% APR, the first month adds $200 of interest; a 2% minimum pays $204 — so $4 touches the principal. At that pace the simulation hits its 100-year cap with roughly $190,638 of interest paid and a balance still outstanding. The minimum protects your credit standing; it is not a repayment plan.'
+  },
+  {
+    q: 'How fast does a fixed monthly payment clear the debt?',
+    a: 'The same $10,000 at 24% APR with a flat $350 a month is gone in 3 years 7 months, at $4,976 total interest. The trick is that a fixed payment does not shrink as the balance falls — the widening gap between your payment and the accruing interest goes entirely to principal, so the payoff accelerates every month.'
+  },
+  {
+    q: 'What does paying a little extra actually save?',
+    a: 'On this balance, raising the fixed payment from $350 to $500 cuts the payoff from 3 years 7 months to 2 years 2 months and the interest from $4,976 to $2,899. Every extra dollar goes 100% to principal, which then stops generating 24% interest — an effective guaranteed return few investments can match.'
+  },
+  {
+    q: 'Should I use a balance transfer instead?',
+    a: 'A 0% promotional transfer can genuinely help if the transfer fee is smaller than the interest saved and the balance clears within the promo window — otherwise the deferred APR resumes on whatever remains. This simulator shows your baseline cost at the current APR, which is the number a transfer offer has to beat.'
+  },
+  {
+    q: 'Avalanche or snowball — which payoff order is right?',
+    a: 'With several cards, the avalanche (highest APR first) minimizes total interest, while the snowball (smallest balance first) buys quicker wins that help some people stay on plan. Both work only if minimums are paid on every card and the extra amount goes to one target at a time. Run each card here to see its individual timeline.'
+  },
+  {
+    q: 'Does the calculator account for new purchases?',
+    a: 'No — it assumes the card is not used during payoff, a constant APR, and an issuer minimum of a percent of the balance with a dollar floor (your cardholder agreement may compute it slightly differently). Continuing to spend on the card while repaying is the most common reason real payoffs run longer than the projection.'
+  }
+];
+
 const formatDuration = (months) => {
   if (!months || months < 1) return '0 months';
   const years = Math.floor(months / 12);
@@ -155,6 +184,20 @@ const USCreditCardPayoffCalculator = () => {
           name="twitter:description"
           content="Compare minimum due and fixed payment strategies to get out of credit card debt faster."
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: CC_PAYOFF_FAQS.map((item) => ({
+                '@type': 'Question',
+                name: item.q,
+                acceptedAnswer: { '@type': 'Answer', text: item.a }
+              }))
+            })
+          }}
+        />
       </Head>
 
       <CalcLayout
@@ -244,6 +287,80 @@ const USCreditCardPayoffCalculator = () => {
             <ResultActions title="US Credit Card Payoff Summary" summaryLines={summaryLines} fileName="us-credit-card-payoff-summary.txt" />
           </div>
         </div>
+
+        <article className="mt-10 space-y-8 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Anatomy of the minimum-payment trap</h2>
+            <p>
+              Follow one month of the default example closely, because the whole trap is visible in it. A $10,000
+              balance at 24% APR accrues <strong>$200 of interest</strong> in month one. The minimum due — 2% of the
+              balance — comes to <strong>$204</strong>. Of the money you sent, <strong>$4</strong> reached the
+              principal. Next month the balance is $9,996 and the arithmetic repeats, fractionally smaller each time.
+            </p>
+            <p>
+              Run that forward and the simulation hits its 100-year cap still carrying a balance, with roughly
+              <strong> $190,638 of interest</strong> paid along the way — nineteen times the original debt. That is
+              not a bug in the card; it is the design. The minimum payment exists to keep the account current, and its
+              percentage is set low precisely because slow payoff is the issuer&rsquo;s revenue. Any plan that follows
+              the minimum line is renting the debt, not repaying it.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">A fixed payment changes the physics</h2>
+            <p>
+              The escape is almost embarrassingly simple: stop letting the payment shrink. The same $10,000 at the
+              same 24% APR, attacked with a flat <strong>$350 every month</strong>, is finished in
+              <strong> 3 years 7 months</strong> at $4,976 of interest. Nothing about the debt changed — only the
+              payment&rsquo;s refusal to decline with the balance.
+            </p>
+            <p>
+              The mechanism is worth seeing: in month one, $200 of the $350 covers interest and $150 hits principal.
+              As the balance falls, the interest share falls with it, so the principal share grows automatically —
+              $150 becomes $200, then $300, and the payoff accelerates toward the end like a ball rolling downhill.
+              Minimum-style payments cancel that acceleration by shrinking in step with the balance; fixed payments
+              harvest it.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">The marginal dollar is the best-paid dollar you have</h2>
+            <p>
+              Once a fixed plan exists, each extra dollar performs spectacularly. Raising the payment from $350 to
+              <strong> $500</strong> shortens the payoff from 3 years 7 months to <strong>2 years 2 months</strong> and
+              cuts interest from $4,976 to $2,899 — <strong>$2,077 saved</strong> for $150 a month of additional
+              effort. Every marginal dollar goes entirely to principal, and each dollar of principal retired stops
+              compounding against you at 24% forever. As a guaranteed, tax-free return on spare cash, paying down a
+              24%-APR balance is nearly impossible to beat — which is why clearing card debt generally comes before
+              investing, right after keeping a small emergency buffer so a surprise expense does not land back on the
+              card.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Reading the projection honestly</h2>
+            <p>
+              The simulation assumes a constant APR, no new purchases, and an issuer minimum computed as a percentage
+              of the balance with a dollar floor — your cardholder agreement may differ in detail, and most real APRs
+              are variable. The single biggest divergence in practice is continued spending on the card during payoff;
+              the model assumes the card is resting in a drawer. If you are juggling several cards, run each one here
+              separately, keep every minimum current, and send the extra to one target at a time — highest APR first
+              for the cheapest total, smallest balance first if early wins keep you going.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Frequently asked questions</h2>
+            <div className="space-y-3">
+              {CC_PAYOFF_FAQS.map((item) => (
+                <details key={item.q} className="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+                  <summary className="cursor-pointer font-semibold text-ink dark:text-white">{item.q}</summary>
+                  <p className="mt-2">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        </article>
 
         <div className="mt-8">
           <CalculatorInfoPanel

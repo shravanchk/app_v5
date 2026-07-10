@@ -19,6 +19,31 @@ const getMonthlyPayment = (principal, annualRate, months) => {
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
 
+// All figures computed with this page's own formulas on the default inputs:
+// $38,000 price, $5,000 down, $3,000 trade-in, 7% sales tax, $1,200 fees, 6.5% APR, 60 months.
+const AUTO_LOAN_FAQS = [
+  {
+    q: 'How is the amount financed calculated?',
+    a: 'Price minus trade-in gives the taxable amount, then sales tax and dealer fees are added and the down payment subtracted. On the default example: $38,000 − $3,000 trade-in = $35,000 taxable, plus $2,450 tax and $1,200 fees, minus $5,000 down = $33,650 financed. That — not the sticker price — is what you pay interest on.'
+  },
+  {
+    q: 'Is a 72- or 84-month car loan a bad idea?',
+    a: 'It is a trade you should price, not a rule. Stretching this $33,650 loan from 60 to 72 months drops the payment from $658.40 to $565.65 but raises total interest from $5,854 to $7,077; at 84 months the payment is $499.68 and interest reaches $8,323. Longer terms also keep you underwater on a depreciating car for more of the loan.'
+  },
+  {
+    q: 'How much does my APR actually matter?',
+    a: 'On this loan, the difference between 6.5% and 9.5% APR is $48.31 a month — $2,899 over 60 months, all of it interest. APR depends on your credit profile, the loan term, and the lender, which is why getting pre-approved by a bank or credit union before visiting the dealer gives you a real number to make the dealer beat.'
+  },
+  {
+    q: 'Why does the trade-in reduce my sales tax?',
+    a: 'In many states, tax applies only to the price difference after the trade-in credit. Here the $3,000 trade-in trims the taxable base and saves $210 at a 7% rate on top of its cash value. State rules vary — some tax the full price — so check how yours treats trade-ins before comparing a private sale against trading in.'
+  },
+  {
+    q: 'What does being "upside-down" on a car loan mean?',
+    a: 'Owing more than the car is worth. Cars depreciate fastest in the first years, while slow-amortizing loans (small down payments, long terms) pay principal slowly, so the loan balance can exceed the car’s value. A bigger down payment and a shorter term shrink the underwater window; gap insurance covers the difference if the car is totaled during it.'
+  }
+];
+
 const getPayoffDate = (months) => {
   if (!months || months <= 0) return 'N/A';
   const date = new Date();
@@ -102,6 +127,20 @@ const USAutoLoanCalculator = () => {
           name="twitter:description"
           content="Estimate monthly car payment, total interest, financed amount and payoff timeline."
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: AUTO_LOAN_FAQS.map((item) => ({
+                '@type': 'Question',
+                name: item.q,
+                acceptedAnswer: { '@type': 'Answer', text: item.a }
+              }))
+            })
+          }}
+        />
       </Head>
 
       <CalcLayout
@@ -157,6 +196,83 @@ const USAutoLoanCalculator = () => {
             <ResultActions title="US Auto Loan Calculator Summary" summaryLines={summaryLines} fileName="us-auto-loan-calculator-summary.txt" />
           </div>
         </div>
+
+        <article className="mt-10 space-y-8 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">The number the dealer finances is not the sticker price</h2>
+            <p>
+              Car-buying conversations orbit the sticker, but your loan is written on a different number. Watch it get
+              built on the default example: a $38,000 vehicle minus the $3,000 trade-in leaves $35,000 of taxable
+              price. A 7% sales tax adds $2,450, dealer fees add $1,200, and the $5,000 down payment comes off at the
+              end — leaving <strong>$33,650 financed</strong>. At 6.5% APR over 60 months that costs
+              <strong> $658.40 a month</strong> and <strong>$5,854 in interest</strong>, for a total out-of-pocket cost
+              of about $47,500 on a &ldquo;$38,000 car.&rdquo;
+            </p>
+            <p>
+              Two useful things fall out of that arithmetic. First, tax and fees are financed too — you pay five years
+              of interest on the $2,450 of sales tax unless you cover it in cash. Second, in many states the trade-in
+              reduces the taxable base, so the $3,000 trade here is really worth $3,210 against a $3,000 private-sale
+              check. State rules differ on both points; the calculator lets you set the tax rate and fees to match
+              yours.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">The long-term illusion</h2>
+            <p>
+              Dealers sell payments, not prices, and the easiest way to shrink a payment is to stretch the term. The
+              same $33,650 loan at the same 6.5% APR: 60 months costs $658.40 a month and $5,854 in interest; 72
+              months looks friendlier at <strong>$565.65</strong> but the interest climbs to <strong>$7,077</strong>;
+              84 months reads <strong>$499.68</strong> and the interest bill hits <strong>$8,323</strong> — 42% more
+              than the five-year loan, for the identical car.
+            </p>
+            <p>
+              The subtler cost is depreciation racing your amortization. A new car loses value fastest exactly when a
+              long loan pays principal slowest, which is how buyers end up owing more than the car is worth deep into
+              year three. If the payment only works at 84 months, that is the budget telling you something the term is
+              trying to hide.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">APR is the silent price tag</h2>
+            <p>
+              Rate shopping feels abstract until you price it. Moving this loan from 6.5% to 9.5% APR — a spread well
+              within the range between a strong and a weak credit profile — raises the payment by $48.31 and the total
+              interest by <strong>$2,899</strong>. That is a real cost of the loan, paid as surely as any dealer fee.
+            </p>
+            <p>
+              The practical defense is sequencing: get pre-approved by your bank or credit union <em>before</em> the
+              dealership, so the finance office has a concrete number to beat rather than a captive customer. Then run
+              the offered APR and term through this calculator while you sit there — the interest line updates
+              instantly, and it negotiates better than adjectives do.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">What this estimate deliberately leaves out</h2>
+            <p>
+              Title, registration, and documentation charges vary by state and are not separately modeled — fold them
+              into the fees field if you know them. Insurance, fuel, and maintenance sit outside the loan but firmly
+              inside the cost of ownership. Optional products pitched at signing (extended warranties, gap coverage,
+              paint protection) are priced separately and usually negotiable. And the trade-in-before-tax treatment is
+              a common state rule, not a universal one. For the full running-cost picture beyond the loan, the car
+              ownership cost workflow complements this page.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Frequently asked questions</h2>
+            <div className="space-y-3">
+              {AUTO_LOAN_FAQS.map((item) => (
+                <details key={item.q} className="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+                  <summary className="cursor-pointer font-semibold text-ink dark:text-white">{item.q}</summary>
+                  <p className="mt-2">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        </article>
 
         <div className="mt-8">
           <CalculatorInfoPanel

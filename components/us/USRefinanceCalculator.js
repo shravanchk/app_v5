@@ -19,6 +19,31 @@ const getMonthlyPayment = (principal, annualRate, months) => {
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
 
+// All figures computed with this page's own amortization math on the default
+// inputs: $320,000 balance, 7.25% with 300 months left, 6.25% offer, $5,500 costs.
+const REFINANCE_FAQS = [
+  {
+    q: 'When is refinancing a mortgage worth it?',
+    a: 'When you will keep the loan past the break-even point. On a $320,000 balance, dropping from 7.25% to 6.25% over the same 300-month term saves $202.04 a month; with $5,500 in closing costs, the refinance pays for itself in about 2 years 4 months. If you might sell or refinance again before then, the deal loses money no matter how good the rate sounds.'
+  },
+  {
+    q: 'Why does restarting a 30-year term cost so much?',
+    a: 'Because you re-spread the balance over more years at the point where your payments were finally attacking principal. Taking the same 6.25% offer over 360 months instead of the remaining 300 drops the payment to $1,970.30 — but lifetime interest rises to $389,306 versus $313,283 if you match your remaining term. The "lower payment" quietly costs about $76,000 extra.'
+  },
+  {
+    q: 'What do refinance closing costs include?',
+    a: 'Lender origination fees, appraisal, title search and insurance, recording fees, and prepaid escrow items. They commonly run a few percent of the loan amount. Ask for the standardized Loan Estimate from each lender — it makes the fee lines directly comparable.'
+  },
+  {
+    q: 'Is a "no-closing-cost" refinance really free?',
+    a: 'No — the costs are either rolled into the loan balance (you pay interest on them for decades) or absorbed through a higher rate. It can still make sense if you expect to move soon, because you avoid the upfront hit; run this calculator with the higher rate to see the trade honestly.'
+  },
+  {
+    q: 'How big a rate cut justifies refinancing?',
+    a: 'The old "one percent rule" is a decent starting point but the break-even math is the real test. On this example, a half-point cut to 6.75% saves only $102.07 a month, pushing break-even to about 54 months — fine if you will stay 10 years, poor if you will not. Larger balances justify smaller cuts because the same percentage saves more dollars.'
+  }
+];
+
 const formatMonths = (months) => {
   if (!months || months < 1) return 'N/A';
   const whole = Math.ceil(months);
@@ -103,6 +128,20 @@ const USRefinanceCalculator = () => {
           name="twitter:description"
           content="Estimate refinance break-even timeline and net savings after closing costs."
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: REFINANCE_FAQS.map((item) => ({
+                '@type': 'Question',
+                name: item.q,
+                acceptedAnswer: { '@type': 'Answer', text: item.a }
+              }))
+            })
+          }}
+        />
       </Head>
 
       <CalcLayout
@@ -163,6 +202,83 @@ const USRefinanceCalculator = () => {
             <ResultActions title="US Refinance Calculator Summary" summaryLines={summaryLines} fileName="us-refinance-calculator-summary.txt" />
           </div>
         </div>
+
+        <article className="mt-10 space-y-8 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">The whole decision is one number: break-even</h2>
+            <p>
+              A refinance is a purchase. You spend real money today — closing costs — to buy a lower monthly payment,
+              and the deal only turns profitable once the accumulated savings pass what you paid. On the default
+              example, a $320,000 balance at 7.25% with 25 years remaining costs $2,312.98 a month. Refinancing to
+              6.25% over the same remaining term drops that to $2,110.94 — a saving of <strong>$202.04 every
+              month</strong>. Against $5,500 in closing costs, the break-even lands at about
+              <strong> 2 years 4 months</strong>.
+            </p>
+            <p>
+              That single number carries the whole decision. Stay in the home for seven more years and the deal earns
+              roughly $55,000 after costs. Sell in year two and the same &ldquo;great rate&rdquo; loses money. Before
+              anything else, be honest about how long you expect to keep this loan — not this house, this <em>loan</em>,
+              because a future refinance restarts the clock too.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">The term-reset trap</h2>
+            <p>
+              Most refinance offers quote a fresh 30-year term, and that is where the marketing does its work. Take the
+              same 6.25% offer, but spread over 360 months instead of the 300 you have left: the payment falls to a
+              seductive <strong>$1,970.30</strong>. The cost hides in the total: lifetime interest of
+              <strong> $389,306</strong>, versus $313,283 when you match your remaining 25 years — about
+              <strong> $76,000 more</strong> for the privilege of a payment that looks $140 cheaper.
+            </p>
+            <p>
+              The fix is simple: when you refinance, ask for a term that matches what you had left, or keep the new
+              30-year loan but pay the old amount every month. Both capture the rate cut without re-renting the
+              amortization curve&rsquo;s expensive early years. This calculator lets you set the new term to anything,
+              so run both versions before signing.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">How big a cut is actually worth it</h2>
+            <p>
+              The folk rule says refinance when rates drop a full point. The math is more nuanced, and the break-even
+              line tells you why. A half-point cut to 6.75% on this balance saves <strong>$102.07 a month</strong> and
+              needs about <strong>54 months</strong> to recover the same $5,500 in costs — nearly double the wait of
+              the full-point cut. Whether that is fine depends entirely on your horizon.
+            </p>
+            <p>
+              Balance size bends the rule too: the same half-point on a $600,000 loan saves roughly twice the dollars,
+              halving the break-even. Big balances justify small cuts; small balances need big ones. And shop the
+              closing costs as hard as the rate — every $1,000 shaved off costs cuts this example&rsquo;s break-even by
+              about five months.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">What this estimate deliberately leaves out</h2>
+            <p>
+              The comparison isolates principal and interest. Escrowed property taxes and homeowners insurance move
+              with your home, not your loan, so they are excluded from the payment difference. Discount points, lender
+              credits, cash-out amounts, and the tax treatment of mortgage interest are not modeled — each can tilt a
+              close decision. And the payment on a new loan can be estimated to the cent, but qualifying for the quoted
+              rate depends on your credit profile, equity, and documentation. Treat the output as the decision
+              framework and your lender&rsquo;s Loan Estimate as the contract-grade numbers.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Frequently asked questions</h2>
+            <div className="space-y-3">
+              {REFINANCE_FAQS.map((item) => (
+                <details key={item.q} className="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+                  <summary className="cursor-pointer font-semibold text-ink dark:text-white">{item.q}</summary>
+                  <p className="mt-2">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        </article>
 
         <div className="mt-8">
           <CalculatorInfoPanel

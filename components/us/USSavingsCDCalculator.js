@@ -11,6 +11,35 @@ import { formatCurrency } from '../../utils/calculations';
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
 
+// All figures computed with this page's own projection loops on the default
+// inputs: savings $10,000 + $500/month at 4.5% for 5 years; CD $15,000 at 5.1% for 12 months.
+const SAVINGS_CD_FAQS = [
+  {
+    q: 'Should I put money in a high-yield savings account or a CD?',
+    a: 'They solve different problems. Savings accounts keep the money reachable but the bank can reprice the APY any time; a CD locks the rate for the term but charges a penalty to exit early. Money you might need stays in savings; money with a known date (a car next year, tuition in two) fits a CD matched to that date.'
+  },
+  {
+    q: 'Is my savings APY guaranteed?',
+    a: 'No. High-yield savings rates float with the market and banks adjust them without notice — the projection here assumes the rate holds, which is the model’s biggest simplification. On the default plan ($10,000 plus $500 a month for 5 years), the difference between a steady 4.5% and a drop to 3.5% is about $1,479 of interest.'
+  },
+  {
+    q: 'How is CD interest calculated here?',
+    a: 'The deposit compounds monthly at APY ÷ 12 for the term: $15,000 at 5.1% for 12 months matures at about $15,783, earning $783. Real banks vary in compounding convention (daily, monthly, at maturity), which shifts the result by a few dollars — the APY is designed to make offers comparable despite that.'
+  },
+  {
+    q: 'What is a CD ladder?',
+    a: 'Splitting a deposit across staggered terms — say a $15,000 sum split into 12-, 24-, and 36-month rungs — so a portion matures regularly. Each maturity can be spent or rolled into a new long rung at current rates. You keep periodic access and average through rate cycles instead of betting everything on one term.'
+  },
+  {
+    q: 'Are savings accounts and CDs at banks insured?',
+    a: 'Deposits at FDIC-member banks (and NCUA-insured credit unions) are federally insured up to the standard coverage limit per depositor, per institution, per ownership category. Balances above the limit can be spread across institutions or ownership categories to stay fully covered.'
+  },
+  {
+    q: 'Is interest from savings and CDs taxable?',
+    a: 'Yes — it is ordinary income in the year it is credited, reported by the bank on Form 1099-INT, even for a CD you have not cashed out. The projections here are pre-tax; your after-tax yield depends on your bracket, which matters when comparing against tax-advantaged alternatives.'
+  }
+];
+
 const projectSavings = (initialDeposit, monthlyContribution, apy, years) => {
   const months = Math.max(1, Math.floor((Number(years) || 0) * 12));
   const monthlyRate = Math.max(0, Number(apy) || 0) / 100 / 12;
@@ -102,6 +131,20 @@ const USSavingsCDCalculator = () => {
           name="twitter:description"
           content="Compare APY-based savings growth and CD maturity outcomes with practical assumptions."
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: SAVINGS_CD_FAQS.map((item) => ({
+                '@type': 'Question',
+                name: item.q,
+                acceptedAnswer: { '@type': 'Answer', text: item.a }
+              }))
+            })
+          }}
+        />
       </Head>
 
       <CalcLayout
@@ -178,6 +221,85 @@ const USSavingsCDCalculator = () => {
             <ResultActions title="US Savings & CD Calculator Summary" summaryLines={summaryLines} fileName="us-savings-cd-calculator-summary.txt" />
           </div>
         </div>
+
+        <article className="mt-10 space-y-8 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">What steady saving at a real yield actually produces</h2>
+            <p>
+              The savings projection answers the unglamorous question that matters most: what does showing up monthly
+              do? On the defaults — $10,000 to start, $500 added every month, 4.5% APY held for five years — the
+              balance reaches <strong>$46,216.63</strong>. You put in $40,000 of that; compounding contributes
+              <strong> $6,216.63</strong> without any market risk. The model compounds monthly at APY ÷ 12, crediting
+              interest on the full balance including each fresh deposit.
+            </p>
+            <p>
+              Notice the shape of the curve the table of inputs cannot show: in year one the interest is mostly earned
+              by the opening $10,000; by year five, the accumulated contributions dominate. Regular deposits are what
+              convert a good rate into a meaningful figure — the rate alone, on the opening $10,000, would have
+              produced about $2,517 of interest over the same five years, well under half of the combined result.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">A CD is not a better savings account — it is a rate lock</h2>
+            <p>
+              The CD side prices a different product. Deposit $15,000 at 5.1% for 12 months and maturity brings
+              <strong> $15,783.14</strong> — $783.14 of interest, known to the cent on the day you open it. That
+              certainty is the point. The savings account may quote a similar rate today, but the bank can cut it next
+              month; the CD cannot be repriced, only exited early at the cost of a penalty (commonly a few months of
+              interest — each bank sets its own).
+            </p>
+            <p>
+              So the choice tracks the money&rsquo;s job. An emergency fund belongs in savings, full stop — penalties
+              and emergencies mix badly. A known future expense fits a CD maturing just before the date. And a lump
+              sum with no fixed date can be laddered: split across staggered terms so a rung matures regularly, rolling
+              each maturity into a new long rung. The ladder earns long-term rates on most of the money while keeping
+              a portion perpetually close to hand.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Rate risk cuts both ways</h2>
+            <p>
+              The projection&rsquo;s quiet assumption is that the savings APY survives five years, and it usually will
+              not. Re-run the default plan at 3.5% instead of 4.5% and the interest drops from $6,216.63 to
+              $4,737.96 — a single percentage point costs <strong>about $1,479</strong> on this modest plan. When rates
+              are falling, that is precisely when the CD&rsquo;s lock outperforms; when rates rise, the floating
+              savings account quietly wins and the CD holder watches better offers go by. Since nobody times rate
+              cycles reliably, the honest play for larger balances is the ladder&rsquo;s average rather than a single
+              bet.
+            </p>
+            <p>
+              Model both sides of your own situation: set the savings APY to what your bank pays <em>today</em> (many
+              large banks still pay near zero — moving idle cash to a high-yield account is often worth hundreds of
+              dollars a year before any optimization), then price the CD your bank actually offers against it.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">What this estimate deliberately leaves out</h2>
+            <p>
+              Taxes: interest is ordinary income (Form 1099-INT), so after-tax yield is lower than the headline —
+              relevant when comparing against tax-advantaged accounts. Early-withdrawal penalties on CDs are not
+              modeled; neither are tiered APYs, promotional rates that expire, or minimum-balance conditions. Bank
+              compounding conventions vary slightly from the monthly model used here, which is exactly the discrepancy
+              APY exists to normalize. For growth involving market returns rather than bank yield, the compound
+              interest calculator is the right tool.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Frequently asked questions</h2>
+            <div className="space-y-3">
+              {SAVINGS_CD_FAQS.map((item) => (
+                <details key={item.q} className="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+                  <summary className="cursor-pointer font-semibold text-ink dark:text-white">{item.q}</summary>
+                  <p className="mt-2">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        </article>
 
         <div className="mt-8">
           <CalculatorInfoPanel
