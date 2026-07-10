@@ -29,6 +29,7 @@ Last updated: 2026-07-05
 | Thin content: Credit Card Analyzer (→1,310w) | The last calculator page without prose — a bespoke interactive multi-currency expense tracker. Added an always-visible educational article (50/30/20 budgeting, reading budget-vs-actual, multi-currency caveats, avoiding revolving interest) plus a 5-item FAQ and matching FAQPage JSON-LD. No numeric claims fabricated (it is a tracker, not a fixed-formula calculator); figures are framed as illustrative. Cross-links to `/us-credit-card-payoff-calculator` and `/credit-card-trap-calculator` | `9ff75ab` |
 | Legacy static guides migrated (8 files) | Migrated all 8 `public/guide-*.html` standalone pages into `/guides/*` (GuidePageLayout — full site chrome, dark-mode-safe prose, reviewed-on byline, Article schema). Content preserved faithfully with a new shared `Callout` component for the old `.box`/`.note` blocks. Rewrote all internal links (10 components) from `/guide-*.html` to `/guides/*`; updated the 8 sitemap URLs (+ bumped lastmod); added 8 `301` redirects to `_redirects`; added the guides to the `/guides` index (new "Saving & investing" group); deleted the legacy HTML so redirects take effect | `0445552` |
 | New `/blog` section (3 launch posts) | Added a distinct editorial blog (nav + footer links, index page with `Blog` JSON-LD, new `BlogPostLayout` mirroring the guides design, `BlogPosting` schema, linked author/reviewer byline). Framed as *timely/data-driven* analysis to stay distinct from the evergreen `/guides`. Three launch posts (US/EU/India mix), every figure engine-verified: US $100k take-home by state (735w), €60k keep-rate across 8 EU systems (671w), old-vs-new regime FY 2026-27 break-even (763w). Added to sitemap. | `5b1baf7` |
+| Thin content: 5 US calculators missed by every batch — Refinance (426→1,264w), Auto Loan (430→1,288w), 401(k) (515→1,417w), Savings & CD (417→1,333w), Credit Card Payoff (554→1,454w). All five had HowTo + InfoPanel but **no article and no FAQPage schema**; issue #1 below had been marked resolved prematurely | Same pattern as prior batches: FAQ array feeding both visible `<details>` and FAQPage JSON-LD, per-topic article, every figure computed from each page's own formulas and verified against the live widget (refinance break-even 2y 4m; 401(k) $2,439,809 projection; CC minimum-payment 100-year cap with $190,638 interest). No IRS limits, APR tables, or FDIC dollar amounts hardcoded | `76958f6` |
 
 ## Open issues
 
@@ -45,9 +46,14 @@ Last updated: 2026-07-05
    interactive tracker — article + FAQ added). Already had full article layouts: GST,
    EMI, Income Tax (`CalculatorArticleLayout`), Salary, SIP, IRCTC, Tax Regime
    Comparison, Buy-vs-Rent (`SearchLandingSections`), Credit Card Trap
-   (`SearchLandingSections`). No calculator page is now thin. (Remaining site-wide
-   quality work lives under issues #2–#3: the legacy static guides and programmatic
-   template repetition.)
+   (`SearchLandingSections`). (Remaining site-wide quality work lives under issues
+   #2–#3: the legacy static guides and programmatic template repetition.)
+   **Correction (2026-07-10):** this was marked resolved prematurely — a word-count
+   sweep of the built US pages found five calculators (Refinance, Auto Loan, 401(k),
+   Savings & CD, Credit Card Payoff) at 417–554 words with no article and no FAQPage
+   schema. All five upgraded in `76958f6` (now 1,260–1,454w); the sweep now shows every
+   calculator page ≥1,000 words with exactly one FAQPage schema. Lesson recorded:
+   verify "all pages done" claims against the built HTML, not the batch list.
    Impact: high — this was the core complaint.
 
 2. **Legacy static guides (`public/guide-*.html`, 8 files).** ✅ **RESOLVED.**
