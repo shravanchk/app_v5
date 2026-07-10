@@ -20,7 +20,9 @@ const FAQ = [
   { question: 'How is my next period predicted?', answer: 'The calculator adds your average cycle length to the first day of your last period. A 28-day cycle starting June 1 predicts the next period on June 29. Predictions are estimates — real cycles naturally vary by a few days.' },
   { question: 'When is the fertile window?', answer: 'Ovulation typically happens about 14 days before the next period starts. Because sperm can survive up to five days, the fertile window spans roughly the five days before ovulation through one day after it.' },
   { question: 'What counts as a normal cycle?', answer: 'Cycles of 21–35 days with periods lasting 2–7 days are generally considered normal for adults. Consistently irregular, very heavy, or very painful periods are worth discussing with a doctor or gynaecologist.' },
-  { question: 'Can I use this as contraception?', answer: 'No. Calendar-based predictions are not a reliable contraceptive method — ovulation timing varies cycle to cycle. Use this tool for planning and awareness, not birth control.' }
+  { question: 'Can I use this as contraception?', answer: 'No. Calendar-based predictions are not a reliable contraceptive method — ovulation timing varies cycle to cycle. Use this tool for planning and awareness, not birth control.' },
+  { question: 'Why was my period early or late even though I entered everything correctly?', answer: 'The calculator projects your average forward, and real cycles move around that average. Stress, travel, illness, sleep disruption, and weight changes can all shift ovulation, which shifts everything after it. A prediction landing within a few days either side of the actual date is the calendar method working as well as it can.' },
+  { question: 'Does this work if my cycles are irregular?', answer: 'It works less well, and it is honest to say so. An average smooths over variation — if your cycles swing widely from month to month, the single predicted date means little, though the range across a few predictions can still help with planning. Cycle-tracking over several months, or discussing persistent irregularity with a clinician, gives better answers than any calendar formula.' }
 ];
 
 const fmt = (d) => d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
@@ -145,6 +147,72 @@ const PeriodCalculator = () => {
             { name: 'Read the cycle wheel', text: 'See period days, fertile window, and ovulation on the wheel, plus dates for your next three cycles.' }
           ]}
         />
+
+        <article className="mt-10 space-y-8 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+          <section>
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">The model behind the predictions</h2>
+            <p className="mt-3">
+              This is a calendar-method calculator, and it helps to know exactly what that means. Your next period is
+              projected by adding your average cycle length to the first day of your last one, repeated for three cycles.
+              Ovulation is then estimated by counting <em>backwards</em> 14 days from each projected period — not forwards
+              from the last one. That direction matters: the second half of the cycle (the luteal phase, from ovulation to
+              the next period) is the relatively stable part for most people, while the first half is where most of the
+              month-to-month variation happens. Anchoring ovulation to the end of the cycle rather than the start is what
+              makes the estimate usable across different cycle lengths.
+            </p>
+            <p className="mt-3">
+              The fertile window spans the five days before estimated ovulation through one day after it. The asymmetry
+              reflects biology rather than convenience: sperm can survive several days waiting for an egg, while a released
+              egg remains viable for roughly a day. So the days <em>before</em> ovulation contribute most of the window, and
+              it closes quickly after.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">Getting a better input number</h2>
+            <p className="mt-3">
+              The single biggest improvement you can make to these predictions costs nothing: use a real average instead of a
+              guess. Note the first day of your period for three to six months, count the days from each start to the next,
+              and average them. Many people who assume they are &ldquo;a 28-day cycle&rdquo; discover they are consistently 26
+              or 31 — and every day of error in the input becomes a day of error in every predicted date. The same goes for
+              period length: count from the first day of real bleeding, not spotting, to the last.
+            </p>
+            <p className="mt-3">
+              If your cycle length genuinely varies — say between 26 and 33 days — no single average captures that, and the
+              honest way to use this tool is to run it twice, once with each end of your range, and treat the span between the
+              two predicted dates as the realistic window.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">What the calculator cannot see</h2>
+            <p className="mt-3">
+              A formula projecting averages forward knows nothing about this particular month. Stress, travel across time
+              zones, illness, intense training, and significant weight change can all delay or occasionally advance ovulation
+              — and because the luteal phase stays roughly fixed, a late ovulation means a late period by about the same
+              number of days. Predictions are also least reliable at times when cycles are re-establishing themselves:
+              the first years after periods begin, after stopping hormonal contraception, postpartum, and approaching
+              menopause. During those phases, treat any calendar prediction as a rough sketch.
+            </p>
+            <p className="mt-3">
+              This is also why the tool is emphatic about not being contraception. Preventing pregnancy with cycle timing
+              requires the prediction to be right about the one week it is most likely to be wrong — the timing of ovulation.
+              Awareness and planning, yes; birth control, no.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl font-bold text-ink dark:text-white">When a pattern is worth a conversation</h2>
+            <p className="mt-3">
+              The typical ranges the form hints at — cycles of 21 to 35 days, bleeding for 2 to 7 days — describe where most
+              adult cycles fall, not a rule. What matters more than any single unusual month is a <em>change in your own
+              pattern</em>: cycles that were regular becoming erratic, bleeding that becomes much heavier or lasts notably
+              longer than your normal, severe pain that interferes with daily life, or a missed period when pregnancy is
+              possible. Those are conversations for a doctor or gynaecologist, not a calculator — bring your tracked dates
+              with you, because a few months of real start dates is exactly the history a clinician will ask for.
+            </p>
+          </section>
+        </article>
 
         <div className="mt-10">
           <h2 className="font-display text-xl font-bold text-ink dark:text-white">Period Calculator FAQ</h2>
