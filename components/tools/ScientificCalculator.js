@@ -64,6 +64,33 @@ const normalizeExpression = (rawExpression) => {
   return expression;
 };
 
+const SCI_FAQS = [
+  {
+    q: 'Why is my trig answer different from the textbook?',
+    a: 'Almost always the angle mode. In DEG mode sin(30) is 0.5, the textbook answer. In RAD mode the same keystrokes compute the sine of 30 radians, which is about −0.988 — a completely different number. School problems are usually in degrees; calculus and programming formulas are usually in radians. Check the DEG/RAD toggle before anything else.'
+  },
+  {
+    q: 'What is the difference between log and ln?',
+    a: 'Here log is base-10 logarithm and ln is the natural (base-e) logarithm, following calculator convention: log(1000) = 3 and ln(E) = 1. Be careful when moving between this tool and programming languages — in most languages the function named log is the natural logarithm.'
+  },
+  {
+    q: 'Why does sin(180) show exactly 0 instead of a tiny number?',
+    a: 'Computers store π only approximately, so the raw result of sin(180°) is a number around 10⁻¹⁶ rather than a true zero. The calculator snaps anything smaller than 10⁻¹² to zero so that results read the way the mathematics intends instead of leaking floating-point noise.'
+  },
+  {
+    q: 'Why does factorial stop at 170?',
+    a: 'Numbers here are stored in double-precision floating point, which tops out near 1.8 × 10³⁰⁸. 170! is about 7.3 × 10³⁰⁶ and still fits; 171! does not, so the calculator raises an overflow error instead of returning Infinity. Factorial also requires a non-negative whole number — fact(2.5) is rejected.'
+  },
+  {
+    q: 'How does the % key work?',
+    a: 'It divides the preceding value by 100, so 25% evaluates to 0.25 and 200 * 10% gives 20. It is a plain mathematical percent, not the “add tax” style percent found on some shop calculators.'
+  },
+  {
+    q: 'How do I reuse a previous result?',
+    a: 'Press ANS to insert the last computed value into the expression, or click any line in the Recent calculations list to reload that full expression for editing. History keeps the last eight evaluations.'
+  }
+];
+
 const keyBase =
   'rounded-xl border px-1 py-3 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40';
 const keyDefault =
@@ -200,6 +227,20 @@ const ScientificCalculator = () => {
                 price: '0',
                 priceCurrency: 'USD'
               }
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: SCI_FAQS.map((faq) => ({
+                '@type': 'Question',
+                name: faq.q,
+                acceptedAnswer: { '@type': 'Answer', text: faq.a }
+              }))
             })
           }}
         />
@@ -349,21 +390,6 @@ const ScientificCalculator = () => {
             </div>
           </Card>
 
-          <Card className="p-5">
-            <h2 className="font-display text-base font-bold text-ink dark:text-white">FAQ</h2>
-            <div className="mt-1.5 space-y-2 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
-              <p>
-                <strong className="font-semibold text-ink dark:text-white">Why are trig answers different from my textbook?</strong>{' '}
-                Check the angle mode. Most textbook examples use degrees.
-              </p>
-              <p>
-                <strong className="font-semibold text-ink dark:text-white">How do I reuse previous outputs?</strong> Use{' '}
-                <strong className="font-semibold text-ink dark:text-white">ANS</strong> in the keypad or click an item from
-                calculation history.
-              </p>
-            </div>
-          </Card>
-
           <p className="flex items-start gap-1.5 text-xs text-ink-muted dark:text-slate-400">
             <Sigma size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
             <span>
@@ -371,7 +397,104 @@ const ScientificCalculator = () => {
             </span>
           </p>
         </div>
-      
+
+        <article className="mt-10 max-w-3xl space-y-8 text-sm leading-relaxed text-ink-soft dark:text-slate-300">
+          <section>
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Type the whole expression, not one step at a time</h2>
+            <p className="mt-3">
+              This calculator evaluates a complete expression in one pass, the way you would write it on paper:{' '}
+              <span className="font-mono">(25^2 + 40^2)^0.5</span> returns 47.1699056603 directly, with the standard order of
+              operations applied — parentheses first, then powers, then multiplication and division, then addition and
+              subtraction. That is the main advantage over a button-chain calculator, where each intermediate press commits a
+              step and a mistyped operator forces you to start over. Here you can see the whole computation, edit any part of
+              it, and re-evaluate.
+            </p>
+            <p className="mt-3">
+              A few notational conveniences are handled for you: <span className="font-mono">^</span> means &ldquo;to the power
+              of&rdquo;, <span className="font-mono">π</span> or <span className="font-mono">pi</span> inserts the constant, and
+              implicit multiplication like <span className="font-mono">2(3+4)</span> is expanded to{' '}
+              <span className="font-mono">2*(3+4)</span> automatically. Function names always take parentheses:{' '}
+              <span className="font-mono">sqrt(144)</span>, <span className="font-mono">log(1000)</span>,{' '}
+              <span className="font-mono">fact(6)</span>.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-ink dark:text-white">DEG vs RAD: the switch that causes most wrong answers</h2>
+            <p className="mt-3">
+              Every trigonometric mistake we could list comes down to one toggle. In DEG mode, <span className="font-mono">sin(30)</span>{' '}
+              is 0.5 — the answer school problems expect. In RAD mode, the same input asks for the sine of 30 <em>radians</em>,
+              which is about −0.988. Neither answer is wrong; they are answers to different questions. Degrees are the
+              convention in school geometry, surveying, and most everyday contexts. Radians are the native unit of calculus,
+              physics formulas, and every mainstream programming language, because they make the derivatives of sin and cos
+              come out clean.
+            </p>
+            <p className="mt-3">
+              The inverse functions respect the same setting: in DEG mode <span className="font-mono">atan(1)</span> returns 45;
+              in RAD mode it returns 0.785398163397, which is π/4. If you are checking a formula from code against this
+              calculator, switch to RAD first — that single step reconciles most &ldquo;the computer disagrees with my
+              calculator&rdquo; sessions.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-ink dark:text-white">What the calculator does about floating-point noise</h2>
+            <p className="mt-3">
+              All arithmetic runs in double-precision floating point, the same number format used by spreadsheets and most
+              programming languages. It is accurate to roughly 15–16 significant digits, but it cannot represent most decimal
+              fractions exactly — the raw result of 0.1 + 0.2 is 0.30000000000000004. To keep answers readable, this calculator
+              rounds every result to 12 significant digits, which folds that kind of representational noise back into the
+              number you expect: 0.1 + 0.2 displays as 0.3.
+            </p>
+            <p className="mt-3">
+              Two related behaviors are worth knowing. First, results smaller than 10⁻¹² in magnitude snap to exactly zero, so{' '}
+              <span className="font-mono">sin(180)</span> in DEG mode shows 0 rather than a stray 1.2 × 10⁻¹⁶ left over from the
+              approximate value of π. Second, quantities that are mathematically undefined can still evaluate to a huge finite
+              number for the same reason: <span className="font-mono">tan(90)</span> in DEG mode returns a value around 1.6 ×
+              10¹⁶ instead of an error, because the computed angle is a hair short of a true right angle. If you see an
+              absurdly large trig result, read it as &ldquo;undefined&rdquo;, not as data.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-ink dark:text-white">The function set, briefly</h2>
+            <p className="mt-3">
+              <span className="font-mono">sin</span>, <span className="font-mono">cos</span>, <span className="font-mono">tan</span>{' '}
+              and their inverses <span className="font-mono">asin</span>, <span className="font-mono">acos</span>,{' '}
+              <span className="font-mono">atan</span> follow the angle mode. <span className="font-mono">log</span> is base-10 and{' '}
+              <span className="font-mono">ln</span> is natural — <span className="font-mono">log(1000)</span> is 3,{' '}
+              <span className="font-mono">ln(E)</span> is 1. <span className="font-mono">sqrt</span> and{' '}
+              <span className="font-mono">abs</span> do what they say; <span className="font-mono">pow(x, y)</span> and{' '}
+              <span className="font-mono">x^y</span> are interchangeable. <span className="font-mono">fact(n)</span> computes
+              factorials for whole numbers from 0 to 170 — handy for permutation and combination checks like{' '}
+              <span className="font-mono">fact(6) / (3 * 2)</span>, which returns 120. Beyond 170 the true value exceeds what
+              double precision can hold (171! is larger than 1.8 × 10³⁰⁸), so the calculator reports an overflow rather than
+              returning a misleading Infinity.
+            </p>
+            <p className="mt-3">
+              <span className="font-mono">ANS</span> inserts the last result, which turns the calculator into a running tape:
+              evaluate a subtotal, then build the next expression around <span className="font-mono">ANS</span> instead of
+              retyping. The history list keeps your last eight evaluations, and clicking one reloads the full expression — not
+              just the answer — so you can correct one number in a long formula without reconstructing it.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Frequently asked questions</h2>
+            <div className="mt-4 space-y-3">
+              {SCI_FAQS.map((faq) => (
+                <details
+                  key={faq.q}
+                  className="group rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
+                >
+                  <summary className="cursor-pointer font-semibold text-ink dark:text-white">{faq.q}</summary>
+                  <p className="mt-2">{faq.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        </article>
+
         <HowToSection
           name="How to use the Scientific Calculator"
           description="Perform scientific calculations in your browser."
