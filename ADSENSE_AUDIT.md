@@ -87,6 +87,17 @@ Last updated: 2026-07-10
    status for India; solidarity/no-tax-state conditional branches), which is genuine
    per-page visible content, not boilerplate. UK/Germany already carried band-specific
    taper/soli callouts. Remaining optional polish: sitemap priority tuning.
+   **Second pass (2026-07-10, `fca5458`):** word-count check showed the two US
+   templates were still near-duplicates (paycheck states: ~450w sharing all but ~46
+   words between Texas and California). Both now generate per-page analysis in
+   getStaticProps from the same engine that builds the tables: paycheck states get
+   type-conditional "how X taxes a paycheck" sections (no-tax/flat/progressive read
+   structurally differently), a build-time 51-state ranking with dollar gaps and
+   nearest-neighbor cross-links, marginal raise math, and 1–2 type-specific FAQs
+   (~800–910w, unique-word count tripled); after-taxes levels get federal-bracket
+   position, threshold-conditional SS-cap/additional-Medicare notes, ladder deltas
+   vs adjacent levels, and 2 level FAQs (~1,130–1,160w). UK/Germany/tax-on-salary
+   templates retain their earlier band-specific callouts and remain acceptable.
    Impact: medium — the hidden-FAQ-schema violation is now fixed everywhere.
 
 4. **Author/E-E-A-T depth.** ✅ **RESOLVED.** `/authors/*` pages exist (3 team/desk
