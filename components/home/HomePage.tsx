@@ -29,7 +29,7 @@ const orgSchema = {
   founder: {
     '@type': 'Person',
     name: 'Shravan Cherukuri',
-    // sameAs: add LinkedIn profile URL here once confirmed
+    sameAs: ['https://www.linkedin.com/in/ch-shravan-kumar-b6a89974/'],
   },
 };
 

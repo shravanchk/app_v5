@@ -11,8 +11,10 @@ export default function UpamanResearchTeamPage() {
       <p>
         The Upaman Research Team prepares planning content, calculation assumptions, and supporting guides for the
         site&apos;s finance and utility tools. The team focuses on simplifying high-impact decisions into practical,
-        transparent models. It is led by <strong>Shravan Cherukuri</strong>, the software engineer who builds and
-        maintains Upaman (see <a href="/about">About Upaman</a>).
+        transparent models. It is led by{' '}
+        <a href="https://www.linkedin.com/in/ch-shravan-kumar-b6a89974/" rel="me noopener" target="_blank">
+          <strong>Shravan Cherukuri</strong>
+        </a>, the software engineer who builds and maintains Upaman (see <a href="/about">About Upaman</a>).
       </p>
       <h2 style={headingTwoStyle}>Scope of Work</h2>
       <ul>

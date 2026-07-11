@@ -28,7 +28,10 @@ export default function AboutPage() {
         </p>
         <h2 style={headingTwoStyle}>Who Runs Upaman</h2>
         <p>
-          Upaman is built and maintained by <strong>Shravan Cherukuri</strong>, a software engineer, together with
+          Upaman is built and maintained by{' '}
+          <a href="https://www.linkedin.com/in/ch-shravan-kumar-b6a89974/" rel="me noopener" target="_blank">
+            <strong>Shravan Cherukuri</strong>
+          </a>, a software engineer, together with
           the <a href="/authors/upaman-research-team">Upaman Research Team</a>. Calculation engines are written
           against official sources (tax statutes, published rate tables, CPI data), and the worked examples across
           the site are generated from the same engines the calculators run — not typed in by hand — so the prose
