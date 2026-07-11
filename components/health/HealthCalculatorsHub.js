@@ -49,11 +49,40 @@ const HealthCalculatorsHub = () => {
           </Link>
         ))}
       </div>
-      <p className="mt-8 max-w-3xl text-sm leading-relaxed text-ink-muted dark:text-slate-400">
-        These tools use published formulas (WHO BMI bands, Mifflin-St Jeor, the US Navy circumference method, and
-        Naegele&apos;s rule) and are for general education — they are not medical advice or a substitute for a
-        healthcare professional.
-      </p>
+      <section className="mt-12 max-w-3xl">
+        <h2 className="font-display text-xl font-bold tracking-tight text-ink dark:text-white">
+          How these calculators work — and which one to start with
+        </h2>
+        <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          Every tool here runs a published, named method rather than a proprietary score, and each results page states
+          which one. The body-metric tools form a sequence: the{' '}
+          <Link href="/bmi-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">BMI calculator</Link>{' '}
+          places weight-for-height into the WHO bands (a screening measure — it cannot tell muscle from fat), the{' '}
+          <Link href="/body-fat-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">body fat calculator</Link>{' '}
+          refines that with the US Navy circumference method using only a tape measure, and the{' '}
+          <Link href="/ideal-weight-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">ideal weight calculator</Link>{' '}
+          shows the four standard reference formulas side by side so you can see how much they disagree.
+        </p>
+        <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          The energy tools build on each other in the same way: the{' '}
+          <Link href="/bmr-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">BMR calculator</Link>{' '}
+          estimates resting burn with Mifflin-St Jeor (Harris-Benedict shown for comparison), the{' '}
+          <Link href="/calorie-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">calorie calculator</Link>{' '}
+          multiplies that by an activity level to get TDEE with safe deficit or surplus targets, and the{' '}
+          <Link href="/macro-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">macro calculator</Link>{' '}
+          splits the result into protein, carb, and fat grams. The{' '}
+          <Link href="/period-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">period</Link>{' '}
+          and{' '}
+          <Link href="/pregnancy-due-date-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">due date</Link>{' '}
+          calculators use calendar methods (cycle averaging and Naegele&apos;s rule) — useful for planning, but not a
+          contraceptive method and not a substitute for an ultrasound date.
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-ink-muted dark:text-slate-400">
+          All results are general education, not medical advice. Formulas fitted to population averages can be off for
+          any individual — athletes, older adults, and people with medical conditions especially — so confirm decisions
+          that affect your health with a professional.
+        </p>
+      </section>
     </CalcLayout>
   );
 };

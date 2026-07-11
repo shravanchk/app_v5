@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://upaman.com/</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -67,7 +67,7 @@
   </url>
   <url>
     <loc>https://upaman.com/india-calculators</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.84</priority>
   </url>
@@ -221,13 +221,13 @@
   </url>
   <url>
     <loc>https://upaman.com/eu-calculators</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.82</priority>
   </url>
   <url>
     <loc>https://upaman.com/us-calculators</loc>
-    <lastmod>2026-02-24</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.82</priority>
   </url>
@@ -269,7 +269,7 @@
   </url>
   <url>
     <loc>https://upaman.com/about</loc>
-    <lastmod>2026-03-05</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
   </url>
@@ -281,7 +281,7 @@
   </url>
   <url>
     <loc>https://upaman.com/authors/upaman-research-team</loc>
-    <lastmod>2026-03-14</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.58</priority>
   </url>
@@ -773,7 +773,7 @@
   </url>
   <url>
     <loc>https://upaman.com/health-calculators</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.88</priority>
   </url>
@@ -815,7 +815,7 @@
   </url>
   <url>
     <loc>https://upaman.com/workflows</loc>
-    <lastmod>2026-07-01</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -1667,7 +1667,7 @@
   </url>
   <url>
     <loc>https://upaman.com/tools</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

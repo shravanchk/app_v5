@@ -65,6 +65,12 @@ const COMPARISON_ROWS = COMPARISON_SALARIES
 const thCls = 'border border-slate-200 bg-slate-50 px-3 py-2 text-left font-semibold text-ink dark:border-slate-700 dark:bg-slate-800 dark:text-white';
 const tdCls = 'border border-slate-200 px-3 py-2 text-ink-soft dark:border-slate-700 dark:text-slate-300';
 
+// Intro figures, computed from the same engine as the table so the prose can
+// never drift from the calculators.
+const NET_60K = Object.fromEntries(
+  ['DE', 'FR', 'NL'].map((code) => [code, money(computeEuropeanSalary(code, 60000).netAnnual, '€')])
+);
+
 const EUCalculatorsHub = () => {
   return (
     <CalcLayout eyebrow="UK & Europe" title="UK & Europe Calculators Hub" subtitle="Tax, VAT, and country-specific net-salary tools for the UK, Germany, France, the Netherlands and across Europe — all free.">
@@ -130,6 +136,42 @@ const EUCalculatorsHub = () => {
           Planning estimates only — figures use national averages where rates vary locally (Swiss canton, Swedish
           municipality), exclude church tax and surcharges, and salaries are not currency-adjusted between countries.
           Cost of living differs; a higher keep-rate is not automatically a higher standard of living.
+        </p>
+      </section>
+      </Reveal>
+
+      <Reveal>
+      <section className="mt-12 max-w-3xl">
+        <h2 className="font-display text-xl font-bold tracking-tight text-ink dark:text-white">
+          Same salary, different rules — why each country needs its own calculator
+        </h2>
+        <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          Every tool in this suite runs on country-specific 2026 rules, not a generic percentage. The{' '}
+          <Link href="/germany-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Germany calculator</Link>{' '}
+          applies the official §32a EStG income-tax formula plus solidarity surcharge and social-insurance
+          contributions up to their assessment ceilings. The{' '}
+          <Link href="/france-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">France calculator</Link>{' '}
+          models the CSG/CRDS social charges that come out of pay before income tax is even assessed. The{' '}
+          <Link href="/netherlands-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Netherlands calculator</Link>{' '}
+          includes the general tax credit and labour credit whose taper makes Dutch take-home unusually progressive.
+          And the{' '}
+          <Link href="/uk-income-tax-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">UK calculator</Link>{' '}
+          applies income tax bands alongside National Insurance, including the 60% effective marginal rate where the
+          personal allowance tapers away between £100,000 and £125,140.
+        </p>
+        <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          That is why the same €60,000 salary produces very different net pay: roughly {NET_60K.DE} in Germany,{' '}
+          {NET_60K.FR} in France, and {NET_60K.NL} in the Netherlands (single employee, no church tax — the figures in
+          the table above come from the same engine). Use a country calculator for a detailed breakdown of your own
+          salary, the{' '}
+          <Link href="/european-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">European comparison tool</Link>{' '}
+          to see several countries side by side, or the{' '}
+          <Link href="/eu-vat-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">EU VAT calculator</Link>{' '}
+          for consumption-tax rates across member states. If you earn a round salary, the{' '}
+          <Link href="/uk/take-home" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">UK</Link>{' '}
+          and{' '}
+          <Link href="/germany/take-home" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Germany take-home tables</Link>{' '}
+          give instant answers for common salary levels without entering anything.
         </p>
       </section>
       </Reveal>

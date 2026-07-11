@@ -46,6 +46,38 @@ const ToolsHub = () => {
           </Link>
         ))}
       </div>
+
+      <section className="mt-12 max-w-3xl">
+        <h2 className="font-display text-xl font-bold tracking-tight text-ink dark:text-white">
+          Small tools, done properly
+        </h2>
+        <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          These are the utilities people reach for between the big financial decisions, built with the same care as
+          the finance calculators: every tool shows its formula or method, works in both light and dark mode, and runs
+          entirely in your browser with no sign-up. The{' '}
+          <Link href="/percentage-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">percentage calculator</Link>{' '}
+          handles the four questions people actually ask — percent of a number, share of a whole, percent change, and
+          reverse percentages — each with the formula written out. The{' '}
+          <Link href="/tip-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">tip calculator</Link>{' '}
+          adds bill splitting and round-up so a group can settle in one step, and the{' '}
+          <Link href="/age-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">age calculator</Link>{' '}
+          returns exact years, months, and days between any two dates — the same arithmetic used for eligibility
+          cut-offs and paperwork.
+        </p>
+        <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          For study and work there are full{' '}
+          <Link href="/scientific-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">scientific</Link>{' '}
+          and{' '}
+          <Link href="/statistics-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">statistics</Link>{' '}
+          calculators (the latter computes mean, median, mode, variance, and standard deviation from a pasted data
+          set), a{' '}
+          <Link href="/unit-converter" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">unit converter</Link>{' '}
+          covering length, weight, temperature, area, and volume, and a{' '}
+          <Link href="/json-tools" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">JSON formatter</Link>{' '}
+          that validates and minifies with clear error positions — handy when a config file breaks and you need to see
+          where. Nothing you enter leaves your device.
+        </p>
+      </section>
     </CalcLayout>
   );
 };

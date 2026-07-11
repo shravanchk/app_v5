@@ -4,12 +4,13 @@ Working document. Issues found while upgrading calculator pages into educational
 resources. Items are **not** auto-fixed unless noted; severity reflects estimated
 impact on AdSense approval probability.
 
-Last updated: 2026-07-10
+Last updated: 2026-07-11
 
 ## Already fixed (this review cycle)
 
 | Issue | Fix | Commit |
 |---|---|---|
+| Thin hub pages (GSC "crawled – currently not indexed" follow-up): /tools 285w, /workflows 317w, /health-calculators 401w, /us-calculators 447w, /eu-calculators 508w, /india-calculators 615w | Each hub gained a region-specific overview section (now 470–847w) with figures computed at build time from the site's own engines (US: TX vs CA $75k paycheck via `computePaycheck`; EU: €60k nets via `computeEuropeanSalary`; India: ₹12L zero-tax rebate via `calculateIndianIncomeTax`), so prose cannot drift from calculators. Also: homepage "Latest updates" dated changelog block (real ship dates from git, easy-to-append array in `components/home/LatestUpdates.tsx`); named maintainer (Shravan Cherukuri) added to /about, research-team author page, and Organization schema `founder` for E-E-A-T; removed stale robots.txt disallows (`/index.html` was causing GSC's "blocked by robots.txt" — Cloudflare 308s it to `/`); sitemap lastmod bumped for the 9 touched pages | — |
 | Placeholder ₹X/₹Y text on Income Tax page | Engine-verified worked example | `3bdb8ea` |
 | "Loading Advertisement / Please wait" in prerendered HTML on ad pages | Silent ad-slot placeholder | `3bdb8ea` |
 | Doubled step numbers ("1. 1") for screen readers / text extraction | HowToSection `ol`→`ul` + aria-hidden badge | `3bdb8ea` |

@@ -26,6 +26,15 @@ export default function AboutPage() {
           compound interest, inflation, and calorie/BMI tools. Region-specific calculators state their assumptions
           (tax year, jurisdiction, currency) so results stay verifiable.
         </p>
+        <h2 style={headingTwoStyle}>Who Runs Upaman</h2>
+        <p>
+          Upaman is built and maintained by <strong>Shravan Cherukuri</strong>, a software engineer, together with
+          the <a href="/authors/upaman-research-team">Upaman Research Team</a>. Calculation engines are written
+          against official sources (tax statutes, published rate tables, CPI data), and the worked examples across
+          the site are generated from the same engines the calculators run — not typed in by hand — so the prose
+          cannot drift from the results. Corrections and questions are welcome via the{' '}
+          <a href="/contact">contact page</a>.
+        </p>
         <h2 style={headingTwoStyle}>Important Note</h2>
         <p>
           Upaman provides educational planning estimates. Results are not legal, tax, or investment advice and should

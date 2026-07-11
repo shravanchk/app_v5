@@ -6,6 +6,11 @@ import {
   Landmark, Repeat, Receipt, Percent, LineChart, ArrowLeftRight, ShieldCheck, CreditCard, Hourglass,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
+import { calculateIndianIncomeTax } from '../../utils/taxCalculations';
+
+// Engine-computed fact for the intro: with the FY 2026-27 rebate, taxable
+// income of ₹12,00,000 pays zero tax under the new regime.
+const TAX_AT_12L = calculateIndianIncomeTax(1200000, 'new').totalTax;
 
 const T = {
   brand: 'bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-300',
@@ -76,6 +81,40 @@ const IndiaCalculatorsHub = () => {
             </Link>
           ))}
         </div>
+
+        <section className="mt-12 max-w-3xl">
+          <h2 className="font-display text-xl font-bold tracking-tight text-ink dark:text-white">
+            Built for FY 2026-27 rules
+          </h2>
+          <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+            The India tools centre on the choice that decides everything else: old regime or new. Under the new
+            regime&apos;s FY 2026-27 slabs, the Section 87A rebate wipes out tax on taxable income up to ₹12 lakh —
+            the engine behind the{' '}
+            <Link href="/income-tax-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">income tax calculator</Link>{' '}
+            computes exactly ₹{TAX_AT_12L.toLocaleString('en-IN')} payable at that level, and with the ₹75,000
+            standard deduction that covers salaries up to ₹12.75 lakh. The old regime can still win if you claim large
+            deductions (80C, home-loan interest, HRA) — the{' '}
+            <Link href="/tax-regime-comparison" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">regime comparison tool</Link>{' '}
+            finds your break-even deduction amount, and the{' '}
+            <Link href="/tax-on-salary" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">tax-on-salary pages</Link>{' '}
+            give pre-computed answers for every salary from ₹5 lakh to ₹50 lakh, including the marginal-relief zone
+            just above ₹12 lakh.
+          </p>
+          <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+            Around that core sit the tools for the other recurring decisions: converting a CTC offer into an in-hand
+            figure (<Link href="/salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">salary calculator</Link>),
+            sizing an EMI and testing prepayment against investing
+            (<Link href="/loan-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">EMI calculator</Link>,{' '}
+            <Link href="/prepay-vs-invest-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">prepay vs invest</Link>),
+            projecting SIP and PPF growth side by side
+            (<Link href="/fd-vs-sip-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">FD vs SIP</Link>{' '}
+            compares them post-tax, where LTCG at 12.5% versus slab-rate FD interest changes the verdict), and GST
+            both as invoice arithmetic and as the September 2025 rate-reform price check
+            (<Link href="/gst-reform-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">GST 2.0 calculator</Link>).
+            Every figure is computed from the same engines the calculators run on, so the numbers here always match
+            what the tools return.
+          </p>
+        </section>
       </CalcLayout>
     </>
   );

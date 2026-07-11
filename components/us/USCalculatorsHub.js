@@ -4,6 +4,13 @@ import {
   Landmark, RefreshCcw, Car, PiggyBank, Wallet, CreditCard, BadgeDollarSign, TrendingUp, Banknote, Table2, Hourglass, Scale,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
+import { computePaycheck } from '../../utils/usPaycheckCalculations';
+
+// Intro example computed from the paycheck engine at build time so the prose
+// always matches the calculator's own output.
+const usd = (n) => `$${Math.round(n).toLocaleString('en-US')}`;
+const EX_TX = computePaycheck({ grossAnnual: 75000, stateCode: 'TX' });
+const EX_CA = computePaycheck({ grossAnnual: 75000, stateCode: 'CA' });
 
 const T = {
   brand: 'bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-300',
@@ -52,6 +59,41 @@ const USCalculatorsHub = () => {
           </Link>
         ))}
       </div>
+
+      <section className="mt-12 max-w-3xl">
+        <h2 className="font-display text-xl font-bold tracking-tight text-ink dark:text-white">
+          What the US suite covers
+        </h2>
+        <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          The US tools are organized around the money decisions where the rules actually change the answer. Paychecks
+          are the clearest case: federal brackets, Social Security, and Medicare apply everywhere, but state income tax
+          ranges from zero to a double-digit top rate. On a $75,000 salary, the{' '}
+          <Link href="/us-paycheck-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">paycheck calculator</Link>{' '}
+          estimates {usd(EX_TX.netAnnual)} take-home in Texas but {usd(EX_CA.netAnnual)} in California — a{' '}
+          {usd(EX_TX.netAnnual - EX_CA.netAnnual)} annual gap from state tax alone. The{' '}
+          <Link href="/after-taxes" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">salary-after-taxes tables</Link>{' '}
+          extend that comparison to every level from $30k to $250k across all 50 states and D.C.
+        </p>
+        <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          The housing tools split one decision into its stages: the{' '}
+          <Link href="/us-mortgage-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">mortgage calculator</Link>{' '}
+          estimates the full PITI payment including property tax, insurance, HOA, and PMI; the{' '}
+          <Link href="/us-refinance-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">refinance calculator</Link>{' '}
+          finds the break-even month where closing costs are recovered; and the{' '}
+          <Link href="/us-mortgage-payoff-vs-invest-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">payoff-vs-invest workflow</Link>{' '}
+          weighs extra principal against investing the same dollars on the same timeline. For long-term saving, the{' '}
+          <Link href="/us-401k-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">401(k)</Link>,{' '}
+          <Link href="/us-savings-cd-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">savings &amp; CD</Link>, and{' '}
+          <Link href="/compound-interest-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">compound interest</Link>{' '}
+          tools project growth, while the{' '}
+          <Link href="/inflation-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">inflation calculator</Link>{' '}
+          (official BLS CPI back to 1913) shows what that growth is worth in real buying power. On the debt side, the{' '}
+          <Link href="/us-credit-card-payoff-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">credit card payoff calculator</Link>{' '}
+          compares minimum payments against a fixed plan — usually the single largest interest saving available to a
+          household. All figures on this page are computed from the same engines the calculators use, updated for the
+          2026 tax year.
+        </p>
+      </section>
     </CalcLayout>
   );
 };

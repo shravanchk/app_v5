@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Hero from './Hero';
+import LatestUpdates from './LatestUpdates';
 import StartHere from './StartHere';
 import WorkflowCards from './WorkflowCards';
 import CalculatorGrid from './CalculatorGrid';
@@ -25,6 +26,11 @@ const orgSchema = {
   name: 'Upaman',
   url: 'https://upaman.com/',
   logo: 'https://upaman.com/upaman-elephant-logo.svg',
+  founder: {
+    '@type': 'Person',
+    name: 'Shravan Cherukuri',
+    // sameAs: add LinkedIn profile URL here once confirmed
+  },
 };
 
 export default function HomePage() {
@@ -45,6 +51,7 @@ export default function HomePage() {
       </Head>
       <div className="bg-white font-sans text-ink dark:bg-slate-900">
         <Hero />
+        <Reveal><LatestUpdates /></Reveal>
         <Reveal><StartHere /></Reveal>
         <Reveal><RegionSection /></Reveal>
         <Reveal><WorkflowCards /></Reveal>

@@ -14,8 +14,5 @@ Disallow: /cgi-bin/
 Disallow: /*.php$
 Disallow: /*.asp$
 Disallow: /*.jsp$
-Disallow: /index.html
-Disallow: /seo-status.html
-Disallow: /font-preview.html
 
 Sitemap: https://upaman.com/sitemap.xml

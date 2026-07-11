@@ -70,6 +70,35 @@ export default function WorkflowsIndex() {
             </Link>
           ))}
         </div>
+
+        <section className="mt-12 max-w-3xl">
+          <h2 className="font-display text-xl font-bold tracking-tight text-ink dark:text-white">
+            What makes a workflow different from a calculator
+          </h2>
+          <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+            A calculator answers a numeric question; a workflow answers a decision. Each one walks you through the
+            inputs a good advisor would ask for, runs them through the same engines that power the individual
+            calculators, and ends with a verdict and an action plan rather than a single number. The comparisons are
+            built to be fair: <Link href="/prepay-vs-invest-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">prepay vs invest</Link>{' '}
+            and <Link href="/us-mortgage-payoff-vs-invest-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">mortgage payoff vs invest</Link>{' '}
+            put both choices on the same timeline with the same monthly surplus,{' '}
+            <Link href="/fd-vs-sip-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">FD vs SIP</Link>{' '}
+            compares maturity values after tax (where slab-rate FD interest and 12.5% LTCG lead to different winners at
+            different horizons), and{' '}
+            <Link href="/rent-vs-buy-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">rent vs buy</Link>{' '}
+            reports a break-even year instead of pretending one side always wins.
+          </p>
+          <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+            The readiness workflows — <Link href="/emergency-fund-readiness-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">emergency fund</Link>,{' '}
+            <Link href="/home-loan-readiness-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">home loan</Link>, and retirement for both{' '}
+            <Link href="/retirement-readiness-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">India</Link>{' '}
+            and the <Link href="/us-retirement-readiness-workflow" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">US</Link> —
+            score where you stand against a target and turn any gap into a concrete monthly amount. Most take three to
+            five minutes, none require sign-up, and every verdict shows the assumptions behind it so you can change
+            them and watch the answer move. If a workflow's verdict surprises you, that is usually the point — the
+            honest math often disagrees with the rule of thumb.
+          </p>
+        </section>
       </CalcLayout>
     </>
   );
