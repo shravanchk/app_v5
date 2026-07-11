@@ -8,6 +8,7 @@ type Update = { date: string; text: string; href?: string };
 // Most recent first, max ~6 shown. Add a new line when something real ships;
 // dates must match the actual deploy. Older entries can simply be deleted.
 const UPDATES: Update[] = [
+  { date: '2026-07-11', text: 'New IRCTC Cancellation Charges Calculator — implements the April 2026 72h/24h/8h refund rules with Tatkal and RAC/WL cases', href: '/irctc-cancellation-calculator' },
   { date: '2026-07-11', text: 'Category hub pages now explain how each region’s rules differ, with examples computed from the live engines', href: '/us-calculators' },
   { date: '2026-07-10', text: 'Three new decision workflows: FD vs SIP, Retirement Readiness (India & US), and US Mortgage Payoff vs Invest', href: '/workflows' },
   { date: '2026-07-10', text: 'Every calculator now includes an in-depth explainer, a worked example, and an FAQ' },

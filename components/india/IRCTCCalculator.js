@@ -571,7 +571,10 @@ END:VCALENDAR`}
             platform charge and varies by payment method — one reason the same journey can cost slightly different
             amounts on different bookings. Tatkal adds its own premium over base fare, and Premium Tatkal replaces
             fixed pricing with demand-based fares altogether. When comparing the &ldquo;cost of a ticket,&rdquo;
-            be clear which of the three layers moved.
+            be clear which of the three layers moved. And if plans change after booking, cancellation has its own
+            fee structure — the{' '}
+            <a href="/irctc-cancellation-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">IRCTC cancellation charges calculator</a>{' '}
+            estimates your refund under the April 2026 72h/24h/8h rules.
           </p>
 
           <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Using this page well</h3>
@@ -630,6 +633,7 @@ END:VCALENDAR`}
             )}
             faqItems={seoFaqItems}
             relatedLinks={[
+              { label: 'IRCTC Cancellation Charges Calculator', href: '/irctc-cancellation-calculator' },
               { label: 'Age Calculator (Travel age checks)', href: '/age-calculator' },
               { label: 'Income Tax Calculator', href: '/income-tax-calculator' },
               { label: 'Loan & EMI Calculator', href: '/loan-calculator' },
