@@ -126,6 +126,39 @@ const IRCTCCancellationCalculator = () => {
     });
   }, [classCode, ticketType, fareNum, hoursBeforeDeparture, paxNum, departed]);
 
+  // Per-window refund figures for the timeline. Within a window the deduction
+  // is constant, so one engine call per window (at a representative hour) is
+  // exact. Rows carry the rule id so the active window can be highlighted.
+  const timelineRows = useMemo(() => {
+    if (!(fareNum > 0) || isTatkalConfirmed) return null;
+    const isRacWl = ticketType !== 'confirmed';
+    const depMs = timingMode === 'datetime' && departureAt ? new Date(departureAt).getTime() : null;
+    const deadline = (hrs) => {
+      if (!depMs || !Number.isFinite(depMs)) return null;
+      return new Date(depMs - hrs * 3600000).toLocaleString('en-IN', {
+        day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit'
+      });
+    };
+    const zone = (label, rule, probeHours, boundaryHours) => {
+      const r = computeCancellationRefund({ classCode, ticketType, fare: fareNum, hoursBeforeDeparture: probeHours, passengers: paxNum });
+      return { label, rule, refund: r.refund, deduction: r.deduction, deadline: boundaryHours == null ? null : deadline(boundaryHours) };
+    };
+    if (isRacWl) {
+      return [
+        zone('Up to 30 min before departure', 'clerkage', 1, 0.5),
+        zone('Under 30 min before departure', 'rac-wl-late', 0.2, null)
+      ];
+    }
+    return [
+      zone('72+ hours before departure', 'flat', 100, 72),
+      zone('72 to 24 hours before', 'slab-25', 48, 24),
+      zone('24 to 8 hours before', 'slab-50', 12, 8),
+      zone('Under 8 hours before', 'no-refund', 4, null)
+    ];
+  }, [fareNum, isTatkalConfirmed, ticketType, classCode, paxNum, timingMode, departureAt]);
+
+  const activeZoneIndex = result && timelineRows ? timelineRows.findIndex((row) => row.rule === result.rule) : -1;
+
   const countdownLabel = useMemo(() => {
     if (hoursBeforeDeparture === null) return null;
     if (departed) return 'Departure time has passed';
@@ -353,6 +386,53 @@ const IRCTCCancellationCalculator = () => {
                     <p className="mt-0.5 text-white/90">{explanationFor(result, classCode, paxNum)}</p>
                   </div>
                 </Card>
+
+                {timelineRows && (
+                  <Card className="p-5">
+                    <h3 className="font-display text-base font-bold text-ink dark:text-white">Refund timeline</h3>
+                    <p className="mt-1 text-sm text-ink-muted dark:text-slate-400">
+                      How your refund shrinks as departure gets closer{timingMode === 'datetime' && departureAt ? ' — deadlines shown for your train' : ''}.
+                    </p>
+                    <ol className="mt-3 space-y-1.5">
+                      {timelineRows.map((row, i) => {
+                        const isActive = i === activeZoneIndex;
+                        const isPassed = activeZoneIndex >= 0 && i < activeZoneIndex;
+                        return (
+                          <li
+                            key={row.rule}
+                            className={
+                              'flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm ' +
+                              (isActive
+                                ? 'bg-brand-50 ring-1 ring-brand-300 dark:bg-brand-900/30 dark:ring-brand-700'
+                                : isPassed
+                                  ? 'opacity-50'
+                                  : '')
+                            }
+                          >
+                            <div className="min-w-0">
+                              <p className={'font-medium ' + (isActive ? 'text-brand-800 dark:text-brand-200' : 'text-ink dark:text-slate-100')}>
+                                {row.label}
+                                {isActive && <span className="ml-2 rounded-full bg-brand-600 px-2 py-0.5 text-xs font-semibold text-white">you are here</span>}
+                                {isPassed && <span className="ml-2 text-xs font-normal text-ink-muted dark:text-slate-500">window passed</span>}
+                              </p>
+                              {row.deadline && !isPassed && (
+                                <p className="mt-0.5 text-xs text-ink-muted dark:text-slate-400">cancel by {row.deadline}</p>
+                              )}
+                            </div>
+                            <div className="shrink-0 text-right">
+                              <p className={'font-semibold ' + (row.refund > 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400')}>
+                                {row.refund > 0 ? `${rupees(row.refund)} back` : 'No refund'}
+                              </p>
+                              {row.refund > 0 && (
+                                <p className="text-xs text-ink-muted dark:text-slate-400">−{rupees(row.deduction)}</p>
+                              )}
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  </Card>
+                )}
 
                 <div className="rounded-xl border-l-4 border-amber-400 bg-amber-50/70 p-4 text-sm leading-relaxed text-amber-800/90 dark:border-amber-500 dark:bg-amber-900/20 dark:text-amber-200/90">
                   This is an estimate from published IRCTC policy. Actual refunds can differ for edge cases IRCTC
