@@ -133,27 +133,33 @@ const IRCTCCancellationCalculator = () => {
     if (!(fareNum > 0) || isTatkalConfirmed) return null;
     const isRacWl = ticketType !== 'confirmed';
     const depMs = timingMode === 'datetime' && departureAt ? new Date(departureAt).getTime() : null;
-    const deadline = (hrs) => {
-      if (!depMs || !Number.isFinite(depMs)) return null;
-      return new Date(depMs - hrs * 3600000).toLocaleString('en-IN', {
+    const hasDates = depMs !== null && Number.isFinite(depMs);
+    const stamp = (hrs) =>
+      new Date(depMs - hrs * 3600000).toLocaleString('en-IN', {
         day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit'
       });
-    };
-    const zone = (label, rule, probeHours, boundaryHours) => {
+    // startHours = Infinity marks an open-ended first window; endHours = 0 is departure.
+    const zone = (label, rule, probeHours, startHours, endHours) => {
       const r = computeCancellationRefund({ classCode, ticketType, fare: fareNum, hoursBeforeDeparture: probeHours, passengers: paxNum });
-      return { label, rule, refund: r.refund, deduction: r.deduction, deadline: boundaryHours == null ? null : deadline(boundaryHours) };
+      let window = null;
+      if (hasDates) {
+        if (startHours === Infinity) window = `until ${stamp(endHours)}`;
+        else if (endHours === 0) window = `${stamp(startHours)} → departure at ${stamp(0)}`;
+        else window = `${stamp(startHours)} → ${stamp(endHours)}`;
+      }
+      return { label, rule, refund: r.refund, deduction: r.deduction, window };
     };
     if (isRacWl) {
       return [
-        zone('Up to 30 min before departure', 'clerkage', 1, 0.5),
-        zone('Under 30 min before departure', 'rac-wl-late', 0.2, null)
+        zone('Up to 30 min before departure', 'clerkage', 1, Infinity, 0.5),
+        zone('Under 30 min before departure', 'rac-wl-late', 0.2, 0.5, 0)
       ];
     }
     return [
-      zone('72+ hours before departure', 'flat', 100, 72),
-      zone('72 to 24 hours before', 'slab-25', 48, 24),
-      zone('24 to 8 hours before', 'slab-50', 12, 8),
-      zone('Under 8 hours before', 'no-refund', 4, null)
+      zone('72+ hours before departure', 'flat', 100, Infinity, 72),
+      zone('72 to 24 hours before', 'slab-25', 48, 72, 24),
+      zone('24 to 8 hours before', 'slab-50', 12, 24, 8),
+      zone('Under 8 hours before', 'no-refund', 4, 8, 0)
     ];
   }, [fareNum, isTatkalConfirmed, ticketType, classCode, paxNum, timingMode, departureAt]);
 
@@ -393,39 +399,42 @@ const IRCTCCancellationCalculator = () => {
                     <p className="mt-1 text-sm text-ink-muted dark:text-slate-400">
                       How your refund shrinks as departure gets closer{timingMode === 'datetime' && departureAt ? ' — deadlines shown for your train' : ''}.
                     </p>
-                    <ol className="mt-3 space-y-1.5">
+                    <ol className="relative ml-2.5 mt-4 border-l-2 border-slate-200 dark:border-slate-700">
                       {timelineRows.map((row, i) => {
                         const isActive = i === activeZoneIndex;
                         const isPassed = activeZoneIndex >= 0 && i < activeZoneIndex;
+                        const dotCls = isActive
+                          ? 'border-brand-600 bg-brand-600 ring-4 ring-brand-200 dark:ring-brand-900'
+                          : row.refund > 0
+                            ? 'border-emerald-500 bg-white dark:bg-slate-800'
+                            : 'border-rose-500 bg-rose-500';
                         return (
-                          <li
-                            key={row.rule}
-                            className={
-                              'flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm ' +
-                              (isActive
-                                ? 'bg-brand-50 ring-1 ring-brand-300 dark:bg-brand-900/30 dark:ring-brand-700'
-                                : isPassed
-                                  ? 'opacity-50'
-                                  : '')
-                            }
-                          >
-                            <div className="min-w-0">
-                              <p className={'font-medium ' + (isActive ? 'text-brand-800 dark:text-brand-200' : 'text-ink dark:text-slate-100')}>
-                                {row.label}
-                                {isActive && <span className="ml-2 rounded-full bg-brand-600 px-2 py-0.5 text-xs font-semibold text-white">you are here</span>}
-                                {isPassed && <span className="ml-2 text-xs font-normal text-ink-muted dark:text-slate-500">window passed</span>}
-                              </p>
-                              {row.deadline && !isPassed && (
-                                <p className="mt-0.5 text-xs text-ink-muted dark:text-slate-400">cancel by {row.deadline}</p>
-                              )}
-                            </div>
-                            <div className="shrink-0 text-right">
-                              <p className={'font-semibold ' + (row.refund > 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400')}>
-                                {row.refund > 0 ? `${rupees(row.refund)} back` : 'No refund'}
-                              </p>
-                              {row.refund > 0 && (
-                                <p className="text-xs text-ink-muted dark:text-slate-400">−{rupees(row.deduction)}</p>
-                              )}
+                          <li key={row.rule} className={'relative pb-5 pl-5 last:pb-0 ' + (isPassed ? 'opacity-50' : '')}>
+                            <span aria-hidden="true" className={'absolute -left-[9px] top-1 h-4 w-4 rounded-full border-2 ' + dotCls} />
+                            <div
+                              className={
+                                'flex items-start justify-between gap-3 rounded-lg px-3 py-2 text-sm ' +
+                                (isActive ? 'bg-brand-50 ring-1 ring-brand-300 dark:bg-brand-900/30 dark:ring-brand-700' : '')
+                              }
+                            >
+                              <div className="min-w-0">
+                                <p className={'font-medium ' + (isActive ? 'text-brand-800 dark:text-brand-200' : 'text-ink dark:text-slate-100')}>
+                                  {row.label}
+                                  {isActive && <span className="ml-2 rounded-full bg-brand-600 px-2 py-0.5 text-xs font-semibold text-white">you are here</span>}
+                                  {isPassed && <span className="ml-2 text-xs font-normal text-ink-muted dark:text-slate-500">window passed</span>}
+                                </p>
+                                {row.window && (
+                                  <p className="mt-0.5 text-xs text-ink-muted dark:text-slate-400">{row.window}</p>
+                                )}
+                              </div>
+                              <div className="shrink-0 text-right">
+                                <p className={'font-semibold ' + (row.refund > 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400')}>
+                                  {row.refund > 0 ? `${rupees(row.refund)} back` : 'No refund'}
+                                </p>
+                                {row.refund > 0 && (
+                                  <p className="text-xs text-ink-muted dark:text-slate-400">−{rupees(row.deduction)}</p>
+                                )}
+                              </div>
                             </div>
                           </li>
                         );
