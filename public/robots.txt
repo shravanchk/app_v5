@@ -4,6 +4,7 @@ User-agent: *
 Allow: /
 
 # Non-content or legacy areas
+Disallow: /cdn-cgi/
 Disallow: /build/
 Disallow: /node_modules/
 Disallow: /admin/
