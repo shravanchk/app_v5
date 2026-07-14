@@ -22,7 +22,7 @@ const computeHRA = ({ basic, da, hraReceived, rentPaid, metro }) => {
 
 const faqItems = [
   { question: 'How is HRA exemption calculated?', answer: 'HRA exemption is the least of three amounts: (1) actual HRA received, (2) rent paid minus 10% of salary, and (3) 50% of salary in metro cities or 40% in non-metro cities. Salary here means basic pay plus dearness allowance that forms part of salary.' },
-  { question: 'Which cities count as metro for HRA?', answer: 'Only Delhi, Mumbai, Kolkata, and Chennai are treated as metro cities for HRA, qualifying for the 50% limit. All other cities use 40%.' },
+  { question: 'Which cities count as metro for HRA?', answer: 'From FY 2026-27, eight cities qualify for the 50% limit: Delhi, Mumbai, Kolkata, Chennai, Bengaluru, Hyderabad, Pune, and Ahmedabad. All other cities use 40%. Note that for FY 2025-26 income (returns filed in 2026), the old four-city list — Delhi, Mumbai, Kolkata, Chennai — still applies.' },
   { question: 'Can I claim HRA under the new tax regime?', answer: 'No. The HRA exemption is available only under the old tax regime. If you opt for the new regime you cannot claim it, which is one factor in the regime decision.' },
   { question: 'Do I need rent receipts?', answer: 'Yes. To claim HRA you generally need rent receipts, and your landlord’s PAN if annual rent exceeds ₹1 lakh.' },
   { question: 'Why is my exemption usually the “rent − 10% of salary” figure?', answer: 'For most salaried people this middle condition is the binding one, because actual HRA and the 40–50% cap tend to be generous while rent minus 10% of salary is smaller. It is worth checking: if your rent is very high relative to salary, the 40%/50% cap becomes the limit instead.' },
@@ -85,7 +85,7 @@ const HRACalculator = () => {
         </div>
         <label style={f.checkboxRow} htmlFor="hra-metro">
           <input id="hra-metro" type="checkbox" checked={inputs.metro} onChange={(e) => set('metro', e.target.checked)} />
-          Metro city (Delhi, Mumbai, Kolkata, Chennai)
+          Metro city — Delhi, Mumbai, Kolkata, Chennai, plus Bengaluru, Hyderabad, Pune &amp; Ahmedabad from FY 2026-27
         </label>
 
         <div className="result-card" style={r.card}>
@@ -108,7 +108,7 @@ const HRACalculator = () => {
             House Rent Allowance is not exempt in full — Section 10(13A) grants exemption equal to the{' '}
             <strong>least of three amounts</strong>, and the whole game is knowing which of the three is limiting you.
             The three candidates are the actual HRA in your salary, the rent you pay minus 10% of salary, and a flat
-            50% of salary in the four metro cities (40% elsewhere). Whichever is smallest becomes your exemption; the
+            50% of salary in the eight metro cities (40% elsewhere). Whichever is smallest becomes your exemption; the
             rest of the HRA is taxable. Because the rule takes a minimum, adding more of any one component only helps
             up to the point where a different condition takes over.
           </p>
@@ -132,9 +132,10 @@ const HRACalculator = () => {
               retirement benefits count.
             </li>
             <li>
-              <strong>Only four cities are metros for HRA.</strong> Delhi, Mumbai, Kolkata, and Chennai qualify for the
-              50% cap. Bengaluru, Hyderabad, Pune, and everywhere else use 40% — a common and costly assumption to get
-              wrong, because it lowers the third candidate.
+              <strong>The metro list grew from four cities to eight in FY 2026-27.</strong> Delhi, Mumbai, Kolkata, and
+              Chennai were long the only metros for HRA, but from FY 2026-27 Bengaluru, Hyderabad, Pune, and Ahmedabad
+              also qualify for the 50% cap. Everywhere else stays at 40% — and for FY 2025-26 returns the old four-city
+              list still applies, so match the list to the year you are computing.
             </li>
             <li>
               <strong>No rent, no exemption.</strong> The second condition (rent − 10% of salary) turns negative or zero
@@ -160,10 +161,10 @@ const HRACalculator = () => {
 
         <CalculatorInfoPanel
           title="Methodology, assumptions, and source references"
-          reviewedOn="June 28, 2026"
+          reviewedOn="July 14, 2026"
           inputs={['Annual basic salary and dearness allowance', 'Annual HRA received and rent paid', 'Whether you live in a metro city']}
           formulas={['Exempt HRA = least of: actual HRA; rent paid − 10% of salary; 50% (metro) or 40% (non-metro) of salary', 'Salary = basic + dearness allowance that forms part of salary', 'Taxable HRA = HRA received − exempt HRA']}
-          assumptions={['HRA exemption applies under the old tax regime only', 'Metro cities are limited to Delhi, Mumbai, Kolkata, and Chennai', 'Rent receipts (and landlord PAN above ₹1 lakh annual rent) are required to claim']}
+          assumptions={['HRA exemption applies under the old tax regime only', 'Metro cities for FY 2026-27 are Delhi, Mumbai, Kolkata, Chennai, Bengaluru, Hyderabad, Pune, and Ahmedabad (the last four were added from April 2026; FY 2025-26 uses the four-city list)', 'Rent receipts (and landlord PAN above ₹1 lakh annual rent) are required to claim']}
           sources={[{ label: 'Income Tax Department (India)', url: 'https://www.incometax.gov.in/' }]}
           guideLinks={[{ label: 'Old vs new regime breakeven', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' }, { label: 'Standard deduction FY 2026-27', href: '/guides/standard-deduction-fy-2026-27' }]}
         />

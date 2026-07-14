@@ -22,7 +22,7 @@ const SalaryCalculator = () => {
   const [comparisonResult, setComparisonResult] = useState(null);
 
   const cityData = useMemo(() => ({
-    metro: { name: 'Metro Cities (Mumbai, Delhi, Bangalore, Chennai)', hraExemption: 0.5, costMultiplier: 1.0, professionalTax: 2500 },
+    metro: { name: 'Metro Cities (Mumbai, Delhi, Kolkata, Chennai, Bengaluru, Hyderabad, Pune, Ahmedabad)', hraExemption: 0.5, costMultiplier: 1.0, professionalTax: 2500 },
     nonMetro: { name: 'Non-Metro Cities', hraExemption: 0.4, costMultiplier: 0.7, professionalTax: 2000 },
   }), []);
 
