@@ -1,5 +1,10 @@
 # Upaman Sprint + Change Tracker
 
+> **⚠️ RETIRED (2026-07-15).** This tracker stopped being updated on 2026-03-14 and no
+> longer reflects reality. Current sources of truth: `ADSENSE_AUDIT.md` (content/SEO
+> work log), `CONTENT_PLAN.md` (guide backlog), and git history. Kept for archival
+> context only — do not plan from it.
+
 Last updated: 2026-03-14  
 Project: `/Users/shravancherukuri/workspace/app_v5`
 
