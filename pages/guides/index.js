@@ -9,6 +9,11 @@ const GROUPS = [
     heading: 'United States',
     guides: [
       { title: 'How to Read Your US Paycheck', desc: 'Every pay-stub line explained: 2026 brackets, FICA, and pre-tax deductions.', href: '/guides/how-to-read-your-paycheck' },
+      { title: 'The 50/30/20 Budget Rule', desc: 'Needs, wants, and savings on real take-home pay — with a worked example and when the ratios should bend.', href: '/guides/50-30-20-rule' },
+      { title: 'How Much House Can You Afford?', desc: 'The 28/36 rule and DTI worked out on a $100k salary — and why your ceiling should sit below the bank\'s.', href: '/guides/how-much-house-can-i-afford' },
+      { title: 'CD Ladders Explained', desc: 'Lock in rates without locking up cash: a five-rung $25k example and the mistakes that cost interest.', href: '/guides/cd-ladder-explained' },
+      { title: 'APR vs APY', desc: 'One includes compounding, one doesn\'t — and banks always quote the flattering one.', href: '/guides/apr-vs-apy' },
+      { title: 'Saved by 30, 40, 50?', desc: 'The salary-multiple benchmarks, what counts, and the honest math of catching up.', href: '/guides/how-much-saved-by-30-40-50' },
       { title: 'Traditional vs Roth 401(k)', desc: 'How each is taxed, 2026 limits, and a simple rule for choosing.', href: '/guides/traditional-vs-roth-401k' },
       { title: 'Salary After Taxes ($30k–$250k)', desc: 'Pick any salary for a 50-state take-home table.', href: '/after-taxes' },
     ]
@@ -23,6 +28,7 @@ const GROUPS = [
       { title: 'Marginal Relief, New Regime', desc: 'How marginal relief works just above the ₹12 lakh threshold.', href: '/guides/marginal-relief-new-regime-fy-2026-27' },
       { title: 'CTC to In-Hand Salary', desc: 'How your cost-to-company becomes monthly take-home pay.', href: '/guides/ctc-to-in-hand-salary' },
       { title: 'Old vs New Tax Regime FY 2026-27', desc: 'Choose a regime using realistic, repeatable deductions — not best-case assumptions.', href: '/guides/income-tax-regime-choice' },
+      { title: 'HRA Exemption Calculation', desc: 'The least-of-three rule worked out, plus the new eight-city metro list for FY 2026-27.', href: '/guides/hra-exemption-calculation' },
       { title: 'Tax on Salary by Income (₹5L–₹50L)', desc: 'Pick any salary for a full new-regime slab breakdown.', href: '/tax-on-salary' },
     ]
   },
@@ -44,12 +50,15 @@ const GROUPS = [
       { title: 'Emergency Fund Readiness', desc: 'Set a risk-based runway, size the corpus gap, and close it on a plan.', href: '/guides/emergency-fund-readiness' },
       { title: 'PPF vs SIP Choice', desc: 'Split stability and growth by mapping goals to timelines and risk.', href: '/guides/ppf-vs-sip-choice' },
       { title: 'SIP Step-up Planning', desc: 'Match investing to salary growth with an annual step-up.', href: '/guides/sip-step-up-planning' },
+      { title: 'SIP vs Lumpsum', desc: 'When lumpsum wins, when a SIP is right anyway, and the STP middle path for windfalls.', href: '/guides/sip-vs-lumpsum' },
     ]
   },
   {
     heading: 'UK & Europe',
     guides: [
       { title: 'UK Tax Rates 2026-27', desc: 'Income tax bands, National Insurance, and student-loan thresholds.', href: '/guides/uk-tax-rates-2026-27' },
+      { title: 'How to Read Your UK Payslip', desc: 'Tax code 1257L, PAYE, NI, student loans, and pensions — every line explained.', href: '/guides/how-to-read-your-uk-payslip' },
+      { title: 'Salary Sacrifice Explained', desc: 'The exact tax + NI saving with a £40,000 worked example, and the catches to check.', href: '/guides/salary-sacrifice-explained' },
     ]
   }
 ];
