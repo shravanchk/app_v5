@@ -166,7 +166,7 @@ const HRACalculator = () => {
           formulas={['Exempt HRA = least of: actual HRA; rent paid − 10% of salary; 50% (metro) or 40% (non-metro) of salary', 'Salary = basic + dearness allowance that forms part of salary', 'Taxable HRA = HRA received − exempt HRA']}
           assumptions={['HRA exemption applies under the old tax regime only', 'Metro cities for FY 2026-27 are Delhi, Mumbai, Kolkata, Chennai, Bengaluru, Hyderabad, Pune, and Ahmedabad (the last four were added from April 2026; FY 2025-26 uses the four-city list)', 'Rent receipts (and landlord PAN above ₹1 lakh annual rent) are required to claim']}
           sources={[{ label: 'Income Tax Department (India)', url: 'https://www.incometax.gov.in/' }]}
-          guideLinks={[{ label: 'Old vs new regime breakeven', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' }, { label: 'Standard deduction FY 2026-27', href: '/guides/standard-deduction-fy-2026-27' }]}
+          guideLinks={[{ label: 'HRA exemption: the least-of-three rule worked out', href: '/guides/hra-exemption-calculation' }, { label: 'How to file your ITR (AY 2026-27)', href: '/guides/how-to-file-itr' }, { label: 'Old vs new regime breakeven', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' }, { label: 'Standard deduction FY 2026-27', href: '/guides/standard-deduction-fy-2026-27' }]}
         />
 
         <p style={r.note}>Planning estimate, not tax advice. Confirm specifics with your employer or a professional.</p>

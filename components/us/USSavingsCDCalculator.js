@@ -299,6 +299,13 @@ const USSavingsCDCalculator = () => {
               ))}
             </div>
           </section>
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Related guides</h2>
+            <ul className="list-disc space-y-1.5 pl-5">
+              <li><a href="/guides/cd-ladder-explained" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">CD ladders explained: lock in rates without locking up cash</a></li>
+              <li><a href="/guides/apr-vs-apy" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">APR vs APY: the difference, and when each one misleads you</a></li>
+            </ul>
+          </section>
         </article>
 
         <div className="mt-8">

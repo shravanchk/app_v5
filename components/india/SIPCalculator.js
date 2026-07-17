@@ -365,7 +365,9 @@ const SIPCalculator = () => {
               debate.</strong> If money arrives monthly from salary, a SIP is simply how investing looks. The
               comparison tab matters only when a lump sum exists today — historically, deploying it immediately
               wins more often than spreading it, but spreading softens the regret of a crash in month two. That
-              trade-off is about temperament as much as math.
+              trade-off is about temperament as much as math — the{' '}
+              <a href="/guides/sip-vs-lumpsum" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">SIP vs lumpsum guide</a>{' '}
+              works through both sides, including the STP middle path.
             </li>
             <li>
               <strong className="text-ink dark:text-white">CAGR vs absolute return.</strong> &ldquo;My fund
@@ -410,7 +412,7 @@ const SIPCalculator = () => {
             formulas={['Future value uses monthly compounding for recurring contributions', 'Goal SIP uses PMT-based reverse calculation for required monthly amount']}
             assumptions={['Expected return is constant through the full tenure', 'No entry/exit load, tax, or fund-level expense variations are modeled', 'Results are estimates for planning, not guaranteed investment outcomes']}
             sources={[{ label: 'SEBI investor awareness', url: 'https://investor.sebi.gov.in/' }, { label: 'AMFI investor education', url: 'https://www.amfiindia.com/investor-corner/knowledge-center' }]}
-            guideLinks={[{ label: 'SIP step-up planning guide', href: '/guides/sip-step-up-planning' }, { label: 'PPF vs SIP guide', href: '/guides/ppf-vs-sip-choice' }]}
+            guideLinks={[{ label: 'SIP vs lumpsum: which should you choose?', href: '/guides/sip-vs-lumpsum' }, { label: 'SIP step-up planning guide', href: '/guides/sip-step-up-planning' }, { label: 'PPF vs SIP guide', href: '/guides/ppf-vs-sip-choice' }]}
           />
           <SearchLandingSections
             intro={(<><p>SIP planning is most effective when you model both contribution behaviour and target outcomes. This SIP calculator supports regular SIP, goal-based planning, and SIP vs lumpsum comparison in one workflow.</p><p>If you are searching for a SIP step-up calculator or goal SIP calculator, this page helps you estimate required monthly investment, return contribution, and how annual step-up changes long-term outcomes.</p></>)}

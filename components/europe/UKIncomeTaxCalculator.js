@@ -497,6 +497,11 @@ const UKIncomeTaxCalculator = () => {
               { label: 'HMRC 2026-27 payroll thresholds', url: 'https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2026-to-2027' },
               { label: 'Student-loan repayment thresholds', url: 'https://www.gov.uk/repaying-your-student-loan/what-you-pay' }
             ]}
+            guideLinks={[
+              { label: 'How to read your UK payslip (2026-27)', href: '/guides/how-to-read-your-uk-payslip' },
+              { label: 'Salary sacrifice explained', href: '/guides/salary-sacrifice-explained' },
+              { label: 'UK tax rates 2026-27', href: '/guides/uk-tax-rates-2026-27' }
+            ]}
           />
         </div>
 

@@ -106,6 +106,7 @@ const TaxRegimeComparisonCalculator = () => {
     { label: 'FY 2026-27 Income Tax Slabs Guide', href: '/guides/india-income-tax-2026-27' },
     { label: 'Old vs New Regime Breakeven (how much in deductions?)', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' },
     { label: 'Marginal Relief Explained', href: '/guides/marginal-relief-new-regime-fy-2026-27' },
+    { label: 'How to File Your ITR (regime is locked at filing)', href: '/guides/how-to-file-itr' },
     { label: 'Income Tax Calculator India', href: '/income-tax-calculator' },
     { label: 'Salary Calculator (CTC to In-hand)', href: '/salary-calculator' },
     { label: 'PPF Calculator for 80C planning', href: '/ppf-calculator' }

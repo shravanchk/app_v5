@@ -314,6 +314,13 @@ const USMortgageCalculator = () => {
               ))}
             </div>
           </section>
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Related guides</h2>
+            <ul className="list-disc space-y-1.5 pl-5">
+              <li><a href="/guides/how-much-house-can-i-afford" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">How much house can you afford? The 28/36 rule, worked out</a></li>
+              <li><a href="/guides/50-30-20-rule" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">The 50/30/20 rule — does the payment fit your needs bucket?</a></li>
+            </ul>
+          </section>
         </article>
 
         <div className="mt-8">

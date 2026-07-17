@@ -339,6 +339,13 @@ const US401kCalculator = () => {
               ))}
             </div>
           </section>
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-ink dark:text-white">Related guides</h2>
+            <ul className="list-disc space-y-1.5 pl-5">
+              <li><a href="/guides/traditional-vs-roth-401k" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Traditional vs Roth 401(k): how to choose</a></li>
+              <li><a href="/guides/how-much-saved-by-30-40-50" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">How much should you have saved by 30, 40, and 50?</a></li>
+            </ul>
+          </section>
         </article>
 
         <div className="mt-8">

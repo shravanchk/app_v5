@@ -379,6 +379,11 @@ const USPaycheckCalculator = () => {
               { label: 'SSA — 2026 Social Security changes', url: 'https://www.ssa.gov/cola/' },
               { label: 'Tax Foundation — State individual income tax rates', url: 'https://taxfoundation.org/data/all/state/state-income-tax-rates/' }
             ]}
+            guideLinks={[
+              { label: 'How to read your US paycheck', href: '/guides/how-to-read-your-paycheck' },
+              { label: 'The 50/30/20 budget rule on real take-home pay', href: '/guides/50-30-20-rule' },
+              { label: 'How much should you have saved by 30, 40, 50?', href: '/guides/how-much-saved-by-30-40-50' }
+            ]}
           />
         </div>
       </CalcLayout>

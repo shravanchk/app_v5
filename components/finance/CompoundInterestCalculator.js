@@ -369,6 +369,11 @@ const CompoundInterestCalculator = () => {
               { label: 'SEC Investor.gov — Compound interest calculator & definitions', url: 'https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator' },
               { label: 'FDIC — How interest and APY work', url: 'https://www.fdic.gov/resources/consumers/' }
             ]}
+            guideLinks={[
+              { label: 'APR vs APY: the difference, and when each misleads', href: '/guides/apr-vs-apy' },
+              { label: 'CD ladders explained', href: '/guides/cd-ladder-explained' },
+              { label: 'How much should you have saved by 30, 40, 50?', href: '/guides/how-much-saved-by-30-40-50' }
+            ]}
           />
         </div>
       </CalcLayout>
