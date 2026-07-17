@@ -301,7 +301,7 @@ const ComprehensiveLoanCalculator = React.memo(() => {
             formulas={['EMI = P × r × (1+r)^n / ((1+r)^n - 1)', 'Amortization: monthly interest = outstanding × monthly rate']}
             assumptions={['Interest rate stays constant through the selected tenure', 'Prepayment scenarios keep tenure fixed and estimate EMI impact', 'Results are planning estimates, not lender-sanctioned repayment schedules']}
             sources={[{ label: 'RBI Financial Education (loan basics)', url: 'https://www.rbi.org.in/financialeducation/' }]}
-            guideLinks={[{ label: 'EMI prepayment strategy guide', href: '/guides/emi-prepayment-strategy' }, { label: 'Credit card minimum due trap guide', href: '/guides/credit-card-minimum-due-trap' }]}
+            guideLinks={[{ label: 'EMI prepayment strategy guide', href: '/guides/emi-prepayment-strategy' }, { label: 'Credit card minimum due trap guide', href: '/guides/credit-card-minimum-due-trap' }, { label: 'Embed this calculator on your site (free widget)', href: '/widgets' }]}
           />
         </div>
       

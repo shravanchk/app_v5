@@ -412,7 +412,7 @@ const SIPCalculator = () => {
             formulas={['Future value uses monthly compounding for recurring contributions', 'Goal SIP uses PMT-based reverse calculation for required monthly amount']}
             assumptions={['Expected return is constant through the full tenure', 'No entry/exit load, tax, or fund-level expense variations are modeled', 'Results are estimates for planning, not guaranteed investment outcomes']}
             sources={[{ label: 'SEBI investor awareness', url: 'https://investor.sebi.gov.in/' }, { label: 'AMFI investor education', url: 'https://www.amfiindia.com/investor-corner/knowledge-center' }]}
-            guideLinks={[{ label: 'SIP vs lumpsum: which should you choose?', href: '/guides/sip-vs-lumpsum' }, { label: 'SIP step-up planning guide', href: '/guides/sip-step-up-planning' }, { label: 'PPF vs SIP guide', href: '/guides/ppf-vs-sip-choice' }]}
+            guideLinks={[{ label: 'SIP vs lumpsum: which should you choose?', href: '/guides/sip-vs-lumpsum' }, { label: 'SIP step-up planning guide', href: '/guides/sip-step-up-planning' }, { label: 'PPF vs SIP guide', href: '/guides/ppf-vs-sip-choice' }, { label: 'Embed this calculator on your site (free widget)', href: '/widgets' }]}
           />
           <SearchLandingSections
             intro={(<><p>SIP planning is most effective when you model both contribution behaviour and target outcomes. This SIP calculator supports regular SIP, goal-based planning, and SIP vs lumpsum comparison in one workflow.</p><p>If you are searching for a SIP step-up calculator or goal SIP calculator, this page helps you estimate required monthly investment, return contribution, and how annual step-up changes long-term outcomes.</p></>)}

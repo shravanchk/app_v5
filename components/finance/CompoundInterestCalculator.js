@@ -372,7 +372,8 @@ const CompoundInterestCalculator = () => {
             guideLinks={[
               { label: 'APR vs APY: the difference, and when each misleads', href: '/guides/apr-vs-apy' },
               { label: 'CD ladders explained', href: '/guides/cd-ladder-explained' },
-              { label: 'How much should you have saved by 30, 40, 50?', href: '/guides/how-much-saved-by-30-40-50' }
+              { label: 'How much should you have saved by 30, 40, 50?', href: '/guides/how-much-saved-by-30-40-50' },
+              { label: 'Embed this calculator on your site (free widget)', href: '/widgets' }
             ]}
           />
         </div>

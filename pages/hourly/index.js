@@ -173,7 +173,8 @@ export default function HourlyIndexPage() {
               <a href="/after-taxes" className={linkCls}>salary after taxes by state</a> ·{' '}
               <a href="/paycheck" className={linkCls}>take-home pay by state</a> ·{' '}
               <a href="/guides/how-to-read-your-paycheck" className={linkCls}>how to read your paycheck</a> ·{' '}
-              <a href="/guides/50-30-20-rule" className={linkCls}>the 50/30/20 budget rule</a>
+              <a href="/guides/50-30-20-rule" className={linkCls}>the 50/30/20 budget rule</a> ·{' '}
+              <a href="/widgets" className={linkCls}>embed this converter on your site</a>
             </div>
           </article>
         </Container>
