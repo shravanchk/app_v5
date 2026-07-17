@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Container from '../ui/Container';
+import { buildBreadcrumbSchema } from '../../utils/schema';
 
 // Legacy export kept so existing guide pages that do `<h2 style={sectionTitleStyle}>`
 // keep working. It is now a no-op: headings are styled by the layout's descendant
@@ -45,6 +46,18 @@ const GuidePageLayout = ({
         {articleSchema ? (
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
         ) : null}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(
+              buildBreadcrumbSchema([
+                { name: 'Home', item: 'https://upaman.com/' },
+                { name: 'Guides', item: 'https://upaman.com/guides' },
+                { name: title, item: `https://upaman.com${canonicalPath}` }
+              ])
+            )
+          }}
+        />
       </Head>
       <Container>
         <article className="mx-auto max-w-[820px]">
