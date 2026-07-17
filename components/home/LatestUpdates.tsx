@@ -8,6 +8,7 @@ type Update = { date: string; text: string; href?: string };
 // Most recent first, max ~6 shown. Add a new line when something real ships;
 // dates must match the actual deploy. Older entries can simply be deleted.
 const UPDATES: Update[] = [
+  { date: '2026-07-17', text: 'New guide for filing season: How to File Your ITR (AY 2026-27) — form choice, regime choice, and AIS reconciliation', href: '/guides/how-to-file-itr' },
   { date: '2026-07-15', text: 'Nine new guides across the US, UK, and India — budgeting, home affordability, CD ladders, APR vs APY, retirement benchmarks, UK payslips, salary sacrifice, HRA exemption, and SIP vs lumpsum', href: '/guides' },
   { date: '2026-07-11', text: 'New IRCTC Cancellation Charges Calculator — implements the April 2026 72h/24h/8h refund rules with Tatkal and RAC/WL cases', href: '/irctc-cancellation-calculator' },
   { date: '2026-07-11', text: 'Category hub pages now explain how each region’s rules differ, with examples computed from the live engines', href: '/us-calculators' },

@@ -82,6 +82,7 @@ Ministry of Finance quarterly small-savings rate notifications.
 | [ ] | `components/india/HraCalculator.js` + guide `hra-exemption-calculation` | Metro city list (8 cities from FY 2026-27 — watch for further changes), FY references, the FY 2025-26 four-city caveat becomes obsolete after AY 2026-27 filing season |
 | [ ] | `pages/tax-on-salary` India programmatic pages (₹5L–₹50L) | Regenerated from engine |
 | [ ] | Blog: `old-vs-new-tax-regime-2026-27-breakeven` | FY-stamped — refresh or archive |
+| [ ] | Guide: `how-to-file-itr` | **Refresh every June, before filing season** (evergreen URL, in-place update): AY/FY references, due date, belated-return date & fee, ITR form applicability, regime-election rules, the HRA metro-list caveat (drops after AY 2026-27) |
 | [ ] | `/gratuity-calculator` | ₹20 lakh ceiling, 15/26 formula (stable, but ceiling changes by notification) |
 | [ ] | `/capital-gains-calculator` | LTCG/STCG rates, holding periods, exemption limit — Budget moves these often |
 | [ ] | `/gst-calculator`, `/gst-reform-calculator` | Slab structure — **as announced** by GST Council, not annual |
