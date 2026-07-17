@@ -174,7 +174,8 @@ export default function HourlyIndexPage() {
               <a href="/paycheck" className={linkCls}>take-home pay by state</a> ·{' '}
               <a href="/guides/how-to-read-your-paycheck" className={linkCls}>how to read your paycheck</a> ·{' '}
               <a href="/guides/50-30-20-rule" className={linkCls}>the 50/30/20 budget rule</a> ·{' '}
-              <a href="/widgets" className={linkCls}>embed this converter on your site</a>
+              <a href="/widgets" className={linkCls}>embed this converter on your site</a> ·{' '}
+              <a href="/uk/hourly" className={linkCls}>UK version (£/hour)</a>
             </div>
           </article>
         </Container>

@@ -68,6 +68,7 @@ Budget (usually Nov — pre-read it; the April numbers are announced there).
 | [ ] | Guide: `how-to-read-your-uk-payslip` | "(2026-27)" in title, allowance, NI rates, all five student-loan thresholds, tax code (1257L changes if allowance changes) |
 | [ ] | Guide: `salary-sacrifice-explained` | 8% NI in the worked example (£160 saving), £100k–£125,140 taper band |
 | [ ] | `pages/tax-on-salary` UK programmatic pages | Regenerated — verify after engine update |
+| [ ] | `pages/uk/hourly/` (20 rate pages, `utils/hourlyRates.js`) | Take-home estimates and "2026-27" copy regenerate from `taxCalculations.js` — rebuild after the April update and spot-check one rate |
 
 ---
 
