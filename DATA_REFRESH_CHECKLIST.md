@@ -39,6 +39,7 @@ SSA wage base announcement (~Oct), BLS CPI (mid-January), state DOR sites.
 |---|---|---|
 | [ ] | `utils/usPaycheckCalculations.js` | `FEDERAL_<year>` brackets, standard deduction, `FICA_<year>` SS wage base; **state tables are 2025-26 estimates — full 50-state re-verify** |
 | [ ] | `pages/paycheck/` (51 state pages) + `/after-taxes` | Regenerated from the util above — rebuild & spot-check 3 states after updating it |
+| [ ] | `pages/hourly/` (26 rate pages, `utils/hourlyRates.js`) | After-tax estimates and "2026" copy regenerate from `usPaycheckCalculations.js` — rebuild after the annual update and spot-check one rate |
 | [ ] | `utils/quickCalculations.js` (`CPI_U_ANNUAL`) | Add the new annual average when BLS publishes it (mid-Jan); feeds `/inflation-calculator` |
 | [ ] | `components/us/US401kCalculator.js` → `/us-401k-calculator` | No hardcoded limit in the engine (percentage-based inputs) — but check the article/FAQ copy for quoted limits |
 | [ ] | `/us-savings-cd-calculator`, `/us-mortgage-calculator`, `/us-auto-loan-calculator`, `/us-refinance-calculator`, `/us-credit-card-payoff-calculator` | No hardcoded market rates by design — verify defaults still look plausible, nothing more |
