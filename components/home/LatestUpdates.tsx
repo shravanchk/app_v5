@@ -8,6 +8,7 @@ type Update = { date: string; text: string; href?: string };
 // Most recent first, max ~6 shown. Add a new line when something real ships;
 // dates must match the actual deploy. Older entries can simply be deleted.
 const UPDATES: Update[] = [
+  { date: '2026-07-17', text: 'New Debt Payoff Calculator — snowball vs avalanche on your real debts, with payoff order and interest side by side', href: '/debt-payoff-calculator' },
   { date: '2026-07-17', text: 'New: Hourly to Salary converter with 26 per-rate pages ($15–$75/hour) — part-time, overtime, and 2026 after-tax breakdowns', href: '/hourly' },
   { date: '2026-07-17', text: 'New guide for filing season: How to File Your ITR (AY 2026-27) — form choice, regime choice, and AIS reconciliation', href: '/guides/how-to-file-itr' },
   { date: '2026-07-15', text: 'Nine new guides across the US, UK, and India — budgeting, home affordability, CD ladders, APR vs APY, retirement benchmarks, UK payslips, salary sacrifice, HRA exemption, and SIP vs lumpsum', href: '/guides' },
