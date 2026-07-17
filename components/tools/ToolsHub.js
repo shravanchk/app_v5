@@ -20,7 +20,7 @@ const cards = [
   { title: 'Scientific Calculator', description: 'Trigonometry, logarithms, powers, and constants for everyday and study use.', icon: FlaskConical, path: '/scientific-calculator', tint: T.violet, tags: ['Trig & log', 'Powers/roots', 'Constants'] },
   { title: 'Statistics Calculator', description: 'Compute mean, median, mode, variance, and standard deviation from a data set.', icon: BarChart3, path: '/statistics-calculator', tint: T.emerald, tags: ['Mean/median/mode', 'Variance', 'Std deviation'] },
   { title: 'Unit Converter', description: 'Convert length, weight, temperature, area, and more across common units.', icon: Ruler, path: '/unit-converter', tint: T.sky, tags: ['Length/weight', 'Temperature', 'Area & volume'] },
-  { title: 'JSON Formatter', description: 'Format, validate, and minify JSON with clear error highlighting.', icon: Braces, path: '/json-tools', tint: T.amber, tags: ['Format', 'Validate', 'Minify'] },
+  { title: 'JSON Tools Studio', description: 'Format, validate, and diff JSON, plus CSV and YAML conversion — live, with error line markers.', icon: Braces, path: '/json-tools', tint: T.amber, tags: ['Format & validate', 'CSV ↔ YAML', 'Patch diff'] },
 ];
 
 const ToolsHub = () => {
@@ -73,8 +73,10 @@ const ToolsHub = () => {
           set), a{' '}
           <Link href="/unit-converter" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">unit converter</Link>{' '}
           covering length, weight, temperature, area, and volume, and a{' '}
-          <Link href="/json-tools" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">JSON formatter</Link>{' '}
-          that validates and minifies with clear error positions — handy when a config file breaks and you need to see
+          <Link href="/json-formatter" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">JSON formatter</Link>{' '}
+          and{' '}
+          <Link href="/json-validator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">validator</Link>{' '}
+          with clear error positions — handy when a config file breaks and you need to see
           where. Nothing you enter leaves your device.
         </p>
       </section>
