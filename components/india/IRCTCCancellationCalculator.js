@@ -594,8 +594,9 @@ const IRCTCCancellationCalculator = () => {
             faqItems={seoFaqItems}
             relatedLinks={[
               { label: 'IRCTC Advance Booking Calculator', href: '/irctc-calculator' },
+              { label: 'TDR Refund Checker', href: '/tdr-refund-checker' },
+              { label: 'Tatkal Charges Calculator', href: '/tatkal-charges-calculator' },
               { label: 'IRCTC and Booking Strategy Guide', href: '/guides/irctc-booking-strategy' },
-              { label: 'GST Calculator', href: '/gst-calculator' },
               { label: 'India Calculators Hub', href: '/india-calculators' }
             ]}
           />

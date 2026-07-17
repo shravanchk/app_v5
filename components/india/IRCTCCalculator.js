@@ -642,9 +642,9 @@ END:VCALENDAR`}
             faqItems={seoFaqItems}
             relatedLinks={[
               { label: 'IRCTC Cancellation Charges Calculator', href: '/irctc-cancellation-calculator' },
-              { label: 'Age Calculator (Travel age checks)', href: '/age-calculator' },
-              { label: 'Income Tax Calculator', href: '/income-tax-calculator' },
-              { label: 'Loan & EMI Calculator', href: '/loan-calculator' },
+              { label: 'Tatkal Charges Calculator', href: '/tatkal-charges-calculator' },
+              { label: 'TDR Refund Checker', href: '/tdr-refund-checker' },
+              { label: 'Train Berth Position Finder', href: '/berth-position-finder' },
               { label: 'IRCTC and Booking Strategy Guide', href: '/guides/irctc-booking-strategy' }
             ]}
           />
