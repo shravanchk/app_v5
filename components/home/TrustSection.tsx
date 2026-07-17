@@ -6,7 +6,7 @@ import SectionHeading from '../ui/SectionHeading';
 type Trust = { icon: LucideIcon; title: string; sub: string };
 
 const ITEMS: Trust[] = [
-  { icon: LayoutGrid, title: '50+ Calculators', sub: 'Tax, loans, investing & more' },
+  { icon: LayoutGrid, title: '100+ Calculators & Tools', sub: 'Tax, loans, investing & more' },
   { icon: BadgeIndianRupee, title: '100% Free', sub: 'No paywalls, ever' },
   { icon: ShieldCheck, title: 'Privacy First', sub: 'Calculations stay in your browser' },
   { icon: UserCheck, title: 'Expert Reviewed', sub: 'Checked against official sources' },

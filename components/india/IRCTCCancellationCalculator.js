@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
-import { AlertTriangle, Clock, TicketX } from 'lucide-react';
+import { AlertTriangle, Clock, ExternalLink, TicketX } from 'lucide-react';
 import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import SearchLandingSections from '../calculator/SearchLandingSections';
@@ -448,6 +448,15 @@ const IRCTCCancellationCalculator = () => {
                   handles at its discretion (partial confirmations, concession fares, agent bookings). Verify the
                   final amount on the official IRCTC site before relying on it.
                 </div>
+
+                <a
+                  href="https://www.irctc.co.in/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-brand-700"
+                >
+                  Cancel your ticket on the official IRCTC portal <ExternalLink size={15} strokeWidth={2.2} />
+                </a>
               </>
             ) : (
               <Card className="flex flex-col items-center justify-center p-10 text-center text-sm text-ink-muted dark:text-slate-400">

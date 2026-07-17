@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Head from 'next/head';
-import { Calendar } from 'lucide-react';
+import { Calendar, ExternalLink } from 'lucide-react';
 import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import SearchLandingSections from '../calculator/SearchLandingSections';
@@ -392,6 +392,14 @@ const IRCTCCalculator = () => {
                         ? 'Booking is available now! Visit the IRCTC website.'
                         : 'Booking date has passed.'}
                   </div>
+                  <a
+                    href="https://www.irctc.co.in/nget/train-search"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-white px-4 py-2.5 text-sm font-bold text-brand-700 transition hover:bg-brand-50"
+                  >
+                    Book on the official IRCTC portal <ExternalLink size={15} strokeWidth={2.2} />
+                  </a>
                 </Card>
 
                 {/* Add to calendar */}
