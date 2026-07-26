@@ -23,3 +23,36 @@
 /guide-sip-step-up-planning /guides/sip-step-up-planning 301
 /uk-rail-calculator /eu-calculators 301
 /emi-calculator /loan-calculator 301
+
+# --- Pre-revamp legacy URLs -------------------------------------------------
+# Recovered from app_v4/public/.htaccess and app_v4/public/robots.txt. That
+# .htaccess never executed (Cloudflare Pages ignores Apache config), so these
+# have been 404ing since the pivot. Only slugs with a genuine topical
+# equivalent get a 301; everything else is 410 via functions/ (see
+# seo-audit/LEGACY_URLS.md).
+/old-calculator /loan-calculator 301
+/emi-calc /loan-calculator 301
+/loan-calc /loan-calculator 301
+/tax-calc /income-tax-calculator 301
+/income-tax-calc /income-tax-calculator 301
+/sip-calc /sip-calculator 301
+/gst-calc /gst-calculator 301
+/irctc-calc /irctc-calculator 301
+/old-calculator/ /loan-calculator 301
+/emi-calc/ /loan-calculator 301
+/loan-calc/ /loan-calculator 301
+/tax-calc/ /income-tax-calculator 301
+/income-tax-calc/ /income-tax-calculator 301
+/sip-calc/ /sip-calculator 301
+/gst-calc/ /gst-calculator 301
+/irctc-calc/ /irctc-calculator 301
+
+# Surfaced by the GSC "Crawled - currently not indexed" export (crawled
+# 2026-02-26, still 404 today). app_v4-era slug; the page is /eu-vat-calculator now.
+/vat-calculator /eu-vat-calculator 301
+/vat-calculator/ /eu-vat-calculator 301
+
+# Trailing-slash normalisation for the 410 paths, so they land on the
+# Pages Function route rather than falling through to the static 404.
+/animalinfo/ /animalinfo 301
+/services/ /services 301

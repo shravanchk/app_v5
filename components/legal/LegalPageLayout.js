@@ -24,6 +24,9 @@ const LegalPageLayout = ({
   description,
   canonicalPath,
   reviewedOn = DEFAULT_REVIEW_DATE,
+  // Optional JSON-LD object emitted into <head>. Used by the author profile
+  // pages to attach ProfilePage/Person markup.
+  schema,
   children
 }) => {
   return (
@@ -39,6 +42,9 @@ const LegalPageLayout = ({
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
+        {schema ? (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+        ) : null}
       </Head>
       <Container>
         <article className="mx-auto max-w-[800px]">

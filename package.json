@@ -12,7 +12,9 @@
     "dev:fresh": "npm run clean && NODE_ENV=development next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "test:seo": "SEO_BASE_URL=${SEO_BASE_URL:-https://upaman.com} node --test test/legacyUrls.integration.test.js",
+    "preview:edge": "npm run build && npx wrangler pages dev out"
   },
   "dependencies": {
     "axios": "^1.11.0",
