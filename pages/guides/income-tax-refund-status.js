@@ -329,7 +329,8 @@ export default function IncomeTaxRefundStatusGuide() {
       <h3>Does a revised return restart the refund clock?</h3>
       <p>
         Yes. Processing shifts to the revised return, so a revision filed while the original was still under processing
-        resets the timeline. Revised returns for AY 2026-27 are allowed until December 31, 2026.
+        resets the timeline. Revised returns for AY 2026-27 are allowed until <strong>March 31, 2027</strong> — see{' '}
+        <a href="/guides/how-to-file-revised-return">how to file a revised return</a>.
       </p>
       <h3>Is my income tax refund taxable?</h3>
       <p>

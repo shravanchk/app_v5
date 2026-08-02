@@ -131,6 +131,7 @@ const IncomeTaxCalculator = () => {
     { label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' },
     { label: 'How to file your ITR (AY 2026-27)', href: '/guides/how-to-file-itr' },
     { label: 'Income tax refund status: how to check and fix delays', href: '/guides/income-tax-refund-status' },
+    { label: 'How to file a revised return (Section 139(5))', href: '/guides/how-to-file-revised-return' },
     { label: 'HRA exemption: how it is calculated', href: '/guides/hra-exemption-calculation' },
   ];
   const nextStepTools = [

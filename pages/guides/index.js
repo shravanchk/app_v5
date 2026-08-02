@@ -31,6 +31,7 @@ const GROUPS = [
       { title: 'HRA Exemption Calculation', desc: 'The least-of-three rule worked out, plus the new eight-city metro list for FY 2026-27.', href: '/guides/hra-exemption-calculation' },
       { title: 'How to File Your ITR (AY 2026-27)', desc: 'Which form, which regime, what to reconcile against AIS — and the e-verification step that voids returns.', href: '/guides/how-to-file-itr' },
       { title: 'Income Tax Refund Status', desc: 'Check your ITR refund by PAN or acknowledgement number, decode every status message, and fix a failed refund.', href: '/guides/income-tax-refund-status' },
+      { title: 'How to File a Revised Return', desc: 'Fix a mistake in a filed ITR under Section 139(5) — free, unlimited, and open until March 31, 2027.', href: '/guides/how-to-file-revised-return' },
       { title: 'Tax on Salary by Income (₹5L–₹50L)', desc: 'Pick any salary for a full new-regime slab breakdown.', href: '/tax-on-salary' },
     ]
   },
