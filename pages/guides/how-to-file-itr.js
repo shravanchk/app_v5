@@ -123,7 +123,7 @@ export default function HowToFileItrGuidePage() {
         the regime question with the <a href="/tax-regime-comparison">regime comparison</a>, and check your HRA
         exemption with the <a href="/hra-calculator">HRA calculator</a> before claiming the old regime. The regime
         decision framework is covered in depth in{' '}
-        <a href="/guides/income-tax-regime-choice">old vs new regime choice</a>. Procedural specifics (portal flows,
+        <a href="/guides/income-tax-regime-choice">old vs new regime choice</a>, and every filing deadline is listed on the <a href="/income-tax-due-dates">income tax due dates</a> page. Procedural specifics (portal flows,
         exact form applicability) can change within a season — when in doubt,{' '}
         <a href="https://www.incometax.gov.in" target="_blank" rel="noopener noreferrer">incometax.gov.in</a> is the
         authority. This is general education, not personalized tax advice.

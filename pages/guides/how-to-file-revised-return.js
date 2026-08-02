@@ -264,7 +264,7 @@ export default function HowToFileRevisedReturnGuide() {
         settle the regime question with the <a href="/tax-regime-comparison">regime comparison tool</a>, and check
         your exemption with the <a href="/hra-calculator">HRA calculator</a>. See also{' '}
         <a href="/guides/how-to-file-itr">how to file your ITR (AY 2026-27)</a> and{' '}
-        <a href="/guides/income-tax-refund-status">income tax refund status</a>.
+        <a href="/guides/income-tax-refund-status">income tax refund status</a>. Every deadline in one place, with calendar reminders, is on the <a href="/income-tax-due-dates">income tax due dates</a> page.
       </p>
       <p>
         Deadlines and portal flows change between seasons — the revised-return window itself moved in Budget 2026, so

@@ -345,7 +345,7 @@ export default function IncomeTaxRefundStatusGuide() {
         with the <a href="/hra-calculator">HRA calculator</a>. For the filing process itself, see{' '}
         <a href="/guides/how-to-file-itr">how to file your ITR (AY 2026-27)</a>; for the regime decision,{' '}
         <a href="/guides/income-tax-regime-choice">old vs new regime choice</a> and the{' '}
-        <a href="/guides/old-vs-new-regime-breakeven-fy-2026-27">breakeven analysis</a>.
+        <a href="/guides/old-vs-new-regime-breakeven-fy-2026-27">breakeven analysis</a>. Filing and payment deadlines are collected on the <a href="/income-tax-due-dates">income tax due dates</a> page.
       </p>
       <p>
         Portal menus and processing timelines change between filing seasons — when something here doesn't match what you

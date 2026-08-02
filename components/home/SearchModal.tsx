@@ -45,6 +45,7 @@ const INDEX: Item[] = [
   { label: 'Gratuity Calculator', href: '/gratuity-calculator', group: 'India', k: 'years of service payout' },
   { label: 'Credit Card Trap Calculator', href: '/credit-card-trap-calculator', group: 'India', k: 'minimum due interest debt revolving' },
   { label: 'Buy vs Rent Calculator', href: '/buy-vs-rent-calculator', group: 'India', k: 'house property home decision' },
+  { label: 'Income Tax Due Dates & ITR Last Date', href: '/income-tax-due-dates', group: 'India', k: 'itr filing last date deadline advance tax belated revised return calendar reminder' },
   { label: 'India Calculators Hub', href: '/india-calculators', group: 'India', k: 'indian tools rupee' },
   // Health
   { label: 'BMI Calculator', href: '/bmi-calculator', group: 'Health', k: 'body mass index healthy weight overweight obese' },

@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import {
-  Calculator, TrendingUp, PiggyBank, Target, Wallet, Home, Car,
+  CalendarClock, Calculator, TrendingUp, PiggyBank, Target, Wallet, Home, Car,
   Landmark, Repeat, Receipt, Percent, LineChart, ArrowLeftRight, ShieldCheck, CreditCard, Hourglass,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
@@ -36,6 +36,7 @@ const cards = [
   { title: 'SIP Calculator', description: 'Estimate SIP corpus with expected returns and goal-based planning.', icon: TrendingUp, path: '/sip-calculator', tint: T.emerald, tags: ['Future value', 'Goal planning', 'Step-up'] },
   { title: 'PPF Calculator', description: 'Project PPF maturity with year-wise contribution and interest assumptions.', icon: PiggyBank, path: '/ppf-calculator', tint: T.rose, tags: ['15-year plan', 'Year-wise table', 'Maturity'] },
   { title: 'Salary Calculator', description: 'Convert CTC to in-hand salary with key deduction estimates.', icon: Wallet, path: '/salary-calculator', tint: T.sky, tags: ['CTC to net', 'Deduction view', 'Take-home'] },
+  { title: 'Income Tax Due Dates', description: 'Every ITR and advance tax deadline for AY 2026-27, with calendar reminders you add yourself.', icon: CalendarClock, path: '/income-tax-due-dates', tint: T.violet, tags: ['ITR last date', 'Advance tax', 'Calendar reminder'] },
   { title: 'Buy vs Rent Calculator', description: 'Estimate break-even timeline for buying vs renting using EMI and rent growth.', icon: Home, path: '/buy-vs-rent-calculator', tint: T.indigo, tags: ['Break-even', 'EMI vs rent', 'Home decision'] },
   { title: 'Prepay vs Invest Workflow', description: 'Compare whether monthly surplus should prepay debt or be invested for growth.', icon: ArrowLeftRight, path: '/prepay-vs-invest-workflow', tint: T.violet, tags: ['Debt vs investing', 'Risk-adjusted', 'Surplus'] },
   { title: 'FD vs SIP Workflow', description: 'Compare fixed deposit and SIP on post-tax maturity with a horizon-aware verdict.', icon: Landmark, path: '/fd-vs-sip-workflow', tint: T.indigo, tags: ['Post-tax view', 'LTCG vs slab', 'Verdict'] },

@@ -2721,3 +2721,89 @@ body.dark-theme .calculator-info-section ul {
 body.dark-theme .calculator-info-section a {
   color: #93c5fd;
 }
+
+/* --- Deadline calendar rows (/income-tax-due-dates) ------------------------
+   Urgency is carried by a modifier class rather than inline styles, so the
+   dark-theme rules below can win. Inline colours cannot be overridden by the
+   `body.dark-theme .calculator-card` block and would stay light on a dark card. */
+
+.deadline-row {
+  border: 1px solid #e2e8f0;
+  border-left-width: 3px;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #f8fafc;
+}
+
+.deadline-row .deadline-title {
+  font-weight: 700;
+  font-size: 0.96rem;
+  cursor: pointer;
+}
+
+.deadline-row .deadline-status {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.deadline-row .deadline-meta {
+  margin: 3px 0 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.deadline-row .deadline-detail {
+  margin: 6px 0 0;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.deadline-row--upcoming { border-left-color: #475569; }
+.deadline-row--upcoming .deadline-status,
+.deadline-row--upcoming .deadline-meta { color: #475569; }
+
+.deadline-row--soon { background: #eff6ff; border-color: #bfdbfe; border-left-color: #1d4ed8; }
+.deadline-row--soon .deadline-status,
+.deadline-row--soon .deadline-meta { color: #1d4ed8; }
+
+.deadline-row--urgent { background: #fff7ed; border-color: #fed7aa; border-left-color: #c2410c; }
+.deadline-row--urgent .deadline-status,
+.deadline-row--urgent .deadline-meta { color: #c2410c; }
+
+.deadline-row--today { background: #fef2f2; border-color: #fecaca; border-left-color: #b91c1c; }
+.deadline-row--today .deadline-status,
+.deadline-row--today .deadline-meta { color: #b91c1c; }
+
+.deadline-row--passed { background: #f1f5f9; border-left-color: #64748b; opacity: 0.75; }
+.deadline-row--passed .deadline-status,
+.deadline-row--passed .deadline-meta { color: #64748b; }
+
+body.dark-theme .deadline-row {
+  background: #24344a !important;
+  border-color: #3d4f66 !important;
+  color: #e2e8f0 !important;
+}
+
+body.dark-theme .deadline-row--soon { background: #1e3050 !important; border-left-color: #60a5fa !important; }
+body.dark-theme .deadline-row--soon .deadline-status,
+body.dark-theme .deadline-row--soon .deadline-meta { color: #93c5fd !important; }
+
+body.dark-theme .deadline-row--urgent { background: #3a2a1b !important; border-left-color: #fb923c !important; }
+body.dark-theme .deadline-row--urgent .deadline-status,
+body.dark-theme .deadline-row--urgent .deadline-meta { color: #fdba74 !important; }
+
+body.dark-theme .deadline-row--today { background: #3d2224 !important; border-left-color: #f87171 !important; }
+body.dark-theme .deadline-row--today .deadline-status,
+body.dark-theme .deadline-row--today .deadline-meta { color: #fca5a5 !important; }
+
+body.dark-theme .deadline-row--upcoming { border-left-color: #94a3b8 !important; }
+body.dark-theme .deadline-row--upcoming .deadline-status,
+body.dark-theme .deadline-row--upcoming .deadline-meta { color: #cbd5e1 !important; }
+
+body.dark-theme .deadline-row--passed { background: #1f2937 !important; border-left-color: #64748b !important; }
+body.dark-theme .deadline-row--passed .deadline-status,
+body.dark-theme .deadline-row--passed .deadline-meta { color: #94a3b8 !important; }
+
+body.dark-theme .deadline-row a { color: #93c5fd !important; }
