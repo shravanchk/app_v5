@@ -14,7 +14,6 @@ const UPDATES: Update[] = [
   { date: '2026-07-17', text: 'New: Hourly to Salary converter with 26 per-rate pages ($15–$75/hour) — part-time, overtime, and 2026 after-tax breakdowns', href: '/hourly' },
   { date: '2026-07-17', text: 'New guide for filing season: How to File Your ITR (AY 2026-27) — form choice, regime choice, and AIS reconciliation', href: '/guides/how-to-file-itr' },
   { date: '2026-07-15', text: 'Nine new guides across the US, UK, and India — budgeting, home affordability, CD ladders, APR vs APY, retirement benchmarks, UK payslips, salary sacrifice, HRA exemption, and SIP vs lumpsum', href: '/guides' },
-  { date: '2026-07-11', text: 'New IRCTC Cancellation Charges Calculator — implements the April 2026 72h/24h/8h refund rules with Tatkal and RAC/WL cases', href: '/irctc-cancellation-calculator' },
   { date: '2026-07-11', text: 'Category hub pages now explain how each region’s rules differ, with examples computed from the live engines', href: '/us-calculators' },
   { date: '2026-07-10', text: 'Three new decision workflows: FD vs SIP, Retirement Readiness (India & US), and US Mortgage Payoff vs Invest', href: '/workflows' },
   { date: '2026-07-10', text: 'Every calculator now includes an in-depth explainer, a worked example, and an FAQ' },

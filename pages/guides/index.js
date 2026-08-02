@@ -43,7 +43,6 @@ const GROUPS = [
       { title: 'Credit Card Minimum Due Trap', desc: 'Why the minimum barely dents debt, and how to exit revolving balances.', href: '/guides/credit-card-minimum-due-trap' },
       { title: 'How to Compare Job Offers', desc: 'A framework that goes beyond headline salary.', href: '/guides/how-to-compare-job-offers' },
       { title: 'Car Ownership Cost Guide', desc: 'The true running cost of a car beyond its sticker price.', href: '/guides/car-ownership-cost-guide' },
-      { title: 'IRCTC Booking Strategy', desc: 'A preparation system for regular and Tatkal train bookings.', href: '/guides/irctc-booking-strategy' },
     ]
   },
   {

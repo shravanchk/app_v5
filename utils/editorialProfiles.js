@@ -1,6 +1,6 @@
 // Single source of truth for who is accountable for content on this site.
 //
-// Upaman is operated by one person. The three profiles below are *functions*
+// Upaman is operated by one person. The two profiles below are *functions*
 // he performs, not separate people or teams — saying so plainly is the point.
 // On a YMYL site an unnamed "Review Desk" reads as manufactured authority,
 // which is worse for trust than admitting the site is small.
@@ -21,10 +21,6 @@ export const editorialProfiles = {
   financeReviewDesk: {
     label: 'Personal Finance Review Desk',
     url: '/authors/personal-finance-review-desk'
-  },
-  travelReviewDesk: {
-    label: 'Travel Utility Review Desk',
-    url: '/authors/travel-utility-review-desk'
   }
 };
 

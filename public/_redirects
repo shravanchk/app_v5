@@ -8,7 +8,7 @@
 /guide-emergency-fund-readiness.html /guides/emergency-fund-readiness 301
 /guide-emi-prepayment-strategy.html /guides/emi-prepayment-strategy 301
 /guide-income-tax-regime-choice.html /guides/income-tax-regime-choice 301
-/guide-irctc-booking-strategy.html /guides/irctc-booking-strategy 301
+/guide-irctc-booking-strategy.html https://railmonk.com/rail/guides/irctc-booking-strategy 301
 /guide-ppf-vs-sip-choice.html /guides/ppf-vs-sip-choice 301
 /guide-prepay-vs-invest-decision.html /guides/prepay-vs-invest-decision 301
 /guide-sip-step-up-planning.html /guides/sip-step-up-planning 301
@@ -17,7 +17,7 @@
 /guide-emergency-fund-readiness /guides/emergency-fund-readiness 301
 /guide-emi-prepayment-strategy /guides/emi-prepayment-strategy 301
 /guide-income-tax-regime-choice /guides/income-tax-regime-choice 301
-/guide-irctc-booking-strategy /guides/irctc-booking-strategy 301
+/guide-irctc-booking-strategy https://railmonk.com/rail/guides/irctc-booking-strategy 301
 /guide-ppf-vs-sip-choice /guides/ppf-vs-sip-choice 301
 /guide-prepay-vs-invest-decision /guides/prepay-vs-invest-decision 301
 /guide-sip-step-up-planning /guides/sip-step-up-planning 301
@@ -37,7 +37,7 @@
 /income-tax-calc /income-tax-calculator 301
 /sip-calc /sip-calculator 301
 /gst-calc /gst-calculator 301
-/irctc-calc /irctc-calculator 301
+/irctc-calc https://railmonk.com/rail/irctc-calculator 301
 /old-calculator/ /loan-calculator 301
 /emi-calc/ /loan-calculator 301
 /loan-calc/ /loan-calculator 301
@@ -45,7 +45,7 @@
 /income-tax-calc/ /income-tax-calculator 301
 /sip-calc/ /sip-calculator 301
 /gst-calc/ /gst-calculator 301
-/irctc-calc/ /irctc-calculator 301
+/irctc-calc/ https://railmonk.com/rail/irctc-calculator 301
 
 # Surfaced by the GSC "Crawled - currently not indexed" export (crawled
 # 2026-02-26, still 404 today). app_v4-era slug; the page is /eu-vat-calculator now.
@@ -56,3 +56,21 @@
 # Pages Function route rather than falling through to the static 404.
 /animalinfo/ /animalinfo 301
 /services/ /services 301
+
+# --- Rail split: IRCTC tools moved to railmonk.com (2026-08-02) -------------
+# The rail tools were spun out to railmonk.com, which now carries a strict
+# superset (10 tools, 13 guides, Hindi pages). Keeping copies here made the two
+# sites compete for the same queries, so upaman hands the topic over entirely
+# and stays a finance site. Cross-domain 301s — do not "restore" these pages.
+/irctc-calculator https://railmonk.com/rail/irctc-calculator 301
+/irctc-cancellation-calculator https://railmonk.com/rail/irctc-cancellation-calculator 301
+/tatkal-charges-calculator https://railmonk.com/rail/tatkal-charges-calculator 301
+/tdr-refund-checker https://railmonk.com/rail/tdr-refund-checker 301
+/berth-position-finder https://railmonk.com/rail/berth-position-finder 301
+/guides/irctc-booking-strategy https://railmonk.com/rail/guides/irctc-booking-strategy 301
+/irctc-calculator/ https://railmonk.com/rail/irctc-calculator 301
+/irctc-cancellation-calculator/ https://railmonk.com/rail/irctc-cancellation-calculator 301
+/tatkal-charges-calculator/ https://railmonk.com/rail/tatkal-charges-calculator 301
+/tdr-refund-checker/ https://railmonk.com/rail/tdr-refund-checker 301
+/berth-position-finder/ https://railmonk.com/rail/berth-position-finder 301
+/guides/irctc-booking-strategy/ https://railmonk.com/rail/guides/irctc-booking-strategy 301

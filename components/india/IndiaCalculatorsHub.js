@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import {
-  Train, Calculator, TrendingUp, PiggyBank, Target, Wallet, Home, Car,
+  Calculator, TrendingUp, PiggyBank, Target, Wallet, Home, Car,
   Landmark, Repeat, Receipt, Percent, LineChart, ArrowLeftRight, ShieldCheck, CreditCard, Hourglass,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
@@ -36,11 +36,6 @@ const cards = [
   { title: 'SIP Calculator', description: 'Estimate SIP corpus with expected returns and goal-based planning.', icon: TrendingUp, path: '/sip-calculator', tint: T.emerald, tags: ['Future value', 'Goal planning', 'Step-up'] },
   { title: 'PPF Calculator', description: 'Project PPF maturity with year-wise contribution and interest assumptions.', icon: PiggyBank, path: '/ppf-calculator', tint: T.rose, tags: ['15-year plan', 'Year-wise table', 'Maturity'] },
   { title: 'Salary Calculator', description: 'Convert CTC to in-hand salary with key deduction estimates.', icon: Wallet, path: '/salary-calculator', tint: T.sky, tags: ['CTC to net', 'Deduction view', 'Take-home'] },
-  { title: 'IRCTC Booking Calculator', description: 'Get exact booking date/timing windows for regular and Tatkal booking.', icon: Train, path: '/irctc-calculator', tint: T.brand, tags: ['Booking date', 'Tatkal timing', 'Quick planning'] },
-  { title: 'IRCTC Cancellation Calculator', description: 'Estimate refund and cancellation charge under the new April 2026 72h/24h/8h rules.', icon: Train, path: '/irctc-cancellation-calculator', tint: T.rose, tags: ['April 2026 rules', 'Refund estimate', 'Tatkal & RAC/WL'] },
-  { title: 'Tatkal Charges Calculator', description: 'The exact Tatkal premium for your class — percentage of basic fare with min/max caps.', icon: Train, path: '/tatkal-charges-calculator', tint: T.amber, tags: ['10%/30% rates', 'Class-wise caps', 'Per passenger'] },
-  { title: 'TDR Refund Checker', description: 'Late train, AC failure, partial travel — check refund eligibility and the filing deadline.', icon: Train, path: '/tdr-refund-checker', tint: T.emerald, tags: ['9 scenarios', 'Filing deadlines', 'Step-by-step'] },
-  { title: 'Berth Position Finder', description: 'Is berth 23 a side lower? Map any berth number to its position with a bay diagram.', icon: Train, path: '/berth-position-finder', tint: T.sky, tags: ['SL/3A/2A/1A', 'Bay diagram', 'Berth tips'] },
   { title: 'Buy vs Rent Calculator', description: 'Estimate break-even timeline for buying vs renting using EMI and rent growth.', icon: Home, path: '/buy-vs-rent-calculator', tint: T.indigo, tags: ['Break-even', 'EMI vs rent', 'Home decision'] },
   { title: 'Prepay vs Invest Workflow', description: 'Compare whether monthly surplus should prepay debt or be invested for growth.', icon: ArrowLeftRight, path: '/prepay-vs-invest-workflow', tint: T.violet, tags: ['Debt vs investing', 'Risk-adjusted', 'Surplus'] },
   { title: 'FD vs SIP Workflow', description: 'Compare fixed deposit and SIP on post-tax maturity with a horizon-aware verdict.', icon: Landmark, path: '/fd-vs-sip-workflow', tint: T.indigo, tags: ['Post-tax view', 'LTCG vs slab', 'Verdict'] },
@@ -117,6 +112,13 @@ const IndiaCalculatorsHub = () => {
             (<Link href="/gst-reform-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">GST 2.0 calculator</Link>).
             Every figure is computed from the same engines the calculators run on, so the numbers here always match
             what the tools return.
+          </p>
+          <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+            Looking for the IRCTC tools that used to live here? Train booking windows, cancellation and Tatkal
+            charges, TDR refunds, and berth positions moved to{' '}
+            <a href="https://railmonk.com/rail" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Railmonk</a>,
+            our dedicated rail site, where they get a fare calculator, waitlist confirmation chances, coach
+            positions, and Hindi versions alongside them.
           </p>
         </section>
       </CalcLayout>

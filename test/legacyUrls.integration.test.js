@@ -57,7 +57,6 @@ const LEGACY_301 = [
   ['/income-tax-calc', '/income-tax-calculator'],
   ['/sip-calc', '/sip-calculator'],
   ['/gst-calc', '/gst-calculator'],
-  ['/irctc-calc', '/irctc-calculator'],
   ['/vat-calculator', '/eu-vat-calculator'],
   ['/emi-calculator', '/loan-calculator']
 ];
@@ -69,6 +68,39 @@ for (const [from, to] of LEGACY_301) {
     assert.equal(new URL(hops[0].location, BASE).pathname, to);
     assert.equal(hops.length, 2, `${from} should reach its target in one hop`);
     assert.equal(hops[1].status, 200, `${to} must be live — never 301 to a dead page`);
+  });
+}
+
+// --- rail split: cross-domain 301 to railmonk.com (2026-08-02) --------------
+//
+// The IRCTC tools were handed over to railmonk.com so the two sites stop
+// competing for the same queries. These must stay single-hop and must land on
+// a live railmonk page — a 301 into a 404 is worse than never redirecting.
+// Asserted separately from LEGACY_301 because the target is another origin.
+
+const RAIL_301 = [
+  ['/irctc-calculator', 'https://railmonk.com/rail/irctc-calculator'],
+  ['/irctc-cancellation-calculator', 'https://railmonk.com/rail/irctc-cancellation-calculator'],
+  ['/tatkal-charges-calculator', 'https://railmonk.com/rail/tatkal-charges-calculator'],
+  ['/tdr-refund-checker', 'https://railmonk.com/rail/tdr-refund-checker'],
+  ['/berth-position-finder', 'https://railmonk.com/rail/berth-position-finder'],
+  ['/guides/irctc-booking-strategy', 'https://railmonk.com/rail/guides/irctc-booking-strategy'],
+  ['/irctc-calc', 'https://railmonk.com/rail/irctc-calculator'],
+  ['/guide-irctc-booking-strategy', 'https://railmonk.com/rail/guides/irctc-booking-strategy']
+];
+
+for (const [from, to] of RAIL_301) {
+  test(`${from} -> 301 -> railmonk`, { skip }, async () => {
+    const res = await probe(from);
+    assert.equal(res.status, 301, `${from} should 301, got ${res.status}`);
+    assert.equal(res.location, to, `${from} should point straight at ${to}`);
+
+    const target = await fetch(to, {
+      redirect: 'manual',
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      headers: { 'user-agent': 'upaman-seo-integration-test' }
+    });
+    assert.equal(target.status, 200, `${to} must be live — never 301 to a dead page`);
   });
 }
 
@@ -109,7 +141,6 @@ const MUST_STAY_200 = [
   '/gst-calculator',
   '/sip-calculator',
   '/loan-calculator',
-  '/irctc-calculator',
   '/age-calculator',
   '/json-tools',
   '/european-salary-calculator',

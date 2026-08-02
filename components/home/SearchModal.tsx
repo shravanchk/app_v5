@@ -44,7 +44,6 @@ const INDEX: Item[] = [
   { label: 'Capital Gains Calculator', href: '/capital-gains-calculator', group: 'India', k: 'ltcg stcg stocks property indexation' },
   { label: 'Gratuity Calculator', href: '/gratuity-calculator', group: 'India', k: 'years of service payout' },
   { label: 'Credit Card Trap Calculator', href: '/credit-card-trap-calculator', group: 'India', k: 'minimum due interest debt revolving' },
-  { label: 'IRCTC Fee Calculator', href: '/irctc-calculator', group: 'India', k: 'train ticket convenience fee tatkal railway booking' },
   { label: 'Buy vs Rent Calculator', href: '/buy-vs-rent-calculator', group: 'India', k: 'house property home decision' },
   { label: 'India Calculators Hub', href: '/india-calculators', group: 'India', k: 'indian tools rupee' },
   // Health
