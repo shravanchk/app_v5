@@ -130,6 +130,7 @@ const IncomeTaxCalculator = () => {
     { label: 'Standard deduction ₹75,000 vs ₹50,000', href: '/guides/standard-deduction-fy-2026-27' },
     { label: 'CTC to in-hand breakdown guide', href: '/guides/ctc-to-in-hand-salary' },
     { label: 'How to file your ITR (AY 2026-27)', href: '/guides/how-to-file-itr' },
+    { label: 'Income tax refund status: how to check and fix delays', href: '/guides/income-tax-refund-status' },
     { label: 'HRA exemption: how it is calculated', href: '/guides/hra-exemption-calculation' },
   ];
   const nextStepTools = [

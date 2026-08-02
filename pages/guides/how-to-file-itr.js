@@ -112,7 +112,7 @@ export default function HowToFileItrGuidePage() {
 
       <h2 style={sectionTitleStyle}>After filing, and if you missed the deadline</h2>
       <ul>
-        <li><strong>Processing and refund:</strong> most salaried returns process within days to a few weeks; the refund lands in your pre-validated account. Track it under "View Filed Returns."</li>
+        <li><strong>Processing and refund:</strong> most salaried returns process within days to a few weeks; the refund lands in your pre-validated account. Track it under "View Filed Returns" — see <a href="/guides/income-tax-refund-status">how to check your income tax refund status</a> for what each status message means and how to fix a failed refund.</li>
         <li><strong>Found a mistake?</strong> A <strong>revised return</strong> can replace the original until December 31, 2026 — no penalty for correcting honestly.</li>
         <li><strong>Missed July 31?</strong> A <strong>belated return</strong> is allowed until December 31, 2026, with a late fee (up to ₹5,000; capped at ₹1,000 for small incomes) — plus the two quieter costs: new regime becomes compulsory, and most losses can't be carried forward.</li>
       </ul>
