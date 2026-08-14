@@ -11,6 +11,8 @@ import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { cn } from '../ui/cn';
 import { useShareableState, toNumericString, toOption } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const FAQ = [
   { question: 'What is VAT and how is it calculated?', answer: 'VAT (Value Added Tax) is a consumption tax levied on goods and services. For VAT exclusive amounts, multiply by the VAT rate. For VAT inclusive amounts, divide by (1 + VAT rate).' },
@@ -25,6 +27,7 @@ const FAQ = [
 const SHARE_DEFAULTS = { amount: '', country: 'UK', calculationType: 'exclusive' };
 
 const VATCalculator = ({ onBack }) => {
+  const t = useT();
   const [amount, setAmount] = useState(SHARE_DEFAULTS.amount);
   const [country, setCountry] = useState(SHARE_DEFAULTS.country);
   const [calculationType, setCalculationType] = useState(SHARE_DEFAULTS.calculationType); // exclusive, inclusive
@@ -183,13 +186,15 @@ const VATCalculator = ({ onBack }) => {
         title="European VAT Calculator"
         subtitle="Calculate VAT inclusive or exclusive amounts across 15+ European countries with current standard rates."
       >
+        <LanguageToggle className="mb-6" />
+
         <div className="grid gap-5 lg:grid-cols-5">
           {/* Input Panel */}
           <Card className="p-5 lg:col-span-2">
             <div className="space-y-4">
               <SelectField
                 id="vat-country"
-                label="Country"
+                label={t('common.country')}
                 value={country}
                 onChange={setCountry}
                 options={Object.entries(VAT_RATES).map(([code, data]) => ({
@@ -200,19 +205,19 @@ const VATCalculator = ({ onBack }) => {
 
               <NumberField
                 id="vat-amount"
-                label={`Amount (${selectedCountry.currency})`}
+                label={t('common.amountWithCurrency').replace('{currency}', selectedCountry.currency)}
                 prefix={selectedCountry.currency}
                 value={amount}
                 onChange={setAmount}
-                hint="Enter the amount to add or extract VAT from."
+                hint={t('vat.amountHint')}
               />
 
               <div>
-                <span className="mb-1.5 block text-sm font-medium text-ink-soft dark:text-slate-300">Calculation type</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-soft dark:text-slate-300">{t('vat.calculationType')}</span>
                 <Tabs
                   tabs={[
-                    { id: 'exclusive', label: 'VAT exclusive' },
-                    { id: 'inclusive', label: 'VAT inclusive' }
+                    { id: 'exclusive', label: t('vat.exclusive') },
+                    { id: 'inclusive', label: t('vat.inclusive') }
                   ]}
                   active={calculationType}
                   onChange={setCalculationType}
@@ -222,7 +227,7 @@ const VATCalculator = ({ onBack }) => {
               <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-3 text-sm dark:border-teal-800/60 dark:bg-teal-900/20">
                 <p className="font-semibold text-teal-800 dark:text-teal-300">{selectedCountry.flag} {selectedCountry.country}</p>
                 <p className="mt-0.5 text-teal-700 dark:text-teal-400">
-                  Standard VAT rate: {selectedCountry.standard}% · Currency: {selectedCountry.currency}
+                  {t('vat.standardRate')}: {selectedCountry.standard}% · {t('vat.currency')}: {selectedCountry.currency}
                 </p>
               </div>
             </div>
@@ -234,18 +239,18 @@ const VATCalculator = ({ onBack }) => {
             {results ? (
               <>
                 <div className="grid grid-cols-2 gap-3">
-                  <ResultStat label="Gross (incl. VAT)" value={formatMoney(results.grossAmount, results.currency)} emphasis tone="positive" />
+                  <ResultStat label={t('vat.grossInclVat')} value={formatMoney(results.grossAmount, results.currency)} emphasis tone="positive" />
                   <ResultStat label={`VAT amount (${results.vatRate}%)`} value={formatMoney(results.vatAmount, results.currency)} />
-                  <ResultStat label="Net (excl. VAT)" value={formatMoney(results.netAmount, results.currency)} />
-                  <ResultStat label="Type" value={results.calculationType === 'exclusive' ? 'Exclusive' : 'Inclusive'} />
+                  <ResultStat label={t('vat.netExclVat')} value={formatMoney(results.netAmount, results.currency)} />
+                  <ResultStat label={t('common.type')} value={results.calculationType === 'exclusive' ? 'Exclusive' : 'Inclusive'} />
                 </div>
 
                 <Card className="p-5">
                   <PieBreakdownChart
-                    title="Net amount vs VAT share"
+                    title={t('vat.chartTitle')}
                     items={[
-                      { label: 'Net amount', value: results.netAmount, color: '#3b82f6' },
-                      { label: 'VAT amount', value: results.vatAmount, color: '#f97316' }
+                      { label: t('vat.netAmount'), value: results.netAmount, color: '#3b82f6' },
+                      { label: t('vat.vatAmount'), value: results.vatAmount, color: '#f97316' }
                     ]}
                     formatter={(value) => formatMoney(value, results.currency)}
                   />

@@ -12,6 +12,8 @@ import Card from '../ui/Card';
 import { cn } from '../ui/cn';
 import { SALARY_SYSTEMS, computeEuropeanSalary } from '../../utils/europeanSalaryCalculations';
 import { useShareableState, toNumericString, toOption } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const FAQ = [
   { question: 'How accurate are these salary calculations?', answer: 'These calculations use the tax rates and standard deductions configured in this calculator. Actual take-home pay may vary based on personal circumstances, allowances, and local variations. Consult a tax professional for precise calculations.' },
@@ -217,6 +219,7 @@ const EuropeanSalaryCalculator = ({
   pageHeading = null,
   pageSubheading = null
 }) => {
+  const t = useT();
   const [grossSalary, setGrossSalary] = useState('');
   const [country, setCountry] = useState(forcedCountry || 'UK');
   const [frequency, setFrequency] = useState('annual'); // annual, monthly
@@ -288,21 +291,13 @@ const EuropeanSalaryCalculator = ({
     ? `Calculate your net salary after tax in ${selectedCountryName}`
     : 'Estimate net salary after tax and social contributions across 8 European countries.');
 
-  const deductionLabels = {
-    incomeTax: 'Income Tax',
-    nationalInsurance: 'National Insurance',
-    socialSecurity: 'Social Security',
-    solidarityTax: 'Solidarity Tax',
-    federalTax: 'Federal Tax',
-    cantonalTax: 'Cantonal Tax',
-    ahv: 'AHV/Insurance',
-    municipalTax: 'Municipal Tax',
-    stateTax: 'State Tax',
-    grossTax: 'Gross Tax',
-    taxCredits: 'Tax Credits',
-    personalAllowance: 'Personal Allowance',
-    taxableIncome: 'Taxable Income'
-  };
+  // Line-item names come from the dictionary, keyed by the engine's breakdown
+  // keys, so an unmapped key still falls back to the raw key below.
+  const deductionLabels = Object.fromEntries(
+    ['incomeTax', 'nationalInsurance', 'socialSecurity', 'solidarityTax', 'federalTax', 'cantonalTax',
+      'ahv', 'municipalTax', 'stateTax', 'grossTax', 'taxCredits', 'personalAllowance', 'taxableIncome']
+      .map((key) => [key, t(`deductions.${key}`)])
+  );
 
   const resultShareLines = results ? [
     `Country: ${results.flag} ${results.country}`,
@@ -377,6 +372,8 @@ const EuropeanSalaryCalculator = ({
         title={resolvedHeading}
         subtitle={resolvedSubheading}
       >
+        <LanguageToggle className="mb-6" />
+
         <div className="grid gap-5 lg:grid-cols-5">
           {/* Input Panel */}
           <Card className="p-5 lg:col-span-2">
@@ -384,7 +381,7 @@ const EuropeanSalaryCalculator = ({
               {!forcedCountry && (
                 <SelectField
                   id="eu-country"
-                  label="Country"
+                  label={t('common.country')}
                   value={country}
                   onChange={setCountry}
                   options={Object.entries(SALARY_SYSTEMS).map(([code, data]) => ({
@@ -395,11 +392,11 @@ const EuropeanSalaryCalculator = ({
               )}
 
               <div>
-                <span className="mb-1.5 block text-sm font-medium text-ink-soft dark:text-slate-300">Salary frequency</span>
+                <span className="mb-1.5 block text-sm font-medium text-ink-soft dark:text-slate-300">{t('salary.frequency')}</span>
                 <Tabs
                   tabs={[
-                    { id: 'annual', label: 'Annual' },
-                    { id: 'monthly', label: 'Monthly' }
+                    { id: 'annual', label: t('salary.annual') },
+                    { id: 'monthly', label: t('salary.monthly') }
                   ]}
                   active={frequency}
                   onChange={setFrequency}
@@ -408,11 +405,11 @@ const EuropeanSalaryCalculator = ({
 
               <NumberField
                 id="eu-gross"
-                label={`Gross salary (${frequency})`}
+                label={t('salary.grossSalaryWithFrequency').replace('{frequency}', t(frequency === 'monthly' ? 'salary.freqMonthlyWord' : 'salary.freqAnnualWord'))}
                 prefix={selectedCountry.currency}
                 value={grossSalary}
                 onChange={setGrossSalary}
-                hint={`Enter your gross ${frequency} salary to calculate take-home pay.`}
+                hint={t('salary.grossHint').replace('{frequency}', t(frequency === 'monthly' ? 'salary.freqMonthlyWord' : 'salary.freqAnnualWord'))}
               />
 
               <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-3 text-sm dark:border-teal-800/60 dark:bg-teal-900/20">
@@ -430,28 +427,28 @@ const EuropeanSalaryCalculator = ({
             {results ? (
               <>
                 <div className="grid grid-cols-2 gap-3">
-                  <ResultStat label="Net annual (take-home)" value={formatCurrency(results.netAnnual, results.currency)} emphasis tone="positive" />
-                  <ResultStat label="Net monthly" value={formatCurrency(results.netMonthly, results.currency)} />
-                  <ResultStat label="Total deductions" value={formatCurrency(results.breakdown.totalDeductions, results.currency)} />
-                  <ResultStat label="Effective tax rate" value={`${results.effectiveRate?.toFixed(1)}%`} />
+                  <ResultStat label={t('salary.netAnnualTakeHome')} value={formatCurrency(results.netAnnual, results.currency)} emphasis tone="positive" />
+                  <ResultStat label={t('salary.netMonthly')} value={formatCurrency(results.netMonthly, results.currency)} />
+                  <ResultStat label={t('common.totalDeductions')} value={formatCurrency(results.breakdown.totalDeductions, results.currency)} />
+                  <ResultStat label={t('common.effectiveTaxRate')} value={`${results.effectiveRate?.toFixed(1)}%`} />
                 </div>
 
                 <Card className="p-5">
                   <PieBreakdownChart
-                    title="Gross salary composition"
+                    title={t('salary.compositionTitle')}
                     items={[
-                      { label: 'Net take-home', value: results.netAnnual, color: '#10b981' },
-                      { label: 'Total deductions', value: results.breakdown.totalDeductions, color: '#f97316' }
+                      { label: t('salary.netTakeHome'), value: results.netAnnual, color: '#10b981' },
+                      { label: t('common.totalDeductions'), value: results.breakdown.totalDeductions, color: '#f97316' }
                     ]}
                     formatter={(value) => formatCurrency(value, results.currency)}
                   />
                 </Card>
 
                 <Card className="p-5">
-                  <h3 className="font-display text-base font-bold text-ink dark:text-white">Detailed breakdown</h3>
+                  <h3 className="font-display text-base font-bold text-ink dark:text-white">{t('salary.detailedBreakdown')}</h3>
                   <div className="mt-3 divide-y divide-slate-100 dark:divide-slate-700">
                     <div className="flex items-center justify-between py-2 text-sm">
-                      <span className="font-medium text-ink-soft dark:text-slate-300">Gross annual salary</span>
+                      <span className="font-medium text-ink-soft dark:text-slate-300">{t('salary.grossAnnual')}</span>
                       <span className="font-semibold text-ink dark:text-white">{formatCurrency(results.grossAnnual, results.currency)}</span>
                     </div>
                     {Object.entries(results.breakdown).map(([key, value]) => {
@@ -475,7 +472,7 @@ const EuropeanSalaryCalculator = ({
                       );
                     })}
                     <div className="flex items-center justify-between py-2 text-sm font-semibold">
-                      <span className="text-emerald-700 dark:text-emerald-400">Net annual salary</span>
+                      <span className="text-emerald-700 dark:text-emerald-400">{t('salary.netAnnual')}</span>
                       <span className="text-emerald-700 dark:text-emerald-400">{formatCurrency(results.netAnnual, results.currency)}</span>
                     </div>
                   </div>

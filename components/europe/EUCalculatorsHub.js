@@ -6,6 +6,8 @@ import {
 import { CalcLayout } from '../calculator/CalcLayout';
 import Reveal from '../ui/Reveal';
 import { computeEuropeanSalary } from '../../utils/europeanSalaryCalculations';
+import { useLanguage } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const T = {
   brand: 'bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-300',
@@ -17,16 +19,19 @@ const T = {
   teal: 'bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-300',
 };
 
+// `id` keys into the `cards.*` namespace of the locale dictionaries for the
+// title, description, and tag chips; everything here is presentation that does
+// not vary by language.
 const cards = [
-  { title: 'UK Income Tax Calculator', description: 'Estimate UK income tax for 2026-27 with Scottish rates and National Insurance.', icon: Landmark, path: '/uk-income-tax-calculator', tint: T.violet, tags: ['2026-27 tax year', 'Scottish rates', 'NI included'] },
-  { title: 'UK Take-Home by Salary', description: 'Instant after-tax figures for UK salaries from £20,000 to £150,000 — tax, NI, and monthly pay.', icon: Table2, path: '/uk/take-home', tint: T.brand, tags: ['£20k–£150k', '2026-27 rates', 'Tax + NI'] },
-  { title: 'UK Hourly to Salary Converter', description: 'Turn any £/hour rate into yearly, monthly, and weekly pay on a 37.5- or 40-hour week — with per-rate pages from £12 to £50 including 2026-27 take-home.', icon: Landmark, path: '/uk/hourly', tint: T.emerald, tags: ['£12–£50/hour', '37.5h & 40h weeks', 'After-tax view'] },
-  { title: 'European VAT Calculator', description: 'Calculate VAT for 15 European countries with inclusive/exclusive and reverse VAT modes.', icon: BadgePercent, path: '/eu-vat-calculator', tint: T.amber, tags: ['15 countries', 'Inclusive/exclusive', 'Rate comparison'] },
-  { title: 'European Salary Calculator', description: 'Estimate net salary after tax and social contributions across key European countries.', icon: Banknote, path: '/european-salary-calculator', tint: T.emerald, tags: ['Net salary', 'Social contributions', 'Country comparison'] },
-  { title: 'Germany Salary Calculator', description: 'Estimate Germany net salary with income tax, social insurance, and solidarity surcharge.', icon: Banknote, path: '/germany-salary-calculator', tint: T.brand, tags: ['Brutto to netto', 'Social insurance', 'Take-home'] },
-  { title: 'Germany Take-Home by Salary', description: 'Instant brutto-to-netto figures for German salaries from €25,000 to €150,000.', icon: Table2, path: '/germany/take-home', tint: T.emerald, tags: ['€25k–€150k', '§32a EStG 2026', 'Tax + social'] },
-  { title: 'France Salary Calculator', description: 'Estimate France take-home salary after income tax and social contributions.', icon: Banknote, path: '/france-salary-calculator', tint: T.sky, tags: ['Salaire net', 'Social charges', 'Tax estimate'] },
-  { title: 'Netherlands Salary Calculator', description: 'Estimate Dutch net salary with box-1 tax and the common tax-credit adjustment.', icon: Banknote, path: '/netherlands-salary-calculator', tint: T.teal, tags: ['Dutch tax', 'Tax credits', 'Net pay estimate'] },
+  { id: 'ukIncomeTax', icon: Landmark, path: '/uk-income-tax-calculator', tint: T.violet },
+  { id: 'ukTakeHome', icon: Table2, path: '/uk/take-home', tint: T.brand },
+  { id: 'ukHourly', icon: Landmark, path: '/uk/hourly', tint: T.emerald },
+  { id: 'vat', icon: BadgePercent, path: '/eu-vat-calculator', tint: T.amber },
+  { id: 'europeanSalary', icon: Banknote, path: '/european-salary-calculator', tint: T.emerald },
+  { id: 'germanySalary', icon: Banknote, path: '/germany-salary-calculator', tint: T.brand },
+  { id: 'germanyTakeHome', icon: Table2, path: '/germany/take-home', tint: T.emerald },
+  { id: 'franceSalary', icon: Banknote, path: '/france-salary-calculator', tint: T.sky },
+  { id: 'netherlandsSalary', icon: Banknote, path: '/netherlands-salary-calculator', tint: T.teal },
 ];
 
 // Static comparison table for the hub: net pay on a typical gross salary in each
@@ -73,10 +78,14 @@ const NET_60K = Object.fromEntries(
 );
 
 const EUCalculatorsHub = () => {
+  const { t, tList } = useLanguage();
+
   return (
-    <CalcLayout eyebrow="UK & Europe" title="UK & Europe Calculators Hub" subtitle="Tax, VAT, and country-specific net-salary tools for the UK, Germany, France, the Netherlands and across Europe — all free.">
+    <CalcLayout eyebrow={t('hub.eyebrow')} title={t('hub.title')} subtitle={t('hub.subtitle')}>
+      <LanguageToggle className="mb-6" />
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map(({ title, description, icon: Icon, path, tint, tags }) => (
+        {cards.map(({ id, icon: Icon, path, tint }) => (
           <Link
             key={path}
             href={path}
@@ -85,10 +94,10 @@ const EUCalculatorsHub = () => {
             <span className={`inline-flex h-12 w-12 items-center justify-center rounded-xl ${tint}`}>
               <Icon className="h-6 w-6" strokeWidth={1.8} />
             </span>
-            <h2 className="mt-4 font-display text-base font-semibold text-ink group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">{title}</h2>
-            <p className="mt-1 flex-1 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{description}</p>
+            <h2 className="mt-4 font-display text-base font-semibold text-ink group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">{t(`cards.${id}.title`)}</h2>
+            <p className="mt-1 flex-1 text-sm leading-relaxed text-ink-muted dark:text-slate-400">{t(`cards.${id}.description`)}</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
-              {tags.map((tag) => (
+              {tList(`cards.${id}.tags`).map((tag) => (
                 <span key={tag} className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-ink-soft dark:bg-slate-700 dark:text-slate-300">{tag}</span>
               ))}
             </div>
@@ -99,21 +108,20 @@ const EUCalculatorsHub = () => {
       <Reveal>
       <section className="mt-12">
         <h2 className="font-display text-xl font-bold tracking-tight text-ink dark:text-white">
-          Who keeps most of their salary in Europe?
+          {t('hub.comparisonHeading')}
         </h2>
         <p className="mt-2 max-w-3xl text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
-          Estimated 2026 take-home pay for a single employee on a typical gross salary in each country&apos;s own
-          currency, after income tax and employee social contributions. Click a country to run your own numbers.
+          {t('hub.comparisonIntro')}
         </p>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[560px] border-collapse text-[0.95rem]">
             <tbody>
               <tr>
-                <th className={thCls}>Country</th>
-                <th className={thCls}>Example gross</th>
-                <th className={thCls}>Net / year</th>
-                <th className={thCls}>Net / month</th>
-                <th className={thCls}>Keeps</th>
+                <th className={thCls}>{t('hub.colCountry')}</th>
+                <th className={thCls}>{t('hub.colGross')}</th>
+                <th className={thCls}>{t('hub.colNetYear')}</th>
+                <th className={thCls}>{t('hub.colNetMonth')}</th>
+                <th className={thCls}>{t('hub.colKeeps')}</th>
               </tr>
               {COMPARISON_ROWS.map((r) => (
                 <tr key={r.code}>

@@ -1,18 +1,26 @@
 import React from 'react';
 import { Languages } from 'lucide-react';
-import { LOCALES } from '../../utils/i18n/locales';
+import { localesForRegion } from '../../utils/i18n/locales';
 import { useLanguage } from '../../utils/i18n/LanguageProvider';
 
 /**
- * Language switcher for the India pages.
+ * Language switcher for the India and Europe pages.
  *
- * Rendered by the India components rather than the global Navbar on purpose —
+ * Rendered by those components rather than the global Navbar on purpose —
  * offering Tamil on the US paycheck calculator would be noise. A <select> over
  * a row of buttons because six options in a row wraps badly on a phone, and the
  * native control gets the OS language keyboard and screen-reader handling free.
+ *
+ * The options come from the route's region, so India pages offer the Indian
+ * languages and Europe pages the European ones.
  */
 export function LanguageToggle({ className = '', note = true }) {
-  const { locale, setLocale, t } = useLanguage();
+  const { region, locale, setLocale, t } = useLanguage();
+  const options = localesForRegion(region);
+
+  // A route with no region has nothing translated behind it; render nothing
+  // rather than a control that would silently do nothing.
+  if (options.length === 0) return null;
 
   return (
     <div className={className}>
@@ -33,7 +41,7 @@ export function LanguageToggle({ className = '', note = true }) {
           onChange={(e) => setLocale(e.target.value)}
           className="cursor-pointer rounded-lg border-0 bg-transparent py-0.5 pr-6 text-sm font-medium text-ink focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white"
         >
-          {LOCALES.map(({ code, native }) => (
+          {options.map(({ code, native }) => (
             // The option text is the language's own name, so a reader who cannot
             // read the current UI language can still find theirs.
             <option key={code} value={code} lang={code}>
