@@ -1,4 +1,5 @@
 import React from 'react';
+const { fitCentreLabel } = require('../../utils/chartLabels');
 
 const cardStyle = {
   marginTop: '1rem',
@@ -40,6 +41,13 @@ export const PieBreakdownChart = ({ title, items, formatter = (value) => `${Math
 
   if (!total) return null;
 
+  // Shrink the centre label to fit; if even the floor size is too small,
+  // abbreviate instead. The exact figure stays in the SVG title (hover) and in
+  // the legend below, so nothing is lost on touch devices where hover is not
+  // available.
+  const exactTotal = formatter(total);
+  const { label: centreLabel, fontSize: centreFontSize } = fitCentreLabel(total, exactTotal);
+
   let cursor = 0;
   const segments = sanitizedItems.map((item) => {
     const share = (item.value / total) * 100;
@@ -66,9 +74,10 @@ export const PieBreakdownChart = ({ title, items, formatter = (value) => `${Math
           width="160"
           height="160"
           role="img"
-          aria-label={title}
+          aria-label={`${title}. Total ${exactTotal}.`}
           style={{ width: 'clamp(132px, 36vw, 168px)', height: 'auto', flex: '0 0 auto' }}
         >
+          <title>{`Total ${exactTotal}`}</title>
           {segments.map((segment) => (
             <path
               key={segment.label}
@@ -82,8 +91,8 @@ export const PieBreakdownChart = ({ title, items, formatter = (value) => `${Math
           <text x="60" y="55" textAnchor="middle" fontSize="9" fill="#475569">
             Total
           </text>
-          <text x="60" y="68" textAnchor="middle" fontSize="10" fontWeight="700" fill="#0f2a43">
-            {formatter(total)}
+          <text x="60" y="68" textAnchor="middle" fontSize={centreFontSize} fontWeight="700" fill="#0f2a43">
+            {centreLabel}
           </text>
         </svg>
         <ul
