@@ -15,6 +15,8 @@ import { HowToNote, Panel } from '../workflow/WorkflowKit';
 import { formatINR } from '../../utils/calculations';
 import { useShareableState, toNumber } from '../../utils/shareableState';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const MAX_MONTHS = 1200;
 
@@ -120,6 +122,7 @@ const DEFAULT_INPUTS = {
 };
 
 const CreditCardTrapCalculator = () => {
+  const t = useT();
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
 
   useShareableState({
@@ -232,14 +235,16 @@ const CreditCardTrapCalculator = () => {
         title="Credit Card Trap Calculator"
         subtitle="Compare minimum due repayment vs a fixed monthly payment and see how much interest you can save."
       >
+        <LanguageToggle className="mb-6" />
+
         <Card className="p-5">
           <h2 className="mb-4 font-display text-base font-bold text-ink dark:text-white">Debt inputs</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <NumberField id="cc-balance" label="Outstanding Balance" prefix="₹" value={inputs.outstandingBalance} onChange={(v) => handleInputChange('outstandingBalance', Number(v) || 0)} />
-            <NumberField id="cc-apr" label="Annual Interest Rate" suffix="% APR" step={0.1} value={inputs.annualRate} onChange={(v) => handleInputChange('annualRate', Number(v) || 0)} />
-            <NumberField id="cc-minpct" label="Minimum Due (% of balance)" suffix="%" step={0.1} value={inputs.minPercent} onChange={(v) => handleInputChange('minPercent', Number(v) || 0)} />
-            <NumberField id="cc-floor" label="Minimum Due Floor" prefix="₹" value={inputs.minFloor} onChange={(v) => handleInputChange('minFloor', Number(v) || 0)} />
-            <NumberField id="cc-fixed" label="Your Monthly Payment Plan" prefix="₹" value={inputs.fixedMonthlyPayment} onChange={(v) => handleInputChange('fixedMonthlyPayment', Number(v) || 0)} hint="If this is lower than minimum due, minimum due will be used." />
+            <NumberField id="cc-balance" label={t('creditCard.outstandingBalance')} prefix="₹" value={inputs.outstandingBalance} onChange={(v) => handleInputChange('outstandingBalance', Number(v) || 0)} />
+            <NumberField id="cc-apr" label={t('ppf.annualInterestRate')} suffix="% APR" step={0.1} value={inputs.annualRate} onChange={(v) => handleInputChange('annualRate', Number(v) || 0)} />
+            <NumberField id="cc-minpct" label={t('creditCard.minimumDuePercent')} suffix="%" step={0.1} value={inputs.minPercent} onChange={(v) => handleInputChange('minPercent', Number(v) || 0)} />
+            <NumberField id="cc-floor" label={t('creditCard.minimumDueFloor')} prefix="₹" value={inputs.minFloor} onChange={(v) => handleInputChange('minFloor', Number(v) || 0)} />
+            <NumberField id="cc-fixed" label={t('creditCard.monthlyPaymentPlan')} prefix="₹" value={inputs.fixedMonthlyPayment} onChange={(v) => handleInputChange('fixedMonthlyPayment', Number(v) || 0)} hint="If this is lower than minimum due, minimum due will be used." />
           </div>
         </Card>
 
@@ -247,26 +252,26 @@ const CreditCardTrapCalculator = () => {
           <Card className="border-rose-200/70 bg-rose-50/50 p-5 dark:border-rose-800/60 dark:bg-rose-900/15">
             <h3 className="mb-3 font-display text-base font-bold text-rose-700 dark:text-rose-300">Minimum Due Path</h3>
             <div className="space-y-3">
-              <PlanRow label="Payoff Time" value={formatDuration(minimumPlan.months)} valueClass="text-rose-700 dark:text-rose-300" />
-              <PlanRow label="Total Interest" value={formatINR(minimumPlan.totalInterest)} valueClass="text-amber-700 dark:text-amber-300" />
-              <PlanRow label="Estimated Debt Free By" value={getEstimatedPayoffDate(minimumPlan.months)} valueClass="text-ink dark:text-white" />
+              <PlanRow label={t('creditCard.payoffTime')} value={formatDuration(minimumPlan.months)} valueClass="text-rose-700 dark:text-rose-300" />
+              <PlanRow label={t('creditCard.totalInterestCap')} value={formatINR(minimumPlan.totalInterest)} valueClass="text-amber-700 dark:text-amber-300" />
+              <PlanRow label={t('creditCard.estimatedDebtFreeBy')} value={getEstimatedPayoffDate(minimumPlan.months)} valueClass="text-ink dark:text-white" />
             </div>
           </Card>
 
           <Card className="border-emerald-200/70 bg-emerald-50/50 p-5 dark:border-emerald-800/60 dark:bg-emerald-900/15">
             <h3 className="mb-3 font-display text-base font-bold text-emerald-700 dark:text-emerald-300">Your Payment Plan</h3>
             <div className="space-y-3">
-              <PlanRow label="Payoff Time" value={formatDuration(acceleratedPlan.months)} valueClass="text-emerald-700 dark:text-emerald-300" />
-              <PlanRow label="Total Interest" value={formatINR(acceleratedPlan.totalInterest)} valueClass="text-amber-700 dark:text-amber-300" />
-              <PlanRow label="Estimated Debt Free By" value={getEstimatedPayoffDate(acceleratedPlan.months)} valueClass="text-ink dark:text-white" />
+              <PlanRow label={t('creditCard.payoffTime')} value={formatDuration(acceleratedPlan.months)} valueClass="text-emerald-700 dark:text-emerald-300" />
+              <PlanRow label={t('creditCard.totalInterestCap')} value={formatINR(acceleratedPlan.totalInterest)} valueClass="text-amber-700 dark:text-amber-300" />
+              <PlanRow label={t('creditCard.estimatedDebtFreeBy')} value={getEstimatedPayoffDate(acceleratedPlan.months)} valueClass="text-ink dark:text-white" />
             </div>
           </Card>
         </div>
 
         <Panel title="Trap impact" icon={<TrendingDown size={18} />} className="mt-5">
           <div className="grid grid-cols-2 gap-3">
-            <ResultStat label="Interest saved" value={formatINR(interestSaved)} emphasis tone="positive" />
-            <ResultStat label="Time saved" value={formatDuration(monthsSaved)} />
+            <ResultStat label={t('emi.interestSaved')} value={formatINR(interestSaved)} emphasis tone="positive" />
+            <ResultStat label={t('emi.timeSaved')} value={formatDuration(monthsSaved)} />
           </div>
           <div className="mt-4 space-y-4">
             <ComparisonBars

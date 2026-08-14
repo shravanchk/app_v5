@@ -14,6 +14,8 @@ import Card from '../ui/Card';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 import { useShareableState, toNumber, toOption } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const SHARE_TABS = ['salary-tax', 'business-tax', 'tax-comparison'];
 const SHARE_REGIMES = ['new', 'old'];
@@ -50,6 +52,7 @@ const SHARE_DEFAULTS = {
 
 
 const IncomeTaxCalculator = () => {
+  const t = useT();
   const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
   // Age is a property of the taxpayer, not of a tab, so both tabs share it.
   const [ageBand, setAgeBand] = useState(SHARE_DEFAULTS.ageBand);
@@ -221,8 +224,11 @@ const IncomeTaxCalculator = () => {
     { label: 'Union Budget 2026', url: 'https://www.indiabudget.gov.in/' },
   ];
 
-  const regimeOptions = [{ value: 'new', label: 'New regime (default)' }, { value: 'old', label: 'Old regime' }];
-  const ageOptions = INDIA_AGE_BANDS.map(({ value, label }) => ({ value, label }));
+  const regimeOptions = [{ value: 'new', label: t('options.regimeNewDefault') }, { value: 'old', label: t('options.regimeOld') }];
+  // Mapped by `value`, not by the English `label`, so the shared tax-engine
+  // band list stays the single source of truth for the exemption amounts.
+  const AGE_KEYS = { below60: 'options.ageBelow60', senior: 'options.ageSenior', superSenior: 'options.ageSuperSenior' };
+  const ageOptions = INDIA_AGE_BANDS.map(({ value, label }) => ({ value, label: AGE_KEYS[value] ? t(AGE_KEYS[value]) : label }));
   // Say so on the page when the years are identical, rather than leaving the
   // reader to wonder whether they picked the wrong one.
   const sameFiguresBothYears = TAX_YEAR_VALUES.every(
@@ -255,8 +261,10 @@ const IncomeTaxCalculator = () => {
       </Head>
 
       <CalcLayout eyebrow="Taxes" title="Income Tax Calculator" subtitle="Estimate salary and business income tax, and compare the old and new regimes — with rebate, marginal relief and 4% cess." ratesFor={INDIA_TAX_YEARS[taxYear].label} reviewedOn={LAST_REVIEWED}>
+        <LanguageToggle className="mb-6" />
+
         <div className="mb-6">
-          <Tabs tabs={[{ id: 'salary-tax', label: 'Salary tax' }, { id: 'business-tax', label: 'Business tax' }, { id: 'tax-comparison', label: 'Old vs new' }]} active={activeTab} onChange={setActiveTab} />
+          <Tabs tabs={[{ id: 'salary-tax', label: t('tabs.salaryTax') }, { id: 'business-tax', label: t('tabs.businessTax') }, { id: 'tax-comparison', label: t('tabs.taxComparison') }]} active={activeTab} onChange={setActiveTab} />
         </div>
 
         {activeTab === 'salary-tax' && (
@@ -265,17 +273,17 @@ const IncomeTaxCalculator = () => {
               <div className="space-y-4">
                 <SelectField
                   id="s-fy"
-                  label="Financial year"
+                  label={t('common.financialYear')}
                   value={taxYear}
                   onChange={setTaxYear}
                   options={TAX_YEAR_OPTIONS}
                   hint={sameFiguresBothYears ? 'Budget 2026 left the slabs, deductions and rebate unchanged, so both years compute identically.' : undefined}
                 />
-                <NumberField id="s-sal" label="Annual salary (gross)" prefix="₹" value={salaryParams.annualSalary} onChange={(v) => setSalaryParams((p) => ({ ...p, annualSalary: num(v) }))} />
-                <SelectField id="s-regime" label="Tax regime" value={salaryParams.regime} onChange={(v) => setSalaryParams((p) => ({ ...p, regime: v }))} options={regimeOptions} />
+                <NumberField id="s-sal" label={t('common.annualSalaryGross')} prefix="₹" value={salaryParams.annualSalary} onChange={(v) => setSalaryParams((p) => ({ ...p, annualSalary: num(v) }))} />
+                <SelectField id="s-regime" label={t('common.taxRegime')} value={salaryParams.regime} onChange={(v) => setSalaryParams((p) => ({ ...p, regime: v }))} options={regimeOptions} />
                 <SelectField
                   id="s-age"
-                  label="Age group"
+                  label={t('incomeTax.ageGroup')}
                   value={ageBand}
                   onChange={setAgeBand}
                   options={ageOptions}
@@ -284,18 +292,18 @@ const IncomeTaxCalculator = () => {
                 {salaryParams.regime === 'old' ? (
                   <>
                     <div className="grid grid-cols-2 gap-3">
-                      <NumberField id="s-80c" label="Section 80C" prefix="₹" value={salaryParams.section80C} onChange={(v) => setSalaryParams((p) => ({ ...p, section80C: num(v) }))} />
-                      <NumberField id="s-80d" label="Section 80D" prefix="₹" value={salaryParams.section80D} onChange={(v) => setSalaryParams((p) => ({ ...p, section80D: num(v) }))} />
+                      <NumberField id="s-80c" label={t('incomeTax.section80C')} prefix="₹" value={salaryParams.section80C} onChange={(v) => setSalaryParams((p) => ({ ...p, section80C: num(v) }))} />
+                      <NumberField id="s-80d" label={t('incomeTax.section80D')} prefix="₹" value={salaryParams.section80D} onChange={(v) => setSalaryParams((p) => ({ ...p, section80D: num(v) }))} />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                      <NumberField id="s-nps" label="NPS 80CCD(1B)" prefix="₹" value={salaryParams.nps} onChange={(v) => setSalaryParams((p) => ({ ...p, nps: num(v) }))} />
-                      <NumberField id="s-hli" label="Home-loan interest" prefix="₹" value={salaryParams.homeLoanInterest} onChange={(v) => setSalaryParams((p) => ({ ...p, homeLoanInterest: num(v) }))} />
+                      <NumberField id="s-nps" label={t('incomeTax.npsCcd1b')} prefix="₹" value={salaryParams.nps} onChange={(v) => setSalaryParams((p) => ({ ...p, nps: num(v) }))} />
+                      <NumberField id="s-hli" label={t('incomeTax.homeLoanInterest')} prefix="₹" value={salaryParams.homeLoanInterest} onChange={(v) => setSalaryParams((p) => ({ ...p, homeLoanInterest: num(v) }))} />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                      <NumberField id="s-hra" label="HRA received" prefix="₹" value={salaryParams.hra} onChange={(v) => setSalaryParams((p) => ({ ...p, hra: num(v) }))} />
-                      <NumberField id="s-rent" label="Rent paid" prefix="₹" value={salaryParams.rentPaid} onChange={(v) => setSalaryParams((p) => ({ ...p, rentPaid: num(v) }))} />
+                      <NumberField id="s-hra" label={t('salary.hraReceived')} prefix="₹" value={salaryParams.hra} onChange={(v) => setSalaryParams((p) => ({ ...p, hra: num(v) }))} />
+                      <NumberField id="s-rent" label={t('hra.rentPaid')} prefix="₹" value={salaryParams.rentPaid} onChange={(v) => setSalaryParams((p) => ({ ...p, rentPaid: num(v) }))} />
                     </div>
-                    <NumberField id="s-other" label="Other deductions" prefix="₹" value={salaryParams.otherDeductions} onChange={(v) => setSalaryParams((p) => ({ ...p, otherDeductions: num(v) }))} />
+                    <NumberField id="s-other" label={t('incomeTax.otherDeductions')} prefix="₹" value={salaryParams.otherDeductions} onChange={(v) => setSalaryParams((p) => ({ ...p, otherDeductions: num(v) }))} />
                   </>
                 ) : (
                   <p className="text-xs text-ink-muted dark:text-slate-500">New regime applies a flat ₹75,000 standard deduction; most other deductions don&rsquo;t apply.</p>
@@ -307,19 +315,19 @@ const IncomeTaxCalculator = () => {
               {salaryTaxResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Total tax payable" value={formatCurrency(salaryTaxResult.totalTax)} emphasis />
-                    <ResultStat label="Net salary (after tax)" value={formatCurrency(salaryTaxResult.netSalary)} tone="positive" />
-                    <ResultStat label="Taxable income" value={formatCurrency(salaryTaxResult.taxableIncome)} />
-                    <ResultStat label="Effective rate" value={`${salaryTaxResult.effectiveRate.toFixed(2)}%`} />
+                    <ResultStat label={t('common.totalTaxPayable')} value={formatCurrency(salaryTaxResult.totalTax)} emphasis />
+                    <ResultStat label={t('salary.netSalaryAfterTax')} value={formatCurrency(salaryTaxResult.netSalary)} tone="positive" />
+                    <ResultStat label={t('common.taxableIncome')} value={formatCurrency(salaryTaxResult.taxableIncome)} />
+                    <ResultStat label={t('common.effectiveRate')} value={`${salaryTaxResult.effectiveRate.toFixed(2)}%`} />
                   </div>
                   <Card className="p-5">
-                    <Row label="Gross salary" value={formatCurrency(salaryTaxResult.grossSalary)} />
-                    <Row label="Total deductions" value={`− ${formatCurrency(salaryTaxResult.totalDeductions)}`} />
-                    <Row label="Slab tax" value={formatCurrency(salaryTaxResult.incomeTax)} />
-                    {salaryTaxResult.rebate > 0 && <Row label="Section 87A rebate" value={`− ${formatCurrency(salaryTaxResult.rebate)}`} />}
-                    {salaryTaxResult.marginalRelief > 0 && <Row label="Marginal relief" value={`− ${formatCurrency(salaryTaxResult.marginalRelief)}`} />}
-                    <Row label="Health & education cess (4%)" value={formatCurrency(salaryTaxResult.cess)} />
-                    <div className="mt-1 border-t border-slate-100 pt-1 dark:border-slate-700"><Row label="Total tax" value={formatCurrency(salaryTaxResult.totalTax)} strong /></div>
+                    <Row label={t('common.grossSalary')} value={formatCurrency(salaryTaxResult.grossSalary)} />
+                    <Row label={t('common.totalDeductions')} value={`− ${formatCurrency(salaryTaxResult.totalDeductions)}`} />
+                    <Row label={t('incomeTax.slabTax')} value={formatCurrency(salaryTaxResult.incomeTax)} />
+                    {salaryTaxResult.rebate > 0 && <Row label={t('incomeTax.rebate87A')} value={`− ${formatCurrency(salaryTaxResult.rebate)}`} />}
+                    {salaryTaxResult.marginalRelief > 0 && <Row label={t('incomeTax.marginalRelief')} value={`− ${formatCurrency(salaryTaxResult.marginalRelief)}`} />}
+                    <Row label={t('incomeTax.healthEducationCess')} value={formatCurrency(salaryTaxResult.cess)} />
+                    <div className="mt-1 border-t border-slate-100 pt-1 dark:border-slate-700"><Row label={t('common.totalTax')} value={formatCurrency(salaryTaxResult.totalTax)} strong /></div>
                   </Card>
                   <Card className="p-5"><PieBreakdownChart title="Tax vs take-home" items={[{ label: 'Total tax', value: salaryTaxResult.totalTax, color: '#ef4444' }, { label: 'Net salary', value: salaryTaxResult.netSalary, color: '#10b981' }]} formatter={formatCurrency} /></Card>
                   <AffiliateRecommendations calculatorType="income-tax" result={salaryTaxResult} isDarkMode={false} />
@@ -334,30 +342,30 @@ const IncomeTaxCalculator = () => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
-                <NumberField id="b-gross" label="Gross business income" prefix="₹" value={businessParams.grossIncome} onChange={(v) => setBusinessParams((p) => ({ ...p, grossIncome: num(v) }))} />
-                <NumberField id="b-exp" label="Business expenses" prefix="₹" value={businessParams.businessExpenses} onChange={(v) => setBusinessParams((p) => ({ ...p, businessExpenses: num(v) }))} />
-                <NumberField id="b-dep" label="Depreciation" prefix="₹" value={businessParams.depreciation} onChange={(v) => setBusinessParams((p) => ({ ...p, depreciation: num(v) }))} />
-                <NumberField id="b-other" label="Other deductions" prefix="₹" value={businessParams.otherDeductions} onChange={(v) => setBusinessParams((p) => ({ ...p, otherDeductions: num(v) }))} />
-                <NumberField id="b-adv" label="Advance tax paid" prefix="₹" value={businessParams.advanceTax} onChange={(v) => setBusinessParams((p) => ({ ...p, advanceTax: num(v) }))} />
+                <NumberField id="b-gross" label={t('salary.grossBusinessIncome')} prefix="₹" value={businessParams.grossIncome} onChange={(v) => setBusinessParams((p) => ({ ...p, grossIncome: num(v) }))} />
+                <NumberField id="b-exp" label={t('salary.businessExpenses')} prefix="₹" value={businessParams.businessExpenses} onChange={(v) => setBusinessParams((p) => ({ ...p, businessExpenses: num(v) }))} />
+                <NumberField id="b-dep" label={t('salary.depreciation')} prefix="₹" value={businessParams.depreciation} onChange={(v) => setBusinessParams((p) => ({ ...p, depreciation: num(v) }))} />
+                <NumberField id="b-other" label={t('incomeTax.otherDeductions')} prefix="₹" value={businessParams.otherDeductions} onChange={(v) => setBusinessParams((p) => ({ ...p, otherDeductions: num(v) }))} />
+                <NumberField id="b-adv" label={t('incomeTax.advanceTaxPaid')} prefix="₹" value={businessParams.advanceTax} onChange={(v) => setBusinessParams((p) => ({ ...p, advanceTax: num(v) }))} />
               </div>
             </Card>
             <div className="space-y-5 lg:col-span-3">
               {businessTaxResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Total tax" value={formatCurrency(businessTaxResult.totalTax)} emphasis />
-                    <ResultStat label="Balance tax to pay" value={formatCurrency(businessTaxResult.balanceTax)} />
-                    <ResultStat label="Taxable profit" value={formatCurrency(businessTaxResult.netProfit)} />
-                    <ResultStat label="Effective rate" value={`${businessTaxResult.effectiveRate.toFixed(2)}%`} />
+                    <ResultStat label={t('common.totalTax')} value={formatCurrency(businessTaxResult.totalTax)} emphasis />
+                    <ResultStat label={t('incomeTax.balanceTaxToPay')} value={formatCurrency(businessTaxResult.balanceTax)} />
+                    <ResultStat label={t('salary.taxableProfit')} value={formatCurrency(businessTaxResult.netProfit)} />
+                    <ResultStat label={t('common.effectiveRate')} value={`${businessTaxResult.effectiveRate.toFixed(2)}%`} />
                   </div>
                   <Card className="p-5">
-                    <Row label="Gross income" value={formatCurrency(businessTaxResult.grossIncome)} />
-                    <Row label="Total expenses" value={`− ${formatCurrency(businessTaxResult.totalExpenses)}`} />
-                    <Row label="Taxable profit" value={formatCurrency(businessTaxResult.netProfit)} />
-                    <Row label="Slab tax" value={formatCurrency(businessTaxResult.incomeTax)} />
-                    <Row label="Cess (4%)" value={formatCurrency(businessTaxResult.cess)} />
-                    <Row label="Advance tax paid" value={`− ${formatCurrency(businessTaxResult.advanceTax)}`} />
-                    <div className="mt-1 border-t border-slate-100 pt-1 dark:border-slate-700"><Row label="Balance tax payable" value={formatCurrency(businessTaxResult.balanceTax)} strong /></div>
+                    <Row label={t('incomeTax.grossIncome')} value={formatCurrency(businessTaxResult.grossIncome)} />
+                    <Row label={t('salary.totalExpenses')} value={`− ${formatCurrency(businessTaxResult.totalExpenses)}`} />
+                    <Row label={t('salary.taxableProfit')} value={formatCurrency(businessTaxResult.netProfit)} />
+                    <Row label={t('incomeTax.slabTax')} value={formatCurrency(businessTaxResult.incomeTax)} />
+                    <Row label={t('incomeTax.cess4')} value={formatCurrency(businessTaxResult.cess)} />
+                    <Row label={t('incomeTax.advanceTaxPaid')} value={`− ${formatCurrency(businessTaxResult.advanceTax)}`} />
+                    <div className="mt-1 border-t border-slate-100 pt-1 dark:border-slate-700"><Row label={t('incomeTax.balanceTaxPayable')} value={formatCurrency(businessTaxResult.balanceTax)} strong /></div>
                   </Card>
                   <Card className="p-5"><PieBreakdownChart title="Tax vs retained profit" items={[{ label: 'Total tax', value: businessTaxResult.totalTax, color: '#ef4444' }, { label: 'Retained profit', value: Math.max(0, businessTaxResult.netProfit - businessTaxResult.totalTax), color: '#10b981' }]} formatter={formatCurrency} /></Card>
                   <ResultActions title="Business tax summary" summaryLines={businessShareLines} fileName="upaman-business-tax.txt" />
@@ -371,11 +379,11 @@ const IncomeTaxCalculator = () => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
-                <NumberField id="c-inc" label="Annual income" prefix="₹" value={comparisonParams.annualIncome} onChange={(v) => setComparisonParams((p) => ({ ...p, annualIncome: num(v) }))} />
-                <NumberField id="c-ded" label="Old-regime deductions (80C, 80D, HRA, etc.)" prefix="₹" value={comparisonParams.deductions} onChange={(v) => setComparisonParams((p) => ({ ...p, deductions: num(v) }))} hint="Total deductions you'd claim under the old regime (excludes standard deduction)." />
+                <NumberField id="c-inc" label={t('common.annualIncome')} prefix="₹" value={comparisonParams.annualIncome} onChange={(v) => setComparisonParams((p) => ({ ...p, annualIncome: num(v) }))} />
+                <NumberField id="c-ded" label={t('taxRegime.oldRegimeDeductions')} prefix="₹" value={comparisonParams.deductions} onChange={(v) => setComparisonParams((p) => ({ ...p, deductions: num(v) }))} hint="Total deductions you'd claim under the old regime (excludes standard deduction)." />
                 <SelectField
                   id="c-age"
-                  label="Age group"
+                  label={t('incomeTax.ageGroup')}
                   value={ageBand}
                   onChange={setAgeBand}
                   options={ageOptions}

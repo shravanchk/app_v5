@@ -11,6 +11,8 @@ import { NumberField, SelectField } from '../ui/Field';
 import Card from '../ui/Card';
 import { DecisionBanner } from '../workflow/WorkflowKit';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 const { calculateIndianIncomeTax, INDIA_AGE_BANDS } = require('../../utils/taxCalculations');
 const { useShareableState, toNumber, toOption } = require('../../utils/shareableState');
 
@@ -27,7 +29,11 @@ const SHARE_DEFAULTS = {
 
 const LAST_REVIEWED = 'June 28, 2026';
 
+// Keyed by band value so the shared tax-engine list stays authoritative.
+const AGE_KEYS = { below60: 'options.ageBelow60', senior: 'options.ageSenior', superSenior: 'options.ageSuperSenior' };
+
 const TaxRegimeComparisonCalculator = () => {
+  const t = useT();
   const [salary, setSalary] = useState(SHARE_DEFAULTS.salary);
   const [deductions80C, setDeductions80C] = useState(SHARE_DEFAULTS.s80c);
   const [deductions80D, setDeductions80D] = useState(SHARE_DEFAULTS.s80d);
@@ -168,20 +174,22 @@ const TaxRegimeComparisonCalculator = () => {
         ratesFor="FY 2026-27"
         reviewedOn={LAST_REVIEWED}
       >
+        <LanguageToggle className="mb-6" />
+
         <div className="grid gap-5 lg:grid-cols-5">
           <Card className="p-5 lg:col-span-2">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
-              <NumberField id="trc-salary" label="Annual Salary (INR)" prefix="₹" value={salary} onChange={(v) => setSalary(Number(v) || 0)} />
-              <NumberField id="trc-80c" label="80C Deductions" prefix="₹" value={deductions80C} onChange={(v) => setDeductions80C(Number(v) || 0)} />
-              <NumberField id="trc-80d" label="80D Deductions" prefix="₹" value={deductions80D} onChange={(v) => setDeductions80D(Number(v) || 0)} />
-              <NumberField id="trc-hra" label="HRA Exemption (Old Regime)" prefix="₹" value={hraExemption} onChange={(v) => setHraExemption(Number(v) || 0)} />
-              <NumberField id="trc-other" label="Other Deductions" prefix="₹" value={otherDeductions} onChange={(v) => setOtherDeductions(Number(v) || 0)} />
+              <NumberField id="trc-salary" label={t('salary.annualSalaryInr')} prefix="₹" value={salary} onChange={(v) => setSalary(Number(v) || 0)} />
+              <NumberField id="trc-80c" label={t('incomeTax.deductions80C')} prefix="₹" value={deductions80C} onChange={(v) => setDeductions80C(Number(v) || 0)} />
+              <NumberField id="trc-80d" label={t('incomeTax.deductions80D')} prefix="₹" value={deductions80D} onChange={(v) => setDeductions80D(Number(v) || 0)} />
+              <NumberField id="trc-hra" label={t('incomeTax.hraExemptionOld')} prefix="₹" value={hraExemption} onChange={(v) => setHraExemption(Number(v) || 0)} />
+              <NumberField id="trc-other" label={t('incomeTax.otherDeductions')} prefix="₹" value={otherDeductions} onChange={(v) => setOtherDeductions(Number(v) || 0)} />
               <SelectField
                 id="trc-age"
-                label="Age group"
+                label={t('incomeTax.ageGroup')}
                 value={ageBand}
                 onChange={setAgeBand}
-                options={INDIA_AGE_BANDS.map(({ value, label }) => ({ value, label }))}
+                options={INDIA_AGE_BANDS.map(({ value, label }) => ({ value, label: AGE_KEYS[value] ? t(AGE_KEYS[value]) : label }))}
                 hint="The old regime's basic exemption rises to ₹3,00,000 at 60 and ₹5,00,000 at 80. The new regime does not change with age."
               />
             </div>
@@ -195,10 +203,10 @@ const TaxRegimeComparisonCalculator = () => {
               icon={<Scale size={18} />}
             />
             <div className="grid grid-cols-2 gap-3">
-              <ResultStat label="Old regime tax" value={formatCurrency(result.oldTotalTax)} emphasis={result.betterRegime === 'Old Regime'} />
-              <ResultStat label="New regime tax" value={formatCurrency(result.newTotalTax)} emphasis={result.betterRegime === 'New Regime'} />
-              <ResultStat label="Old taxable income" value={formatCurrency(result.oldTaxable)} />
-              <ResultStat label="New taxable income" value={formatCurrency(result.newTaxable)} />
+              <ResultStat label={t('taxRegime.oldRegimeTax')} value={formatCurrency(result.oldTotalTax)} emphasis={result.betterRegime === 'Old Regime'} />
+              <ResultStat label={t('taxRegime.newRegimeTax')} value={formatCurrency(result.newTotalTax)} emphasis={result.betterRegime === 'New Regime'} />
+              <ResultStat label={t('taxRegime.oldTaxableIncome')} value={formatCurrency(result.oldTaxable)} />
+              <ResultStat label={t('taxRegime.newTaxableIncome')} value={formatCurrency(result.newTaxable)} />
             </div>
 
             <Card className="p-5">

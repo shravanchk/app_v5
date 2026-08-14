@@ -3,6 +3,8 @@ import Head from 'next/head';
 import HomeButton from '../HomeButton';
 import SearchLandingSections from '../calculator/SearchLandingSections';
 import { PieBreakdownChart, ComparisonBars } from '../calculator/ResultVisualizations';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const monthlyEmi = (principal, annualRate, years) => {
   const n = years * 12;
@@ -14,6 +16,7 @@ const monthlyEmi = (principal, annualRate, years) => {
 };
 
 const BuyVsRentCalculator = () => {
+  const t = useT();
   const [homePrice, setHomePrice] = useState(10000000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
   const [loanRate, setLoanRate] = useState(8.5);
@@ -110,56 +113,58 @@ const BuyVsRentCalculator = () => {
         </div>
 
         <div className="mobile-card-content">
+          <LanguageToggle className="mb-6" />
+
           <section style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#f8fafc', padding: '1rem', marginBottom: '1rem' }}>
             <div className="responsive-grid">
               <div>
-                <label className="input-label">Home Price (INR)</label>
+                <label className="input-label">{t('buyVsRent.homePrice')}</label>
                 <input className="calculator-input mobile-input" type="number" value={homePrice} onChange={(e) => setHomePrice(Number(e.target.value) || 0)} />
               </div>
               <div>
-                <label className="input-label">Down Payment (%)</label>
+                <label className="input-label">{t('buyVsRent.downPayment')}</label>
                 <input className="calculator-input mobile-input" type="number" value={downPaymentPct} onChange={(e) => setDownPaymentPct(Number(e.target.value) || 0)} />
               </div>
               <div>
-                <label className="input-label">Loan Interest Rate (%)</label>
+                <label className="input-label">{t('buyVsRent.loanInterestRate')}</label>
                 <input className="calculator-input mobile-input" type="number" step="0.1" value={loanRate} onChange={(e) => setLoanRate(Number(e.target.value) || 0)} />
               </div>
               <div>
-                <label className="input-label">Loan Tenure (Years)</label>
+                <label className="input-label">{t('buyVsRent.loanTenureYears')}</label>
                 <input className="calculator-input mobile-input" type="number" value={loanYears} onChange={(e) => setLoanYears(Number(e.target.value) || 0)} />
               </div>
               <div>
-                <label className="input-label">Monthly Rent (INR)</label>
+                <label className="input-label">{t('buyVsRent.monthlyRent')}</label>
                 <input className="calculator-input mobile-input" type="number" value={monthlyRent} onChange={(e) => setMonthlyRent(Number(e.target.value) || 0)} />
               </div>
               <div>
-                <label className="input-label">Annual Rent Increase (%)</label>
+                <label className="input-label">{t('buyVsRent.annualRentIncrease')}</label>
                 <input className="calculator-input mobile-input" type="number" value={rentIncrease} onChange={(e) => setRentIncrease(Number(e.target.value) || 0)} />
               </div>
               <div>
-                <label className="input-label">Home Appreciation (%)</label>
+                <label className="input-label">{t('buyVsRent.homeAppreciation')}</label>
                 <input className="calculator-input mobile-input" type="number" value={homeAppreciation} onChange={(e) => setHomeAppreciation(Number(e.target.value) || 0)} />
               </div>
               <div>
-                <label className="input-label">Analysis Period (Years)</label>
+                <label className="input-label">{t('buyVsRent.analysisPeriod')}</label>
                 <input className="calculator-input mobile-input" type="number" value={analysisYears} onChange={(e) => setAnalysisYears(Number(e.target.value) || 0)} />
               </div>
             </div>
           </section>
 
           <section style={{ border: '1px solid #dbe2eb', borderRadius: '0.9rem', background: '#ffffff', padding: '1rem', marginBottom: '1rem' }}>
-            <h2 style={{ marginTop: 0, color: '#0f2a43', fontSize: '1.05rem' }}>Decision Summary</h2>
+            <h2 style={{ marginTop: 0, color: '#0f2a43', fontSize: '1.05rem' }}>{t('buyVsRent.decisionSummary')}</h2>
             <p style={{ marginTop: 0, color: '#334155' }}>
               Based on current assumptions, <strong>{result.winner}</strong> appears more favorable over {analysisYears} years.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
               <div style={{ background: '#eff6ff', borderRadius: '0.75rem', padding: '0.8rem' }}>
-                <div style={{ color: '#1d4e89', fontWeight: 700 }}>Estimated EMI</div>
+                <div style={{ color: '#1d4e89', fontWeight: 700 }}>{t('buyVsRent.estimatedEmi')}</div>
                 <div style={{ color: '#0f2a43', fontSize: '1.1rem', fontWeight: 700 }}>{formatCurrency(result.emi)}</div>
                 <div style={{ color: '#475569', fontSize: '0.82rem' }}>Down payment: {formatCurrency(result.downPayment)}</div>
               </div>
               <div style={{ background: '#ecfeff', borderRadius: '0.75rem', padding: '0.8rem' }}>
-                <div style={{ color: '#0f766e', fontWeight: 700 }}>Break-even Year</div>
+                <div style={{ color: '#0f766e', fontWeight: 700 }}>{t('buyVsRent.breakEvenYear')}</div>
                 <div style={{ color: '#0f766e', fontSize: '1.1rem', fontWeight: 700 }}>
                   {result.breakEvenYear ? `Year ${result.breakEvenYear}` : 'Not reached'}
                 </div>
@@ -169,13 +174,13 @@ const BuyVsRentCalculator = () => {
 
             <div style={{ marginTop: '0.9rem', display: 'grid', gap: '0.5rem' }}>
               <div>
-                <div style={{ fontSize: '0.82rem', color: '#475569', marginBottom: '0.2rem' }}>Cumulative buying outflow</div>
+                <div style={{ fontSize: '0.82rem', color: '#475569', marginBottom: '0.2rem' }}>{t('buyVsRent.cumulativeBuying')}</div>
                 <div style={{ height: '12px', background: '#e2e8f0', borderRadius: '999px', overflow: 'hidden' }}>
                   <div style={{ width: `${(result.cumulativeBuyOutflow / maxBar) * 100}%`, height: '100%', background: '#1d4e89' }} />
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '0.82rem', color: '#475569', marginBottom: '0.2rem' }}>Cumulative renting outflow</div>
+                <div style={{ fontSize: '0.82rem', color: '#475569', marginBottom: '0.2rem' }}>{t('buyVsRent.cumulativeRenting')}</div>
                 <div style={{ height: '12px', background: '#e2e8f0', borderRadius: '999px', overflow: 'hidden' }}>
                   <div style={{ width: `${(result.cumulativeRentOutflow / maxBar) * 100}%`, height: '100%', background: '#0f766e' }} />
                 </div>

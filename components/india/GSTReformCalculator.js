@@ -8,6 +8,8 @@ import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
 import { useShareableState, restoreValues } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const OLD_RATES = [5, 12, 18, 28];
 const NEW_RATES = [0, 5, 18, 40];
@@ -41,6 +43,7 @@ const DEFAULT_INPUTS = { amount: 1000, mode: 'base', oldRate: 28, newRate: 18 };
 const SHARED_OPTIONS = { mode: ['base', 'inclusive'] };
 
 const GSTReformCalculator = () => {
+  const t = useT();
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
 
   useShareableState({
@@ -79,26 +82,28 @@ const GSTReformCalculator = () => {
       </Head>
 
       <CalcShell icon={Receipt} title="GST 2.0 Price Calculator" subtitle="How the 22 September 2025 GST reform changed an item’s price — old and new slabs side by side.">
+        <LanguageToggle className="mb-6" />
+
         <div style={f.group}>
-          <label style={f.label} htmlFor="g2-amount">Amount</label>
+          <label style={f.label} htmlFor="g2-amount">{t('common.amount')}</label>
           <input style={f.input} id="g2-amount" type="number" min="0" value={inputs.amount} onChange={(e) => set('amount', e.target.value)} />
         </div>
         <div style={f.group}>
-          <label style={f.label} htmlFor="g2-mode">This amount is…</label>
+          <label style={f.label} htmlFor="g2-mode">{t('gstReform.thisAmountIs')}</label>
           <select style={f.input} id="g2-mode" value={inputs.mode} onChange={(e) => set('mode', e.target.value)}>
-            <option value="base">Base price (before GST)</option>
-            <option value="inclusive">Old MRP (including old GST)</option>
+            <option value="base">{t('options.gstBasePrice')}</option>
+            <option value="inclusive">{t('options.gstOldMrp')}</option>
           </select>
         </div>
         <div style={{ ...f.row, ...f.group }}>
           <div style={f.col}>
-            <label style={f.label} htmlFor="g2-old">Old GST rate</label>
+            <label style={f.label} htmlFor="g2-old">{t('gstReform.oldGstRate')}</label>
             <select style={f.input} id="g2-old" value={inputs.oldRate} onChange={(e) => set('oldRate', e.target.value)}>
               {OLD_RATES.map((rt) => <option key={rt} value={rt}>{rt}%</option>)}
             </select>
           </div>
           <div style={f.col}>
-            <label style={f.label} htmlFor="g2-new">New GST rate</label>
+            <label style={f.label} htmlFor="g2-new">{t('gstReform.newGstRate')}</label>
             <select style={f.input} id="g2-new" value={inputs.newRate} onChange={(e) => set('newRate', e.target.value)}>
               {NEW_RATES.map((rt) => <option key={rt} value={rt}>{rt}%</option>)}
             </select>
@@ -108,12 +113,12 @@ const GSTReformCalculator = () => {
         <div className="result-card" style={r.card}>
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             <div style={comparePanel('#94a3b8')}>
-              <p style={r.kicker}>Old price · GST {inputs.oldRate}%</p>
+              <p style={r.kicker}>{t('gstReform.oldPriceGst')} {inputs.oldRate}%</p>
               <p style={{ ...r.figure, fontSize: '1.4rem' }}>{formatINR(res.oldTotal)}</p>
               <p style={r.note}>incl. tax {formatINR(res.oldTax)}</p>
             </div>
             <div style={comparePanel('#1d4e89')}>
-              <p style={r.kicker}>New price · GST {inputs.newRate}%</p>
+              <p style={r.kicker}>{t('gstReform.newPriceGst')} {inputs.newRate}%</p>
               <p style={{ ...r.figure, fontSize: '1.4rem' }}>{formatINR(res.newTotal)}</p>
               <p style={r.note}>incl. tax {formatINR(res.newTax)}</p>
             </div>

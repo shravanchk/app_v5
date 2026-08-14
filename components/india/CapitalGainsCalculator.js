@@ -8,6 +8,8 @@ import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
 import { useShareableState, restoreValues } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const EQUITY_LTCG_EXEMPTION = 125000;
 
@@ -52,6 +54,7 @@ const DEFAULT_INPUTS = { asset: 'equity', term: 'long', saleValue: 800000, cost:
 const SHARED_OPTIONS = { asset: ['equity', 'property', 'other'], term: ['long', 'short'] };
 
 const CapitalGainsCalculator = () => {
+  const t = useT();
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
 
   useShareableState({
@@ -91,20 +94,22 @@ const CapitalGainsCalculator = () => {
       </Head>
 
       <CalcShell icon={TrendingUp} title="Capital Gains Tax Calculator" subtitle="LTCG and STCG on listed equity, mutual funds, and property under FY 2026-27 rules.">
+        <LanguageToggle className="mb-6" />
+
         <div style={{ ...f.row, ...f.group }}>
           <div style={f.col}>
-            <label style={f.label} htmlFor="cg-asset">Asset type</label>
+            <label style={f.label} htmlFor="cg-asset">{t('capitalGains.assetType')}</label>
             <select style={f.input} id="cg-asset" value={inputs.asset} onChange={(e) => set('asset', e.target.value)}>
-              <option value="equity">Listed equity / equity mutual fund</option>
-              <option value="property">Property (land / building)</option>
-              <option value="other">Other (gold, unlisted, debt fund, etc.)</option>
+              <option value="equity">{t('options.assetEquity')}</option>
+              <option value="property">{t('options.assetProperty')}</option>
+              <option value="other">{t('options.assetOther')}</option>
             </select>
           </div>
           <div style={f.col}>
-            <label style={f.label} htmlFor="cg-term">Holding term</label>
+            <label style={f.label} htmlFor="cg-term">{t('capitalGains.holdingTerm')}</label>
             <select style={f.input} id="cg-term" value={inputs.term} onChange={(e) => set('term', e.target.value)}>
-              <option value="long">Long-term</option>
-              <option value="short">Short-term</option>
+              <option value="long">{t('options.termLong')}</option>
+              <option value="short">{t('options.termShort')}</option>
             </select>
           </div>
         </div>
@@ -114,37 +119,37 @@ const CapitalGainsCalculator = () => {
 
         <div style={{ ...f.row, ...f.group }}>
           <div style={f.col}>
-            <label style={f.label} htmlFor="cg-sale">Sale value</label>
+            <label style={f.label} htmlFor="cg-sale">{t('capitalGains.saleValue')}</label>
             <input style={f.input} id="cg-sale" type="number" min="0" value={inputs.saleValue} onChange={(e) => set('saleValue', e.target.value)} />
           </div>
           <div style={f.col}>
-            <label style={f.label} htmlFor="cg-cost">Purchase cost</label>
+            <label style={f.label} htmlFor="cg-cost">{t('capitalGains.purchaseCost')}</label>
             <input style={f.input} id="cg-cost" type="number" min="0" value={inputs.cost} onChange={(e) => set('cost', e.target.value)} />
           </div>
         </div>
         <div style={{ ...f.row, ...f.group }}>
           <div style={f.col}>
-            <label style={f.label} htmlFor="cg-exp">Transfer / improvement expenses</label>
+            <label style={f.label} htmlFor="cg-exp">{t('capitalGains.transferExpenses')}</label>
             <input style={f.input} id="cg-exp" type="number" min="0" value={inputs.expenses} onChange={(e) => set('expenses', e.target.value)} />
           </div>
           {showSlab && (
             <div style={f.col}>
-              <label style={f.label} htmlFor="cg-slab">Your income slab rate (%)</label>
+              <label style={f.label} htmlFor="cg-slab">{t('capitalGains.slabRate')}</label>
               <input style={f.input} id="cg-slab" type="number" min="0" max="30" value={inputs.slabRate} onChange={(e) => set('slabRate', e.target.value)} />
             </div>
           )}
         </div>
 
         <div className="result-card" style={r.card}>
-          <p style={r.kicker}>Total tax payable (incl. 4% cess)</p>
+          <p style={r.kicker}>{t('capitalGains.totalTaxPayableCess')}</p>
           <p style={r.figure}>{formatINR(res.total)}</p>
           <div style={{ marginTop: '12px' }}>
-            <div style={r.row}><span>Capital gain</span><span>{formatINR(res.gain)}</span></div>
-            {res.exemption > 0 && <div style={r.row}><span>Less: exemption</span><span>− {formatINR(res.exemption)}</span></div>}
+            <div style={r.row}><span>{t('capitalGains.capitalGain')}</span><span>{formatINR(res.gain)}</span></div>
+            {res.exemption > 0 && <div style={r.row}><span>{t('capitalGains.lessExemption')}</span><span>− {formatINR(res.exemption)}</span></div>}
             <div style={r.row}><span>Taxable gain @ {res.rate}%</span><span>{formatINR(res.taxableGain)}</span></div>
-            <div style={r.row}><span>Tax</span><span>{formatINR(res.tax)}</span></div>
-            <div style={r.row}><span>Health &amp; education cess (4%)</span><span>{formatINR(res.cess)}</span></div>
-            <div style={r.rowLast}><span>Net gain after tax</span><span>{formatINR(res.netGain)}</span></div>
+            <div style={r.row}><span>{t('capitalGains.tax')}</span><span>{formatINR(res.tax)}</span></div>
+            <div style={r.row}><span>{t('incomeTax.healthEducationCess')}</span><span>{formatINR(res.cess)}</span></div>
+            <div style={r.rowLast}><span>{t('capitalGains.netGainAfterTax')}</span><span>{formatINR(res.netGain)}</span></div>
           </div>
           <p style={r.note}>{res.law}</p>
         </div>

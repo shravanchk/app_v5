@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 import SiteFooter from '../components/home/SiteFooter';
 import Navbar from '../components/home/Navbar';
+import { LanguageProvider } from '../utils/i18n/LanguageProvider';
 import '../styles/globals.css';
 import '../styles/common.css';
 import '../styles/adsense.css';
@@ -54,9 +55,13 @@ export default function App({ Component, pageProps }) {
         <meta key="twitter:image" name="twitter:image" content="https://upaman.com/og-image.png" />
         <meta key="twitter:image:alt" name="twitter:image:alt" content="Upaman — free financial calculators and guides" />
       </Head>
-      {!hideChrome && <Navbar />}
-      <Component {...pageProps} />
-      {!hideChrome && <SiteFooter />}
+      {/* Regional-language context for the India pages. Renders English on the
+          server everywhere; only components that call useT() change. */}
+      <LanguageProvider>
+        {!hideChrome && <Navbar />}
+        <Component {...pageProps} />
+        {!hideChrome && <SiteFooter />}
+      </LanguageProvider>
     </div>
   );
 }

@@ -16,6 +16,8 @@ import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 import { formatINR } from '../../utils/calculations';
 import { useShareableState, toNumber, toOption } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const SHARE_TABS = ['emi', 'prepayment'];
 const SHARE_UNITS = ['years', 'months'];
@@ -34,6 +36,7 @@ const SHARE_DEFAULTS = {
 };
 
 const ComprehensiveLoanCalculator = React.memo(() => {
+  const t = useT();
   const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
   const [emiParams, setEmiParams] = useState({ loanAmount: 2500000, interestRate: 8.5, loanTenure: 20, tenureUnit: 'years' });
   const [emiResult, setEmiResult] = useState(null);
@@ -204,7 +207,7 @@ const ComprehensiveLoanCalculator = React.memo(() => {
     { label: 'SBI Home Loans', url: 'https://homeloans.sbi/' },
   ];
 
-  const unitOptions = [{ value: 'years', label: 'years' }, { value: 'months', label: 'months' }];
+  const unitOptions = [{ value: 'years', label: t('options.unitYears') }, { value: 'months', label: t('options.unitMonths') }];
 
   return (
     <>
@@ -224,19 +227,21 @@ const ComprehensiveLoanCalculator = React.memo(() => {
       </Head>
 
       <CalcLayout eyebrow="Loans" title="EMI & Loan Calculator" subtitle="Calculate EMI for home, car and personal loans, see the full interest split, and test prepayment savings.">
+        <LanguageToggle className="mb-6" />
+
         <div className="mb-6">
-          <Tabs tabs={[{ id: 'emi', label: 'EMI & schedule' }, { id: 'prepayment', label: 'Prepayment savings' }]} active={activeTab} onChange={setActiveTab} />
+          <Tabs tabs={[{ id: 'emi', label: t('tabs.emiSchedule') }, { id: 'prepayment', label: t('tabs.prepaymentSavings') }]} active={activeTab} onChange={setActiveTab} />
         </div>
 
         {activeTab === 'emi' && (
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
-                <NumberField id="emi-amt" label="Loan amount" prefix="₹" value={emiParams.loanAmount} onChange={(v) => setEmiParams((p) => ({ ...p, loanAmount: num(v) }))} />
-                <NumberField id="emi-rate" label="Interest rate (p.a.)" suffix="%" step={0.1} value={emiParams.interestRate} onChange={(v) => setEmiParams((p) => ({ ...p, interestRate: num(v) }))} />
+                <NumberField id="emi-amt" label={t('common.loanAmount')} prefix="₹" value={emiParams.loanAmount} onChange={(v) => setEmiParams((p) => ({ ...p, loanAmount: num(v) }))} />
+                <NumberField id="emi-rate" label={t('common.interestRatePa')} suffix="%" step={0.1} value={emiParams.interestRate} onChange={(v) => setEmiParams((p) => ({ ...p, interestRate: num(v) }))} />
                 <div className="grid grid-cols-2 gap-3">
-                  <NumberField id="emi-ten" label="Loan tenure" value={emiParams.loanTenure} onChange={(v) => setEmiParams((p) => ({ ...p, loanTenure: num(v) }))} />
-                  <SelectField id="emi-unit" label="Unit" value={emiParams.tenureUnit} onChange={(v) => setEmiParams((p) => ({ ...p, tenureUnit: v }))} options={unitOptions} />
+                  <NumberField id="emi-ten" label={t('emi.loanTenure')} value={emiParams.loanTenure} onChange={(v) => setEmiParams((p) => ({ ...p, loanTenure: num(v) }))} />
+                  <SelectField id="emi-unit" label={t('common.unit')} value={emiParams.tenureUnit} onChange={(v) => setEmiParams((p) => ({ ...p, tenureUnit: v }))} options={unitOptions} />
                 </div>
               </div>
             </Card>
@@ -245,10 +250,10 @@ const ComprehensiveLoanCalculator = React.memo(() => {
               {emiResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Monthly EMI" value={formatINR(emiResult.emi)} emphasis tone="positive" />
-                    <ResultStat label="Total interest" value={formatINR(emiResult.totalInterest)} />
-                    <ResultStat label="Total payment" value={formatINR(emiResult.totalAmount)} />
-                    <ResultStat label="Principal" value={formatINR(emiResult.loanAmount)} />
+                    <ResultStat label={t('common.monthlyEmi')} value={formatINR(emiResult.emi)} emphasis tone="positive" />
+                    <ResultStat label={t('common.totalInterest')} value={formatINR(emiResult.totalInterest)} />
+                    <ResultStat label={t('common.totalPayment')} value={formatINR(emiResult.totalAmount)} />
+                    <ResultStat label={t('common.principal')} value={formatINR(emiResult.loanAmount)} />
                   </div>
                   <Card className="p-5">
                     <PieBreakdownChart title="Principal vs interest" items={[{ label: 'Principal', value: emiResult.loanAmount, color: '#3b82f6' }, { label: 'Total interest', value: emiResult.totalInterest, color: '#f59e0b' }]} formatter={formatINR} />
@@ -300,13 +305,13 @@ const ComprehensiveLoanCalculator = React.memo(() => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
-                <NumberField id="pre-out" label="Outstanding principal" prefix="₹" value={prepaymentParams.outstandingAmount} onChange={(v) => setPrepaymentParams((p) => ({ ...p, outstandingAmount: num(v) }))} />
-                <NumberField id="pre-emi" label="Current EMI" prefix="₹" value={prepaymentParams.currentEMI} onChange={(v) => setPrepaymentParams((p) => ({ ...p, currentEMI: num(v) }))} />
+                <NumberField id="pre-out" label={t('emi.outstandingPrincipal')} prefix="₹" value={prepaymentParams.outstandingAmount} onChange={(v) => setPrepaymentParams((p) => ({ ...p, outstandingAmount: num(v) }))} />
+                <NumberField id="pre-emi" label={t('emi.currentEmi')} prefix="₹" value={prepaymentParams.currentEMI} onChange={(v) => setPrepaymentParams((p) => ({ ...p, currentEMI: num(v) }))} />
                 <div className="grid grid-cols-2 gap-3">
-                  <NumberField id="pre-rem" label="Remaining tenure" step={0.1} value={prepaymentParams.remainingMonths} onChange={(v) => setPrepaymentParams((p) => ({ ...p, remainingMonths: num(v) }))} />
-                  <SelectField id="pre-unit" label="Unit" value={prepaymentParams.remainingTenureUnit} onChange={(v) => setPrepaymentParams((p) => ({ ...p, remainingTenureUnit: v }))} options={unitOptions} />
+                  <NumberField id="pre-rem" label={t('emi.remainingTenure')} step={0.1} value={prepaymentParams.remainingMonths} onChange={(v) => setPrepaymentParams((p) => ({ ...p, remainingMonths: num(v) }))} />
+                  <SelectField id="pre-unit" label={t('common.unit')} value={prepaymentParams.remainingTenureUnit} onChange={(v) => setPrepaymentParams((p) => ({ ...p, remainingTenureUnit: v }))} options={unitOptions} />
                 </div>
-                <NumberField id="pre-rate" label="Interest rate (p.a.)" suffix="%" step={0.1} value={prepaymentParams.interestRate} onChange={(v) => setPrepaymentParams((p) => ({ ...p, interestRate: num(v) }))} />
+                <NumberField id="pre-rate" label={t('common.interestRatePa')} suffix="%" step={0.1} value={prepaymentParams.interestRate} onChange={(v) => setPrepaymentParams((p) => ({ ...p, interestRate: num(v) }))} />
               </div>
 
               <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50">

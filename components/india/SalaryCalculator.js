@@ -13,6 +13,8 @@ import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 import { useShareableState, toNumber, toOption, toBoolean } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const SHARE_TABS = ['ctc-breakdown', 'salary-comparison'];
 const SHARE_CITIES = ['metro', 'nonMetro'];
@@ -35,6 +37,7 @@ const SHARE_DEFAULTS = {
 const { calculateIndianIncomeTax } = require('../../utils/taxCalculations');
 
 const SalaryCalculator = () => {
+  const t = useT();
   const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
   const [ctcParams, setCTCParams] = useState({ annualCTC: 1200000, city: 'metro', hasHRA: true, pfContribution: 12, gratuityApplicable: true, professionalTax: true });
   const [comparisonParams, setComparisonParams] = useState({ currentSalary: 800000, newSalary: 1200000, currentCity: 'metro', newCity: 'metro' });
@@ -160,7 +163,7 @@ const SalaryCalculator = () => {
     { name: 'Salary Calculator', item: 'https://upaman.com/salary-calculator' },
   ]);
 
-  const cityOptions = [{ value: 'metro', label: 'Metro city' }, { value: 'nonMetro', label: 'Non-metro city' }];
+  const cityOptions = [{ value: 'metro', label: t('options.cityMetro') }, { value: 'nonMetro', label: t('options.cityNonMetro') }];
   const Row = ({ label, value, strong }) => (
     <div className={`flex justify-between py-1.5 text-sm ${strong ? 'font-semibold' : ''}`}>
       <span className="text-ink-muted dark:text-slate-400">{label}</span>
@@ -190,21 +193,23 @@ const SalaryCalculator = () => {
       </Head>
 
       <CalcLayout eyebrow="Salary" title="Salary Calculator" subtitle="Turn your CTC into a realistic monthly take-home with a full deduction breakdown, or compare two offers across cities. Tax modelled on FY 2026-27 new regime." ratesFor="FY 2026-27" reviewedOn={LAST_REVIEWED}>
+        <LanguageToggle className="mb-6" />
+
         <div className="mb-6">
-          <Tabs tabs={[{ id: 'ctc-breakdown', label: 'CTC → in-hand' }, { id: 'salary-comparison', label: 'Compare offers' }]} active={activeTab} onChange={setActiveTab} />
+          <Tabs tabs={[{ id: 'ctc-breakdown', label: t('tabs.ctcInHand') }, { id: 'salary-comparison', label: t('tabs.compareOffers') }]} active={activeTab} onChange={setActiveTab} />
         </div>
 
         {activeTab === 'ctc-breakdown' && (
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
-                <NumberField id="ctc-amt" label="Annual CTC" prefix="₹" value={ctcParams.annualCTC} onChange={(v) => setCTCParams((p) => ({ ...p, annualCTC: num(v) }))} />
-                <SelectField id="ctc-city" label="City" value={ctcParams.city} onChange={(v) => setCTCParams((p) => ({ ...p, city: v }))} options={cityOptions} />
-                <NumberField id="ctc-pf" label="PF contribution" suffix="%" value={ctcParams.pfContribution} onChange={(v) => setCTCParams((p) => ({ ...p, pfContribution: num(v) }))} />
+                <NumberField id="ctc-amt" label={t('salary.annualCtc')} prefix="₹" value={ctcParams.annualCTC} onChange={(v) => setCTCParams((p) => ({ ...p, annualCTC: num(v) }))} />
+                <SelectField id="ctc-city" label={t('common.city')} value={ctcParams.city} onChange={(v) => setCTCParams((p) => ({ ...p, city: v }))} options={cityOptions} />
+                <NumberField id="ctc-pf" label={t('salary.pfContribution')} suffix="%" value={ctcParams.pfContribution} onChange={(v) => setCTCParams((p) => ({ ...p, pfContribution: num(v) }))} />
                 <div className="space-y-2.5 pt-1">
-                  <Check id="ctc-hra" label="Includes HRA" checked={ctcParams.hasHRA} onChange={(c) => setCTCParams((p) => ({ ...p, hasHRA: c }))} />
-                  <Check id="ctc-grat" label="Gratuity applicable" checked={ctcParams.gratuityApplicable} onChange={(c) => setCTCParams((p) => ({ ...p, gratuityApplicable: c }))} />
-                  <Check id="ctc-pt" label="Professional tax" checked={ctcParams.professionalTax} onChange={(c) => setCTCParams((p) => ({ ...p, professionalTax: c }))} />
+                  <Check id="ctc-hra" label={t('salary.includesHra')} checked={ctcParams.hasHRA} onChange={(c) => setCTCParams((p) => ({ ...p, hasHRA: c }))} />
+                  <Check id="ctc-grat" label={t('gratuity.gratuityApplicable')} checked={ctcParams.gratuityApplicable} onChange={(c) => setCTCParams((p) => ({ ...p, gratuityApplicable: c }))} />
+                  <Check id="ctc-pt" label={t('common.professionalTax')} checked={ctcParams.professionalTax} onChange={(c) => setCTCParams((p) => ({ ...p, professionalTax: c }))} />
                 </div>
               </div>
             </Card>
@@ -213,22 +218,22 @@ const SalaryCalculator = () => {
               {ctcResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Monthly take-home" value={formatCurrency(ctcResult.netMonthlySalary)} emphasis tone="positive" />
-                    <ResultStat label="Annual take-home" value={formatCurrency(ctcResult.netAnnualSalary)} />
-                    <ResultStat label="Total deductions" value={formatCurrency(ctcResult.deductions.total)} />
-                    <ResultStat label="Take-home ratio" value={`${ctcResult.takeHomePercentage.toFixed(1)}%`} />
+                    <ResultStat label={t('salary.monthlyTakeHome')} value={formatCurrency(ctcResult.netMonthlySalary)} emphasis tone="positive" />
+                    <ResultStat label={t('salary.annualTakeHome')} value={formatCurrency(ctcResult.netAnnualSalary)} />
+                    <ResultStat label={t('common.totalDeductions')} value={formatCurrency(ctcResult.deductions.total)} />
+                    <ResultStat label={t('salary.takeHomeRatio')} value={`${ctcResult.takeHomePercentage.toFixed(1)}%`} />
                   </div>
                   <Card className="p-5">
                     <p className="mb-1 text-sm font-semibold text-ink dark:text-slate-100">Salary components</p>
-                    <Row label="Basic salary" value={formatCurrency(ctcResult.basicSalary)} />
-                    <Row label="HRA" value={formatCurrency(ctcResult.hraAmount)} />
-                    <Row label="Special allowance" value={formatCurrency(ctcResult.specialAllowance)} />
+                    <Row label={t('common.basicSalary')} value={formatCurrency(ctcResult.basicSalary)} />
+                    <Row label={t('common.hra')} value={formatCurrency(ctcResult.hraAmount)} />
+                    <Row label={t('salary.specialAllowance')} value={formatCurrency(ctcResult.specialAllowance)} />
                     <p className="mb-1 mt-3 text-sm font-semibold text-ink dark:text-slate-100">Deductions</p>
-                    <Row label="PF (employee)" value={`− ${formatCurrency(ctcResult.deductions.pfEmployee)}`} />
-                    <Row label="Income tax" value={`− ${formatCurrency(ctcResult.deductions.incomeTax)}`} />
-                    <Row label="Professional tax" value={`− ${formatCurrency(ctcResult.deductions.professionalTax)}`} />
-                    {ctcResult.deductions.esic > 0 && <Row label="ESIC" value={`− ${formatCurrency(ctcResult.deductions.esic)}`} />}
-                    <div className="mt-1 border-t border-slate-100 pt-1 dark:border-slate-700"><Row label="Total deductions" value={formatCurrency(ctcResult.deductions.total)} strong /></div>
+                    <Row label={t('salary.pfEmployee')} value={`− ${formatCurrency(ctcResult.deductions.pfEmployee)}`} />
+                    <Row label={t('common.incomeTax')} value={`− ${formatCurrency(ctcResult.deductions.incomeTax)}`} />
+                    <Row label={t('common.professionalTax')} value={`− ${formatCurrency(ctcResult.deductions.professionalTax)}`} />
+                    {ctcResult.deductions.esic > 0 && <Row label={t('salary.esic')} value={`− ${formatCurrency(ctcResult.deductions.esic)}`} />}
+                    <div className="mt-1 border-t border-slate-100 pt-1 dark:border-slate-700"><Row label={t('common.totalDeductions')} value={formatCurrency(ctcResult.deductions.total)} strong /></div>
                     <p className="mt-3 text-xs text-ink-muted dark:text-slate-500">City: {ctcResult.cityInfo.name}. Employer also contributes {formatCurrency(ctcResult.employerContributions.total)} (PF, gratuity, ESIC) within CTC.</p>
                   </Card>
                   <Card className="p-5"><PieBreakdownChart title="Take-home vs deductions" items={[{ label: 'Annual take-home', value: ctcResult.netAnnualSalary, color: '#10b981' }, { label: 'Total deductions', value: ctcResult.deductions.total, color: '#ef4444' }]} formatter={formatCurrency} /></Card>
@@ -244,20 +249,20 @@ const SalaryCalculator = () => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
-                <NumberField id="cmp-cur" label="Current salary (CTC)" prefix="₹" value={comparisonParams.currentSalary} onChange={(v) => setComparisonParams((p) => ({ ...p, currentSalary: num(v) }))} />
-                <SelectField id="cmp-curcity" label="Current city" value={comparisonParams.currentCity} onChange={(v) => setComparisonParams((p) => ({ ...p, currentCity: v }))} options={cityOptions} />
-                <NumberField id="cmp-new" label="New offer (CTC)" prefix="₹" value={comparisonParams.newSalary} onChange={(v) => setComparisonParams((p) => ({ ...p, newSalary: num(v) }))} />
-                <SelectField id="cmp-newcity" label="New city" value={comparisonParams.newCity} onChange={(v) => setComparisonParams((p) => ({ ...p, newCity: v }))} options={cityOptions} />
+                <NumberField id="cmp-cur" label={t('salary.currentSalaryCtc')} prefix="₹" value={comparisonParams.currentSalary} onChange={(v) => setComparisonParams((p) => ({ ...p, currentSalary: num(v) }))} />
+                <SelectField id="cmp-curcity" label={t('salary.currentCity')} value={comparisonParams.currentCity} onChange={(v) => setComparisonParams((p) => ({ ...p, currentCity: v }))} options={cityOptions} />
+                <NumberField id="cmp-new" label={t('salary.newOfferCtc')} prefix="₹" value={comparisonParams.newSalary} onChange={(v) => setComparisonParams((p) => ({ ...p, newSalary: num(v) }))} />
+                <SelectField id="cmp-newcity" label={t('salary.newCity')} value={comparisonParams.newCity} onChange={(v) => setComparisonParams((p) => ({ ...p, newCity: v }))} options={cityOptions} />
               </div>
             </Card>
             <div className="space-y-5 lg:col-span-3">
               {comparisonResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Nominal raise" value={`${comparisonResult.percentageIncrease.toFixed(1)}%`} emphasis />
-                    <ResultStat label="Cost-adjusted raise" value={`${comparisonResult.realPercentageIncrease.toFixed(1)}%`} tone={comparisonResult.realPercentageIncrease >= 0 ? 'positive' : 'default'} />
-                    <ResultStat label="Salary increase" value={formatCurrency(comparisonResult.salaryIncrease)} />
-                    <ResultStat label="Real increase (adj.)" value={formatCurrency(Math.round(comparisonResult.realIncrease))} />
+                    <ResultStat label={t('salary.nominalRaise')} value={`${comparisonResult.percentageIncrease.toFixed(1)}%`} emphasis />
+                    <ResultStat label={t('salary.costAdjustedRaise')} value={`${comparisonResult.realPercentageIncrease.toFixed(1)}%`} tone={comparisonResult.realPercentageIncrease >= 0 ? 'positive' : 'default'} />
+                    <ResultStat label={t('salary.salaryIncrease')} value={formatCurrency(comparisonResult.salaryIncrease)} />
+                    <ResultStat label={t('salary.realIncrease')} value={formatCurrency(Math.round(comparisonResult.realIncrease))} />
                   </div>
                   <Card className="p-5"><ComparisonBars title="Cost-adjusted salary" items={[{ label: 'Current (adjusted)', value: Math.round(comparisonResult.currentAdjustedSalary), color: '#6366f1' }, { label: 'New offer (adjusted)', value: Math.round(comparisonResult.newAdjustedSalary), color: '#1d4e89' }]} formatter={formatCurrency} /></Card>
                   <p className="text-sm text-ink-muted dark:text-slate-400">Cost-adjusted figures normalize each salary by city cost of living, so a raise into a pricier city may be smaller in real terms.</p>

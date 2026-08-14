@@ -8,6 +8,8 @@ import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
 import { useShareableState, restoreValues } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const computeHRA = ({ basic, da, hraReceived, rentPaid, metro }) => {
   const salary = Math.max(0, Number(basic) || 0) + Math.max(0, Number(da) || 0);
@@ -35,6 +37,7 @@ const faqItems = [
 const DEFAULT_INPUTS = { basic: 600000, da: 0, hraReceived: 300000, rentPaid: 240000, metro: true };
 
 const HRACalculator = () => {
+  const t = useT();
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
 
   useShareableState({
@@ -72,40 +75,42 @@ const HRACalculator = () => {
       </Head>
 
       <CalcShell icon={Home} title="HRA Exemption Calculator" subtitle="How much House Rent Allowance is tax-exempt under the old regime, using the least-of-three rule. All amounts are annual.">
+        <LanguageToggle className="mb-6" />
+
         <div style={{ ...f.row, ...f.group }}>
           <div style={f.col}>
-            <label style={f.label} htmlFor="hra-basic">Basic salary (annual)</label>
+            <label style={f.label} htmlFor="hra-basic">{t('hra.basicSalaryAnnual')}</label>
             <input style={f.input} id="hra-basic" type="number" min="0" value={inputs.basic} onChange={(e) => set('basic', e.target.value)} />
           </div>
           <div style={f.col}>
-            <label style={f.label} htmlFor="hra-da">Dearness allowance (annual)</label>
+            <label style={f.label} htmlFor="hra-da">{t('hra.daAnnual')}</label>
             <input style={f.input} id="hra-da" type="number" min="0" value={inputs.da} onChange={(e) => set('da', e.target.value)} />
           </div>
         </div>
         <div style={{ ...f.row, ...f.group }}>
           <div style={f.col}>
-            <label style={f.label} htmlFor="hra-recd">HRA received (annual)</label>
+            <label style={f.label} htmlFor="hra-recd">{t('hra.hraReceivedAnnual')}</label>
             <input style={f.input} id="hra-recd" type="number" min="0" value={inputs.hraReceived} onChange={(e) => set('hraReceived', e.target.value)} />
           </div>
           <div style={f.col}>
-            <label style={f.label} htmlFor="hra-rent">Rent paid (annual)</label>
+            <label style={f.label} htmlFor="hra-rent">{t('hra.rentPaidAnnual')}</label>
             <input style={f.input} id="hra-rent" type="number" min="0" value={inputs.rentPaid} onChange={(e) => set('rentPaid', e.target.value)} />
           </div>
         </div>
         <label style={f.checkboxRow} htmlFor="hra-metro">
           <input id="hra-metro" type="checkbox" checked={inputs.metro} onChange={(e) => set('metro', e.target.checked)} />
-          Metro city — Delhi, Mumbai, Kolkata, Chennai, plus Bengaluru, Hyderabad, Pune &amp; Ahmedabad from FY 2026-27
+          {t('hra.metroLabel')}
         </label>
 
         <div className="result-card" style={r.card}>
-          <p style={r.kicker}>Exempt HRA</p>
+          <p style={r.kicker}>{t('hra.exemptHra')}</p>
           <p style={r.figure}>{formatINR(result.exemption)}</p>
           <div style={{ marginTop: '12px' }}>
-            <div style={r.row}><span>1. Actual HRA received</span><span>{formatINR(result.optionActual)}</span></div>
-            <div style={r.row}><span>2. Rent paid − 10% of salary</span><span>{formatINR(result.optionRent)}</span></div>
-            <div style={r.row}><span>3. {result.metro ? '50%' : '40%'} of salary</span><span>{formatINR(result.optionPercent)}</span></div>
-            <div style={r.row}><span><strong>Exempt (least of the three)</strong></span><span><strong>{formatINR(result.exemption)}</strong></span></div>
-            <div style={r.rowLast}><span>Taxable HRA</span><span>{formatINR(result.taxable)}</span></div>
+            <div style={r.row}><span>{t('hra.optionActual')}</span><span>{formatINR(result.optionActual)}</span></div>
+            <div style={r.row}><span>{t('hra.optionRent')}</span><span>{formatINR(result.optionRent)}</span></div>
+            <div style={r.row}><span>{result.metro ? t('hra.optionPercentMetro') : t('hra.optionPercentNonMetro')}</span><span>{formatINR(result.optionPercent)}</span></div>
+            <div style={r.row}><span><strong>{t('hra.exemptLeast')}</strong></span><span><strong>{formatINR(result.exemption)}</strong></span></div>
+            <div style={r.rowLast}><span>{t('hra.taxableHra')}</span><span>{formatINR(result.taxable)}</span></div>
           </div>
         </div>
 

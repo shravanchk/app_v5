@@ -14,6 +14,8 @@ import Card from '../ui/Card';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 import { useShareableState, toNumber, toOption } from '../../utils/shareableState';
 import { sipForTarget, sipFutureValue, stepUpSipSchedule, lumpsumFutureValue } from '../../utils/sipCalculations';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 // Per-tab prefixes keep the three input groups from colliding on shared names
 // like annualReturn, and the active tab travels with them.
@@ -35,6 +37,7 @@ const SHARE_DEFAULTS = {
 };
 
 const SIPCalculator = () => {
+  const t = useT();
   const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
 
   const [sipParams, setSipParams] = useState({ monthlyInvestment: 5000, annualReturn: 12, investmentPeriod: 10, stepUpPercentage: 0 });
@@ -195,9 +198,11 @@ const SIPCalculator = () => {
       </Head>
 
       <CalcLayout eyebrow="Investing" title="SIP Calculator" subtitle="Project mutual-fund SIP returns with optional step-up, plan a goal-based SIP, or compare SIP against a lumpsum.">
+        <LanguageToggle className="mb-6" />
+
         <div className="mb-6">
           <Tabs
-            tabs={[{ id: 'sip', label: 'SIP & step-up' }, { id: 'goal', label: 'Goal-based' }, { id: 'comparison', label: 'SIP vs lumpsum' }]}
+            tabs={[{ id: 'sip', label: t('tabs.sipStepUp') }, { id: 'goal', label: t('tabs.goalBased') }, { id: 'comparison', label: t('tabs.sipVsLumpsum') }]}
             active={activeTab}
             onChange={setActiveTab}
           />
@@ -207,10 +212,10 @@ const SIPCalculator = () => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className={`${formColCls} p-5`}>
               <div className="space-y-4">
-                <NumberField id="sip-amt" label="Monthly investment" prefix="₹" value={sipParams.monthlyInvestment} onChange={(v) => setSipParams((p) => ({ ...p, monthlyInvestment: num(v) }))} />
-                <NumberField id="sip-ret" label="Expected annual return" suffix="%" step={0.5} value={sipParams.annualReturn} onChange={(v) => setSipParams((p) => ({ ...p, annualReturn: num(v) }))} />
-                <NumberField id="sip-yrs" label="Investment period" suffix="yrs" value={sipParams.investmentPeriod} onChange={(v) => setSipParams((p) => ({ ...p, investmentPeriod: num(v) }))} />
-                <NumberField id="sip-step" label="Annual step-up (optional)" suffix="%" step={1} value={sipParams.stepUpPercentage} onChange={(v) => setSipParams((p) => ({ ...p, stepUpPercentage: num(v) }))} hint="Increase your SIP each year as income grows." />
+                <NumberField id="sip-amt" label={t('sip.monthlyInvestment')} prefix="₹" value={sipParams.monthlyInvestment} onChange={(v) => setSipParams((p) => ({ ...p, monthlyInvestment: num(v) }))} />
+                <NumberField id="sip-ret" label={t('common.expectedAnnualReturn')} suffix="%" step={0.5} value={sipParams.annualReturn} onChange={(v) => setSipParams((p) => ({ ...p, annualReturn: num(v) }))} />
+                <NumberField id="sip-yrs" label={t('common.investmentPeriod')} suffix="yrs" value={sipParams.investmentPeriod} onChange={(v) => setSipParams((p) => ({ ...p, investmentPeriod: num(v) }))} />
+                <NumberField id="sip-step" label={t('sip.annualStepUp')} suffix="%" step={1} value={sipParams.stepUpPercentage} onChange={(v) => setSipParams((p) => ({ ...p, stepUpPercentage: num(v) }))} hint="Increase your SIP each year as income grows." />
               </div>
             </Card>
 
@@ -218,10 +223,10 @@ const SIPCalculator = () => {
               {sipResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Total invested" value={formatCurrency(sipResult.totalInvestment)} />
-                    <ResultStat label="Future value" value={formatCurrency(sipResult.futureValue)} emphasis tone="positive" />
-                    <ResultStat label="Total returns" value={formatCurrency(sipResult.totalReturns)} />
-                    <ResultStat label="Return on investment" value={`${sipResult.returnPercentage}%`} />
+                    <ResultStat label={t('common.totalInvested')} value={formatCurrency(sipResult.totalInvestment)} />
+                    <ResultStat label={t('common.futureValue')} value={formatCurrency(sipResult.futureValue)} emphasis tone="positive" />
+                    <ResultStat label={t('common.totalReturns')} value={formatCurrency(sipResult.totalReturns)} />
+                    <ResultStat label={t('sip.returnOnInvestment')} value={`${sipResult.returnPercentage}%`} />
                   </div>
                   <Card className="p-5"><PieBreakdownChart title="Investment vs returns" items={[{ label: 'Total investment', value: sipResult.totalInvestment, color: '#3b82f6' }, { label: 'Total returns', value: sipResult.totalReturns, color: '#10b981' }]} formatter={formatCurrency} /></Card>
                   {yearlyBreakdown.length > 0 && (
@@ -263,19 +268,19 @@ const SIPCalculator = () => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className={`${formColCls} p-5`}>
               <div className="space-y-4">
-                <NumberField id="goal-amt" label="Target corpus" prefix="₹" value={goalParams.targetAmount} onChange={(v) => setGoalParams((p) => ({ ...p, targetAmount: num(v) }))} />
-                <NumberField id="goal-ret" label="Expected annual return" suffix="%" step={0.5} value={goalParams.annualReturn} onChange={(v) => setGoalParams((p) => ({ ...p, annualReturn: num(v) }))} />
-                <NumberField id="goal-yrs" label="Investment period" suffix="yrs" value={goalParams.investmentPeriod} onChange={(v) => setGoalParams((p) => ({ ...p, investmentPeriod: num(v) }))} />
+                <NumberField id="goal-amt" label={t('sip.targetCorpus')} prefix="₹" value={goalParams.targetAmount} onChange={(v) => setGoalParams((p) => ({ ...p, targetAmount: num(v) }))} />
+                <NumberField id="goal-ret" label={t('common.expectedAnnualReturn')} suffix="%" step={0.5} value={goalParams.annualReturn} onChange={(v) => setGoalParams((p) => ({ ...p, annualReturn: num(v) }))} />
+                <NumberField id="goal-yrs" label={t('common.investmentPeriod')} suffix="yrs" value={goalParams.investmentPeriod} onChange={(v) => setGoalParams((p) => ({ ...p, investmentPeriod: num(v) }))} />
               </div>
             </Card>
             <div className={`${resultColCls} space-y-5`}>
               {goalResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Required monthly SIP" value={formatCurrency(goalResult.requiredMonthlySIP)} emphasis tone="positive" />
-                    <ResultStat label="Total invested" value={formatCurrency(goalResult.totalInvestment)} />
-                    <ResultStat label="Target corpus" value={formatCurrency(goalResult.targetAmount)} />
-                    <ResultStat label="Projected returns" value={formatCurrency(goalResult.totalReturns)} />
+                    <ResultStat label={t('sip.requiredMonthlySip')} value={formatCurrency(goalResult.requiredMonthlySIP)} emphasis tone="positive" />
+                    <ResultStat label={t('common.totalInvested')} value={formatCurrency(goalResult.totalInvestment)} />
+                    <ResultStat label={t('sip.targetCorpus')} value={formatCurrency(goalResult.targetAmount)} />
+                    <ResultStat label={t('sip.projectedReturns')} value={formatCurrency(goalResult.totalReturns)} />
                   </div>
                   <ResultActions title="Goal-based SIP summary" summaryLines={goalShareLines} fileName="upaman-goal-sip-summary.txt" />
                 </>
@@ -288,10 +293,10 @@ const SIPCalculator = () => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className={`${formColCls} p-5`}>
               <div className="space-y-4">
-                <NumberField id="cmp-sip" label="Monthly SIP amount" prefix="₹" value={comparisonParams.monthlyAmount} onChange={(v) => setComparisonParams((p) => ({ ...p, monthlyAmount: num(v) }))} />
-                <NumberField id="cmp-lump" label="Lumpsum amount" prefix="₹" value={comparisonParams.lumpsumAmount} onChange={(v) => setComparisonParams((p) => ({ ...p, lumpsumAmount: num(v) }))} />
-                <NumberField id="cmp-ret" label="Expected annual return" suffix="%" step={0.5} value={comparisonParams.annualReturn} onChange={(v) => setComparisonParams((p) => ({ ...p, annualReturn: num(v) }))} />
-                <NumberField id="cmp-yrs" label="Investment period" suffix="yrs" value={comparisonParams.investmentPeriod} onChange={(v) => setComparisonParams((p) => ({ ...p, investmentPeriod: num(v) }))} />
+                <NumberField id="cmp-sip" label={t('sip.monthlySipAmount')} prefix="₹" value={comparisonParams.monthlyAmount} onChange={(v) => setComparisonParams((p) => ({ ...p, monthlyAmount: num(v) }))} />
+                <NumberField id="cmp-lump" label={t('sip.lumpsumAmount')} prefix="₹" value={comparisonParams.lumpsumAmount} onChange={(v) => setComparisonParams((p) => ({ ...p, lumpsumAmount: num(v) }))} />
+                <NumberField id="cmp-ret" label={t('common.expectedAnnualReturn')} suffix="%" step={0.5} value={comparisonParams.annualReturn} onChange={(v) => setComparisonParams((p) => ({ ...p, annualReturn: num(v) }))} />
+                <NumberField id="cmp-yrs" label={t('common.investmentPeriod')} suffix="yrs" value={comparisonParams.investmentPeriod} onChange={(v) => setComparisonParams((p) => ({ ...p, investmentPeriod: num(v) }))} />
               </div>
             </Card>
             <div className={`${resultColCls} space-y-5`}>
@@ -301,17 +306,17 @@ const SIPCalculator = () => {
                     <Card className="p-4">
                       <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">SIP</p>
                       <div className="mt-3 space-y-2">
-                        <ResultStat label="Future value" value={formatCurrency(comparisonResult.sip.futureValue)} emphasis tone="positive" />
-                        <ResultStat label="Invested" value={formatCurrency(comparisonResult.sip.investment)} />
-                        <ResultStat label="Return %" value={`${comparisonResult.sip.returnPercentage}%`} />
+                        <ResultStat label={t('common.futureValue')} value={formatCurrency(comparisonResult.sip.futureValue)} emphasis tone="positive" />
+                        <ResultStat label={t('common.invested')} value={formatCurrency(comparisonResult.sip.investment)} />
+                        <ResultStat label={t('common.returnPercent')} value={`${comparisonResult.sip.returnPercentage}%`} />
                       </div>
                     </Card>
                     <Card className="p-4">
                       <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">Lumpsum</p>
                       <div className="mt-3 space-y-2">
-                        <ResultStat label="Future value" value={formatCurrency(comparisonResult.lumpsum.futureValue)} emphasis tone="positive" />
-                        <ResultStat label="Invested" value={formatCurrency(comparisonResult.lumpsum.investment)} />
-                        <ResultStat label="Return %" value={`${comparisonResult.lumpsum.returnPercentage}%`} />
+                        <ResultStat label={t('common.futureValue')} value={formatCurrency(comparisonResult.lumpsum.futureValue)} emphasis tone="positive" />
+                        <ResultStat label={t('common.invested')} value={formatCurrency(comparisonResult.lumpsum.investment)} />
+                        <ResultStat label={t('common.returnPercent')} value={`${comparisonResult.lumpsum.returnPercentage}%`} />
                       </div>
                     </Card>
                   </div>

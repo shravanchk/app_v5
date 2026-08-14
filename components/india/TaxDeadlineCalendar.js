@@ -7,12 +7,14 @@ import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildCalendar, istToday } from '../../utils/engines/taxDeadlines';
 import { buildIcsCalendar, downloadIcs } from '../../utils/calendarReminders';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const LEAD_TIMES = [
-  { label: '1 day before', minutes: 24 * 60 },
-  { label: '3 days before', minutes: 3 * 24 * 60 },
-  { label: '1 week before', minutes: 7 * 24 * 60 },
-  { label: '2 weeks before', minutes: 14 * 24 * 60 }
+  { labelKey: 'deadlines.lead1Day', minutes: 24 * 60 },
+  { labelKey: 'deadlines.lead3Days', minutes: 3 * 24 * 60 },
+  { labelKey: 'deadlines.lead1Week', minutes: 7 * 24 * 60 },
+  { labelKey: 'deadlines.lead2Weeks', minutes: 14 * 24 * 60 }
 ];
 
 // Deadlines are dates, not instants. A timed 10:00 IST event with a lead-time
@@ -69,6 +71,7 @@ const faqItems = [
 ];
 
 const TaxDeadlineCalendar = () => {
+  const t = useT();
   // Rendered at build time as a static export, so "days left" must be computed
   // after mount — otherwise every visitor sees the countdown as it stood on the
   // day the site was built, and the server/client markup disagrees on hydration.
@@ -164,6 +167,8 @@ const TaxDeadlineCalendar = () => {
         title="Income Tax Due Dates (AY 2026-27)"
         subtitle="Every filing and payment deadline that still applies, with the option to put the ones you care about in your own calendar."
       >
+        <LanguageToggle className="mb-6" />
+
         <label style={f.checkboxRow} htmlFor="d-audit">
           <input
             id="d-audit"
@@ -171,7 +176,7 @@ const TaxDeadlineCalendar = () => {
             checked={hideAuditOnly}
             onChange={(e) => setHideAuditOnly(e.target.checked)}
           />
-          Hide audit-only deadlines (most salaried taxpayers should leave this ticked)
+          {t('deadlines.hideAuditOnly')}
         </label>
 
         <div style={{ marginTop: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -215,7 +220,7 @@ const TaxDeadlineCalendar = () => {
 
         <div style={f.group}>
           <label style={f.label} htmlFor="d-lead">
-            Remind me
+            {t('deadlines.remindMe')}
           </label>
           <select
             style={f.input}
@@ -225,7 +230,7 @@ const TaxDeadlineCalendar = () => {
           >
             {LEAD_TIMES.map((l) => (
               <option key={l.minutes} value={l.minutes}>
-                {l.label}
+                {t(l.labelKey)}
               </option>
             ))}
           </select>
@@ -249,8 +254,8 @@ const TaxDeadlineCalendar = () => {
           }}
         >
           {downloaded
-            ? '✓ Calendar file downloaded'
-            : `Add ${selectedCount} deadline${selectedCount === 1 ? '' : 's'} to my calendar`}
+            ? t('deadlines.downloaded')
+            : t(selectedCount === 1 ? 'deadlines.addOne' : 'deadlines.addMany').replace('{count}', selectedCount)}
         </button>
         <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '8px', lineHeight: 1.55 }}>
           Downloads an <code>.ics</code> file that imports into Google Calendar, Apple Calendar, Outlook, or any

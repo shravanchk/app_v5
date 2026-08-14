@@ -12,6 +12,8 @@ import Card from '../ui/Card';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
 import { useShareableState, toNumber, toOption } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 // GST 2.0 rate structure effective 22 September 2025: two main slabs (5%, 18%)
 // plus a 40% rate for sin/luxury goods. The 12% and 28% slabs were abolished.
@@ -40,6 +42,7 @@ const SHARE_DEFAULTS = {
 };
 
 const GSTCalculator = () => {
+  const t = useT();
   const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
   const [addGSTParams, setAddGSTParams] = useState({ amount: SHARE_DEFAULTS.addAmount, gstRate: SHARE_DEFAULTS.addRate });
   const [removeGSTParams, setRemoveGSTParams] = useState({ amount: SHARE_DEFAULTS.removeAmount, gstRate: SHARE_DEFAULTS.removeRate });
@@ -159,26 +162,28 @@ const GSTCalculator = () => {
       </Head>
 
       <CalcLayout eyebrow="Taxes" title="GST Calculator" subtitle="Add GST to a base price, remove GST from an inclusive amount, or reverse-extract the base — with CGST/SGST/IGST split. GST 2.0 rates (5%, 18%, 40%).">
+        <LanguageToggle className="mb-6" />
+
         <div className="mb-6">
-          <Tabs tabs={[{ id: 'add-gst', label: 'Add GST' }, { id: 'remove-gst', label: 'Remove GST' }, { id: 'reverse-gst', label: 'Reverse GST' }]} active={activeTab} onChange={setActiveTab} />
+          <Tabs tabs={[{ id: 'add-gst', label: t('tabs.addGst') }, { id: 'remove-gst', label: t('tabs.removeGst') }, { id: 'reverse-gst', label: t('tabs.reverseGst') }]} active={activeTab} onChange={setActiveTab} />
         </div>
 
         {activeTab === 'add-gst' && (
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
-                <NumberField id="add-amt" label="Base amount (before GST)" prefix="₹" value={addGSTParams.amount} onChange={(v) => setAddGSTParams((p) => ({ ...p, amount: num(v) }))} />
-                <SelectField id="add-rate" label="GST rate" value={addGSTParams.gstRate} onChange={(v) => setAddGSTParams((p) => ({ ...p, gstRate: num(v) }))} options={rateOptions} />
+                <NumberField id="add-amt" label={t('gst.baseAmountBeforeGst')} prefix="₹" value={addGSTParams.amount} onChange={(v) => setAddGSTParams((p) => ({ ...p, amount: num(v) }))} />
+                <SelectField id="add-rate" label={t('gst.gstRate')} value={addGSTParams.gstRate} onChange={(v) => setAddGSTParams((p) => ({ ...p, gstRate: num(v) }))} options={rateOptions} />
               </div>
             </Card>
             <div className="space-y-5 lg:col-span-3">
               {addGSTResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Total (incl. GST)" value={formatINR(addGSTResult.totalAmount)} emphasis tone="positive" />
-                    <ResultStat label="Base amount" value={formatINR(addGSTResult.originalAmount)} />
+                    <ResultStat label={t('gst.totalInclGst')} value={formatINR(addGSTResult.totalAmount)} emphasis tone="positive" />
+                    <ResultStat label={t('gst.baseAmount')} value={formatINR(addGSTResult.originalAmount)} />
                     <ResultStat label={`GST (${addGSTResult.gstRate}%)`} value={formatINR(addGSTResult.gstAmount)} />
-                    <ResultStat label="Rate" value={`${addGSTResult.gstRate}%`} />
+                    <ResultStat label={t('common.rate')} value={`${addGSTResult.gstRate}%`} />
                   </div>
                   <Breakdown b={addGSTResult.breakdown} />
                   <Card className="p-5"><PieBreakdownChart title="Base vs GST" items={[{ label: 'Base amount', value: addGSTResult.originalAmount, color: '#3b82f6' }, { label: 'GST', value: addGSTResult.gstAmount, color: '#f59e0b' }]} formatter={formatINR} /></Card>
@@ -194,18 +199,18 @@ const GSTCalculator = () => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
-                <NumberField id="rem-amt" label="GST-inclusive amount" prefix="₹" value={removeGSTParams.amount} onChange={(v) => setRemoveGSTParams((p) => ({ ...p, amount: num(v) }))} />
-                <SelectField id="rem-rate" label="GST rate" value={removeGSTParams.gstRate} onChange={(v) => setRemoveGSTParams((p) => ({ ...p, gstRate: num(v) }))} options={rateOptions} />
+                <NumberField id="rem-amt" label={t('gst.gstInclusiveAmount')} prefix="₹" value={removeGSTParams.amount} onChange={(v) => setRemoveGSTParams((p) => ({ ...p, amount: num(v) }))} />
+                <SelectField id="rem-rate" label={t('gst.gstRate')} value={removeGSTParams.gstRate} onChange={(v) => setRemoveGSTParams((p) => ({ ...p, gstRate: num(v) }))} options={rateOptions} />
               </div>
             </Card>
             <div className="space-y-5 lg:col-span-3">
               {removeGSTResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Base amount" value={formatINR(removeGSTResult.baseAmount)} emphasis tone="positive" />
-                    <ResultStat label="Inclusive amount" value={formatINR(removeGSTResult.inclusiveAmount)} />
+                    <ResultStat label={t('gst.baseAmount')} value={formatINR(removeGSTResult.baseAmount)} emphasis tone="positive" />
+                    <ResultStat label={t('gst.inclusiveAmount')} value={formatINR(removeGSTResult.inclusiveAmount)} />
                     <ResultStat label={`GST (${removeGSTResult.gstRate}%)`} value={formatINR(removeGSTResult.gstAmount)} />
-                    <ResultStat label="Rate" value={`${removeGSTResult.gstRate}%`} />
+                    <ResultStat label={t('common.rate')} value={`${removeGSTResult.gstRate}%`} />
                   </div>
                   <Breakdown b={removeGSTResult.breakdown} />
                   <ResultActions title="Remove GST summary" summaryLines={removeShareLines} fileName="upaman-gst-remove.txt" />
@@ -219,18 +224,18 @@ const GSTCalculator = () => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
-                <NumberField id="rev-amt" label="Final amount received" prefix="₹" value={reverseGSTParams.inclusiveAmount} onChange={(v) => setReverseGSTParams((p) => ({ ...p, inclusiveAmount: num(v) }))} />
-                <SelectField id="rev-rate" label="GST rate" value={reverseGSTParams.gstRate} onChange={(v) => setReverseGSTParams((p) => ({ ...p, gstRate: num(v) }))} options={rateOptions} />
+                <NumberField id="rev-amt" label={t('gst.finalAmountReceived')} prefix="₹" value={reverseGSTParams.inclusiveAmount} onChange={(v) => setReverseGSTParams((p) => ({ ...p, inclusiveAmount: num(v) }))} />
+                <SelectField id="rev-rate" label={t('gst.gstRate')} value={reverseGSTParams.gstRate} onChange={(v) => setReverseGSTParams((p) => ({ ...p, gstRate: num(v) }))} options={rateOptions} />
               </div>
             </Card>
             <div className="space-y-5 lg:col-span-3">
               {reverseGSTResult && (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <ResultStat label="Original taxable value" value={formatINR(reverseGSTResult.baseAmount)} emphasis tone="positive" />
-                    <ResultStat label="Final amount" value={formatINR(reverseGSTResult.inclusiveAmount)} />
+                    <ResultStat label={t('gst.originalTaxableValue')} value={formatINR(reverseGSTResult.baseAmount)} emphasis tone="positive" />
+                    <ResultStat label={t('gst.finalAmount')} value={formatINR(reverseGSTResult.inclusiveAmount)} />
                     <ResultStat label={`GST (${reverseGSTResult.gstRate}%)`} value={formatINR(reverseGSTResult.gstAmount)} />
-                    <ResultStat label="Rate" value={`${reverseGSTResult.gstRate}%`} />
+                    <ResultStat label={t('common.rate')} value={`${reverseGSTResult.gstRate}%`} />
                   </div>
                   <Breakdown b={reverseGSTResult.breakdown} />
                   <ResultActions title="Reverse GST summary" summaryLines={reverseShareLines} fileName="upaman-gst-reverse.txt" />

@@ -8,6 +8,8 @@ import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
 import { useShareableState, restoreValues } from '../../utils/shareableState';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const GRATUITY_CAP = 2000000;
 
@@ -36,6 +38,7 @@ const faqItems = [
 const DEFAULT_INPUTS = { lastSalary: 80000, years: 10, months: 7, coveredByAct: true };
 
 const GratuityCalculator = () => {
+  const t = useT();
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
 
   useShareableState({
@@ -72,33 +75,35 @@ const GratuityCalculator = () => {
       </Head>
 
       <CalcShell icon={Wallet} title="Gratuity Calculator" subtitle="Estimate gratuity under the Payment of Gratuity Act, with the ₹20 lakh tax-free ceiling.">
+        <LanguageToggle className="mb-6" />
+
         <div style={f.group}>
-          <label style={f.label} htmlFor="g-salary">Last drawn monthly salary (Basic + DA)</label>
+          <label style={f.label} htmlFor="g-salary">{t('gratuity.lastDrawnSalary')}</label>
           <input style={f.input} id="g-salary" type="number" min="0" value={inputs.lastSalary} onChange={(e) => set('lastSalary', e.target.value)} />
         </div>
 
         <div style={{ ...f.row, ...f.group }}>
           <div style={f.col}>
-            <label style={f.label} htmlFor="g-years">Completed years of service</label>
+            <label style={f.label} htmlFor="g-years">{t('gratuity.completedYears')}</label>
             <input style={f.input} id="g-years" type="number" min="0" value={inputs.years} onChange={(e) => set('years', e.target.value)} />
           </div>
           <div style={f.col}>
-            <label style={f.label} htmlFor="g-months">Additional months</label>
+            <label style={f.label} htmlFor="g-months">{t('gratuity.additionalMonths')}</label>
             <input style={f.input} id="g-months" type="number" min="0" max="11" value={inputs.months} onChange={(e) => set('months', e.target.value)} />
           </div>
         </div>
 
         <label style={f.checkboxRow} htmlFor="g-act">
           <input id="g-act" type="checkbox" checked={inputs.coveredByAct} onChange={(e) => set('coveredByAct', e.target.checked)} />
-          Covered by the Payment of Gratuity Act (divisor 26)
+          {t('gratuity.coveredByAct')}
         </label>
 
         <div className="result-card" style={r.card}>
-          <p style={r.kicker}>Estimated gratuity</p>
+          <p style={r.kicker}>{t('gratuity.estimatedGratuity')}</p>
           <p style={r.figure}>{formatINR(result.capped)}</p>
           <p style={r.note}>
-            (15 × {formatINR(result.salary)} × {result.roundedYears} years) ÷ {result.divisor} = {formatINR(result.raw)}
-            {result.exceedsCap && <><br /><strong>Capped at the ₹20,00,000 statutory tax-free ceiling.</strong></>}
+            (15 × {formatINR(result.salary)} × {result.roundedYears} {t('gratuity.yearsWord')}) ÷ {result.divisor} = {formatINR(result.raw)}
+            {result.exceedsCap && <><br /><strong>{t('gratuity.cappedNote')}</strong></>}
           </p>
         </div>
 

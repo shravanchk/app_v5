@@ -10,6 +10,8 @@ import Card from '../ui/Card';
 import { formatINR } from '../../utils/calculations';
 import { useShareableState, restoreValues } from '../../utils/shareableState';
 import { buildFaqSchema } from '../../utils/faqSchema';
+import { useT } from '../../utils/i18n/LanguageProvider';
+import LanguageToggle from '../i18n/LanguageToggle';
 
 const PPF_CONTRIBUTION_LIMIT = 150000;
 
@@ -22,10 +24,12 @@ const FAQ = [
   { question: 'Is PPF better than a SIP in mutual funds?', answer: 'They answer different needs. PPF offers a sovereign-guaranteed, tax-free, fixed return with no market risk — ideal for the safe portion of a portfolio. Equity SIPs carry market risk but have historically delivered higher long-run returns. Many investors use both: PPF for stability and 80C, SIPs for growth.' }
 ];
 
+// Label carries a dictionary key rather than English text: this list is
+// module-level, so it cannot call the translate hook itself.
 const contributionModes = [
-  { value: 'monthly', label: 'Monthly installments' },
-  { value: 'yearly-start', label: 'Yearly lump sum (start of year)' },
-  { value: 'yearly-end', label: 'Yearly lump sum (end of year)' },
+  { value: 'monthly', labelKey: 'options.ppfMonthly' },
+  { value: 'yearly-start', labelKey: 'options.ppfYearlyStart' },
+  { value: 'yearly-end', labelKey: 'options.ppfYearlyEnd' },
 ];
 
 const getClampedContribution = (value) => {
@@ -88,6 +92,7 @@ const DEFAULT_INPUTS = { annualContribution: 150000, annualRate: 7.1, tenureYear
 const SHARED_OPTIONS = { contributionMode: contributionModes.map((mode) => mode.value) };
 
 const PPFCalculator = () => {
+  const t = useT();
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
 
   useShareableState({
@@ -126,23 +131,25 @@ const PPFCalculator = () => {
       </Head>
 
       <CalcLayout eyebrow="Investing" title="PPF Calculator" subtitle="Estimate your Public Provident Fund maturity value and interest, with a full year-by-year projection. Current rate: 7.1% p.a.">
+        <LanguageToggle className="mb-6" />
+
         <div className="grid gap-5 lg:grid-cols-5">
           <Card className="p-5 lg:col-span-2">
             <div className="space-y-4">
-              <NumberField id="ppf-amt" label="Annual contribution" prefix="₹" value={inputs.annualContribution} onChange={(v) => set('annualContribution', num(v))} hint={hasContributionCap ? 'Capped at ₹1,50,000 per year in the projection.' : 'Maximum eligible: ₹1,50,000 per year.'} />
-              <NumberField id="ppf-rate" label="Interest rate (p.a.)" suffix="%" step={0.1} value={inputs.annualRate} onChange={(v) => set('annualRate', num(v))} />
-              <NumberField id="ppf-yrs" label="Tenure" suffix="yrs" value={inputs.tenureYears} onChange={(v) => set('tenureYears', num(v))} hint="PPF has a 15-year lock-in, extendable in 5-year blocks." />
-              <NumberField id="ppf-step" label="Annual step-up (optional)" suffix="%" step={1} value={inputs.annualStepUp} onChange={(v) => set('annualStepUp', num(v))} />
-              <SelectField id="ppf-mode" label="Contribution mode" value={inputs.contributionMode} onChange={(v) => set('contributionMode', v)} options={contributionModes} />
+              <NumberField id="ppf-amt" label={t('ppf.annualContribution')} prefix="₹" value={inputs.annualContribution} onChange={(v) => set('annualContribution', num(v))} hint={hasContributionCap ? 'Capped at ₹1,50,000 per year in the projection.' : 'Maximum eligible: ₹1,50,000 per year.'} />
+              <NumberField id="ppf-rate" label={t('common.interestRatePa')} suffix="%" step={0.1} value={inputs.annualRate} onChange={(v) => set('annualRate', num(v))} />
+              <NumberField id="ppf-yrs" label={t('common.tenure')} suffix="yrs" value={inputs.tenureYears} onChange={(v) => set('tenureYears', num(v))} hint="PPF has a 15-year lock-in, extendable in 5-year blocks." />
+              <NumberField id="ppf-step" label={t('sip.annualStepUp')} suffix="%" step={1} value={inputs.annualStepUp} onChange={(v) => set('annualStepUp', num(v))} />
+              <SelectField id="ppf-mode" label={t('ppf.contributionMode')} value={inputs.contributionMode} onChange={(v) => set('contributionMode', v)} options={contributionModes.map(({ value, labelKey }) => ({ value, label: t(labelKey) }))} />
             </div>
           </Card>
 
           <div className="space-y-5 lg:col-span-3">
             <div className="grid grid-cols-2 gap-3">
-              <ResultStat label="Maturity value" value={formatINR(results.summary.maturityValue)} emphasis tone="positive" />
-              <ResultStat label="Total invested" value={formatINR(results.summary.totalInvested)} />
-              <ResultStat label="Total interest" value={formatINR(results.summary.totalInterest)} />
-              <ResultStat label="Final annual contribution" value={formatINR(results.summary.finalAnnualContribution)} />
+              <ResultStat label={t('common.maturityValue')} value={formatINR(results.summary.maturityValue)} emphasis tone="positive" />
+              <ResultStat label={t('common.totalInvested')} value={formatINR(results.summary.totalInvested)} />
+              <ResultStat label={t('common.totalInterest')} value={formatINR(results.summary.totalInterest)} />
+              <ResultStat label={t('ppf.finalAnnualContribution')} value={formatINR(results.summary.finalAnnualContribution)} />
             </div>
             <Card className="p-5">
               <PieBreakdownChart title="Investment vs interest" items={[{ label: 'Total invested', value: results.summary.totalInvested, color: '#3b82f6' }, { label: 'Total interest', value: results.summary.totalInterest, color: '#10b981' }]} formatter={formatINR} />
