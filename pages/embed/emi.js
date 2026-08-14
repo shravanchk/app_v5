@@ -34,7 +34,7 @@ export default function EmiEmbedWidget() {
       </Head>
       <div style={{ padding: '8px', background: 'transparent' }}>
         <div style={box}>
-          <div style={{ fontWeight: 700, color: '#2563eb', fontSize: '1.05rem' }}>EMI Calculator</div>
+          <div style={{ fontWeight: 700, color: '#1d4e89', fontSize: '1.05rem' }}>EMI Calculator</div>
 
           <label style={label}>Loan amount (₹)</label>
           <input style={input} type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} />
@@ -62,7 +62,7 @@ export default function EmiEmbedWidget() {
 
           <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '0.78rem', color: '#6b7280' }}>
             Powered by{' '}
-            <a href="https://upaman.com/loan-calculator" target="_blank" rel="noopener" style={{ color: '#2563eb', fontWeight: 600 }}>
+            <a href="https://upaman.com/loan-calculator" target="_blank" rel="noopener" style={{ color: '#1d4e89', fontWeight: 600 }}>
               Upaman EMI Calculator
             </a>
           </div>

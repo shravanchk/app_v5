@@ -81,6 +81,14 @@ export default function ReadYourPaycheckGuidePage() {
         table for <a href="/after-taxes/70000">$70,000 after taxes</a>, or pick{' '}
         <a href="/after-taxes">any salary from $30k to $250k</a>.
       </p>
+      <p>
+        <a href="/us-paycheck-calculator?salary=70000&filingStatus=single&stateCode=TX">
+          Open this example in the paycheck calculator
+        </a>{' '}
+        to see the same breakdown line by line — then switch the state to{' '}
+        <a href="/us-paycheck-calculator?salary=70000&filingStatus=single&stateCode=CA">California</a> to watch the
+        state-tax line appear.
+      </p>
 
       <h2 style={sectionTitleStyle}>Checking your own numbers</h2>
       <p>

@@ -27,7 +27,7 @@ export default function HourlyToSalaryEmbedWidget() {
       </Head>
       <div style={{ padding: '8px', background: 'transparent' }}>
         <div style={box}>
-          <div style={{ fontWeight: 700, color: '#2563eb', fontSize: '1.05rem' }}>Hourly to Salary Calculator</div>
+          <div style={{ fontWeight: 700, color: '#1d4e89', fontSize: '1.05rem' }}>Hourly to Salary Calculator</div>
 
           <label style={label}>Hourly rate ($)</label>
           <input style={input} type="number" min="0" step="0.5" value={rate} onChange={(e) => setRate(e.target.value)} />
@@ -55,7 +55,7 @@ export default function HourlyToSalaryEmbedWidget() {
 
           <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '0.78rem', color: '#6b7280' }}>
             Powered by{' '}
-            <a href="https://upaman.com/hourly" target="_blank" rel="noopener" style={{ color: '#2563eb', fontWeight: 600 }}>
+            <a href="https://upaman.com/hourly" target="_blank" rel="noopener" style={{ color: '#1d4e89', fontWeight: 600 }}>
               Upaman Hourly to Salary Converter
             </a>
           </div>

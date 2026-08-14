@@ -61,6 +61,13 @@ export default function HraExemptionGuidePage() {
         rupee of exemption</strong> (until another leg binds), while a higher basic salary <em>cuts</em> the
         exemption through the 10% subtraction.
       </p>
+      <p>
+        <a href="/hra-calculator?basic=600000&da=0&hraReceived=300000&rentPaid=240000&metro=true">
+          Open this example in the HRA calculator
+        </a>{' '}
+        — all three legs are shown side by side, so you can raise the rent or the basic and see which one takes over as
+        the binding leg.
+      </p>
 
       <h2 style={sectionTitleStyle}>Rules that trip people up</h2>
       <ul>

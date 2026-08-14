@@ -118,6 +118,13 @@ export default function OldVsNewRegimeBreakevenGuide() {
         <strong>₹6.19 lakh of deductions</strong>. Even claiming the full ₹4.75 lakh above, you would still need about ₹1.44
         lakh of HRA exemption on top just to break even. Anything less and the new regime is cheaper.
       </p>
+      <p>
+        Compare the two side by side:{' '}
+        <a href="/income-tax-calculator?salary=1600000&regime=new&s80c=0&s80d=0&nps=0">₹16 lakh under the new regime</a>{' '}
+        against <a href="/income-tax-calculator?salary=1600000&regime=old&s80c=150000&s80d=25000&nps=50000">the same
+        salary under the old regime with the standard deductions claimed</a> — then add your own HRA figure to see which
+        side of the breakeven you land on.
+      </p>
 
       <h2 style={sectionTitleStyle}>Two cautions before you choose the old regime</h2>
       <ul>

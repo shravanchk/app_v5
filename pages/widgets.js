@@ -6,6 +6,34 @@ const linkCls = 'font-medium text-brand-600 underline underline-offset-2 hover:t
 
 const WIDGETS = [
   {
+    name: 'Mortgage Payment Calculator ($)',
+    slug: 'us-mortgage',
+    height: 560,
+    desc: 'Full monthly payment — principal and interest, property tax, insurance, and PMI when the down payment is under 20% — plus lifetime interest.',
+    fullTool: '/us-mortgage-calculator'
+  },
+  {
+    name: 'Paycheck Calculator ($)',
+    slug: 'us-paycheck',
+    height: 520,
+    desc: 'Take-home pay for all 50 states with 2026 federal brackets, FICA, and state income tax, shown per year, month, bi-weekly, or week.',
+    fullTool: '/us-paycheck-calculator'
+  },
+  {
+    name: '401(k) Growth Calculator ($)',
+    slug: 'us-401k',
+    height: 560,
+    desc: 'Projects a 401(k) to retirement age with employer match, annual raises, and compounding — separating your money, the match, and market growth.',
+    fullTool: '/us-401k-calculator'
+  },
+  {
+    name: 'VAT Calculator (EU/UK)',
+    slug: 'eu-vat',
+    height: 460,
+    desc: 'Adds or strips VAT at the standard rate for 15 European countries, showing the net, the VAT, and the gross side by side.',
+    fullTool: '/eu-vat-calculator'
+  },
+  {
     name: 'Compound Interest Calculator',
     slug: 'compound-interest',
     height: 430,

@@ -9,6 +9,7 @@ const GROUPS = [
     heading: 'United States',
     guides: [
       { title: 'How to Read Your US Paycheck', desc: 'Every pay-stub line explained: 2026 brackets, FICA, and pre-tax deductions.', href: '/guides/how-to-read-your-paycheck' },
+      { title: 'Is a 7% Mortgage Rate Good?', desc: 'What each point costs per month and over 30 years, where 7% sits historically, and whether waiting pays.', href: '/guides/is-7-percent-mortgage-rate-good' },
       { title: 'The 50/30/20 Budget Rule', desc: 'Needs, wants, and savings on real take-home pay — with a worked example and when the ratios should bend.', href: '/guides/50-30-20-rule' },
       { title: 'How Much House Can You Afford?', desc: 'The 28/36 rule and DTI worked out on a $100k salary — and why your ceiling should sit below the bank\'s.', href: '/guides/how-much-house-can-i-afford' },
       { title: 'CD Ladders Explained', desc: 'Lock in rates without locking up cash: a five-rung $25k example and the mistakes that cost interest.', href: '/guides/cd-ladder-explained' },
@@ -22,6 +23,8 @@ const GROUPS = [
     heading: 'India tax & salary',
     guides: [
       { title: 'India Income Tax Slabs FY 2026-27', desc: 'New and old regime slabs, rates, and how to compare them.', href: '/guides/india-income-tax-2026-27' },
+      { title: 'Is ₹10, ₹15 or ₹25 LPA a Good Salary?', desc: 'What each CTC band pays monthly after PF and tax, and what it buys city by city.', href: '/guides/is-x-lpa-a-good-salary-india' },
+      { title: 'Section 80C: The Full List', desc: 'Every qualifying investment and expense, lock-ins, and why 80C only matters in the old regime.', href: '/guides/section-80c-investment-list' },
       { title: 'Tax on ₹12 Lakh Salary FY 2026-27', desc: 'Why a ₹12 lakh salary is effectively tax-free under the new regime.', href: '/guides/tax-on-12-lakh-salary-fy-2026-27' },
       { title: 'Standard Deduction FY 2026-27', desc: 'What the ₹75,000 standard deduction saves you and who can claim it.', href: '/guides/standard-deduction-fy-2026-27' },
       { title: 'Old vs New Regime Breakeven', desc: 'How many deductions you need before the old regime wins.', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' },
@@ -49,6 +52,7 @@ const GROUPS = [
   {
     heading: 'Saving & investing',
     guides: [
+      { title: 'How Much SIP for ₹1 Crore?', desc: 'The monthly SIP needed over 10 to 30 years — and what ₹1 crore will actually be worth by then.', href: '/guides/how-much-sip-for-1-crore' },
       { title: 'Emergency Fund Readiness', desc: 'Set a risk-based runway, size the corpus gap, and close it on a plan.', href: '/guides/emergency-fund-readiness' },
       { title: 'PPF vs SIP Choice', desc: 'Split stability and growth by mapping goals to timelines and risk.', href: '/guides/ppf-vs-sip-choice' },
       { title: 'SIP Step-up Planning', desc: 'Match investing to salary growth with an annual step-up.', href: '/guides/sip-step-up-planning' },

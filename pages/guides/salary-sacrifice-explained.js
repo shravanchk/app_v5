@@ -50,6 +50,14 @@ export default function SalarySacrificeGuidePage() {
           pension; always ask.
         </li>
       </ul>
+      <p>
+        Check it against your own salary:{' '}
+        <a href="/uk-income-tax-calculator?income=40000&pensionContribution=2000">
+          £40,000 with a £2,000 pension contribution
+        </a>{' '}
+        versus <a href="/uk-income-tax-calculator?income=40000">the same salary with none</a> — the difference in
+        take-home is the number that matters, not the headline relief rate.
+      </p>
 
       <h2 style={sectionTitleStyle}>What can be sacrificed</h2>
       <ul>

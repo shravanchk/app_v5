@@ -106,6 +106,12 @@ export default function TaxOn12LakhSalaryGuide() {
         The slab tax of ₹52,500 is 5% on the ₹4–8 lakh band (₹20,000) plus 10% on ₹8 lakh to ₹11.25 lakh (₹32,500). Because
         taxable income is under ₹12 lakh, the rebate (capped at ₹60,000) is large enough to cancel it completely.
       </p>
+      <p>
+        <a href="/income-tax-calculator?salary=1200000&regime=new&s80c=0&s80d=0&nps=0">
+          Open this example in the income tax calculator
+        </a>{' '}
+        — then push the salary past ₹12.75 lakh to see the rebate drop away and marginal relief take over.
+      </p>
 
       <h2 style={sectionTitleStyle}>The real ceiling is ₹12.75 lakh, not ₹12 lakh</h2>
       <p>

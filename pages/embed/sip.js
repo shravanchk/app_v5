@@ -33,7 +33,7 @@ export default function SipEmbedWidget() {
       </Head>
       <div style={{ padding: '8px', background: 'transparent' }}>
         <div style={box}>
-          <div style={{ fontWeight: 700, color: '#2563eb', fontSize: '1.05rem' }}>SIP Calculator</div>
+          <div style={{ fontWeight: 700, color: '#1d4e89', fontSize: '1.05rem' }}>SIP Calculator</div>
 
           <label style={label}>Monthly SIP amount (₹)</label>
           <input style={input} type="number" min="0" step="500" value={monthly} onChange={(e) => setMonthly(e.target.value)} />
@@ -60,7 +60,7 @@ export default function SipEmbedWidget() {
 
           <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '0.78rem', color: '#6b7280' }}>
             Powered by{' '}
-            <a href="https://upaman.com/sip-calculator" target="_blank" rel="noopener" style={{ color: '#2563eb', fontWeight: 600 }}>
+            <a href="https://upaman.com/sip-calculator" target="_blank" rel="noopener" style={{ color: '#1d4e89', fontWeight: 600 }}>
               Upaman SIP Calculator
             </a>
           </div>

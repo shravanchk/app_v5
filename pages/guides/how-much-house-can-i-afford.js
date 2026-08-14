@@ -62,6 +62,13 @@ export default function HowMuchHouseGuidePage() {
         <li><strong>Add your down payment:</strong> with $70,000 down (20%), that's about a <strong>$350,000 house</strong> with no PMI. With 10% down instead, the price ceiling drops toward $310,000 <em>and</em> PMI eats part of the budget until you reach 20% equity.</li>
       </ol>
       <p>
+        <a href="/us-mortgage-calculator?homePrice=350000&downPayment=70000&interestRate=6.5&loanTermYears=30&monthlyGrossIncome=8333">
+          Open this example in the mortgage calculator
+        </a>{' '}
+        — the $350,000 price, $70,000 down, 6.5% over 30 years, and the $8,333 gross monthly income are already filled
+        in, so you can change one number at a time and watch the housing ratio move.
+      </p>
+      <p>
         Two things to notice. First, <strong>existing debt directly shrinks the house</strong>: every $100 of monthly
         payments removes roughly $16,000 of loan at these rates — paying off a $400 car payment "buys" about $63,000
         of house. Second, <strong>rates dominate</strong>: a one-point rate move shifts what the same payment buys by
@@ -102,8 +109,9 @@ export default function HowMuchHouseGuidePage() {
       <h2 style={sectionTitleStyle}>Run your numbers</h2>
       <p>
         Model the full payment — P&amp;I, taxes, insurance, PMI, and HOA — with the{' '}
-        <a href="/us-mortgage-calculator">US Mortgage Calculator</a>, and get your true take-home for the net-income
-        test with the <a href="/us-paycheck-calculator">US Paycheck Calculator</a>. If you already own and rates have
+        <a href="/us-mortgage-calculator?homePrice=350000&downPayment=70000&interestRate=6.5&loanTermYears=30&monthlyGrossIncome=8333">US Mortgage Calculator</a>,
+        and get your true take-home for the net-income test with the{' '}
+        <a href="/us-paycheck-calculator?salary=100000">US Paycheck Calculator</a>. If you already own and rates have
         moved, the <a href="/us-refinance-calculator">Refinance Calculator</a> shows whether a new rate frees up
         budget. This is general education, not personalized financial advice.
       </p>

@@ -36,7 +36,7 @@ export default function CompoundInterestEmbedWidget() {
       </Head>
       <div style={{ padding: '8px', background: 'transparent' }}>
         <div style={box}>
-          <div style={{ fontWeight: 700, color: '#2563eb', fontSize: '1.05rem' }}>Compound Interest Calculator</div>
+          <div style={{ fontWeight: 700, color: '#1d4e89', fontSize: '1.05rem' }}>Compound Interest Calculator</div>
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <div style={{ flex: 1 }}>
@@ -71,7 +71,7 @@ export default function CompoundInterestEmbedWidget() {
 
           <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '0.78rem', color: '#6b7280' }}>
             Powered by{' '}
-            <a href="https://upaman.com/compound-interest-calculator" target="_blank" rel="noopener" style={{ color: '#2563eb', fontWeight: 600 }}>
+            <a href="https://upaman.com/compound-interest-calculator" target="_blank" rel="noopener" style={{ color: '#1d4e89', fontWeight: 600 }}>
               Upaman Compound Interest Calculator
             </a>
           </div>

@@ -162,9 +162,10 @@ export default function CtcToInHandSalaryGuide() {
 
       <h2 style={sectionTitleStyle}>Estimate your own in-hand</h2>
       <p>
-        Use Upaman&rsquo;s <a href="/salary-calculator">Salary Calculator</a> to convert your CTC into a monthly in-hand figure
+        Use Upaman&rsquo;s <a href="/salary-calculator?ctc=1200000&city=metro">Salary Calculator</a> — opened on the
+        ₹12 lakh CTC from this guide — to convert your CTC into a monthly in-hand figure
         with the PF, professional tax, and tax deductions worked out for you. To see how the tax piece changes your take-home,
-        run your number through the <a href="/income-tax-calculator">Income Tax Calculator</a>, and read the{' '}
+        run your number through the <a href="/income-tax-calculator?salary=1200000&regime=new">Income Tax Calculator</a>, and read the{' '}
         <a href="/guides/standard-deduction-fy-2026-27">standard deduction guide</a> to understand the flat ₹75,000 that lowers
         your taxable salary first.
       </p>
