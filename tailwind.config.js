@@ -9,18 +9,22 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Primary brand blue (#2563EB) with a calm, accessible scale.
+        // Anchored on #1D4E89 — the navy already used by the elephant logo and
+        // the theme-color meta — rather than Tailwind's default blue-600. Same
+        // hue throughout, saturation tapered at the light end.
+        // Contrast: 600 on white 8.39:1, 700 on white 10.65:1,
+        // 300 on slate-900 9.17:1, 400 on slate-900 5.72:1.
         brand: {
-          50: '#eff5ff',
-          100: '#dbe7fe',
-          200: '#bfd3fe',
-          300: '#93b4fd',
-          400: '#608cfa',
-          500: '#3b6df6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+          50: '#f3f7fc',
+          100: '#e2ecf8',
+          200: '#c6daf1',
+          300: '#9cbde2',
+          400: '#6495ce',
+          500: '#326cae',
+          600: '#1d4e89',
+          700: '#153f6f',
+          800: '#11335a',
+          900: '#0f2948',
         },
         ink: {
           DEFAULT: '#0f2a43',
@@ -40,7 +44,7 @@ module.exports = {
       boxShadow: {
         soft: '0 1px 2px rgba(15, 42, 67, 0.04), 0 6px 24px -12px rgba(15, 42, 67, 0.12)',
         card: '0 1px 3px rgba(15, 42, 67, 0.05), 0 12px 32px -16px rgba(15, 42, 67, 0.18)',
-        lift: '0 8px 30px -12px rgba(37, 99, 235, 0.25)',
+        lift: '0 8px 30px -12px rgba(29, 78, 137, 0.25)',
       },
       maxWidth: {
         content: '1200px',

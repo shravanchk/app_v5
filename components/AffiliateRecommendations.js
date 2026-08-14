@@ -258,7 +258,7 @@ const AffiliateRecommendations = ({ calculatorType, result, isDarkMode = false }
                 fontWeight: '500',
                 transition: 'background-color 0.2s'
               }}
-              onMouseEnter={(e) => e.target.style.background = '#2563eb'}
+              onMouseEnter={(e) => e.target.style.background = '#1d4e89'}
               onMouseLeave={(e) => e.target.style.background = '#3b82f6'}
             >
               {rec.cta} →

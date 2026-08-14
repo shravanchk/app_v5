@@ -7,11 +7,13 @@ import { editorialProfiles } from '../../utils/editorialProfiles';
 import { PieBreakdownChart, ComparisonBars } from '../calculator/ResultVisualizations';
 import { CalcLayout, ResultStat } from '../calculator/CalcLayout';
 import HowToSection from '../calculator/HowToSection';
-import { NumberField } from '../ui/Field';
+import { NumberField, SelectField } from '../ui/Field';
 import Card from '../ui/Card';
 import { DecisionBanner } from '../workflow/WorkflowKit';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
-const { calculateIndianIncomeTax } = require('../../utils/taxCalculations');
+const { calculateIndianIncomeTax, INDIA_AGE_BANDS } = require('../../utils/taxCalculations');
+
+const LAST_REVIEWED = 'June 28, 2026';
 
 const TaxRegimeComparisonCalculator = () => {
   const [salary, setSalary] = useState(1500000);
@@ -19,6 +21,8 @@ const TaxRegimeComparisonCalculator = () => {
   const [deductions80D, setDeductions80D] = useState(25000);
   const [hraExemption, setHraExemption] = useState(120000);
   const [otherDeductions, setOtherDeductions] = useState(30000);
+  // Only the old regime's exemption moves with age, so this can flip the verdict.
+  const [ageBand, setAgeBand] = useState('below60');
 
   const formatCurrency = (value) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
@@ -36,7 +40,7 @@ const TaxRegimeComparisonCalculator = () => {
     const oldTaxable = Math.max(0, salary - oldDeductions);
     const newTaxable = Math.max(0, salary - newStandardDeduction);
 
-    const oldTotalTax = calculateIndianIncomeTax(oldTaxable, 'old').totalTax;
+    const oldTotalTax = calculateIndianIncomeTax(oldTaxable, 'old', ageBand).totalTax;
     const newTotalTax = calculateIndianIncomeTax(newTaxable, 'new').totalTax;
 
     const savings = Math.abs(oldTotalTax - newTotalTax);
@@ -50,7 +54,7 @@ const TaxRegimeComparisonCalculator = () => {
       savings,
       betterRegime
     };
-  }, [salary, deductions80C, deductions80D, hraExemption, otherDeductions]);
+  }, [salary, deductions80C, deductions80D, hraExemption, otherDeductions, ageBand]);
 
   const oldTakeHome = Math.max(0, salary - result.oldTotalTax);
   const newTakeHome = Math.max(0, salary - result.newTotalTax);
@@ -136,6 +140,8 @@ const TaxRegimeComparisonCalculator = () => {
         eyebrow="India · Tax"
         title="Tax Regime Comparison Tool (India)"
         subtitle="Compare old vs new regime with deduction-aware inputs and an instant tax-savings recommendation."
+        ratesFor="FY 2026-27"
+        reviewedOn={LAST_REVIEWED}
       >
         <div className="grid gap-5 lg:grid-cols-5">
           <Card className="p-5 lg:col-span-2">
@@ -145,6 +151,14 @@ const TaxRegimeComparisonCalculator = () => {
               <NumberField id="trc-80d" label="80D Deductions" prefix="₹" value={deductions80D} onChange={(v) => setDeductions80D(Number(v) || 0)} />
               <NumberField id="trc-hra" label="HRA Exemption (Old Regime)" prefix="₹" value={hraExemption} onChange={(v) => setHraExemption(Number(v) || 0)} />
               <NumberField id="trc-other" label="Other Deductions" prefix="₹" value={otherDeductions} onChange={(v) => setOtherDeductions(Number(v) || 0)} />
+              <SelectField
+                id="trc-age"
+                label="Age group"
+                value={ageBand}
+                onChange={setAgeBand}
+                options={INDIA_AGE_BANDS.map(({ value, label }) => ({ value, label }))}
+                hint="The old regime's basic exemption rises to ₹3,00,000 at 60 and ₹5,00,000 at 80. The new regime does not change with age."
+              />
             </div>
           </Card>
 
@@ -192,7 +206,7 @@ const TaxRegimeComparisonCalculator = () => {
           <EEATPanel
             author={editorialProfiles.researchTeam}
             reviewer="Tax Policy Review Desk (Upaman)"
-            reviewedOn="June 28, 2026"
+            reviewedOn={LAST_REVIEWED}
             scope="This tool compares old vs new Indian tax regime for FY 2026-27 using slab math, standard deductions, cess, rebate, and marginal-relief checks."
             sources={eeatSources}
           />

@@ -8,6 +8,7 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { formatCurrency } from '../../utils/calculations';
+import { useShareableState, toNumber } from '../../utils/shareableState';
 
 const getMonthlyPayment = (principal, annualRate, months) => {
   if (principal <= 0 || months <= 0) return 0;
@@ -51,15 +52,30 @@ const getPayoffDate = (months) => {
   return date.toLocaleString('en-US', { month: 'long', year: 'numeric' });
 };
 
+const DEFAULT_INPUTS = {
+  vehiclePrice: 38000,
+  downPayment: 5000,
+  tradeInValue: 3000,
+  salesTaxRate: 7,
+  dealerFees: 1200,
+  apr: 6.5,
+  termMonths: 60
+};
+
 const USAutoLoanCalculator = () => {
-  const [inputs, setInputs] = useState({
-    vehiclePrice: 38000,
-    downPayment: 5000,
-    tradeInValue: 3000,
-    salesTaxRate: 7,
-    dealerFees: 1200,
-    apr: 6.5,
-    termMonths: 60
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) =>
+      setInputs((prev) => {
+        const restored = { ...prev };
+        Object.entries(shared).forEach(([key, raw]) => {
+          restored[key] = toNumber(raw, DEFAULT_INPUTS[key]);
+        });
+        return restored;
+      })
   });
 
   const results = useMemo(() => {

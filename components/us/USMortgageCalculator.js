@@ -8,6 +8,7 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { formatCurrency } from '../../utils/calculations';
+import { useShareableState, toNumber } from '../../utils/shareableState';
 
 const getMonthlyPayment = (principal, annualRate, months) => {
   if (principal <= 0 || months <= 0) return 0;
@@ -46,17 +47,32 @@ const MORTGAGE_FAQS = [
   }
 ];
 
+const DEFAULT_INPUTS = {
+  homePrice: 450000,
+  downPayment: 90000,
+  interestRate: 6.75,
+  loanTermYears: 30,
+  propertyTaxRate: 1.1,
+  homeInsuranceAnnual: 1800,
+  hoaMonthly: 150,
+  pmiRate: 0.6,
+  monthlyGrossIncome: 9000
+};
+
 const USMortgageCalculator = () => {
-  const [inputs, setInputs] = useState({
-    homePrice: 450000,
-    downPayment: 90000,
-    interestRate: 6.75,
-    loanTermYears: 30,
-    propertyTaxRate: 1.1,
-    homeInsuranceAnnual: 1800,
-    hoaMonthly: 150,
-    pmiRate: 0.6,
-    monthlyGrossIncome: 9000
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) =>
+      setInputs((prev) => {
+        const restored = { ...prev };
+        Object.entries(shared).forEach(([key, raw]) => {
+          restored[key] = toNumber(raw, DEFAULT_INPUTS[key]);
+        });
+        return restored;
+      })
   });
 
   const results = useMemo(() => {

@@ -11,6 +11,7 @@ import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { cn } from '../ui/cn';
 import { SALARY_SYSTEMS, computeEuropeanSalary } from '../../utils/europeanSalaryCalculations';
+import { useShareableState, toNumericString, toOption } from '../../utils/shareableState';
 
 const FAQ = [
   { question: 'How accurate are these salary calculations?', answer: 'These calculations use the tax rates and standard deductions configured in this calculator. Actual take-home pay may vary based on personal circumstances, allowances, and local variations. Consult a tax professional for precise calculations.' },
@@ -203,6 +204,9 @@ const COUNTRY_CONTENT = {
   }
 };
 
+const SHARE_DEFAULTS = { grossSalary: '', country: 'UK', frequency: 'annual' };
+const PINNED_SHARE_DEFAULTS = { grossSalary: '', frequency: 'annual' };
+
 const EuropeanSalaryCalculator = ({
   onBack,
   forcedCountry = null,
@@ -217,6 +221,23 @@ const EuropeanSalaryCalculator = ({
   const [country, setCountry] = useState(forcedCountry || 'UK');
   const [frequency, setFrequency] = useState('annual'); // annual, monthly
   const [results, setResults] = useState(null);
+
+  // The country-specific pages (/germany-salary-calculator and friends) pin the
+  // country, so it must not become a shared param there — a link that silently
+  // switched country would contradict the page it sits on.
+  const shareDefaults = forcedCountry ? PINNED_SHARE_DEFAULTS : SHARE_DEFAULTS;
+
+  useShareableState({
+    values: forcedCountry ? { grossSalary, frequency } : { grossSalary, country, frequency },
+    defaults: shareDefaults,
+    onRestore: (shared) => {
+      if ('grossSalary' in shared) setGrossSalary(toNumericString(shared.grossSalary, ''));
+      if ('frequency' in shared) setFrequency(toOption(shared.frequency, ['annual', 'monthly'], 'annual'));
+      if ('country' in shared && !forcedCountry) {
+        setCountry(toOption(shared.country, Object.keys(SALARY_SYSTEMS), 'UK'));
+      }
+    }
+  });
 
   useEffect(() => {
     if (forcedCountry) {

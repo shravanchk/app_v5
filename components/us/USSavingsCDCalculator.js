@@ -8,6 +8,7 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { formatCurrency } from '../../utils/calculations';
+import { useShareableState, toNumber } from '../../utils/shareableState';
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
 
@@ -69,15 +70,30 @@ const projectCD = (deposit, apy, termMonths) => {
   return { maturityValue, interestEarned };
 };
 
+const DEFAULT_INPUTS = {
+  savingsInitialDeposit: 10000,
+  savingsMonthlyContribution: 500,
+  savingsApy: 4.5,
+  savingsYears: 5,
+  cdDeposit: 15000,
+  cdApy: 5.1,
+  cdTermMonths: 12
+};
+
 const USSavingsCDCalculator = () => {
-  const [inputs, setInputs] = useState({
-    savingsInitialDeposit: 10000,
-    savingsMonthlyContribution: 500,
-    savingsApy: 4.5,
-    savingsYears: 5,
-    cdDeposit: 15000,
-    cdApy: 5.1,
-    cdTermMonths: 12
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) =>
+      setInputs((prev) => {
+        const restored = { ...prev };
+        Object.entries(shared).forEach(([key, raw]) => {
+          restored[key] = toNumber(raw, DEFAULT_INPUTS[key]);
+        });
+        return restored;
+      })
   });
 
   const savingsResult = useMemo(

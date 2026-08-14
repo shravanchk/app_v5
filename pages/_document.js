@@ -11,7 +11,34 @@ export default function Document() {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-SXZKYDXLKW');
+
+              // Calculators keep their inputs in the query string so results can be
+              // shared and bookmarked. Those inputs are salaries, loan balances and
+              // debts, and page_location would otherwise carry them to Analytics on
+              // every page_view. Keep only the attribution params we actually report
+              // on and drop the rest before anything is sent.
+              var UPAMAN_ANALYTICS_PARAMS = [
+                'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+                'gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'ref'
+              ];
+              window.upamanCleanLocation = function () {
+                try {
+                  var url = new URL(window.location.href);
+                  var kept = new URLSearchParams();
+                  UPAMAN_ANALYTICS_PARAMS.forEach(function (key) {
+                    var value = url.searchParams.get(key);
+                    if (value) kept.set(key, value);
+                  });
+                  var query = kept.toString();
+                  return url.origin + url.pathname + (query ? '?' + query : '');
+                } catch (error) {
+                  return window.location.origin + window.location.pathname;
+                }
+              };
+
+              gtag('config', 'G-SXZKYDXLKW', {
+                page_location: window.upamanCleanLocation()
+              });
             `
           }}
         />

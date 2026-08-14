@@ -11,6 +11,7 @@ import Card from '../ui/Card';
 import {
   computePaycheck, US_STATES, FILING_STATUSES, PAY_FREQUENCIES, FICA_2026, stateSlug
 } from '../../utils/usPaycheckCalculations';
+import { useShareableState, toNumericString, toOption } from '../../utils/shareableState';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 
@@ -68,12 +69,38 @@ function HundredBar({ result }) {
 const fmtUSD = (v, digits = 0) =>
   `$${Number(v || 0).toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits })}`;
 
+const SHARE_DEFAULTS = {
+  salary: '75000',
+  stateCode: 'TX',
+  filingStatus: 'single',
+  frequency: 'monthly',
+  retirementPct: '0'
+};
+
 const USPaycheckCalculator = () => {
-  const [salary, setSalary] = useState('75000');
-  const [stateCode, setStateCode] = useState('TX');
-  const [filingStatus, setFilingStatus] = useState('single');
-  const [frequency, setFrequency] = useState('monthly');
-  const [retirementPct, setRetirementPct] = useState('0');
+  const [salary, setSalary] = useState(SHARE_DEFAULTS.salary);
+  const [stateCode, setStateCode] = useState(SHARE_DEFAULTS.stateCode);
+  const [filingStatus, setFilingStatus] = useState(SHARE_DEFAULTS.filingStatus);
+  const [frequency, setFrequency] = useState(SHARE_DEFAULTS.frequency);
+  const [retirementPct, setRetirementPct] = useState(SHARE_DEFAULTS.retirementPct);
+
+  useShareableState({
+    values: { salary, stateCode, filingStatus, frequency, retirementPct },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('salary' in shared) setSalary(toNumericString(shared.salary, SHARE_DEFAULTS.salary));
+      if ('retirementPct' in shared) setRetirementPct(toNumericString(shared.retirementPct, SHARE_DEFAULTS.retirementPct));
+      // The state and frequency lookups index straight into their tables, so an
+      // unknown code would throw rather than degrade.
+      if ('stateCode' in shared) setStateCode(toOption(shared.stateCode, Object.keys(US_STATES), SHARE_DEFAULTS.stateCode));
+      if ('filingStatus' in shared) {
+        setFilingStatus(toOption(shared.filingStatus, FILING_STATUSES.map((s) => s.value), SHARE_DEFAULTS.filingStatus));
+      }
+      if ('frequency' in shared) {
+        setFrequency(toOption(shared.frequency, PAY_FREQUENCIES.map((f) => f.value), SHARE_DEFAULTS.frequency));
+      }
+    }
+  });
 
   const result = useMemo(() => computePaycheck({
     grossAnnual: parseFloat(salary) || 0,
@@ -134,6 +161,8 @@ const USPaycheckCalculator = () => {
         eyebrow="United States · Salary"
         title="US Paycheck Calculator"
         subtitle="See your 2026 take-home pay after federal income tax, Social Security, Medicare, and state tax — for any state, filing status, and 401(k) contribution."
+        ratesFor="tax year 2026"
+        reviewedOn="June 2026"
       >
         <div className="grid gap-5 lg:grid-cols-5">
           <Card className="p-5 lg:col-span-2">

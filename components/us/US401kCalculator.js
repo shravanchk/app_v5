@@ -8,6 +8,7 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { formatCurrency } from '../../utils/calculations';
+import { useShareableState, toNumber } from '../../utils/shareableState';
 
 const formatUSD = (value) => formatCurrency(Number(value) || 0, 'USD');
 
@@ -41,17 +42,32 @@ const K401_FAQS = [
   }
 ];
 
+const DEFAULT_INPUTS = {
+  currentAge: 32,
+  retirementAge: 65,
+  currentBalance: 45000,
+  annualSalary: 90000,
+  employeeContributionPercent: 10,
+  employerMatchPercent: 50,
+  employerMatchCapPercent: 6,
+  annualReturn: 7,
+  annualSalaryGrowth: 3
+};
+
 const US401kCalculator = () => {
-  const [inputs, setInputs] = useState({
-    currentAge: 32,
-    retirementAge: 65,
-    currentBalance: 45000,
-    annualSalary: 90000,
-    employeeContributionPercent: 10,
-    employerMatchPercent: 50,
-    employerMatchCapPercent: 6,
-    annualReturn: 7,
-    annualSalaryGrowth: 3
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) =>
+      setInputs((prev) => {
+        const restored = { ...prev };
+        Object.entries(shared).forEach(([key, raw]) => {
+          restored[key] = toNumber(raw, DEFAULT_INPUTS[key]);
+        });
+        return restored;
+      })
   });
 
   const [showFullProjection, setShowFullProjection] = useState(false);

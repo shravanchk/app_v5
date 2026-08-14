@@ -8,6 +8,7 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField, SelectField } from '../ui/Field';
 import Card from '../ui/Card';
 import { formatINR } from '../../utils/calculations';
+import { useShareableState, restoreValues } from '../../utils/shareableState';
 import { buildFaqSchema } from '../../utils/faqSchema';
 
 const PPF_CONTRIBUTION_LIMIT = 150000;
@@ -82,8 +83,18 @@ const softwareSchema = {
   featureList: ['PPF maturity calculator', 'Year-wise projection table', 'Interest breakdown', 'Annual step-up option'],
 };
 
+const DEFAULT_INPUTS = { annualContribution: 150000, annualRate: 7.1, tenureYears: 15, annualStepUp: 0, contributionMode: 'monthly' };
+
+const SHARED_OPTIONS = { contributionMode: contributionModes.map((mode) => mode.value) };
+
 const PPFCalculator = () => {
-  const [inputs, setInputs] = useState({ annualContribution: 150000, annualRate: 7.1, tenureYears: 15, annualStepUp: 0, contributionMode: 'monthly' });
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) => setInputs((prev) => restoreValues(prev, shared, DEFAULT_INPUTS, SHARED_OPTIONS))
+  });
   const [showFullProjection, setShowFullProjection] = useState(false);
   const results = useMemo(() => calculatePPFProjection(inputs), [inputs]);
 

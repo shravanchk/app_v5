@@ -12,12 +12,66 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
+import { useShareableState, toNumber, toOption, toBoolean } from '../../utils/shareableState';
+
+const SHARE_TABS = ['ctc-breakdown', 'salary-comparison'];
+const SHARE_CITIES = ['metro', 'nonMetro'];
+
+const LAST_REVIEWED = 'June 28, 2026';
+
+const SHARE_DEFAULTS = {
+  tab: 'ctc-breakdown',
+  ctc: 1200000,
+  city: 'metro',
+  hasHRA: true,
+  pf: 12,
+  gratuity: true,
+  ptax: true,
+  cmpCurrent: 800000,
+  cmpNew: 1200000,
+  cmpCurrentCity: 'metro',
+  cmpNewCity: 'metro'
+};
 const { calculateIndianIncomeTax } = require('../../utils/taxCalculations');
 
 const SalaryCalculator = () => {
-  const [activeTab, setActiveTab] = useState('ctc-breakdown');
+  const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
   const [ctcParams, setCTCParams] = useState({ annualCTC: 1200000, city: 'metro', hasHRA: true, pfContribution: 12, gratuityApplicable: true, professionalTax: true });
   const [comparisonParams, setComparisonParams] = useState({ currentSalary: 800000, newSalary: 1200000, currentCity: 'metro', newCity: 'metro' });
+
+  useShareableState({
+    values: {
+      tab: activeTab,
+      ctc: ctcParams.annualCTC,
+      city: ctcParams.city,
+      hasHRA: ctcParams.hasHRA,
+      pf: ctcParams.pfContribution,
+      gratuity: ctcParams.gratuityApplicable,
+      ptax: ctcParams.professionalTax,
+      cmpCurrent: comparisonParams.currentSalary,
+      cmpNew: comparisonParams.newSalary,
+      cmpCurrentCity: comparisonParams.currentCity,
+      cmpNewCity: comparisonParams.newCity
+    },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('tab' in shared) setActiveTab(toOption(shared.tab, SHARE_TABS, SHARE_DEFAULTS.tab));
+      setCTCParams((prev) => ({
+        annualCTC: toNumber(shared.ctc, prev.annualCTC),
+        city: toOption(shared.city, SHARE_CITIES, prev.city),
+        hasHRA: toBoolean(shared.hasHRA, prev.hasHRA),
+        pfContribution: toNumber(shared.pf, prev.pfContribution),
+        gratuityApplicable: toBoolean(shared.gratuity, prev.gratuityApplicable),
+        professionalTax: toBoolean(shared.ptax, prev.professionalTax)
+      }));
+      setComparisonParams((prev) => ({
+        currentSalary: toNumber(shared.cmpCurrent, prev.currentSalary),
+        newSalary: toNumber(shared.cmpNew, prev.newSalary),
+        currentCity: toOption(shared.cmpCurrentCity, SHARE_CITIES, prev.currentCity),
+        newCity: toOption(shared.cmpNewCity, SHARE_CITIES, prev.newCity)
+      }));
+    }
+  });
   const [ctcResult, setCTCResult] = useState(null);
   const [comparisonResult, setComparisonResult] = useState(null);
 
@@ -135,7 +189,7 @@ const SalaryCalculator = () => {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 
-      <CalcLayout eyebrow="Salary" title="Salary Calculator" subtitle="Turn your CTC into a realistic monthly take-home with a full deduction breakdown, or compare two offers across cities. Tax modelled on FY 2026-27 new regime.">
+      <CalcLayout eyebrow="Salary" title="Salary Calculator" subtitle="Turn your CTC into a realistic monthly take-home with a full deduction breakdown, or compare two offers across cities. Tax modelled on FY 2026-27 new regime." ratesFor="FY 2026-27" reviewedOn={LAST_REVIEWED}>
         <div className="mb-6">
           <Tabs tabs={[{ id: 'ctc-breakdown', label: 'CTC → in-hand' }, { id: 'salary-comparison', label: 'Compare offers' }]} active={activeTab} onChange={setActiveTab} />
         </div>
@@ -205,7 +259,7 @@ const SalaryCalculator = () => {
                     <ResultStat label="Salary increase" value={formatCurrency(comparisonResult.salaryIncrease)} />
                     <ResultStat label="Real increase (adj.)" value={formatCurrency(Math.round(comparisonResult.realIncrease))} />
                   </div>
-                  <Card className="p-5"><ComparisonBars title="Cost-adjusted salary" items={[{ label: 'Current (adjusted)', value: Math.round(comparisonResult.currentAdjustedSalary), color: '#6366f1' }, { label: 'New offer (adjusted)', value: Math.round(comparisonResult.newAdjustedSalary), color: '#2563eb' }]} formatter={formatCurrency} /></Card>
+                  <Card className="p-5"><ComparisonBars title="Cost-adjusted salary" items={[{ label: 'Current (adjusted)', value: Math.round(comparisonResult.currentAdjustedSalary), color: '#6366f1' }, { label: 'New offer (adjusted)', value: Math.round(comparisonResult.newAdjustedSalary), color: '#1d4e89' }]} formatter={formatCurrency} /></Card>
                   <p className="text-sm text-ink-muted dark:text-slate-400">Cost-adjusted figures normalize each salary by city cost of living, so a raise into a pricier city may be smaller in real terms.</p>
                   <ResultActions title="Offer comparison summary" summaryLines={comparisonShareLines} fileName="upaman-offer-comparison.txt" />
                 </>
@@ -218,13 +272,13 @@ const SalaryCalculator = () => {
           <EEATPanel
             author={editorialProfiles.researchTeam}
             reviewer="Compensation and Payroll Review Desk (Upaman)"
-            reviewedOn="June 28, 2026"
+            reviewedOn={LAST_REVIEWED}
             scope="Salary outputs are planning estimates based on modeled structure, deduction assumptions, and city normalization."
             sources={[{ label: 'EPFO', url: 'https://www.epfindia.gov.in/' }, { label: 'Income Tax Department', url: 'https://www.incometax.gov.in/' }, { label: 'RBI Financial Education', url: 'https://www.rbi.org.in/financialeducation/' }]}
           />
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
-            reviewedOn="June 28, 2026"
+            reviewedOn={LAST_REVIEWED}
             inputs={['Annual CTC, city type, PF %, optional HRA/gratuity/professional-tax toggles', 'Salary comparison uses current offer, new offer, and city cost multipliers']}
             formulas={['Component split model: basic + HRA + allowance with deduction roll-up', 'Illustrative tax and statutory deduction estimation for take-home projection', 'City comparison uses normalization multipliers for cost-adjusted change']}
             assumptions={['Salary structures vary by employer; this is a planning model, not payroll output', 'Tax and deduction estimates are simplified for quick decision support', 'Professional tax/benefit treatment can differ by state and payroll policy']}

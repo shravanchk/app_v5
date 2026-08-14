@@ -1,9 +1,37 @@
+// The old regime raises the basic exemption with age: ₹3,00,000 from 60 and
+// ₹5,00,000 from 80. The new regime has no equivalent relief, which is one
+// reason the old regime can still win for older taxpayers.
 const INDIA_OLD_SLABS = [
   { min: 0, max: 250000, rate: 0 },
   { min: 250000, max: 500000, rate: 5 },
   { min: 500000, max: 1000000, rate: 20 },
   { min: 1000000, max: Number.POSITIVE_INFINITY, rate: 30 }
 ];
+
+const INDIA_OLD_SLABS_SENIOR = [
+  { min: 0, max: 300000, rate: 0 },
+  { min: 300000, max: 500000, rate: 5 },
+  { min: 500000, max: 1000000, rate: 20 },
+  { min: 1000000, max: Number.POSITIVE_INFINITY, rate: 30 }
+];
+
+const INDIA_OLD_SLABS_SUPER_SENIOR = [
+  { min: 0, max: 500000, rate: 0 },
+  { min: 500000, max: 1000000, rate: 20 },
+  { min: 1000000, max: Number.POSITIVE_INFINITY, rate: 30 }
+];
+
+const INDIA_AGE_BANDS = [
+  { value: 'below60', label: 'Below 60', exemption: 250000 },
+  { value: 'senior', label: '60 to 79 (senior citizen)', exemption: 300000 },
+  { value: 'superSenior', label: '80 and above (super senior)', exemption: 500000 }
+];
+
+const oldRegimeSlabsFor = (ageBand) => {
+  if (ageBand === 'senior') return INDIA_OLD_SLABS_SENIOR;
+  if (ageBand === 'superSenior') return INDIA_OLD_SLABS_SUPER_SENIOR;
+  return INDIA_OLD_SLABS;
+};
 
 const INDIA_NEW_SLABS = [
   { min: 0, max: 400000, rate: 0 },
@@ -31,8 +59,10 @@ const calculateSlabTax = (income, slabs) => {
   return { tax, breakdown };
 };
 
-const calculateIndianIncomeTax = (taxableIncome, regime) => {
-  const slabs = regime === 'old' ? INDIA_OLD_SLABS : INDIA_NEW_SLABS;
+// `ageBand` only affects the old regime. It defaults to 'below60' so existing
+// two-argument callers keep their previous behaviour.
+const calculateIndianIncomeTax = (taxableIncome, regime, ageBand = 'below60') => {
+  const slabs = regime === 'old' ? oldRegimeSlabsFor(ageBand) : INDIA_NEW_SLABS;
   const { tax: slabTax, breakdown } = calculateSlabTax(Math.max(0, taxableIncome), slabs);
   let rebate = 0;
   let marginalRelief = 0;
@@ -152,6 +182,10 @@ const calculateUKTax = ({ grossIncome, pensionContribution = 0, region = 'englan
 
 module.exports = {
   INDIA_OLD_SLABS,
+  INDIA_OLD_SLABS_SENIOR,
+  INDIA_OLD_SLABS_SUPER_SENIOR,
+  INDIA_AGE_BANDS,
+  oldRegimeSlabsFor,
   INDIA_NEW_SLABS,
   UK_TAX_YEAR,
   UK_STUDENT_LOAN_RATES,

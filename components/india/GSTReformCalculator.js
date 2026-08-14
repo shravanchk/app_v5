@@ -7,6 +7,7 @@ import CalcShell, { fieldStyles as f, resultStyles as r } from '../calculator/Ca
 import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
+import { useShareableState, restoreValues } from '../../utils/shareableState';
 
 const OLD_RATES = [5, 12, 18, 28];
 const NEW_RATES = [0, 5, 18, 40];
@@ -35,8 +36,18 @@ const faqItems = [
   { question: 'Does a lower GST rate always mean a big saving?', answer: 'The saving is proportional to both the rate cut and the price. Moving an item from 12% to 5% saves about 6.25% of the old price; moving from 28% to 18% saves about 7.8%. On small purchases the rupee amount is modest, but on big-ticket goods it adds up quickly.' }
 ];
 
+const DEFAULT_INPUTS = { amount: 1000, mode: 'base', oldRate: 28, newRate: 18 };
+
+const SHARED_OPTIONS = { mode: ['base', 'inclusive'] };
+
 const GSTReformCalculator = () => {
-  const [inputs, setInputs] = useState({ amount: 1000, mode: 'base', oldRate: 28, newRate: 18 });
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) => setInputs((prev) => restoreValues(prev, shared, DEFAULT_INPUTS, SHARED_OPTIONS))
+  });
   const res = useMemo(() => compute(inputs), [inputs]);
   const set = (k, v) => setInputs((p) => ({ ...p, [k]: v }));
   const cheaper = res.savings >= 0;

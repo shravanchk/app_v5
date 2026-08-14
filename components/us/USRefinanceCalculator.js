@@ -8,6 +8,7 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { formatCurrency } from '../../utils/calculations';
+import { useShareableState, toNumber } from '../../utils/shareableState';
 
 const getMonthlyPayment = (principal, annualRate, months) => {
   if (principal <= 0 || months <= 0) return 0;
@@ -54,14 +55,29 @@ const formatMonths = (months) => {
   return `${years} years ${remaining} months`;
 };
 
+const DEFAULT_INPUTS = {
+  currentBalance: 320000,
+  currentRate: 7.25,
+  remainingTermMonths: 300,
+  newRate: 6.25,
+  newTermMonths: 300,
+  closingCosts: 5500
+};
+
 const USRefinanceCalculator = () => {
-  const [inputs, setInputs] = useState({
-    currentBalance: 320000,
-    currentRate: 7.25,
-    remainingTermMonths: 300,
-    newRate: 6.25,
-    newTermMonths: 300,
-    closingCosts: 5500
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) =>
+      setInputs((prev) => {
+        const restored = { ...prev };
+        Object.entries(shared).forEach(([key, raw]) => {
+          restored[key] = toNumber(raw, DEFAULT_INPUTS[key]);
+        });
+        return restored;
+      })
   });
 
   const results = useMemo(() => {

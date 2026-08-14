@@ -12,13 +12,71 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
+import { useShareableState, toNumber, toOption } from '../../utils/shareableState';
+
+// Per-tab prefixes keep the three input groups from colliding on shared names
+// like annualReturn, and the active tab travels with them.
+const SHARE_TABS = ['sip', 'goal', 'comparison'];
+
+const SHARE_DEFAULTS = {
+  tab: 'sip',
+  sipMonthly: 5000,
+  sipReturn: 12,
+  sipYears: 10,
+  sipStepUp: 0,
+  goalTarget: 1000000,
+  goalReturn: 12,
+  goalYears: 10,
+  cmpMonthly: 5000,
+  cmpLumpsum: 600000,
+  cmpReturn: 12,
+  cmpYears: 10
+};
 
 const SIPCalculator = () => {
-  const [activeTab, setActiveTab] = useState('sip');
+  const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
 
   const [sipParams, setSipParams] = useState({ monthlyInvestment: 5000, annualReturn: 12, investmentPeriod: 10, stepUpPercentage: 0 });
   const [goalParams, setGoalParams] = useState({ targetAmount: 1000000, annualReturn: 12, investmentPeriod: 10 });
   const [comparisonParams, setComparisonParams] = useState({ monthlyAmount: 5000, lumpsumAmount: 600000, annualReturn: 12, investmentPeriod: 10 });
+
+  useShareableState({
+    values: {
+      tab: activeTab,
+      sipMonthly: sipParams.monthlyInvestment,
+      sipReturn: sipParams.annualReturn,
+      sipYears: sipParams.investmentPeriod,
+      sipStepUp: sipParams.stepUpPercentage,
+      goalTarget: goalParams.targetAmount,
+      goalReturn: goalParams.annualReturn,
+      goalYears: goalParams.investmentPeriod,
+      cmpMonthly: comparisonParams.monthlyAmount,
+      cmpLumpsum: comparisonParams.lumpsumAmount,
+      cmpReturn: comparisonParams.annualReturn,
+      cmpYears: comparisonParams.investmentPeriod
+    },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('tab' in shared) setActiveTab(toOption(shared.tab, SHARE_TABS, SHARE_DEFAULTS.tab));
+      setSipParams((prev) => ({
+        monthlyInvestment: toNumber(shared.sipMonthly, prev.monthlyInvestment),
+        annualReturn: toNumber(shared.sipReturn, prev.annualReturn),
+        investmentPeriod: toNumber(shared.sipYears, prev.investmentPeriod),
+        stepUpPercentage: toNumber(shared.sipStepUp, prev.stepUpPercentage)
+      }));
+      setGoalParams((prev) => ({
+        targetAmount: toNumber(shared.goalTarget, prev.targetAmount),
+        annualReturn: toNumber(shared.goalReturn, prev.annualReturn),
+        investmentPeriod: toNumber(shared.goalYears, prev.investmentPeriod)
+      }));
+      setComparisonParams((prev) => ({
+        monthlyAmount: toNumber(shared.cmpMonthly, prev.monthlyAmount),
+        lumpsumAmount: toNumber(shared.cmpLumpsum, prev.lumpsumAmount),
+        annualReturn: toNumber(shared.cmpReturn, prev.annualReturn),
+        investmentPeriod: toNumber(shared.cmpYears, prev.investmentPeriod)
+      }));
+    }
+  });
 
   const [sipResult, setSipResult] = useState(null);
   const [goalResult, setGoalResult] = useState(null);

@@ -28,7 +28,7 @@ const NotFoundPage = () => {
           color: '#ffffff',
           textDecoration: 'none',
           fontWeight: 600,
-          background: 'linear-gradient(135deg, #3b82f6, #2563eb)'
+          background: 'linear-gradient(135deg, #326cae, #1d4e89)'
         }}
       >
         Back to Home

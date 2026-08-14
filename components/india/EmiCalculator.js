@@ -15,15 +15,64 @@ import Card from '../ui/Card';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 import { formatINR } from '../../utils/calculations';
+import { useShareableState, toNumber, toOption } from '../../utils/shareableState';
+
+const SHARE_TABS = ['emi', 'prepayment'];
+const SHARE_UNITS = ['years', 'months'];
+
+const SHARE_DEFAULTS = {
+  tab: 'emi',
+  loan: 2500000,
+  rate: 8.5,
+  tenure: 20,
+  unit: 'years',
+  ppOutstanding: 2577227,
+  ppEmi: 25601,
+  ppRemaining: 14.3,
+  ppUnit: 'years',
+  ppRate: 8.25
+};
 
 const ComprehensiveLoanCalculator = React.memo(() => {
-  const [activeTab, setActiveTab] = useState('emi');
+  const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
   const [emiParams, setEmiParams] = useState({ loanAmount: 2500000, interestRate: 8.5, loanTenure: 20, tenureUnit: 'years' });
   const [emiResult, setEmiResult] = useState(null);
   const [showAmortization, setShowAmortization] = useState(false);
   const [amortizationData, setAmortizationData] = useState([]);
 
   const [prepaymentParams, setPrepaymentParams] = useState({ outstandingAmount: 2577227, currentEMI: 25601, remainingMonths: 14.3, remainingTenureUnit: 'years', interestRate: 8.25 });
+
+  useShareableState({
+    values: {
+      tab: activeTab,
+      loan: emiParams.loanAmount,
+      rate: emiParams.interestRate,
+      tenure: emiParams.loanTenure,
+      unit: emiParams.tenureUnit,
+      ppOutstanding: prepaymentParams.outstandingAmount,
+      ppEmi: prepaymentParams.currentEMI,
+      ppRemaining: prepaymentParams.remainingMonths,
+      ppUnit: prepaymentParams.remainingTenureUnit,
+      ppRate: prepaymentParams.interestRate
+    },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('tab' in shared) setActiveTab(toOption(shared.tab, SHARE_TABS, SHARE_DEFAULTS.tab));
+      setEmiParams((prev) => ({
+        loanAmount: toNumber(shared.loan, prev.loanAmount),
+        interestRate: toNumber(shared.rate, prev.interestRate),
+        loanTenure: toNumber(shared.tenure, prev.loanTenure),
+        tenureUnit: toOption(shared.unit, SHARE_UNITS, prev.tenureUnit)
+      }));
+      setPrepaymentParams((prev) => ({
+        outstandingAmount: toNumber(shared.ppOutstanding, prev.outstandingAmount),
+        currentEMI: toNumber(shared.ppEmi, prev.currentEMI),
+        remainingMonths: toNumber(shared.ppRemaining, prev.remainingMonths),
+        remainingTenureUnit: toOption(shared.ppUnit, SHARE_UNITS, prev.remainingTenureUnit),
+        interestRate: toNumber(shared.ppRate, prev.interestRate)
+      }));
+    }
+  });
   const [scenarios, setScenarios] = useState([]);
   const [customPrepayment, setCustomPrepayment] = useState('');
   const [customResult, setCustomResult] = useState(null);

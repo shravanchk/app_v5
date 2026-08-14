@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Head from 'next/head';
 import AffiliateRecommendations from '../AffiliateRecommendations';
 import CalculatorInfoPanel from '../CalculatorInfoPanel';
@@ -13,30 +13,97 @@ import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
-const { calculateIndianIncomeTax } = require('../../utils/taxCalculations');
+import { useShareableState, toNumber, toOption } from '../../utils/shareableState';
+
+const SHARE_TABS = ['salary-tax', 'business-tax', 'tax-comparison'];
+const SHARE_REGIMES = ['new', 'old'];
+
+const LAST_REVIEWED = 'June 28, 2026';
+
+const SHARE_DEFAULTS = {
+  tab: 'salary-tax',
+  ageBand: 'below60',
+  salary: 1200000,
+  regime: 'new',
+  hra: 0,
+  rent: 0,
+  s80c: 150000,
+  s80d: 25000,
+  nps: 50000,
+  homeLoan: 0,
+  otherDeductions: 0,
+  bizGross: 2000000,
+  bizExpenses: 500000,
+  bizDepreciation: 50000,
+  bizOther: 0,
+  bizAdvanceTax: 0,
+  cmpIncome: 800000,
+  cmpDeductions: 0
+};
+const { calculateIndianIncomeTax, INDIA_AGE_BANDS } = require('../../utils/taxCalculations');
+
+const AGE_BAND_VALUES = INDIA_AGE_BANDS.map((band) => band.value);
 
 const IncomeTaxCalculator = () => {
-  const [activeTab, setActiveTab] = useState('salary-tax');
+  const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
+  // Age is a property of the taxpayer, not of a tab, so both tabs share it.
+  const [ageBand, setAgeBand] = useState(SHARE_DEFAULTS.ageBand);
   const [comparisonParams, setComparisonParams] = useState({ annualIncome: 800000, deductions: 0 });
   const [comparisonResult, setComparisonResult] = useState(null);
   const [salaryParams, setSalaryParams] = useState({ annualSalary: 1200000, regime: 'new', hra: 0, rentPaid: 0, section80C: 150000, section80D: 25000, nps: 50000, homeLoanInterest: 0, otherDeductions: 0 });
   const [businessParams, setBusinessParams] = useState({ grossIncome: 2000000, businessExpenses: 500000, depreciation: 50000, otherDeductions: 0, advanceTax: 0 });
+
+  useShareableState({
+    values: {
+      tab: activeTab,
+      ageBand,
+      salary: salaryParams.annualSalary,
+      regime: salaryParams.regime,
+      hra: salaryParams.hra,
+      rent: salaryParams.rentPaid,
+      s80c: salaryParams.section80C,
+      s80d: salaryParams.section80D,
+      nps: salaryParams.nps,
+      homeLoan: salaryParams.homeLoanInterest,
+      otherDeductions: salaryParams.otherDeductions,
+      bizGross: businessParams.grossIncome,
+      bizExpenses: businessParams.businessExpenses,
+      bizDepreciation: businessParams.depreciation,
+      bizOther: businessParams.otherDeductions,
+      bizAdvanceTax: businessParams.advanceTax,
+      cmpIncome: comparisonParams.annualIncome,
+      cmpDeductions: comparisonParams.deductions
+    },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('tab' in shared) setActiveTab(toOption(shared.tab, SHARE_TABS, SHARE_DEFAULTS.tab));
+      if ('ageBand' in shared) setAgeBand(toOption(shared.ageBand, AGE_BAND_VALUES, SHARE_DEFAULTS.ageBand));
+      setSalaryParams((prev) => ({
+        annualSalary: toNumber(shared.salary, prev.annualSalary),
+        regime: toOption(shared.regime, SHARE_REGIMES, prev.regime),
+        hra: toNumber(shared.hra, prev.hra),
+        rentPaid: toNumber(shared.rent, prev.rentPaid),
+        section80C: toNumber(shared.s80c, prev.section80C),
+        section80D: toNumber(shared.s80d, prev.section80D),
+        nps: toNumber(shared.nps, prev.nps),
+        homeLoanInterest: toNumber(shared.homeLoan, prev.homeLoanInterest),
+        otherDeductions: toNumber(shared.otherDeductions, prev.otherDeductions)
+      }));
+      setBusinessParams((prev) => ({
+        grossIncome: toNumber(shared.bizGross, prev.grossIncome),
+        businessExpenses: toNumber(shared.bizExpenses, prev.businessExpenses),
+        depreciation: toNumber(shared.bizDepreciation, prev.depreciation),
+        otherDeductions: toNumber(shared.bizOther, prev.otherDeductions),
+        advanceTax: toNumber(shared.bizAdvanceTax, prev.advanceTax)
+      }));
+      setComparisonParams((prev) => ({
+        annualIncome: toNumber(shared.cmpIncome, prev.annualIncome),
+        deductions: toNumber(shared.cmpDeductions, prev.deductions)
+      }));
+    }
+  });
   const [salaryTaxResult, setSalaryTaxResult] = useState(null);
   const [businessTaxResult, setBusinessTaxResult] = useState(null);
-
-  // FY 2026-27 (AY 2027-28). Budget 2026 retained the prior-year slab structure.
-  const taxSlabs = useMemo(() => ({
-    old: [
-      { min: 0, max: 250000, rate: 0 }, { min: 250000, max: 500000, rate: 5 },
-      { min: 500000, max: 1000000, rate: 20 }, { min: 1000000, max: Infinity, rate: 30 },
-    ],
-    new: [
-      { min: 0, max: 400000, rate: 0 }, { min: 400000, max: 800000, rate: 5 },
-      { min: 800000, max: 1200000, rate: 10 }, { min: 1200000, max: 1600000, rate: 15 },
-      { min: 1600000, max: 2000000, rate: 20 }, { min: 2000000, max: 2400000, rate: 25 },
-      { min: 2400000, max: Infinity, rate: 30 },
-    ],
-  }), []);
 
   const formatCurrency = (amount) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
   const num = (v) => Number(v) || 0;
@@ -57,7 +124,7 @@ const IncomeTaxCalculator = () => {
       deductions += Math.min(75000, annualSalary);
     }
     const taxableIncome = Math.max(0, annualSalary - deductions);
-    const taxResult = calculateIndianIncomeTax(taxableIncome, regime);
+    const taxResult = calculateIndianIncomeTax(taxableIncome, regime, ageBand);
     const finalTax = taxResult.totalTax;
     setSalaryTaxResult({
       grossSalary: annualSalary, totalDeductions: deductions, taxableIncome,
@@ -65,28 +132,28 @@ const IncomeTaxCalculator = () => {
       totalTax: finalTax, netSalary: annualSalary - finalTax, breakdown: taxResult.breakdown, regime,
       effectiveRate: annualSalary > 0 ? (finalTax / annualSalary) * 100 : 0,
     });
-  }, [salaryParams]);
+  }, [salaryParams, ageBand]);
 
   const calculateBusinessTax = useCallback(() => {
     const { grossIncome, businessExpenses, depreciation, otherDeductions, advanceTax } = businessParams;
     if (!grossIncome) return;
     const totalExpenses = businessExpenses + depreciation + otherDeductions;
     const netProfit = Math.max(0, grossIncome - totalExpenses);
-    const taxResult = calculateIndianIncomeTax(netProfit, 'old');
+    const taxResult = calculateIndianIncomeTax(netProfit, 'old', ageBand);
     const balanceTax = Math.max(0, taxResult.totalTax - advanceTax);
     setBusinessTaxResult({
       grossIncome, totalExpenses, netProfit, taxableIncome: netProfit,
       incomeTax: taxResult.slabTax, cess: taxResult.cess, totalTax: taxResult.totalTax, advanceTax, balanceTax,
       breakdown: taxResult.breakdown, effectiveRate: grossIncome > 0 ? (taxResult.totalTax / grossIncome) * 100 : 0,
     });
-  }, [businessParams]);
+  }, [businessParams, ageBand]);
 
   const calculateTaxComparison = useCallback(() => {
     const { annualIncome, deductions } = comparisonParams;
     if (!annualIncome || annualIncome <= 0) { setComparisonResult(null); return; }
     const oldRegimeTaxableIncome = Math.max(0, annualIncome - Math.min(50000, annualIncome) - deductions);
     const newRegimeTaxableIncome = Math.max(0, annualIncome - Math.min(75000, annualIncome));
-    const oldRegimeFinalTax = calculateIndianIncomeTax(oldRegimeTaxableIncome, 'old').totalTax;
+    const oldRegimeFinalTax = calculateIndianIncomeTax(oldRegimeTaxableIncome, 'old', ageBand).totalTax;
     const newRegimeFinalTax = calculateIndianIncomeTax(newRegimeTaxableIncome, 'new').totalTax;
     setComparisonResult({
       oldRegimeTax: oldRegimeFinalTax, newRegimeTax: newRegimeFinalTax,
@@ -94,7 +161,7 @@ const IncomeTaxCalculator = () => {
       betterRegime: oldRegimeFinalTax < newRegimeFinalTax ? 'old' : 'new',
       oldRegimeTakeHome: annualIncome - oldRegimeFinalTax, newRegimeTakeHome: annualIncome - newRegimeFinalTax,
     });
-  }, [comparisonParams]);
+  }, [comparisonParams, ageBand]);
 
   useEffect(() => { if (activeTab === 'salary-tax') calculateSalaryTax(); }, [activeTab, calculateSalaryTax]);
   useEffect(() => { if (activeTab === 'business-tax') calculateBusinessTax(); }, [activeTab, calculateBusinessTax]);
@@ -147,6 +214,9 @@ const IncomeTaxCalculator = () => {
   ];
 
   const regimeOptions = [{ value: 'new', label: 'New regime (default)' }, { value: 'old', label: 'Old regime' }];
+  const ageOptions = INDIA_AGE_BANDS.map(({ value, label }) => ({ value, label }));
+  const selectedBand = INDIA_AGE_BANDS.find((band) => band.value === ageBand) || INDIA_AGE_BANDS[0];
+  const oldRegimeAgeHint = `Old-regime basic exemption: ${formatCurrency(selectedBand.exemption)}.`;
   const Row = ({ label, value, strong, tone }) => (
     <div className={`flex justify-between py-1.5 text-sm ${strong ? 'font-semibold' : ''}`}>
       <span className="text-ink-muted dark:text-slate-400">{label}</span>
@@ -170,7 +240,7 @@ const IncomeTaxCalculator = () => {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 
-      <CalcLayout eyebrow="Taxes" title="Income Tax Calculator" subtitle="Estimate salary and business income tax for FY 2026-27, and compare the old and new regimes — with rebate, marginal relief and 4% cess.">
+      <CalcLayout eyebrow="Taxes" title="Income Tax Calculator" subtitle="Estimate salary and business income tax for FY 2026-27, and compare the old and new regimes — with rebate, marginal relief and 4% cess." ratesFor="FY 2026-27" reviewedOn={LAST_REVIEWED}>
         <div className="mb-6">
           <Tabs tabs={[{ id: 'salary-tax', label: 'Salary tax' }, { id: 'business-tax', label: 'Business tax' }, { id: 'tax-comparison', label: 'Old vs new' }]} active={activeTab} onChange={setActiveTab} />
         </div>
@@ -181,6 +251,14 @@ const IncomeTaxCalculator = () => {
               <div className="space-y-4">
                 <NumberField id="s-sal" label="Annual salary (gross)" prefix="₹" value={salaryParams.annualSalary} onChange={(v) => setSalaryParams((p) => ({ ...p, annualSalary: num(v) }))} />
                 <SelectField id="s-regime" label="Tax regime" value={salaryParams.regime} onChange={(v) => setSalaryParams((p) => ({ ...p, regime: v }))} options={regimeOptions} />
+                <SelectField
+                  id="s-age"
+                  label="Age group"
+                  value={ageBand}
+                  onChange={setAgeBand}
+                  options={ageOptions}
+                  hint={salaryParams.regime === 'old' ? oldRegimeAgeHint : 'The new regime uses one exemption limit for every age.'}
+                />
                 {salaryParams.regime === 'old' ? (
                   <>
                     <div className="grid grid-cols-2 gap-3">
@@ -273,6 +351,14 @@ const IncomeTaxCalculator = () => {
               <div className="space-y-4">
                 <NumberField id="c-inc" label="Annual income" prefix="₹" value={comparisonParams.annualIncome} onChange={(v) => setComparisonParams((p) => ({ ...p, annualIncome: num(v) }))} />
                 <NumberField id="c-ded" label="Old-regime deductions (80C, 80D, HRA, etc.)" prefix="₹" value={comparisonParams.deductions} onChange={(v) => setComparisonParams((p) => ({ ...p, deductions: num(v) }))} hint="Total deductions you'd claim under the old regime (excludes standard deduction)." />
+                <SelectField
+                  id="c-age"
+                  label="Age group"
+                  value={ageBand}
+                  onChange={setAgeBand}
+                  options={ageOptions}
+                  hint={`${oldRegimeAgeHint} Only the old regime varies by age, so this can change which regime wins.`}
+                />
               </div>
             </Card>
             <div className="space-y-5 lg:col-span-3">
@@ -293,7 +379,7 @@ const IncomeTaxCalculator = () => {
                   <div className="rounded-xl border border-brand-200 bg-brand-50/60 p-4 text-sm font-semibold text-ink dark:border-brand-800/60 dark:bg-brand-900/20 dark:text-slate-100">
                     {comparisonResult.betterRegime === 'old' ? 'Old' : 'New'} regime saves {formatCurrency(comparisonResult.taxDifference)} in tax.
                   </div>
-                  <Card className="p-5"><ComparisonBars title="Tax by regime" items={[{ label: 'Old regime tax', value: comparisonResult.oldRegimeTax, color: '#6366f1' }, { label: 'New regime tax', value: comparisonResult.newRegimeTax, color: '#2563eb' }]} formatter={formatCurrency} /></Card>
+                  <Card className="p-5"><ComparisonBars title="Tax by regime" items={[{ label: 'Old regime tax', value: comparisonResult.oldRegimeTax, color: '#6366f1' }, { label: 'New regime tax', value: comparisonResult.newRegimeTax, color: '#1d4e89' }]} formatter={formatCurrency} /></Card>
                   <ResultActions title="Regime comparison summary" summaryLines={comparisonShareLines} fileName="upaman-regime-comparison.txt" />
                 </>
               )}
@@ -304,7 +390,7 @@ const IncomeTaxCalculator = () => {
         <div className="mt-10">
           <CalculatorInfoPanel
             title="Methodology, assumptions, and source references"
-            reviewedOn="June 28, 2026"
+            reviewedOn={LAST_REVIEWED}
             inputs={['Annual income (salary or business), selected regime, and applicable deductions', 'Old regime deductions include 80C/80D/NPS/HRA/home-loan fields when provided']}
             formulas={['Slab-wise marginal tax computation by regime', 'Health and education cess applied after base tax', 'Section 87A rebate logic applied where eligible']}
             assumptions={['Rates and slab structures are modeled for FY 2026-27 / AY 2027-28; Budget 2026 retained the prior-year slabs', 'Surcharge, special incomes, and complex exemptions are not fully modeled', 'Use results for planning; file taxes using official utilities or a qualified advisor']}
@@ -330,7 +416,7 @@ const IncomeTaxCalculator = () => {
         title="Income Tax Calculator India (FY 2026-27): Old vs New Regime With Worked Examples"
         summary={(<p style={{ margin: 0 }}>Estimate salary and business tax, compare old vs new regime, and review take-home impact quickly. Use the calculator first, then scroll for detailed explanation, examples, FAQ, and methodology.</p>)}
         trustPanel={(
-          <EEATPanel author={editorialProfiles.researchTeam} reviewer="Tax Policy Review Desk (Upaman)" reviewedOn="June 28, 2026" scope="Covers slab-based tax planning estimates for salaried and business users under FY 2026-27 / AY 2027-28 assumptions." sources={eeatSources} />
+          <EEATPanel author={editorialProfiles.researchTeam} reviewer="Tax Policy Review Desk (Upaman)" reviewedOn={LAST_REVIEWED} scope="Covers slab-based tax planning estimates for salaried and business users under FY 2026-27 / AY 2027-28 assumptions." sources={eeatSources} />
         )}
         intro={(
           <>

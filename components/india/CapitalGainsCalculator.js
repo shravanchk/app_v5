@@ -7,6 +7,7 @@ import CalcShell, { fieldStyles as f, resultStyles as r } from '../calculator/Ca
 import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
+import { useShareableState, restoreValues } from '../../utils/shareableState';
 
 const EQUITY_LTCG_EXEMPTION = 125000;
 
@@ -44,8 +45,20 @@ const faqItems = [
   { question: 'Can I reduce property capital gains tax?', answer: 'Yes — Sections 54, 54F, and 54EC let you defer or exempt long-term gains by reinvesting in a residential house or in specified bonds within set time limits. These exemptions are not modelled here; this tool shows the tax before any reinvestment relief.' }
 ];
 
+const DEFAULT_INPUTS = { asset: 'equity', term: 'long', saleValue: 800000, cost: 500000, expenses: 0, slabRate: 30 };
+
+// The rate tables branch on these, so a hand-edited URL must not introduce a
+// value the tax logic has no case for.
+const SHARED_OPTIONS = { asset: ['equity', 'property', 'other'], term: ['long', 'short'] };
+
 const CapitalGainsCalculator = () => {
-  const [inputs, setInputs] = useState({ asset: 'equity', term: 'long', saleValue: 800000, cost: 500000, expenses: 0, slabRate: 30 });
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) => setInputs((prev) => restoreValues(prev, shared, DEFAULT_INPUTS, SHARED_OPTIONS))
+  });
   const res = useMemo(() => compute(inputs), [inputs]);
   const set = (k, v) => setInputs((p) => ({ ...p, [k]: v }));
   const isEquityShort = inputs.asset === 'equity' && inputs.term === 'short';

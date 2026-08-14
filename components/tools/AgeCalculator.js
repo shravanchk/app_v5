@@ -482,7 +482,7 @@ const AgeCalculator = () => {
           />
           <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#2563eb" />
+              <stop offset="0%" stopColor="#1d4e89" />
               <stop offset="100%" stopColor="#0f766e" />
             </linearGradient>
           </defs>

@@ -10,6 +10,7 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { cn } from '../ui/cn';
+import { useShareableState, toNumericString, toOption } from '../../utils/shareableState';
 
 const FAQ = [
   { question: 'What is VAT and how is it calculated?', answer: 'VAT (Value Added Tax) is a consumption tax levied on goods and services. For VAT exclusive amounts, multiply by the VAT rate. For VAT inclusive amounts, divide by (1 + VAT rate).' },
@@ -21,10 +22,27 @@ const FAQ = [
   { question: 'Why do prices in the US look lower than Europe for the same item?', answer: 'US sales tax (typically 5–10%) is added at the till, while European shelf prices must include VAT by law. A €119 German price already contains €19 of VAT; a $100 US shelf price will grow at checkout. Comparing shelf prices across the Atlantic compares different things.' }
 ];
 
+const SHARE_DEFAULTS = { amount: '', country: 'UK', calculationType: 'exclusive' };
+
 const VATCalculator = ({ onBack }) => {
-  const [amount, setAmount] = useState('');
-  const [country, setCountry] = useState('UK');
-  const [calculationType, setCalculationType] = useState('exclusive'); // exclusive, inclusive
+  const [amount, setAmount] = useState(SHARE_DEFAULTS.amount);
+  const [country, setCountry] = useState(SHARE_DEFAULTS.country);
+  const [calculationType, setCalculationType] = useState(SHARE_DEFAULTS.calculationType); // exclusive, inclusive
+
+  useShareableState({
+    values: { amount, country, calculationType },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('amount' in shared) setAmount(toNumericString(shared.amount, SHARE_DEFAULTS.amount));
+      // Read off VAT_RATES itself so the accepted set cannot drift from the
+      // table the rate lookup indexes into. It is initialised by the time this
+      // runs, since onRestore fires from an effect.
+      if ('country' in shared) setCountry(toOption(shared.country, Object.keys(VAT_RATES), SHARE_DEFAULTS.country));
+      if ('calculationType' in shared) {
+        setCalculationType(toOption(shared.calculationType, ['exclusive', 'inclusive'], SHARE_DEFAULTS.calculationType));
+      }
+    }
+  });
   const [results, setResults] = useState(null);
 
   // VAT rates for major European countries

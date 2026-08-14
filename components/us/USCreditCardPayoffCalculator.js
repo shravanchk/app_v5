@@ -8,6 +8,7 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { formatCurrency } from '../../utils/calculations';
+import { useShareableState, toNumber } from '../../utils/shareableState';
 
 const MAX_MONTHS = 1200;
 
@@ -115,13 +116,28 @@ const simulatePayoff = ({ balance, apr, minPercent, minFloor, fixedPayment, mode
   };
 };
 
+const DEFAULT_INPUTS = {
+  balance: 10000,
+  apr: 24,
+  minPercent: 2,
+  minFloor: 35,
+  fixedPayment: 350
+};
+
 const USCreditCardPayoffCalculator = () => {
-  const [inputs, setInputs] = useState({
-    balance: 10000,
-    apr: 24,
-    minPercent: 2,
-    minFloor: 35,
-    fixedPayment: 350
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) =>
+      setInputs((prev) => {
+        const restored = { ...prev };
+        Object.entries(shared).forEach(([key, raw]) => {
+          restored[key] = toNumber(raw, DEFAULT_INPUTS[key]);
+        });
+        return restored;
+      })
   });
 
   const minimumPlan = useMemo(

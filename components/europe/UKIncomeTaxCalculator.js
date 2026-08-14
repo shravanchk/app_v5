@@ -10,6 +10,12 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField, SelectField } from '../ui/Field';
 import Card from '../ui/Card';
 const { calculateUKTax } = require('../../utils/taxCalculations');
+const { useShareableState, toNumericString, toOption } = require('../../utils/shareableState');
+
+const SHARE_DEFAULTS = { income: '', region: 'england', pensionContribution: '', studentLoan: 'none' };
+
+const SHARED_REGIONS = ['england', 'scotland'];
+const SHARED_LOAN_PLANS = ['none', 'plan1', 'plan2', 'plan4', 'plan5', 'postgrad'];
 
 // Single source for the visible FAQ list and the FAQPage JSON-LD so the
 // schema can never drift from what's on the page. Figures verified against
@@ -46,10 +52,23 @@ const UK_FAQS = [
 ];
 
 const UKIncomeTaxCalculator = () => {
-  const [income, setIncome] = useState('');
-  const [region, setRegion] = useState('england'); // england, scotland, wales, ni
-  const [pensionContribution, setPensionContribution] = useState('');
-  const [studentLoan, setStudentLoan] = useState('none'); // none, plan1, plan2, plan4, plan5, postgrad
+  const [income, setIncome] = useState(SHARE_DEFAULTS.income);
+  const [region, setRegion] = useState(SHARE_DEFAULTS.region); // england, scotland, wales, ni
+  const [pensionContribution, setPensionContribution] = useState(SHARE_DEFAULTS.pensionContribution);
+  const [studentLoan, setStudentLoan] = useState(SHARE_DEFAULTS.studentLoan); // none, plan1, plan2, plan4, plan5, postgrad
+
+  useShareableState({
+    values: { income, region, pensionContribution, studentLoan },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('income' in shared) setIncome(toNumericString(shared.income, SHARE_DEFAULTS.income));
+      if ('pensionContribution' in shared) {
+        setPensionContribution(toNumericString(shared.pensionContribution, SHARE_DEFAULTS.pensionContribution));
+      }
+      if ('region' in shared) setRegion(toOption(shared.region, SHARED_REGIONS, SHARE_DEFAULTS.region));
+      if ('studentLoan' in shared) setStudentLoan(toOption(shared.studentLoan, SHARED_LOAN_PLANS, SHARE_DEFAULTS.studentLoan));
+    }
+  });
   const [results, setResults] = useState(null);
   const [showBreakdown, setShowBreakdown] = useState(false);
 
@@ -179,6 +198,8 @@ const UKIncomeTaxCalculator = () => {
         eyebrow="United Kingdom"
         title="UK Income Tax Calculator"
         subtitle="Estimate income tax, employee National Insurance, pension impact and student loan repayments for the 2026-27 tax year, including Scottish bands."
+        ratesFor="2026-27 tax year"
+        reviewedOn="June 2026"
       >
         <div className="grid gap-5 lg:grid-cols-5">
           <Card className="p-5 lg:col-span-2">

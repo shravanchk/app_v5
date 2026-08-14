@@ -262,14 +262,14 @@ function AreaChartView({ points, years }: { points: number[]; years: string[] })
       <svg viewBox={`0 0 ${W} ${H}`} className="h-[150px] w-full" role="img" aria-label="Projected value over time">
         <defs>
           <linearGradient id="previewArea" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#2563eb" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="#2563eb" stopOpacity="0" />
+            <stop offset="0%" stopColor="#1d4e89" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#1d4e89" stopOpacity="0" />
           </linearGradient>
         </defs>
         <path d={area} fill="url(#previewArea)" />
-        <path d={line} fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={line} fill="none" stroke="#1d4e89" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         {pts.filter((_, i) => i % 2 === 0).map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r="3" fill="#2563eb" stroke="#fff" strokeWidth="1.5" />
+          <circle key={i} cx={p.x} cy={p.y} r="3" fill="#1d4e89" stroke="#fff" strokeWidth="1.5" />
         ))}
       </svg>
       <div className="flex justify-between px-2 pb-1 text-[0.65rem] text-ink-muted dark:text-slate-500">

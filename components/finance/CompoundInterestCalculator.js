@@ -9,6 +9,7 @@ import { PieBreakdownChart } from '../calculator/ResultVisualizations';
 import { NumberField, SelectField } from '../ui/Field';
 import Card from '../ui/Card';
 import { COMPOUND_FREQUENCIES, computeCompoundGrowth } from '../../utils/quickCalculations';
+import { useShareableState, toNumericString, toOption } from '../../utils/shareableState';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 
@@ -62,12 +63,34 @@ function GrowthBars({ yearly, principal }) {
   );
 }
 
+const SHARE_DEFAULTS = {
+  principal: '10000',
+  monthly: '200',
+  rate: '7',
+  years: '20',
+  frequency: 'monthly'
+};
+
 const CompoundInterestCalculator = () => {
-  const [principal, setPrincipal] = useState('10000');
-  const [monthly, setMonthly] = useState('200');
-  const [rate, setRate] = useState('7');
-  const [years, setYears] = useState('20');
-  const [frequency, setFrequency] = useState('monthly');
+  const [principal, setPrincipal] = useState(SHARE_DEFAULTS.principal);
+  const [monthly, setMonthly] = useState(SHARE_DEFAULTS.monthly);
+  const [rate, setRate] = useState(SHARE_DEFAULTS.rate);
+  const [years, setYears] = useState(SHARE_DEFAULTS.years);
+  const [frequency, setFrequency] = useState(SHARE_DEFAULTS.frequency);
+
+  useShareableState({
+    values: { principal, monthly, rate, years, frequency },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('principal' in shared) setPrincipal(toNumericString(shared.principal, SHARE_DEFAULTS.principal));
+      if ('monthly' in shared) setMonthly(toNumericString(shared.monthly, SHARE_DEFAULTS.monthly));
+      if ('rate' in shared) setRate(toNumericString(shared.rate, SHARE_DEFAULTS.rate));
+      if ('years' in shared) setYears(toNumericString(shared.years, SHARE_DEFAULTS.years));
+      if ('frequency' in shared) {
+        setFrequency(toOption(shared.frequency, COMPOUND_FREQUENCIES.map((f) => f.value), SHARE_DEFAULTS.frequency));
+      }
+    }
+  });
 
   const result = useMemo(() => computeCompoundGrowth({
     principal: parseFloat(principal) || 0,

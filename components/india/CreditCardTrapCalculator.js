@@ -13,6 +13,7 @@ import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { HowToNote, Panel } from '../workflow/WorkflowKit';
 import { formatINR } from '../../utils/calculations';
+import { useShareableState, toNumber } from '../../utils/shareableState';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 
 const MAX_MONTHS = 1200;
@@ -110,13 +111,28 @@ const PlanRow = ({ label, value, valueClass }) => (
   </div>
 );
 
+const DEFAULT_INPUTS = {
+  outstandingBalance: 250000,
+  annualRate: 36,
+  minPercent: 5,
+  minFloor: 500,
+  fixedMonthlyPayment: 15000
+};
+
 const CreditCardTrapCalculator = () => {
-  const [inputs, setInputs] = useState({
-    outstandingBalance: 250000,
-    annualRate: 36,
-    minPercent: 5,
-    minFloor: 500,
-    fixedMonthlyPayment: 15000
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) =>
+      setInputs((prev) => {
+        const restored = { ...prev };
+        Object.entries(shared).forEach(([key, raw]) => {
+          restored[key] = toNumber(raw, DEFAULT_INPUTS[key]);
+        });
+        return restored;
+      })
   });
 
   const minimumPlan = useMemo(() => simulatePayoff({ ...inputs, mode: 'minimum' }), [inputs]);

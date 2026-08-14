@@ -7,6 +7,7 @@ import CalcShell, { fieldStyles as f, resultStyles as r } from '../calculator/Ca
 import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
+import { useShareableState, restoreValues } from '../../utils/shareableState';
 
 const computeHRA = ({ basic, da, hraReceived, rentPaid, metro }) => {
   const salary = Math.max(0, Number(basic) || 0) + Math.max(0, Number(da) || 0);
@@ -31,8 +32,16 @@ const faqItems = [
   { question: 'What if I don’t receive HRA as a salary component?', answer: 'Then this exemption does not apply. Self-employed people and salaried employees without an HRA component can instead claim a limited deduction for rent under Section 80GG, which has its own, lower limits.' }
 ];
 
+const DEFAULT_INPUTS = { basic: 600000, da: 0, hraReceived: 300000, rentPaid: 240000, metro: true };
+
 const HRACalculator = () => {
-  const [inputs, setInputs] = useState({ basic: 600000, da: 0, hraReceived: 300000, rentPaid: 240000, metro: true });
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) => setInputs((prev) => restoreValues(prev, shared, DEFAULT_INPUTS))
+  });
   const result = useMemo(() => computeHRA(inputs), [inputs]);
   const set = (k, v) => setInputs((p) => ({ ...p, [k]: v }));
 

@@ -9,6 +9,7 @@ import ResultActions from '../ResultActions';
 import { NumberField, SelectField } from '../ui/Field';
 import Card from '../ui/Card';
 import { CPI_YEARS, CPI_FIRST_YEAR, CPI_LATEST_YEAR, adjustForInflation } from '../../utils/quickCalculations';
+import { useShareableState, toNumericString, toOption } from '../../utils/shareableState';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 
@@ -50,10 +51,25 @@ function ValueBars({ amount, adjusted, fromYear, toYear }) {
   );
 }
 
+const SHARE_DEFAULTS = { amount: '100', fromYear: '2000', toYear: String(CPI_LATEST_YEAR) };
+
+// Only years the CPI table actually covers — an out-of-range year has no data.
+const SHARED_YEARS = CPI_YEARS.map((year) => String(year));
+
 const InflationCalculator = () => {
-  const [amount, setAmount] = useState('100');
-  const [fromYear, setFromYear] = useState('2000');
-  const [toYear, setToYear] = useState(String(CPI_LATEST_YEAR));
+  const [amount, setAmount] = useState(SHARE_DEFAULTS.amount);
+  const [fromYear, setFromYear] = useState(SHARE_DEFAULTS.fromYear);
+  const [toYear, setToYear] = useState(SHARE_DEFAULTS.toYear);
+
+  useShareableState({
+    values: { amount, fromYear, toYear },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('amount' in shared) setAmount(toNumericString(shared.amount, SHARE_DEFAULTS.amount));
+      if ('fromYear' in shared) setFromYear(toOption(shared.fromYear, SHARED_YEARS, SHARE_DEFAULTS.fromYear));
+      if ('toYear' in shared) setToYear(toOption(shared.toYear, SHARED_YEARS, SHARE_DEFAULTS.toYear));
+    }
+  });
 
   const yearOptions = useMemo(() => [...CPI_YEARS].reverse().map((y) => ({ value: String(y), label: String(y) })), []);
 

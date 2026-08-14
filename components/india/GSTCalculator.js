@@ -11,6 +11,7 @@ import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
+import { useShareableState, toNumber, toOption } from '../../utils/shareableState';
 
 // GST 2.0 rate structure effective 22 September 2025: two main slabs (5%, 18%)
 // plus a 40% rate for sin/luxury goods. The 12% and 28% slabs were abolished.
@@ -23,11 +24,54 @@ const commonGSTRates = [
 
 const breakdownOf = (gstAmount) => ({ cgst: gstAmount / 2, sgst: gstAmount / 2, igst: gstAmount });
 
+// Each tab keeps its own inputs, so the shared keys are prefixed per tab and
+// the active tab travels with them — otherwise a link would reopen on the
+// wrong tab with the numbers hidden.
+const SHARE_TABS = ['add-gst', 'remove-gst', 'reverse-gst'];
+
+const SHARE_DEFAULTS = {
+  tab: 'add-gst',
+  addAmount: 10000,
+  addRate: 18,
+  removeAmount: 11800,
+  removeRate: 18,
+  reverseAmount: 11800,
+  reverseRate: 18
+};
+
 const GSTCalculator = () => {
-  const [activeTab, setActiveTab] = useState('add-gst');
-  const [addGSTParams, setAddGSTParams] = useState({ amount: 10000, gstRate: 18 });
-  const [removeGSTParams, setRemoveGSTParams] = useState({ amount: 11800, gstRate: 18 });
-  const [reverseGSTParams, setReverseGSTParams] = useState({ inclusiveAmount: 11800, gstRate: 18 });
+  const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
+  const [addGSTParams, setAddGSTParams] = useState({ amount: SHARE_DEFAULTS.addAmount, gstRate: SHARE_DEFAULTS.addRate });
+  const [removeGSTParams, setRemoveGSTParams] = useState({ amount: SHARE_DEFAULTS.removeAmount, gstRate: SHARE_DEFAULTS.removeRate });
+  const [reverseGSTParams, setReverseGSTParams] = useState({ inclusiveAmount: SHARE_DEFAULTS.reverseAmount, gstRate: SHARE_DEFAULTS.reverseRate });
+
+  useShareableState({
+    values: {
+      tab: activeTab,
+      addAmount: addGSTParams.amount,
+      addRate: addGSTParams.gstRate,
+      removeAmount: removeGSTParams.amount,
+      removeRate: removeGSTParams.gstRate,
+      reverseAmount: reverseGSTParams.inclusiveAmount,
+      reverseRate: reverseGSTParams.gstRate
+    },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('tab' in shared) setActiveTab(toOption(shared.tab, SHARE_TABS, SHARE_DEFAULTS.tab));
+      setAddGSTParams((prev) => ({
+        amount: toNumber(shared.addAmount, prev.amount),
+        gstRate: toNumber(shared.addRate, prev.gstRate)
+      }));
+      setRemoveGSTParams((prev) => ({
+        amount: toNumber(shared.removeAmount, prev.amount),
+        gstRate: toNumber(shared.removeRate, prev.gstRate)
+      }));
+      setReverseGSTParams((prev) => ({
+        inclusiveAmount: toNumber(shared.reverseAmount, prev.inclusiveAmount),
+        gstRate: toNumber(shared.reverseRate, prev.gstRate)
+      }));
+    }
+  });
 
   const [addGSTResult, setAddGSTResult] = useState(null);
   const [removeGSTResult, setRemoveGSTResult] = useState(null);

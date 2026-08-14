@@ -7,6 +7,7 @@ import CalcShell, { fieldStyles as f, resultStyles as r } from '../calculator/Ca
 import CalcFAQ from '../calculator/CalcFAQ';
 import { buildFaqSchema } from '../../utils/faqSchema';
 import { formatINR } from '../../utils/calculations';
+import { useShareableState, restoreValues } from '../../utils/shareableState';
 
 const GRATUITY_CAP = 2000000;
 
@@ -32,8 +33,16 @@ const faqItems = [
   { question: 'Do I get gratuity if I resign before 5 years?', answer: 'Generally no — five years of continuous service is the eligibility threshold for resignation or retirement. The only exceptions are death or disablement, where the five-year condition is waived and gratuity is paid for the service completed.' }
 ];
 
+const DEFAULT_INPUTS = { lastSalary: 80000, years: 10, months: 7, coveredByAct: true };
+
 const GratuityCalculator = () => {
-  const [inputs, setInputs] = useState({ lastSalary: 80000, years: 10, months: 7, coveredByAct: true });
+  const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+
+  useShareableState({
+    values: inputs,
+    defaults: DEFAULT_INPUTS,
+    onRestore: (shared) => setInputs((prev) => restoreValues(prev, shared, DEFAULT_INPUTS))
+  });
   const result = useMemo(() => computeGratuity(inputs), [inputs]);
   const set = (k, v) => setInputs((p) => ({ ...p, [k]: v }));
 

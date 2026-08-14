@@ -8,6 +8,7 @@ import HowToSection from '../calculator/HowToSection';
 import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
 import { formatCurrency } from '../../utils/calculations';
+import { useShareableState, encodeRows, decodeRows, toNumber } from '../../utils/shareableState';
 
 const MAX_MONTHS = 600;
 
@@ -127,10 +128,40 @@ const textInputCls =
   'mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-ink shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white';
 const labelCls = 'block text-xs font-medium text-ink-muted dark:text-slate-400';
 
+const DEBT_FIELDS = ['name', 'balance', 'apr', 'minPayment'];
+const MAX_SHARED_DEBTS = 12;
+
+const SHARE_DEFAULTS = { debts: encodeRows(DEFAULT_DEBTS, DEBT_FIELDS), extra: 250 };
+
 const DebtPayoffCalculator = () => {
   const [debts, setDebts] = useState(DEFAULT_DEBTS);
   const [extraPayment, setExtraPayment] = useState(250);
   const [nextId, setNextId] = useState(4);
+
+  useShareableState({
+    values: { debts: encodeRows(debts, DEBT_FIELDS), extra: extraPayment },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('extra' in shared) setExtraPayment(toNumber(shared.extra, 250));
+      if (!('debts' in shared)) return;
+
+      const rows = decodeRows(shared.debts, DEBT_FIELDS, MAX_SHARED_DEBTS);
+      if (!rows.length) return;
+
+      // Ids are positional and only used as React keys and row handles, so they
+      // are reissued here rather than carried through the URL.
+      setDebts(
+        rows.map((row, index) => ({
+          id: index + 1,
+          name: row.name || `Debt ${index + 1}`,
+          balance: toNumber(row.balance, 0),
+          apr: toNumber(row.apr, 0),
+          minPayment: toNumber(row.minPayment, 0)
+        }))
+      );
+      setNextId(rows.length + 1);
+    }
+  });
 
   const setDebt = (id, field, value) =>
     setDebts((prev) => prev.map((d) => (d.id === id ? { ...d, [field]: value } : d)));

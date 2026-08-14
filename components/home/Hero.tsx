@@ -15,16 +15,15 @@ export default function Hero() {
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
           <div className="animate-fade-up">
             <h1 className="max-w-2xl font-display text-4xl font-bold leading-[1.1] tracking-tight text-ink sm:text-5xl dark:text-white">
-              Smart tools for smarter{' '}
-              <span className="text-brand-600 dark:text-brand-400">financial decisions</span>
+              Financial calculators that show their working
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-muted dark:text-slate-400">
-              Free calculators, comparison tools, workflows and guides that help you plan, compare, and make confident
-              financial decisions.
+              Tax, salary, loans and investing for India, the US and the UK. Every result comes with the formula behind
+              it, the rule it applies, and a straight answer on whether the number is good news.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Button href="/india-calculators" size="lg">Explore Calculators <span aria-hidden>→</span></Button>
-              <Button href="/workflows" variant="secondary" size="lg">Explore Workflows</Button>
+              <Button href="/india-calculators" size="lg">Browse calculators <span aria-hidden>→</span></Button>
+              <Button href="/methodology" variant="secondary" size="lg">How we calculate</Button>
             </div>
             <div className="mt-8">
               <TrustIndicators />
