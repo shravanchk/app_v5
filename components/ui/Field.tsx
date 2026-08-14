@@ -50,15 +50,17 @@ type SelectFieldProps = {
   value: string | number;
   onChange: (v: string) => void;
   options: { value: string | number; label: string }[];
+  hint?: string;
 };
 
-export function SelectField({ id, label, value, onChange, options }: SelectFieldProps) {
+export function SelectField({ id, label, value, onChange, options, hint }: SelectFieldProps) {
   return (
     <div>
       <label htmlFor={id} className={labelCls}>{label}</label>
       <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className={controlCls}>
         {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
+      {hint ? <p className="mt-1 text-xs text-ink-muted dark:text-slate-500">{hint}</p> : null}
     </div>
   );
 }

@@ -61,27 +61,56 @@ const calculateSlabTax = (income, slabs) => {
 
 // `ageBand` only affects the old regime. It defaults to 'below60' so existing
 // two-argument callers keep their previous behaviour.
-const calculateIndianIncomeTax = (taxableIncome, regime, ageBand = 'below60') => {
-  const slabs = regime === 'old' ? oldRegimeSlabsFor(ageBand) : INDIA_NEW_SLABS;
+// Every figure that a Budget can move, keyed by financial year. Budget 2026
+// left the slabs, deductions and rebate untouched, so FY 2026-27 reuses the
+// FY 2025-26 parameters rather than restating them — if a future Budget
+// diverges, give that year its own object and nothing else has to change.
+const INDIA_FY_2025_26 = {
+  label: 'FY 2025-26 (AY 2026-27)',
+  assessmentYear: '2026-27',
+  newSlabs: INDIA_NEW_SLABS,
+  newStandardDeduction: 75000,
+  oldStandardDeduction: 50000,
+  newRebateLimit: 1200000,
+  newRebateCap: 60000,
+  oldRebateLimit: 500000,
+  oldRebateCap: 12500,
+  cessRate: 0.04
+};
+
+const INDIA_TAX_YEARS = {
+  '2025-26': INDIA_FY_2025_26,
+  '2026-27': { ...INDIA_FY_2025_26, label: 'FY 2026-27 (AY 2027-28)', assessmentYear: '2027-28' }
+};
+
+const INDIA_DEFAULT_TAX_YEAR = '2026-27';
+
+const yearParamsFor = (taxYear) => INDIA_TAX_YEARS[taxYear] || INDIA_TAX_YEARS[INDIA_DEFAULT_TAX_YEAR];
+
+// `ageBand` only affects the old regime; `taxYear` selects the parameter set.
+// Both are optional so existing two-argument callers keep their behaviour.
+const calculateIndianIncomeTax = (taxableIncome, regime, ageBand = 'below60', taxYear = INDIA_DEFAULT_TAX_YEAR) => {
+  const year = yearParamsFor(taxYear);
+  const slabs = regime === 'old' ? oldRegimeSlabsFor(ageBand) : year.newSlabs;
   const { tax: slabTax, breakdown } = calculateSlabTax(Math.max(0, taxableIncome), slabs);
   let rebate = 0;
   let marginalRelief = 0;
 
-  if (regime === 'old' && taxableIncome <= 500000) {
-    rebate = Math.min(slabTax, 12500);
+  if (regime === 'old' && taxableIncome <= year.oldRebateLimit) {
+    rebate = Math.min(slabTax, year.oldRebateCap);
   }
 
   if (regime === 'new') {
-    if (taxableIncome <= 1200000) {
-      rebate = Math.min(slabTax, 60000);
+    if (taxableIncome <= year.newRebateLimit) {
+      rebate = Math.min(slabTax, year.newRebateCap);
     } else {
-      const excessIncome = taxableIncome - 1200000;
+      const excessIncome = taxableIncome - year.newRebateLimit;
       marginalRelief = Math.max(0, slabTax - excessIncome);
     }
   }
 
   const taxAfterRelief = Math.max(0, slabTax - rebate - marginalRelief);
-  const cess = taxAfterRelief * 0.04;
+  const cess = taxAfterRelief * year.cessRate;
 
   return {
     slabTax,
@@ -185,7 +214,10 @@ module.exports = {
   INDIA_OLD_SLABS_SENIOR,
   INDIA_OLD_SLABS_SUPER_SENIOR,
   INDIA_AGE_BANDS,
+  INDIA_TAX_YEARS,
+  INDIA_DEFAULT_TAX_YEAR,
   oldRegimeSlabsFor,
+  yearParamsFor,
   INDIA_NEW_SLABS,
   UK_TAX_YEAR,
   UK_STUDENT_LOAN_RATES,

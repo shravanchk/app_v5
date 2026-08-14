@@ -20,9 +20,16 @@ const SHARE_REGIMES = ['new', 'old'];
 
 const LAST_REVIEWED = 'June 28, 2026';
 
+const { calculateIndianIncomeTax, INDIA_AGE_BANDS, INDIA_TAX_YEARS, INDIA_DEFAULT_TAX_YEAR } = require('../../utils/taxCalculations');
+
+const AGE_BAND_VALUES = INDIA_AGE_BANDS.map((band) => band.value);
+const TAX_YEAR_VALUES = Object.keys(INDIA_TAX_YEARS);
+const TAX_YEAR_OPTIONS = TAX_YEAR_VALUES.map((value) => ({ value, label: INDIA_TAX_YEARS[value].label }));
+
 const SHARE_DEFAULTS = {
   tab: 'salary-tax',
   ageBand: 'below60',
+  fy: INDIA_DEFAULT_TAX_YEAR,
   salary: 1200000,
   regime: 'new',
   hra: 0,
@@ -40,14 +47,13 @@ const SHARE_DEFAULTS = {
   cmpIncome: 800000,
   cmpDeductions: 0
 };
-const { calculateIndianIncomeTax, INDIA_AGE_BANDS } = require('../../utils/taxCalculations');
 
-const AGE_BAND_VALUES = INDIA_AGE_BANDS.map((band) => band.value);
 
 const IncomeTaxCalculator = () => {
   const [activeTab, setActiveTab] = useState(SHARE_DEFAULTS.tab);
   // Age is a property of the taxpayer, not of a tab, so both tabs share it.
   const [ageBand, setAgeBand] = useState(SHARE_DEFAULTS.ageBand);
+  const [taxYear, setTaxYear] = useState(SHARE_DEFAULTS.fy);
   const [comparisonParams, setComparisonParams] = useState({ annualIncome: 800000, deductions: 0 });
   const [comparisonResult, setComparisonResult] = useState(null);
   const [salaryParams, setSalaryParams] = useState({ annualSalary: 1200000, regime: 'new', hra: 0, rentPaid: 0, section80C: 150000, section80D: 25000, nps: 50000, homeLoanInterest: 0, otherDeductions: 0 });
@@ -57,6 +63,7 @@ const IncomeTaxCalculator = () => {
     values: {
       tab: activeTab,
       ageBand,
+      fy: taxYear,
       salary: salaryParams.annualSalary,
       regime: salaryParams.regime,
       hra: salaryParams.hra,
@@ -78,6 +85,7 @@ const IncomeTaxCalculator = () => {
     onRestore: (shared) => {
       if ('tab' in shared) setActiveTab(toOption(shared.tab, SHARE_TABS, SHARE_DEFAULTS.tab));
       if ('ageBand' in shared) setAgeBand(toOption(shared.ageBand, AGE_BAND_VALUES, SHARE_DEFAULTS.ageBand));
+      if ('fy' in shared) setTaxYear(toOption(shared.fy, TAX_YEAR_VALUES, SHARE_DEFAULTS.fy));
       setSalaryParams((prev) => ({
         annualSalary: toNumber(shared.salary, prev.annualSalary),
         regime: toOption(shared.regime, SHARE_REGIMES, prev.regime),
@@ -124,7 +132,7 @@ const IncomeTaxCalculator = () => {
       deductions += Math.min(75000, annualSalary);
     }
     const taxableIncome = Math.max(0, annualSalary - deductions);
-    const taxResult = calculateIndianIncomeTax(taxableIncome, regime, ageBand);
+    const taxResult = calculateIndianIncomeTax(taxableIncome, regime, ageBand, taxYear);
     const finalTax = taxResult.totalTax;
     setSalaryTaxResult({
       grossSalary: annualSalary, totalDeductions: deductions, taxableIncome,
@@ -132,36 +140,36 @@ const IncomeTaxCalculator = () => {
       totalTax: finalTax, netSalary: annualSalary - finalTax, breakdown: taxResult.breakdown, regime,
       effectiveRate: annualSalary > 0 ? (finalTax / annualSalary) * 100 : 0,
     });
-  }, [salaryParams, ageBand]);
+  }, [salaryParams, ageBand, taxYear]);
 
   const calculateBusinessTax = useCallback(() => {
     const { grossIncome, businessExpenses, depreciation, otherDeductions, advanceTax } = businessParams;
     if (!grossIncome) return;
     const totalExpenses = businessExpenses + depreciation + otherDeductions;
     const netProfit = Math.max(0, grossIncome - totalExpenses);
-    const taxResult = calculateIndianIncomeTax(netProfit, 'old', ageBand);
+    const taxResult = calculateIndianIncomeTax(netProfit, 'old', ageBand, taxYear);
     const balanceTax = Math.max(0, taxResult.totalTax - advanceTax);
     setBusinessTaxResult({
       grossIncome, totalExpenses, netProfit, taxableIncome: netProfit,
       incomeTax: taxResult.slabTax, cess: taxResult.cess, totalTax: taxResult.totalTax, advanceTax, balanceTax,
       breakdown: taxResult.breakdown, effectiveRate: grossIncome > 0 ? (taxResult.totalTax / grossIncome) * 100 : 0,
     });
-  }, [businessParams, ageBand]);
+  }, [businessParams, ageBand, taxYear]);
 
   const calculateTaxComparison = useCallback(() => {
     const { annualIncome, deductions } = comparisonParams;
     if (!annualIncome || annualIncome <= 0) { setComparisonResult(null); return; }
     const oldRegimeTaxableIncome = Math.max(0, annualIncome - Math.min(50000, annualIncome) - deductions);
     const newRegimeTaxableIncome = Math.max(0, annualIncome - Math.min(75000, annualIncome));
-    const oldRegimeFinalTax = calculateIndianIncomeTax(oldRegimeTaxableIncome, 'old', ageBand).totalTax;
-    const newRegimeFinalTax = calculateIndianIncomeTax(newRegimeTaxableIncome, 'new').totalTax;
+    const oldRegimeFinalTax = calculateIndianIncomeTax(oldRegimeTaxableIncome, 'old', ageBand, taxYear).totalTax;
+    const newRegimeFinalTax = calculateIndianIncomeTax(newRegimeTaxableIncome, 'new', 'below60', taxYear).totalTax;
     setComparisonResult({
       oldRegimeTax: oldRegimeFinalTax, newRegimeTax: newRegimeFinalTax,
       taxDifference: Math.abs(oldRegimeFinalTax - newRegimeFinalTax),
       betterRegime: oldRegimeFinalTax < newRegimeFinalTax ? 'old' : 'new',
       oldRegimeTakeHome: annualIncome - oldRegimeFinalTax, newRegimeTakeHome: annualIncome - newRegimeFinalTax,
     });
-  }, [comparisonParams, ageBand]);
+  }, [comparisonParams, ageBand, taxYear]);
 
   useEffect(() => { if (activeTab === 'salary-tax') calculateSalaryTax(); }, [activeTab, calculateSalaryTax]);
   useEffect(() => { if (activeTab === 'business-tax') calculateBusinessTax(); }, [activeTab, calculateBusinessTax]);
@@ -215,6 +223,12 @@ const IncomeTaxCalculator = () => {
 
   const regimeOptions = [{ value: 'new', label: 'New regime (default)' }, { value: 'old', label: 'Old regime' }];
   const ageOptions = INDIA_AGE_BANDS.map(({ value, label }) => ({ value, label }));
+  // Say so on the page when the years are identical, rather than leaving the
+  // reader to wonder whether they picked the wrong one.
+  const sameFiguresBothYears = TAX_YEAR_VALUES.every(
+    (y) => INDIA_TAX_YEARS[y].newSlabs === INDIA_TAX_YEARS[TAX_YEAR_VALUES[0]].newSlabs
+      && INDIA_TAX_YEARS[y].newRebateCap === INDIA_TAX_YEARS[TAX_YEAR_VALUES[0]].newRebateCap
+  );
   const selectedBand = INDIA_AGE_BANDS.find((band) => band.value === ageBand) || INDIA_AGE_BANDS[0];
   const oldRegimeAgeHint = `Old-regime basic exemption: ${formatCurrency(selectedBand.exemption)}.`;
   const Row = ({ label, value, strong, tone }) => (
@@ -240,7 +254,7 @@ const IncomeTaxCalculator = () => {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       </Head>
 
-      <CalcLayout eyebrow="Taxes" title="Income Tax Calculator" subtitle="Estimate salary and business income tax for FY 2026-27, and compare the old and new regimes — with rebate, marginal relief and 4% cess." ratesFor="FY 2026-27" reviewedOn={LAST_REVIEWED}>
+      <CalcLayout eyebrow="Taxes" title="Income Tax Calculator" subtitle="Estimate salary and business income tax, and compare the old and new regimes — with rebate, marginal relief and 4% cess." ratesFor={INDIA_TAX_YEARS[taxYear].label} reviewedOn={LAST_REVIEWED}>
         <div className="mb-6">
           <Tabs tabs={[{ id: 'salary-tax', label: 'Salary tax' }, { id: 'business-tax', label: 'Business tax' }, { id: 'tax-comparison', label: 'Old vs new' }]} active={activeTab} onChange={setActiveTab} />
         </div>
@@ -249,6 +263,14 @@ const IncomeTaxCalculator = () => {
           <div className="grid gap-5 lg:grid-cols-5">
             <Card className="p-5 lg:col-span-2">
               <div className="space-y-4">
+                <SelectField
+                  id="s-fy"
+                  label="Financial year"
+                  value={taxYear}
+                  onChange={setTaxYear}
+                  options={TAX_YEAR_OPTIONS}
+                  hint={sameFiguresBothYears ? 'Budget 2026 left the slabs, deductions and rebate unchanged, so both years compute identically.' : undefined}
+                />
                 <NumberField id="s-sal" label="Annual salary (gross)" prefix="₹" value={salaryParams.annualSalary} onChange={(v) => setSalaryParams((p) => ({ ...p, annualSalary: num(v) }))} />
                 <SelectField id="s-regime" label="Tax regime" value={salaryParams.regime} onChange={(v) => setSalaryParams((p) => ({ ...p, regime: v }))} options={regimeOptions} />
                 <SelectField

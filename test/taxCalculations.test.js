@@ -2,6 +2,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   calculateIndianIncomeTax,
+  INDIA_TAX_YEARS,
+  INDIA_DEFAULT_TAX_YEAR,
   calculateUKTax
 } = require('../utils/taxCalculations');
 
@@ -107,4 +109,43 @@ test('the 87A rebate still clears tax at ₹5 lakh for every age band', () => {
   ['below60', 'senior', 'superSenior'].forEach((band) => {
     assert.equal(calculateIndianIncomeTax(500000, 'old', band).totalTax, 0);
   });
+});
+
+// --- Financial-year parameters -------------------------------------------
+// Budget 2026 left the slabs, deductions and rebate unchanged, so both years
+// currently produce identical tax. These tests pin that as a deliberate fact
+// rather than a coincidence, and guard the fallbacks.
+
+test('FY 2025-26 and FY 2026-27 currently produce identical tax', () => {
+  [600000, 1200000, 1210000, 2500000].forEach((income) => {
+    assert.equal(
+      calculateIndianIncomeTax(income, 'new', 'below60', '2025-26').totalTax,
+      calculateIndianIncomeTax(income, 'new', 'below60', '2026-27').totalTax
+    );
+  });
+});
+
+test('the year selector carries the assessment year for each FY', () => {
+  assert.equal(INDIA_TAX_YEARS['2025-26'].assessmentYear, '2026-27');
+  assert.equal(INDIA_TAX_YEARS['2026-27'].assessmentYear, '2027-28');
+});
+
+test('an unknown tax year falls back to the default', () => {
+  assert.equal(
+    calculateIndianIncomeTax(1500000, 'new', 'below60', 'not-a-year').totalTax,
+    calculateIndianIncomeTax(1500000, 'new', 'below60', INDIA_DEFAULT_TAX_YEAR).totalTax
+  );
+});
+
+test('omitting the tax year keeps the pre-existing behaviour', () => {
+  assert.equal(
+    calculateIndianIncomeTax(1500000, 'new').totalTax,
+    calculateIndianIncomeTax(1500000, 'new', 'below60', INDIA_DEFAULT_TAX_YEAR).totalTax
+  );
+});
+
+test('the age band still applies within a chosen tax year', () => {
+  const below60 = calculateIndianIncomeTax(600000, 'old', 'below60', '2025-26').totalTax;
+  const superSenior = calculateIndianIncomeTax(600000, 'old', 'superSenior', '2025-26').totalTax;
+  assert.equal(Math.round(below60 - superSenior), 13000);
 });
