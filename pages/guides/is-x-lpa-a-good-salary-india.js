@@ -85,7 +85,7 @@ export default function IsXLpaGoodSalaryGuide() {
           <tr><td style={tdStyle}>₹8 LPA</td><td style={tdStyle}>₹57,824</td><td style={tdStyle}>₹0</td><td style={tdStyle}>86.7%</td></tr>
           <tr><td style={tdStyle}>₹10 LPA</td><td style={tdStyle}>₹72,330</td><td style={tdStyle}>₹0</td><td style={tdStyle}>86.8%</td></tr>
           <tr><td style={tdStyle}>₹12 LPA</td><td style={tdStyle}>₹86,836</td><td style={tdStyle}>₹0</td><td style={tdStyle}>86.8%</td></tr>
-          <tr><td style={tdStyle}>₹15 LPA</td><td style={tdStyle}><strong>₹1,05,948</strong></td><td style={tdStyle}>₹31,754</td><td style={tdStyle}>84.8%</td></tr>
+          <tr><td style={tdStyle}>₹15 LPA</td><td style={tdStyle}><strong>₹1,05,940</strong></td><td style={tdStyle}>₹31,754</td><td style={tdStyle}>84.8%</td></tr>
           <tr><td style={tdStyle}>₹20 LPA</td><td style={tdStyle}>₹1,33,320</td><td style={tdStyle}>₹1,38,468</td><td style={tdStyle}>80.0%</td></tr>
           <tr><td style={tdStyle}>₹25 LPA</td><td style={tdStyle}>₹1,61,605</td><td style={tdStyle}>₹2,34,231</td><td style={tdStyle}>77.6%</td></tr>
           <tr><td style={tdStyle}>₹30 LPA</td><td style={tdStyle}>₹1,87,851</td><td style={tdStyle}>₹3,54,452</td><td style={tdStyle}>75.1%</td></tr>
@@ -121,7 +121,7 @@ export default function IsXLpaGoodSalaryGuide() {
 
       <h2 style={sectionTitleStyle}>Is it a good salary? It depends on the city</h2>
       <p>
-        Take the ₹15 LPA case — ₹1,05,948 a month. A common benchmark is that rent should stay near 30% of take-home:
+        Take the ₹15 LPA case — ₹1,05,940 a month. A common benchmark is that rent should stay near 30% of take-home:
       </p>
       <table style={tableStyle}>
         <tbody>

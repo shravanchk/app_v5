@@ -27,7 +27,7 @@ const articleSchema = [
         acceptedAnswer: {
           '@type': 'Answer',
           text:
-            'About ₹10,100 a month, assuming a 12% annual return. Over 20 years you would invest roughly ₹24.3 lakh of your own money; the remaining ₹75.7 lakh comes from compounding.'
+            'About ₹10,000 a month, assuming a 12% annual return. Over 20 years you would invest roughly ₹24.0 lakh of your own money; the remaining ₹76.0 lakh comes from compounding.'
         }
       },
       {
@@ -36,7 +36,7 @@ const articleSchema = [
         acceptedAnswer: {
           '@type': 'Answer',
           text:
-            'About ₹43,500 a month at a 12% annual return — more than four times the 20-year figure, because half the target has to come from your own contributions rather than growth.'
+            'About ₹43,000 a month at a 12% annual return — more than four times the 20-year figure, because half the target has to come from your own contributions rather than growth.'
         }
       },
       {
@@ -82,11 +82,11 @@ export default function SipForOneCroreGuide() {
             <th style={thStyle}>You invest</th>
             <th style={thStyle}>Growth provides</th>
           </tr>
-          <tr><td style={tdStyle}>10 years</td><td style={tdStyle}><strong>₹43,471</strong></td><td style={tdStyle}>₹52.2 lakh</td><td style={tdStyle}>₹47.8 lakh (48%)</td></tr>
-          <tr><td style={tdStyle}>15 years</td><td style={tdStyle}><strong>₹20,017</strong></td><td style={tdStyle}>₹36.0 lakh</td><td style={tdStyle}>₹64.0 lakh (64%)</td></tr>
-          <tr><td style={tdStyle}>20 years</td><td style={tdStyle}><strong>₹10,109</strong></td><td style={tdStyle}>₹24.3 lakh</td><td style={tdStyle}>₹75.7 lakh (76%)</td></tr>
-          <tr><td style={tdStyle}>25 years</td><td style={tdStyle}><strong>₹5,322</strong></td><td style={tdStyle}>₹16.0 lakh</td><td style={tdStyle}>₹84.0 lakh (84%)</td></tr>
-          <tr><td style={tdStyle}>30 years</td><td style={tdStyle}><strong>₹2,861</strong></td><td style={tdStyle}>₹10.3 lakh</td><td style={tdStyle}>₹89.7 lakh (90%)</td></tr>
+          <tr><td style={tdStyle}>10 years</td><td style={tdStyle}><strong>₹43,041</strong></td><td style={tdStyle}>₹51.6 lakh</td><td style={tdStyle}>₹48.4 lakh (48%)</td></tr>
+          <tr><td style={tdStyle}>15 years</td><td style={tdStyle}><strong>₹20,017</strong></td><td style={tdStyle}>₹35.7 lakh</td><td style={tdStyle}>₹64.3 lakh (64%)</td></tr>
+          <tr><td style={tdStyle}>20 years</td><td style={tdStyle}><strong>₹10,009</strong></td><td style={tdStyle}>₹24.0 lakh</td><td style={tdStyle}>₹76.0 lakh (76%)</td></tr>
+          <tr><td style={tdStyle}>25 years</td><td style={tdStyle}><strong>₹5,322</strong></td><td style={tdStyle}>₹15.8 lakh</td><td style={tdStyle}>₹84.2 lakh (84%)</td></tr>
+          <tr><td style={tdStyle}>30 years</td><td style={tdStyle}><strong>₹2,861</strong></td><td style={tdStyle}>₹10.2 lakh</td><td style={tdStyle}>₹89.8 lakh (90%)</td></tr>
         </tbody>
       </table>
 
@@ -100,8 +100,8 @@ export default function SipForOneCroreGuide() {
       <h2 style={sectionTitleStyle}>Ten extra years is worth more than quadrupling the SIP</h2>
       <p>
         Read the first and third rows together. Going from 10 years to 20 years cuts the required monthly amount from
-        ₹43,471 to ₹10,109 — you need <strong>77% less per month</strong> for the same ₹1 crore. You also end up putting
-        in less than half as much of your own money in total: ₹24.3 lakh instead of ₹52.2 lakh.
+        ₹43,041 to ₹10,009 — you need <strong>77% less per month</strong> for the same ₹1 crore. You also end up putting
+        in less than half as much of your own money in total: ₹24.0 lakh instead of ₹51.6 lakh.
       </p>
       <p>
         The reason is visible in the last column. Over 10 years compounding supplies less than half the target, so most
@@ -118,10 +118,10 @@ export default function SipForOneCroreGuide() {
       <table style={tableStyle}>
         <tbody>
           <tr><th style={thStyle}>Annual return</th><th style={thStyle}>Monthly SIP for ₹1 crore in 20 years</th></tr>
-          <tr><td style={tdStyle}>8%</td><td style={tdStyle}>₹16,977</td></tr>
-          <tr><td style={tdStyle}>10%</td><td style={tdStyle}>₹13,169</td></tr>
-          <tr><td style={tdStyle}>12%</td><td style={tdStyle}>₹10,109</td></tr>
-          <tr><td style={tdStyle}>14%</td><td style={tdStyle}>₹7,685</td></tr>
+          <tr><td style={tdStyle}>8%</td><td style={tdStyle}>₹16,865</td></tr>
+          <tr><td style={tdStyle}>10%</td><td style={tdStyle}>₹13,060</td></tr>
+          <tr><td style={tdStyle}>12%</td><td style={tdStyle}>₹10,009</td></tr>
+          <tr><td style={tdStyle}>14%</td><td style={tdStyle}>₹7,597</td></tr>
         </tbody>
       </table>
       <p>
@@ -139,13 +139,13 @@ export default function SipForOneCroreGuide() {
         That does not make the goal pointless — it makes the round number a poor target. The better method is to decide
         what you need <em>in today&rsquo;s money</em>, then inflate it. If you want the equivalent of ₹1 crore of
         today&rsquo;s purchasing power in 20 years, you are actually aiming at roughly ₹3.2 crore, which at 12% needs
-        about <strong>₹32,000 a month</strong>, not ₹10,109. Check the erosion for your own horizon in the{' '}
+        about <strong>₹32,000 a month</strong>, not ₹10,009. Check the erosion for your own horizon in the{' '}
         <a href="/inflation-calculator">inflation calculator</a>.
       </p>
 
       <h2 style={sectionTitleStyle}>Step-up SIP: the realistic version</h2>
       <p>
-        A flat ₹10,109 for twenty years assumes your income never rises, which is rarely true. Raising the SIP by 10% a
+        A flat ₹10,009 for twenty years assumes your income never rises, which is rarely true. Raising the SIP by 10% a
         year — roughly in line with salary growth — gets to ₹1 crore substantially faster, or lets you start much
         smaller. Someone who begins at ₹5,000 and steps up 10% annually reaches ₹1 crore in about the same time as
         someone paying a flat ₹10,000 throughout, without ever feeling the squeeze at the start.

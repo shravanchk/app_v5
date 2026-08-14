@@ -12,17 +12,42 @@ import Card from '../ui/Card';
 import { DecisionBanner } from '../workflow/WorkflowKit';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 const { calculateIndianIncomeTax, INDIA_AGE_BANDS } = require('../../utils/taxCalculations');
+const { useShareableState, toNumber, toOption } = require('../../utils/shareableState');
+
+const AGE_BAND_VALUES = INDIA_AGE_BANDS.map((band) => band.value);
+
+const SHARE_DEFAULTS = {
+  salary: 1500000,
+  s80c: 150000,
+  s80d: 25000,
+  hra: 120000,
+  other: 30000,
+  ageBand: 'below60'
+};
 
 const LAST_REVIEWED = 'June 28, 2026';
 
 const TaxRegimeComparisonCalculator = () => {
-  const [salary, setSalary] = useState(1500000);
-  const [deductions80C, setDeductions80C] = useState(150000);
-  const [deductions80D, setDeductions80D] = useState(25000);
-  const [hraExemption, setHraExemption] = useState(120000);
-  const [otherDeductions, setOtherDeductions] = useState(30000);
+  const [salary, setSalary] = useState(SHARE_DEFAULTS.salary);
+  const [deductions80C, setDeductions80C] = useState(SHARE_DEFAULTS.s80c);
+  const [deductions80D, setDeductions80D] = useState(SHARE_DEFAULTS.s80d);
+  const [hraExemption, setHraExemption] = useState(SHARE_DEFAULTS.hra);
+  const [otherDeductions, setOtherDeductions] = useState(SHARE_DEFAULTS.other);
   // Only the old regime's exemption moves with age, so this can flip the verdict.
-  const [ageBand, setAgeBand] = useState('below60');
+  const [ageBand, setAgeBand] = useState(SHARE_DEFAULTS.ageBand);
+
+  useShareableState({
+    values: { salary, s80c: deductions80C, s80d: deductions80D, hra: hraExemption, other: otherDeductions, ageBand },
+    defaults: SHARE_DEFAULTS,
+    onRestore: (shared) => {
+      if ('salary' in shared) setSalary(toNumber(shared.salary, SHARE_DEFAULTS.salary));
+      if ('s80c' in shared) setDeductions80C(toNumber(shared.s80c, SHARE_DEFAULTS.s80c));
+      if ('s80d' in shared) setDeductions80D(toNumber(shared.s80d, SHARE_DEFAULTS.s80d));
+      if ('hra' in shared) setHraExemption(toNumber(shared.hra, SHARE_DEFAULTS.hra));
+      if ('other' in shared) setOtherDeductions(toNumber(shared.other, SHARE_DEFAULTS.other));
+      if ('ageBand' in shared) setAgeBand(toOption(shared.ageBand, AGE_BAND_VALUES, SHARE_DEFAULTS.ageBand));
+    }
+  });
 
   const formatCurrency = (value) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);

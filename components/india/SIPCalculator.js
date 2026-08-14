@@ -13,6 +13,7 @@ import { NumberField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../../utils/schema';
 import { useShareableState, toNumber, toOption } from '../../utils/shareableState';
+import { sipForTarget, sipFutureValue, stepUpSipSchedule, lumpsumFutureValue } from '../../utils/sipCalculations';
 
 // Per-tab prefixes keep the three input groups from colliding on shared names
 // like annualReturn, and the active tab travels with them.
@@ -86,29 +87,10 @@ const SIPCalculator = () => {
   const calculateSIP = useCallback(() => {
     const { monthlyInvestment, annualReturn, investmentPeriod, stepUpPercentage } = sipParams;
     if (!monthlyInvestment || !annualReturn || !investmentPeriod) return;
-    const monthlyRate = annualReturn / 100 / 12;
-    let totalInvestment = 0;
-    let futureValue = 0;
-    let currentMonthlyAmount = monthlyInvestment;
-    const breakdown = [];
-    for (let year = 1; year <= investmentPeriod; year++) {
-      let yearlyInvestment = 0;
-      for (let month = 1; month <= 12; month++) {
-        totalInvestment += currentMonthlyAmount;
-        yearlyInvestment += currentMonthlyAmount;
-        futureValue = (futureValue + currentMonthlyAmount) * (1 + monthlyRate);
-      }
-      if (stepUpPercentage > 0 && year < investmentPeriod) {
-        currentMonthlyAmount = currentMonthlyAmount * (1 + stepUpPercentage / 100);
-      }
-      breakdown.push({
-        year,
-        yearlyInvestment: Math.round(yearlyInvestment),
-        totalInvestment: Math.round(totalInvestment),
-        futureValue: Math.round(futureValue),
-        returns: Math.round(futureValue - totalInvestment),
-      });
-    }
+    const { futureValue, totalInvestment, finalMonthlyAmount, schedule } =
+      stepUpSipSchedule(monthlyInvestment, annualReturn, investmentPeriod, stepUpPercentage);
+    const breakdown = schedule;
+    const currentMonthlyAmount = finalMonthlyAmount;
     const totalReturns = Math.round(futureValue - totalInvestment);
     setSipResult({
       monthlyInvestment: Math.round(currentMonthlyAmount),
@@ -123,9 +105,8 @@ const SIPCalculator = () => {
   const calculateGoalSIP = useCallback(() => {
     const { targetAmount, annualReturn, investmentPeriod } = goalParams;
     if (!targetAmount || !annualReturn || !investmentPeriod) return;
-    const monthlyRate = annualReturn / 100 / 12;
     const totalMonths = investmentPeriod * 12;
-    const requiredMonthlySIP = (targetAmount * monthlyRate) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+    const requiredMonthlySIP = sipForTarget(targetAmount, annualReturn, investmentPeriod);
     const totalInvestment = requiredMonthlySIP * totalMonths;
     const totalReturns = targetAmount - totalInvestment;
     setGoalResult({
@@ -140,17 +121,15 @@ const SIPCalculator = () => {
   const calculateComparison = useCallback(() => {
     const { monthlyAmount, lumpsumAmount, annualReturn, investmentPeriod } = comparisonParams;
     if (!monthlyAmount || !lumpsumAmount || !annualReturn || !investmentPeriod) return;
-    const monthlyRate = annualReturn / 100 / 12;
-    const annualRate = annualReturn / 100;
     const totalMonths = investmentPeriod * 12;
-    const sipFutureValue = (monthlyAmount * (Math.pow(1 + monthlyRate, totalMonths) - 1)) / monthlyRate;
+    const sipFV = sipFutureValue(monthlyAmount, annualReturn, investmentPeriod);
     const sipTotalInvestment = monthlyAmount * totalMonths;
-    const sipReturns = sipFutureValue - sipTotalInvestment;
-    const lumpsumFutureValue = lumpsumAmount * Math.pow(1 + annualRate, investmentPeriod);
-    const lumpsumReturns = lumpsumFutureValue - lumpsumAmount;
+    const sipReturns = sipFV - sipTotalInvestment;
+    const lumpsumFV = lumpsumFutureValue(lumpsumAmount, annualReturn, investmentPeriod);
+    const lumpsumReturns = lumpsumFV - lumpsumAmount;
     setComparisonResult({
-      sip: { investment: Math.round(sipTotalInvestment), futureValue: Math.round(sipFutureValue), returns: Math.round(sipReturns), returnPercentage: ((sipReturns / sipTotalInvestment) * 100).toFixed(2) },
-      lumpsum: { investment: Math.round(lumpsumAmount), futureValue: Math.round(lumpsumFutureValue), returns: Math.round(lumpsumReturns), returnPercentage: ((lumpsumReturns / lumpsumAmount) * 100).toFixed(2) },
+      sip: { investment: Math.round(sipTotalInvestment), futureValue: Math.round(sipFV), returns: Math.round(sipReturns), returnPercentage: ((sipReturns / sipTotalInvestment) * 100).toFixed(2) },
+      lumpsum: { investment: Math.round(lumpsumAmount), futureValue: Math.round(lumpsumFV), returns: Math.round(lumpsumReturns), returnPercentage: ((lumpsumReturns / lumpsumAmount) * 100).toFixed(2) },
     });
   }, [comparisonParams]);
 
