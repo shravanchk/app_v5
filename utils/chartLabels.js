@@ -2,17 +2,19 @@
 // DOM — so it can be unit-tested and so it works during static export, where
 // there is no getBBox to measure real text with.
 
-// The donut hole is 56 units wide in a 120-unit viewBox; 48 leaves padding so
-// the label never touches the ring.
-const HOLE_WIDTH = 48;
+// The hole has r=28, but the label sits at y=68 rather than dead centre, where
+// the chord is 2 * sqrt(28^2 - 8^2) = 53.7 units. Budget 50 to leave padding.
+const HOLE_WIDTH = 50;
 const BASE_FONT_SIZE = 10;
-// The SVG renders between 132px and 168px wide for that 120-unit viewBox, so a
+// The SVG renders between 132px and 168px wide for a 120-unit viewBox, so a
 // unit is roughly 1.1-1.4 real pixels. Below 8 units the label would render
 // under ~9px on a phone; abbreviate rather than shrink past that.
 const MIN_FONT_SIZE = 8;
-// Measured against the site's font: roughly 0.47 x fontSize per character for
-// digits and separators.
-const CHAR_WIDTH_RATIO = 0.47;
+// Measured in-browser at font-size 10, weight 700, across rupee, dollar,
+// pound, euro and abbreviated strings: per-character width ranged 0.476 to
+// 0.529. Take the widest so the estimate never runs short — short abbreviated
+// labels like "$46.3M" are the widest per character because of the letters.
+const CHAR_WIDTH_RATIO = 0.53;
 
 const fitFontSize = (text) =>
   Math.min(BASE_FONT_SIZE, HOLE_WIDTH / (Math.max(1, String(text).length) * CHAR_WIDTH_RATIO));

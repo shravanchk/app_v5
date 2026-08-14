@@ -36,15 +36,23 @@ test('the label never renders below the legibility floor', () => {
 });
 
 test('a short figure keeps the base font and its exact value', () => {
-  const { label, fontSize } = fitCentreLabel(1161695, inr(1161695));
-  assert.equal(label, inr(1161695));
+  const { label, fontSize } = fitCentreLabel(3047.45, usd(3047.45));
+  assert.equal(label, usd(3047.45));
   assert.equal(fontSize, BASE_FONT_SIZE);
 });
 
-test('a long figure shrinks before it abbreviates', () => {
+test('a mid-length figure shrinks but stays exact', () => {
+  const { label, fontSize } = fitCentreLabel(1161695, inr(1161695));
+  assert.equal(label, inr(1161695), 'should not abbreviate while it still fits legibly');
+  assert.ok(fontSize < BASE_FONT_SIZE, 'should have shrunk below the base size');
+  assert.ok(fontSize >= MIN_FONT_SIZE, 'should stay above the legibility floor');
+});
+
+test('abbreviation is preferred over shrinking past the floor', () => {
   const { label, fontSize } = fitCentreLabel(87813722, inr(87813722));
-  assert.equal(label, inr(87813722));
-  assert.ok(fontSize < BASE_FONT_SIZE && fontSize >= MIN_FONT_SIZE);
+  assert.notEqual(label, inr(87813722));
+  assert.ok(label.endsWith('Cr'));
+  assert.ok(fontSize >= MIN_FONT_SIZE);
 });
 
 test('rupees abbreviate to lakh and crore', () => {
