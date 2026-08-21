@@ -10,6 +10,7 @@
     "clean": "rm -rf .next out",
     "dev": "NODE_ENV=development next dev",
     "dev:fresh": "npm run clean && NODE_ENV=development next dev",
+    "prebuild": "node scripts/write-build-meta.js",
     "build": "next build",
     "start": "next start",
     "test": "node --test test/*.test.js",
