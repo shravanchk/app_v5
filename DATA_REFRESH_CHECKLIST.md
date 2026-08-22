@@ -123,11 +123,19 @@ Ministry of Finance quarterly small-savings rate notifications.
    number's *old* value across `pages/` and `components/` to catch every guide, FAQ,
    meta description, and structured-data block that quotes it.
 2. Update **`reviewedOn`** and **`dateModified`** (article schema) on every touched guide.
-3. Bump **`lastmod`** in `public/sitemap.xml` for every touched URL.
-4. Add a line to **`components/home/LatestUpdates.tsx`** (date must match the deploy).
-5. Build, verify locally, commit, deploy.
-6. GSC: resubmit sitemap; request indexing for the highest-value refreshed pages.
-7. Stamp the checkbox here with the date.
+3. Bump **`lastmod`** in `public/sitemap.xml` — don't hand-edit it. Run
+   `python3 seo-audit/refresh_lastmod.py --dry-run`, read the plan, then `--apply`.
+   It derives each date from the last commit touching the page's route file and the
+   modules it imports. Add `--skip-template-clusters` to hold the generated clusters
+   (`/paycheck/*`, `/tax-on-salary/*`, `/uk/take-home/*`, …) at their current dates.
+4. If the refresh pulled **new market data**, update `data/buildMeta.source.json`.
+   That file is the only hand-managed half of `generated/buildMeta.json`; the build
+   stamp is derived and the generated file is gitignored. `latestAvailable` drives the
+   "Data snapshot" label, which `utils/siteMeta.js` hides once it is over 180 days old.
+5. Add a line to **`components/home/LatestUpdates.tsx`** (date must match the deploy).
+6. Build, verify locally, commit, deploy.
+7. GSC: resubmit sitemap; request indexing for the highest-value refreshed pages.
+8. Stamp the checkbox here with the date.
 
 ## 🗓 Next scheduled passes
 

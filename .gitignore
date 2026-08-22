@@ -18,3 +18,9 @@ __pycache__/
 # SEO audit: keep the notes and runbook, ignore raw GSC exports and generated output
 seo-audit/gsc/
 seo-audit/out/
+
+# Build stamp: rewritten by scripts/write-build-meta.js on every build, so
+# tracking it means a one-line diff after each one. utils/siteMeta.js imports
+# it statically, so the pre* hooks regenerate it before any entry point that
+# resolves the module graph.
+generated/buildMeta.json
