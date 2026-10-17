@@ -48,6 +48,9 @@ const EU_ROUTES = [
   '/germany-salary-calculator',
   '/france-salary-calculator',
   '/netherlands-salary-calculator',
+  '/belgium-salary-calculator',
+  '/austria-salary-calculator',
+  '/sweden-salary-calculator',
 ];
 
 const ROUTE_REGION = new Map([

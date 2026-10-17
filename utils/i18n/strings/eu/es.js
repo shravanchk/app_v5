@@ -79,6 +79,21 @@ const es = {
       description: 'Estima el salario neto neerlandés con el impuesto de la casilla 1 y la deducción fiscal habitual.',
       tags: ['Impuesto neerlandés', 'Deducciones fiscales', 'Estimación neta'],
     },
+    belgiumSalary: {
+      title: 'Calculadora de salario (Bélgica)',
+      description: 'Estima el salario neto belga tras las cotizaciones RSZ, el impuesto sobre la renta y el recargo municipal.',
+      tags: ['RSZ/ONSS', 'Recargo municipal', 'Estimación neta'],
+    },
+    austriaSalary: {
+      title: 'Calculadora de salario (Austria)',
+      description: 'Estima el salario neto austriaco en 14 pagas, con la 13ª y 14ª gravadas al 6%.',
+      tags: ['14 pagas', 'Sonderzahlungen', 'Estimación neta'],
+    },
+    swedenSalary: {
+      title: 'Calculadora de salario (Suecia)',
+      description: 'Estima el salario neto sueco tras la deducción básica, el crédito por trabajo y el impuesto municipal.',
+      tags: ['Grundavdrag', 'Jobbskatteavdrag', 'Estimación neta'],
+    },
   },
 
   common: {
@@ -108,6 +123,7 @@ const es = {
     netAnnual: 'Salario neto anual',
     netAnnualTakeHome: 'Neto anual',
     netMonthly: 'Neto mensual',
+    netPerPayment: 'Neto por mes normal',
     frequency: 'Periodicidad del salario',
     annual: 'Anual',
     monthly: 'Mensual',
@@ -132,6 +148,7 @@ const es = {
     stateTax: 'Impuesto regional',
     grossTax: 'Impuesto bruto',
     taxCredits: 'Deducciones fiscales',
+    specialPaymentTax: 'Impuesto sobre pagas extra',
     personalAllowance: 'Mínimo personal',
     taxableIncome: 'Base imponible',
   },

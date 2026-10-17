@@ -75,6 +75,21 @@ const de = {
       description: 'Schätzen Sie das niederländische Nettogehalt mit Box-1-Steuer und der üblichen Steuergutschrift.',
       tags: ['Niederländische Steuer', 'Steuergutschriften', 'Netto-Schätzung'],
     },
+    belgiumSalary: {
+      title: 'Gehaltsrechner Belgien',
+      description: 'Schätzen Sie das belgische Nettogehalt nach RSZ-Sozialabgaben, Lohnsteuer und Gemeindezuschlag.',
+      tags: ['RSZ/ONSS', 'Gemeindezuschlag', 'Netto-Schätzung'],
+    },
+    austriaSalary: {
+      title: 'Brutto-Netto-Rechner Österreich',
+      description: 'Schätzen Sie das österreichische Nettogehalt über 14 Bezüge, mit 13. und 14. zu 6% versteuert.',
+      tags: ['14 Bezüge', 'Sonderzahlungen', 'Netto-Schätzung'],
+    },
+    swedenSalary: {
+      title: 'Gehaltsrechner Schweden',
+      description: 'Schätzen Sie das schwedische Nettogehalt nach Grundabzug, Arbeitsteuergutschrift und Kommunalsteuer.',
+      tags: ['Grundavdrag', 'Jobbskatteavdrag', 'Netto-Schätzung'],
+    },
   },
 
   common: {
@@ -104,6 +119,7 @@ const de = {
     netAnnual: 'Nettojahresgehalt',
     netAnnualTakeHome: 'Netto pro Jahr',
     netMonthly: 'Netto pro Monat',
+    netPerPayment: 'Netto pro normalem Monat',
     frequency: 'Abrechnungszeitraum',
     annual: 'Jährlich',
     monthly: 'Monatlich',
@@ -128,6 +144,7 @@ const de = {
     stateTax: 'Regionalsteuer',
     grossTax: 'Steuer brutto',
     taxCredits: 'Steuergutschriften',
+    specialPaymentTax: 'Steuer auf Sonderzahlungen',
     personalAllowance: 'Grundfreibetrag',
     taxableIncome: 'Zu versteuerndes Einkommen',
   },

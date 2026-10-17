@@ -73,6 +73,21 @@ const fr = {
       description: 'Estimez le salaire net néerlandais avec l’impôt de la case 1 et le crédit d’impôt habituel.',
       tags: ['Impôt néerlandais', 'Crédits d’impôt', 'Estimation nette'],
     },
+    belgiumSalary: {
+      title: 'Calculateur de salaire (Belgique)',
+      description: 'Estimez le salaire net belge après cotisations ONSS, impôt sur le revenu et taxe communale.',
+      tags: ['ONSS/RSZ', 'Taxe communale', 'Estimation nette'],
+    },
+    austriaSalary: {
+      title: 'Calculateur de salaire (Autriche)',
+      description: 'Estimez le salaire net autrichien sur 14 versements, les 13e et 14e étant imposés à 6%.',
+      tags: ['14 versements', 'Sonderzahlungen', 'Estimation nette'],
+    },
+    swedenSalary: {
+      title: 'Calculateur de salaire (Suède)',
+      description: 'Estimez le salaire net suédois après abattement de base, crédit d’activité et impôt communal.',
+      tags: ['Grundavdrag', 'Jobbskatteavdrag', 'Estimation nette'],
+    },
   },
 
   common: {
@@ -102,6 +117,7 @@ const fr = {
     netAnnual: 'Salaire net annuel',
     netAnnualTakeHome: 'Net annuel',
     netMonthly: 'Net mensuel',
+    netPerPayment: 'Net par mois ordinaire',
     frequency: 'Périodicité du salaire',
     annual: 'Annuel',
     monthly: 'Mensuel',
@@ -126,6 +142,7 @@ const fr = {
     stateTax: 'Impôt régional',
     grossTax: 'Impôt brut',
     taxCredits: 'Crédits d’impôt',
+    specialPaymentTax: 'Impôt sur 13e/14e mois',
     personalAllowance: 'Abattement personnel',
     taxableIncome: 'Revenu imposable',
   },

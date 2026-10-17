@@ -77,6 +77,21 @@ const en = {
       description: 'Estimate Dutch net salary with box-1 tax and the common tax-credit adjustment.',
       tags: ['Dutch tax', 'Tax credits', 'Net pay estimate'],
     },
+    belgiumSalary: {
+      title: 'Belgium Salary Calculator',
+      description: 'Estimate Belgian net salary after RSZ social security, income tax and the communal surcharge.',
+      tags: ['RSZ/ONSS', 'Communal surcharge', 'Net pay estimate'],
+    },
+    austriaSalary: {
+      title: 'Austria Salary Calculator',
+      description: 'Estimate Austrian net salary across 14 payments, with the 13th and 14th taxed at 6%.',
+      tags: ['14 payments', 'Sonderzahlungen', 'Net pay estimate'],
+    },
+    swedenSalary: {
+      title: 'Sweden Salary Calculator',
+      description: 'Estimate Swedish net salary after grundavdrag, jobbskatteavdrag and municipal tax.',
+      tags: ['Grundavdrag', 'Jobbskatteavdrag', 'Net pay estimate'],
+    },
   },
 
   common: {
@@ -108,6 +123,7 @@ const en = {
     netAnnual: 'Net annual salary',
     netAnnualTakeHome: 'Net annual (take-home)',
     netMonthly: 'Net monthly',
+    netPerPayment: 'Net per regular month',
     frequency: 'Salary frequency',
     annual: 'Annual',
     monthly: 'Monthly',
@@ -134,6 +150,7 @@ const en = {
     stateTax: 'State Tax',
     grossTax: 'Gross Tax',
     taxCredits: 'Tax Credits',
+    specialPaymentTax: '13th/14th Salary Tax',
     personalAllowance: 'Personal Allowance',
     taxableIncome: 'Taxable Income',
   },

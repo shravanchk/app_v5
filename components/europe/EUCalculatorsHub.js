@@ -32,6 +32,9 @@ const cards = [
   { id: 'germanyTakeHome', icon: Table2, path: '/germany/take-home', tint: T.emerald },
   { id: 'franceSalary', icon: Banknote, path: '/france-salary-calculator', tint: T.sky },
   { id: 'netherlandsSalary', icon: Banknote, path: '/netherlands-salary-calculator', tint: T.teal },
+  { id: 'belgiumSalary', icon: Banknote, path: '/belgium-salary-calculator', tint: T.amber },
+  { id: 'austriaSalary', icon: Banknote, path: '/austria-salary-calculator', tint: T.sky },
+  { id: 'swedenSalary', icon: Banknote, path: '/sweden-salary-calculator', tint: T.teal },
 ];
 
 // Static comparison table for the hub: net pay on a typical gross salary in each
@@ -41,10 +44,10 @@ const COMPARISON_SALARIES = [
   { code: 'DE', gross: 60000, href: '/germany-salary-calculator' },
   { code: 'FR', gross: 60000, href: '/france-salary-calculator' },
   { code: 'NL', gross: 60000, href: '/netherlands-salary-calculator' },
-  { code: 'AT', gross: 60000, href: '/european-salary-calculator' },
-  { code: 'BE', gross: 60000, href: '/european-salary-calculator' },
+  { code: 'AT', gross: 60000, href: '/austria-salary-calculator' },
+  { code: 'BE', gross: 60000, href: '/belgium-salary-calculator' },
   { code: 'CH', gross: 90000, href: '/european-salary-calculator' },
-  { code: 'SE', gross: 600000, href: '/european-salary-calculator' },
+  { code: 'SE', gross: 600000, href: '/sweden-salary-calculator' },
 ];
 
 const money = (amount, currency) => {
@@ -143,8 +146,10 @@ const EUCalculatorsHub = () => {
         </div>
         <p className="mt-3 text-sm text-ink-muted dark:text-slate-500">
           Planning estimates only — figures use national averages where rates vary locally (Swiss canton, Swedish
-          municipality), exclude church tax and surcharges, and salaries are not currency-adjusted between countries.
-          Cost of living differs; a higher keep-rate is not automatically a higher standard of living.
+          municipality, Belgian communal surcharge), exclude church tax and surcharges, and salaries are not
+          currency-adjusted between countries. The monthly column is the annual net divided by twelve; Austria
+          actually pays fourteen times a year, so a regular Austrian month is smaller and June and November are
+          much larger. Cost of living differs; a higher keep-rate is not automatically a higher standard of living.
         </p>
       </section>
       </Reveal>
@@ -163,7 +168,16 @@ const EUCalculatorsHub = () => {
           models the CSG/CRDS social charges that come out of pay before income tax is even assessed. The{' '}
           <Link href="/netherlands-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Netherlands calculator</Link>{' '}
           includes the general tax credit and labour credit whose taper makes Dutch take-home unusually progressive.
-          And the{' '}
+          The{' '}
+          <Link href="/belgium-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Belgium calculator</Link>{' '}
+          deducts RSZ social security and the flat-rate professional expenses allowance before any band applies, then
+          adds the communal surcharge your municipality levies on the tax due. The{' '}
+          <Link href="/austria-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Austria calculator</Link>{' '}
+          splits Jahresbrutto across the 14 payments Austrian salaries are actually quoted in, taxing the 13th and
+          14th at the flat 6% Sonderzahlungen rate rather than the marginal one. The{' '}
+          <Link href="/sweden-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Sweden calculator</Link>{' '}
+          applies the grundavdrag and the jobbskatteavdrag that make Swedish take-home far milder than its headline
+          municipal rate, and refunds the pension fee the way a skattereduktion actually does. And the{' '}
           <Link href="/uk-income-tax-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">UK calculator</Link>{' '}
           applies income tax bands alongside National Insurance, including the 60% effective marginal rate where the
           personal allowance tapers away between £100,000 and £125,140.

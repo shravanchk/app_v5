@@ -96,33 +96,36 @@ const COUNTRY_CONTENT = {
   FR: {
     faq: [
       { question: 'Does this France calculator account for the quotient familial?', answer: 'No — it models a single person (one part). France taxes households, so a married or PACS couple and children add parts that lower the income-tax base. A family can pay far less income tax than the single figure shown, though social contributions are unchanged.' },
-      { question: 'Why is French take-home lower than the Netherlands for the same gross?', answer: 'French employee social contributions (social insurance, CSG and unemployment) are heavier — about 21% of gross — and there is no large flat tax credit like the Dutch heffingskorting. On €60,000 France nets about €36,116 versus roughly €46,987 in the Netherlands.' },
+      { question: 'Why is French take-home lower than the Netherlands for the same gross?', answer: 'French employee social contributions (state and AGIRC-ARRCO pensions, plus CSG and CRDS) are heavier — about 21% of gross — and there is no large flat tax credit like the Dutch heffingskorting. On €60,000 France nets about €41,149 versus roughly €46,987 in the Netherlands.' },
       { question: 'Is French income tax withheld monthly now?', answer: 'Yes. Since the prélèvement à la source reform, income tax is withheld from each payslip rather than settled the following year, so the net figure here is close to what actually reaches your account.' }
     ],
     article: (
       <>
-        <h2 className="font-display text-xl font-bold text-ink dark:text-white">What €60,000 gross becomes in France — about €3,010 a month</h2>
+        <h2 className="font-display text-xl font-bold text-ink dark:text-white">What €60,000 gross becomes in France — about €3,429 a month</h2>
         <p className="mt-3">
           Run €60,000 of gross salary through the calculator above and it returns roughly{' '}
-          <strong className="text-ink dark:text-white">€36,116 net a year — about €3,010 a month</strong>, an effective
-          rate of 39.8%. France splits that almost evenly between two very different charges: social contributions of about
-          €12,780 and income tax of about €11,104. Knowing which is which matters, because only one of them is what a French
-          payslip treats as taxable income.
+          <strong className="text-ink dark:text-white">€41,149 net a year — about €3,429 a month</strong>, an effective
+          rate of 31.4%. Two very different charges make up the gap: social contributions of about €12,446 and income tax
+          of about €6,405. Social contributions are twice the size of the tax bill, and most of them are deducted
+          before income tax is even calculated.
         </p>
 
         <h3 className={cn('mt-8', proseHead)}>Two layers: cotisations, then impôt</h3>
         <ul className="mt-3 list-disc space-y-2 pl-5">
           <li>
-            <strong className="text-ink dark:text-white">Social contributions come off first.</strong> This model applies a
-            combined rate of about 21.3% for the main employee charges — social insurance, CSG and unemployment — roughly
-            €12,780 on €60,000. They fund healthcare, the state pension and unemployment cover, and are deducted before you
-            see the money.
+            <strong className="text-ink dark:text-white">Social contributions come off first.</strong> On €60,000 they come
+            to about €12,446 (20.7%): the state pension (6.9% up to the €48,060 social-security ceiling plus 0.4% on
+            everything), the AGIRC-ARRCO complementary pension (4.01% below the ceiling, 9.72% above it), and CSG and CRDS
+            at 9.7% of 98.25% of gross. Employees have paid no unemployment or health contribution since 2019 — the
+            employer carries those.
           </li>
           <li>
-            <strong className="text-ink dark:text-white">Income tax on a progressive barème.</strong> The 2026 bands run 0%
-            to €11,600, 11% to €29,579, 30% to €84,577, then 41% and 45%. On €60,000 that is about €11,104. Because the
-            first €11,600 is free and the 30% band only bites above €29,579, the effective income-tax rate stays well below
-            the 30% headline.
+            <strong className="text-ink dark:text-white">Income tax on a progressive barème — applied to a much smaller
+            base.</strong> Taxable income is gross less the deductible contributions (all but 2.9 points of CSG/CRDS),
+            then less a flat 10% allowance for professional expenses: €60,000 becomes about €44,337 of taxable income.
+            The 2026 bands run 0% to €11,600, 11% to €29,579, 30% to €84,577, then 41% and 45%, giving about €6,405 of
+            tax — an effective income-tax rate under 11% despite the 30% headline. Modest earners also get the
+            <em> décote</em>, which trims small tax bills further.
           </li>
           <li>
             <strong className="text-ink dark:text-white">Withheld at source.</strong> Since the prélèvement à la source
@@ -142,8 +145,8 @@ const COUNTRY_CONTENT = {
 
         <h3 className={cn('mt-8', proseHead)}>Reading the number</h3>
         <p className="mt-3">
-          At €40,000 the calculator shows about €26,376 net (34.1%); at €80,000, €45,856 (42.7%); at €100,000, €53,899
-          (46.1%). To weigh a French offer against a neighbour&rsquo;s, the{' '}
+          At €40,000 the calculator shows about €29,697 net (25.8%); at €80,000, €52,706 (34.1%); at €100,000, €64,262
+          (35.7%). To weigh a French offer against a neighbour&rsquo;s, the{' '}
           <a href="/european-salary-calculator" className={proseLink}>European salary calculator</a>{' '}runs the same gross
           through eight systems side by side — useful because France&rsquo;s social contributions are heavier than most
           while its net can still be middling. Every figure here is a planning estimate for a single employee; a French
@@ -203,6 +206,198 @@ const COUNTRY_CONTENT = {
         </p>
       </>
     )
+  },
+  BE: {
+    faq: [
+      { question: 'Why is Belgian tax lower than the 50% headline rate suggests?', answer: 'Because the 50% band applies to taxable income, not gross. On a €60,000 salary, social security (€7,842) and the flat-rate professional expenses deduction (€6,070) come off first, leaving about €46,088 to be taxed — below the €51,070 point where 50% starts. The effective rate lands near 38%, not 50%.' },
+      { question: 'What is the communal surcharge and how much does it cost me?', answer: 'Belgian municipalities add a surcharge on the federal tax you owe, ranging from 0% to about 9%. This calculator applies the 7% national average, which is roughly €977 a year on a €60,000 salary. Moving between a 0% commune and a 9% one is worth about €1,250 a year at that income — small next to rent, but not nothing.' },
+      { question: 'Does this include the werkbonus or a company car?', answer: 'No. The werkbonus, a social-security rebate for lower wages, is excluded, so salaries under roughly €30,000 are shown slightly pessimistically. The bijzondere bijdrage sociale zekerheid (at most €731 a year) is also excluded. Belgian packages often carry a company car, meal vouchers or an eco-cheque budget that this model does not value, and those can be worth more than a raise.' }
+    ],
+    article: (
+      <>
+        <h2 className="font-display text-xl font-bold text-ink dark:text-white">What €60,000 gross becomes in Belgium — about €3,102 a month</h2>
+        <p className="mt-3">
+          Run €60,000 of gross salary through the calculator above as a single employee with no dependants and it
+          returns roughly <strong className="text-ink dark:text-white">€37,220 net a year — about €3,102 a month</strong>,
+          an effective rate of 38.0%. That is a long way from the 50% figure Belgium is famous for, and the gap is not a
+          loophole: it is simply what happens when you tax income in the order Belgian law actually specifies.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Four steps, in this order</h3>
+        <ul className="mt-3 list-disc space-y-2 pl-5">
+          <li>
+            <strong className="text-ink dark:text-white">Social security comes off first.</strong> The employee RSZ/ONSS
+            contribution is 13.07% of gross — €7,842 on €60,000 — and it is deducted before any income tax is
+            calculated. It funds healthcare, pensions and unemployment cover.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">Then the professional expenses deduction.</strong> Employees
+            automatically get 30% of what remains as a flat-rate expenses allowance, capped at €6,070 for income year
+            2026. No receipts, no paperwork. On €60,000 the cap binds, and taxable income falls to about €46,088.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">Only then do the bands apply</strong> — 25% to €16,720, 40%
+            to €29,510, 45% to €51,070 and 50% above. Because taxable income is €46,088, this salary never reaches
+            the 50% band at all; gross tax comes to about €16,756.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">A credit, then the commune.</strong> The tax-free sum of
+            €11,180 is not a zero-rate slice but a credit worth 25% of itself — €2,795 straight off the bill,
+            leaving €13,961. Your municipality then adds its surcharge on that figure: about €977 at the 7% national
+            average used here.
+          </li>
+        </ul>
+
+        <h3 className={cn('mt-8', proseHead)}>What the effective rate does as pay rises</h3>
+        <p className="mt-3">
+          At €30,000 the calculator shows about €23,189 net (22.7%); at €45,000, €30,459 (32.3%); at €80,000,
+          €45,571 (43.0%); at €100,000, €53,655 (46.3%). The climb is steep in the middle because the flat-rate
+          expenses deduction is capped — once you pass the €6,070 ceiling, every extra euro of salary is exposed to
+          the bands with no offsetting relief, and the 50% band starts biting on gross salaries above roughly €80,000.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Why your Belgian payslip will differ</h3>
+        <p className="mt-3">
+          This model assumes a single employee, no dependants, private sector, standard flat-rate expenses and the 7%
+          average communal surcharge. Dependent children raise the tax-free sum and can move the number substantially;
+          your own commune may charge anywhere from 0% to 9%; and the werkbonus lifts net pay at lower salaries. Belgian
+          compensation also leans unusually hard on things a gross figure never shows — company cars, meal vouchers,
+          group insurance and the 13th month — so compare packages, not just salaries. For the wider picture, the{' '}
+          <a href="/european-salary-calculator" className={proseLink}>European salary calculator</a>{' '}puts the same gross
+          through eight systems, and the{' '}
+          <a href="/netherlands-salary-calculator" className={proseLink}>Netherlands calculator</a>{' '}shows the neighbour
+          most often compared against. Treat this as a planning estimate — your loonbrief or fiche 281.10 is the final word.
+        </p>
+      </>
+    )
+  },
+  AT: {
+    faq: [
+      { question: 'Does this calculator include the 13th and 14th salary?', answer: 'Yes, and it has to. Austrian salaries are quoted as 14 payments — 12 monthly plus Urlaubsgeld and Weihnachtsgeld. Enter your Jahresbrutto (all 14) and the calculator splits it correctly; if you enter a monthly figure it multiplies by 14, not 12. The two extra payments are Sonderzahlungen and are taxed at a flat 6%, not at your marginal rate.' },
+      { question: 'Why are the 13th and 14th salaries taxed so lightly?', answer: 'Sonderzahlungen fall outside the progressive tariff. After social security, the first €620 is free and the rest is taxed at 6%, provided the total stays within the Jahressechstel — which a standard 14-payment salary does exactly. On a €60,000 salary that costs about €389 instead of roughly €2,842 at the 40% marginal rate, a saving of about €2,450 a year.' },
+      { question: 'Does social security really stop at a ceiling?', answer: 'Yes. The Höchstbeitragsgrundlage for 2026 is €6,930 a month for running pay, with a separate €13,860 annual ceiling for the 13th/14th. Above those levels no further contributions are due, which is why the effective rate flattens on high salaries — at €120,000 social security is about €17,441 rather than the €21,744 an uncapped 18.12% would take.' }
+    ],
+    article: (
+      <>
+        <h2 className="font-display text-xl font-bold text-ink dark:text-white">What €60,000 gross becomes in Austria — about €2,934 a month, fourteen times a year</h2>
+        <p className="mt-3">
+          Run €60,000 of Jahresbrutto through the calculator above as a single Angestellte(r) outside Vienna and it
+          returns roughly <strong className="text-ink dark:text-white">€41,082 net a year</strong>, an effective rate
+          of 31.5%. The monthly figure depends on which month you mean: about{' '}
+          <strong className="text-ink dark:text-white">€2,934 in a normal month</strong>, and roughly double that in
+          June and November when the Urlaubsgeld and Weihnachtsgeld land. That fourteenth-payment structure is not a
+          quirk of presentation — it is the single biggest reason Austrian take-home beats what the 48% tax band implies.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Two salaries, two tax systems</h3>
+        <ul className="mt-3 list-disc space-y-2 pl-5">
+          <li>
+            <strong className="text-ink dark:text-white">The twelve running payments</strong>{' '}go through the normal
+            progressive tariff. Social security of 18.12% comes off first (about €9,319), the
+            Werbungskostenpauschale takes €132, and what remains — roughly €41,978 — meets the 2026 bands: nothing to
+            €13,539, then 20%, 30% and 40%. That produces about €8,238, less the €496 Verkehrsabsetzbetrag, so €7,742.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">The 13th and 14th are taxed separately</strong>{' '}and far more
+            gently. Social security applies at a lower 17.12% (they escape the Wohnbauförderungsbeitrag and the
+            AK-Umlage), the first €620 is tax-free, and everything above it is charged at a flat 6%. The bill on
+            €8,571 of Sonderzahlungen is about €389. Pushed through the progressive tariff at this salary&rsquo;s 40%
+            marginal rate it would have cost roughly €2,842 — the Sonderzahlungen rule is worth about €2,450 a year.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">Contributions stop at a ceiling.</strong>{' '}The 2026
+            Höchstbeitragsgrundlage is €6,930 a month for running pay and €13,860 a year for the Sonderzahlungen.
+            Below those levels contributions scale with salary; above them they simply stop.
+          </li>
+        </ul>
+
+        <h3 className={cn('mt-8', proseHead)}>What the effective rate does as pay rises</h3>
+        <p className="mt-3">
+          At €35,000 the calculator shows about €26,570 net (24.1%); at €45,000, €32,596 (27.6%); at €80,000, €51,730
+          (35.3%); at €120,000, €74,312 (38.1%). The curve is gentler than the 40&ndash;48% bands suggest, and it
+          flattens at the top for two compounding reasons: social security stops at the ceiling, and a fixed two
+          fourteenths of every salary keeps being taxed at 6% no matter how high the rest climbs.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Why your Lohnzettel will differ</h3>
+        <p className="mt-3">
+          This model assumes an Angestellte(r) outside Vienna, single, with no children and no commuter allowance.
+          Vienna raised the Wohnbauförderungsbeitrag for 2026, taking the employee rate to 18.32%; the
+          Familienbonus Plus, Alleinverdienerabsetzbetrag and Pendlerpauschale all reduce tax and none are modelled;
+          and the Zuschlag zum Verkehrsabsetzbetrag plus the Negativsteuer are granted at assessment rather than in
+          payroll, so low earners here are shown slightly pessimistically. For the wider picture, the{' '}
+          <a href="/european-salary-calculator" className={proseLink}>European salary calculator</a>{' '}puts the same
+          gross through eight systems, and the{' '}
+          <a href="/germany-salary-calculator" className={proseLink}>Germany calculator</a>{' '}covers the neighbour
+          Austrian offers are most often weighed against. Treat this as a planning estimate — your monthly
+          Lohnzettel is the final word.
+        </p>
+      </>
+    )
+  },
+  SE: {
+    faq: [
+      { question: 'Why is Swedish tax lower than its reputation suggests?', answer: 'Because the ~32% municipal rate is charged on taxable income, not gross, and two large reliefs come off first. The grundavdrag removes a slice of income from tax entirely, and the jobbskatteavdrag is a credit worth about 50,500 kr a year at higher salaries. On 500,000 kr the effective rate is about 21.2%, not 32%.' },
+      { question: 'Do I really pay the 7% allmän pensionsavgift?', answer: 'On paper yes, in practice no. The 7% pension fee is charged on income up to 673,038 kr, but a skattereduktion refunds 100% of it against your income tax. Anyone with enough tax to offset — which is nearly every employee — ends up paying nothing net. Modelling it as a straight 7% deduction, as many calculators do, overstates Swedish tax substantially.' },
+      { question: 'When does the 20% state tax actually start?', answer: 'On taxable income above the 2026 skiktgräns of 643,000 kr, which for someone taking only the standard grundavdrag means a gross salary of roughly 660,400 kr. Below that you pay municipal tax only. This is why the effective rate curve here is flat through the middle and then steepens sharply.' }
+    ],
+    article: (
+      <>
+        <h2 className="font-display text-xl font-bold text-ink dark:text-white">What 500,000 kr gross becomes in Sweden — about 32,854 kr a month</h2>
+        <p className="mt-3">
+          Run 500,000 kr of gross salary through the calculator above as an employee under 66 in an average-rate
+          municipality and it returns roughly{' '}
+          <strong className="text-ink dark:text-white">394,247 kr net a year — about 32,854 kr a month</strong>, an
+          effective rate of 21.2%. Sweden has a reputation for taking a third of everything, and the headline
+          municipal rate of 32.38% appears to confirm it. The reputation is wrong for one simple reason: that rate is
+          charged on taxable income after two substantial reliefs, and a third charge is refunded outright.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Three reliefs, then the rate</h3>
+        <ul className="mt-3 list-disc space-y-2 pl-5">
+          <li>
+            <strong className="text-ink dark:text-white">The grundavdrag</strong>{' '}comes off first. It rises with
+            income, plateaus, then tapers to a floor of 17,400 kr — which is where a 500,000 kr salary sits, leaving
+            482,600 kr to be taxed. Municipal tax on that is about 156,266 kr.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">The jobbskatteavdrag is the big one.</strong>{' '}It is a
+            credit against municipal tax, built up in bands and valued at the municipal rate, worth about 50,513 kr a
+            year at this salary. The phase-out that used to claw it back from high earners was removed for 2026, so
+            it now plateaus rather than disappearing.
+          </li>
+          <li>
+            <strong className="text-ink dark:text-white">The 7% pension fee cancels itself.</strong>{' '}The allmän
+            pensionsavgift takes 35,000 kr here — and a skattereduktion hands back 100% of it. It appears on the
+            payslip and then vanishes from the bill. Calculators that treat it as a straight deduction overstate
+            Swedish tax by the full 7%.
+          </li>
+        </ul>
+
+        <h3 className={cn('mt-8', proseHead)}>What the effective rate does as pay rises</h3>
+        <p className="mt-3">
+          At 300,000 kr the calculator shows about 245,240 kr net (18.3%); at 400,000 kr, 320,580 kr (19.9%); at
+          600,000 kr, 461,867 kr (23.0%); at 1,000,000 kr, 664,427 kr (33.6%). The curve is remarkably flat through
+          the middle and then bends hard, because the 20% statlig inkomstskatt only begins above 643,000 kr of
+          taxable income — roughly 660,400 kr of gross salary. Below that threshold Swedish marginal rates are
+          municipal-only; above it they jump by twenty points at once.
+        </p>
+
+        <h3 className={cn('mt-8', proseHead)}>Why your lönebesked will differ</h3>
+        <p className="mt-3">
+          This model uses the national average municipal rate of 32.38%, but the real figure is set by your kommun
+          and region and runs from 28.93% in Österåker to 35.65% in Dorotea — a spread worth more than 15,000 kr a
+          year on this salary. It also assumes you are under 66 (over-66s get a much larger grundavdrag and a
+          different job credit) and not a member of the Church of Sweden, whose fee is not modelled here. Thresholds
+          and formulas follow Skatteverket&rsquo;s technical description for 2026. For the wider picture, the{' '}
+          <a href="/european-salary-calculator" className={proseLink}>European salary calculator</a>{' '}puts the same
+          gross through eight systems, and the{' '}
+          <a href="/germany-salary-calculator" className={proseLink}>Germany calculator</a>{' '}covers the system
+          Swedish offers are most often compared against. Treat this as a planning estimate — your lönebesked and
+          Skatteverket&rsquo;s own tools are the final word.
+        </p>
+      </>
+    )
   }
 };
 
@@ -251,7 +446,12 @@ const EuropeanSalaryCalculator = ({
   const calculateSalary = () => {
     if (!grossSalary || !country) return;
 
-    const annual = frequency === 'annual' ? parseFloat(grossSalary) : parseFloat(grossSalary) * 12;
+    // Austria advertises salaries as 14 payments, so a monthly figure there
+    // annualises to 14x, not 12x. Every other system here pays 12.
+    const paymentsPerYear = SALARY_SYSTEMS[country]?.paymentsPerYear || 12;
+    const annual = frequency === 'annual'
+      ? parseFloat(grossSalary)
+      : parseFloat(grossSalary) * paymentsPerYear;
     const computed = computeEuropeanSalary(country, annual);
     if (computed) setResults(computed);
   };
@@ -295,7 +495,8 @@ const EuropeanSalaryCalculator = ({
   // keys, so an unmapped key still falls back to the raw key below.
   const deductionLabels = Object.fromEntries(
     ['incomeTax', 'nationalInsurance', 'socialSecurity', 'solidarityTax', 'federalTax', 'cantonalTax',
-      'ahv', 'municipalTax', 'stateTax', 'grossTax', 'taxCredits', 'personalAllowance', 'taxableIncome']
+      'ahv', 'municipalTax', 'stateTax', 'grossTax', 'taxCredits', 'personalAllowance', 'taxableIncome',
+      'specialPaymentTax']
       .map((key) => [key, t(`deductions.${key}`)])
   );
 
@@ -428,7 +629,13 @@ const EuropeanSalaryCalculator = ({
               <>
                 <div className="grid grid-cols-2 gap-3">
                   <ResultStat label={t('salary.netAnnualTakeHome')} value={formatCurrency(results.netAnnual, results.currency)} emphasis tone="positive" />
-                  <ResultStat label={t('salary.netMonthly')} value={formatCurrency(results.netMonthly, results.currency)} />
+                  <ResultStat
+                    label={results.paymentsPerYear === 12 ? t('salary.netMonthly') : t('salary.netPerPayment')}
+                    value={formatCurrency(
+                      results.paymentsPerYear === 12 ? results.netMonthly : results.netPerPayment,
+                      results.currency
+                    )}
+                  />
                   <ResultStat label={t('common.totalDeductions')} value={formatCurrency(results.breakdown.totalDeductions, results.currency)} />
                   <ResultStat label={t('common.effectiveTaxRate')} value={`${results.effectiveRate?.toFixed(1)}%`} />
                 </div>
@@ -529,31 +736,32 @@ const EuropeanSalaryCalculator = ({
           <div className="mt-12 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft dark:text-slate-300">
             <h2 className="font-display text-xl font-bold text-ink dark:text-white">Same gross, very different net: what actually varies between countries</h2>
             <p className="mt-3">
-              Run the same €60,000 gross salary through this calculator&rsquo;s eight systems and the spread is
-              startling: about <strong className="text-ink dark:text-white">€46,990 net in the Netherlands</strong>{' '}
-              (a 21.7% effective rate) against roughly{' '}
-              <strong className="text-ink dark:text-white">€28,100 in Belgium</strong> (53.2%) — a gap of nearly
-              €1,600 every month for identical pay. Germany (€37,550) and France (€36,120) cluster in the middle
-              around 37&ndash;40%. Three structural differences, not one, produce that spread, and knowing which
-              one drives your own number is what makes a payslip legible.
+              Run the same €60,000 gross salary through this calculator&rsquo;s euro-denominated systems and the
+              spread is startling: about <strong className="text-ink dark:text-white">€46,990 net in the
+              Netherlands</strong> (a 21.7% effective rate) against roughly{' '}
+              <strong className="text-ink dark:text-white">€37,220 in Belgium</strong>{' '}(38.0%) — a gap of about
+              €810 every month for identical pay. Germany (€37,551) sits right beside Belgium, while France
+              (€41,149) and Austria (€41,082) land in between, around 31&ndash;32%. Three structural differences, not one, produce that spread, and knowing
+              which one drives your own number is what makes a payslip legible.
             </p>
 
             <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">The three levers: bands, contributions, credits</h3>
             <ul className="mt-3 list-disc space-y-2 pl-5">
               <li>
-                <strong className="text-ink dark:text-white">Progressive tax bands</strong> get the headlines, but
+                <strong className="text-ink dark:text-white">Progressive tax bands</strong>{' '}get the headlines, but
                 they tax income in slices — the first slice is often free (UK personal allowance £12,570; German
                 Grundfreibetrag €12,348; French first band to €11,600), and top rates apply only above high
                 thresholds. This is why a UK earner on £50,000 sits in a &ldquo;40% band&rdquo; yet keeps about
                 £39,520 — an effective rate of 21%.
               </li>
               <li>
-                <strong className="text-ink dark:text-white">Social contributions</strong> are the quiet giant. In
+                <strong className="text-ink dark:text-white">Social contributions</strong>{' '}are the quiet giant. In
                 Germany, an employee&rsquo;s pension (9.3%), health (~8.75%), unemployment (1.3%), and care (2.4%)
                 contributions take more of a €60,000 salary than income tax does — and unlike tax they start from
-                the first euro, though they also stop at assessment ceilings. France stacks CSG and other social
-                charges to a similar effect. Belgium&rsquo;s combination of both levers at once is what pushes it
-                to the top of the deduction table.
+                the first euro, though they also stop at assessment ceilings. France stacks pension charges and
+                CSG to a similar 21%, though most of it is deductible from taxable income. Belgium pulls both levers at once — 13.07% employee social security
+                and bands reaching 50% — but its flat-rate professional-expenses deduction and tax-free credit
+                claw enough back to land it beside Germany rather than far above it.
               </li>
               <li>
                 <strong className="text-ink dark:text-white">Credits and allowances</strong> pull in the opposite
@@ -579,7 +787,7 @@ const EuropeanSalaryCalculator = ({
             <h3 className="mt-8 font-display text-lg font-semibold text-ink dark:text-white">Why your real payslip will still differ</h3>
             <p className="mt-3">
               This calculator models a standard single employee, and that assumption matters more in some systems
-              than others. France taxes households, not individuals — the <em>quotient familial</em> splits income
+              than others. France taxes households, not individuals — the <em>quotient familial</em>{' '}splits income
               across family members, so a married earner with children can pay dramatically less than the single
               figure shown. Germany&rsquo;s marital splitting and church tax move numbers both ways; Swiss totals
               swing by canton and commune. Country-specific pages for{' '}
