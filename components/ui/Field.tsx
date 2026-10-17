@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { cn } from './cn';
 
 const labelCls = 'mb-1.5 block text-sm font-medium text-ink-soft dark:text-slate-300';
@@ -6,6 +6,51 @@ const controlCls =
   'w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-[0.95rem] text-ink ' +
   'shadow-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-500/30 ' +
   'dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100';
+
+type NumericInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'type'> & {
+  value: number | string | null | undefined;
+  onChange: (raw: string) => void;
+};
+
+const toText = (v: NumericInputProps['value']) =>
+  v === null || v === undefined || (typeof v === 'number' && Number.isNaN(v)) ? '' : String(v);
+
+// A number input that shows what the user typed rather than echoing the parent's
+// state back. Most calculators coerce input with `Number(v) || 0`, so a cleared
+// field became state 0 and rendered "0"; typing next produced "012". Here the
+// typed text is local, and the parent's value only overwrites it when it changes
+// for some other reason (a reset, a preset, a shared link, a currency switch).
+export function NumericInput({ value, onChange, ...rest }: NumericInputProps) {
+  const [draft, setDraft] = useState(() => toText(value));
+  const justTyped = useRef(false);
+
+  useEffect(() => {
+    if (justTyped.current) return;
+    setDraft(toText(value));
+  }, [value]);
+
+  // Runs after the effect above on every render, so the flag only ever covers
+  // the render caused by the keystroke that set it.
+  useEffect(() => {
+    justTyped.current = false;
+  });
+
+  return (
+    <input
+      type="number"
+      inputMode="decimal"
+      {...rest}
+      value={draft}
+      onChange={(e) => {
+        // "012" -> "12", but "0.5" and "0" stay as typed.
+        const raw = e.target.value.replace(/^(-?)0+(?=\d)/, '$1');
+        justTyped.current = true;
+        setDraft(raw);
+        onChange(raw);
+      }}
+    />
+  );
+}
 
 type NumberFieldProps = {
   id: string;
@@ -26,15 +71,13 @@ export function NumberField({ id, label, value, onChange, min = 0, max, step, pr
       <label htmlFor={id} className={labelCls}>{label}</label>
       <div className="relative flex items-center">
         {prefix ? <span className="pointer-events-none absolute left-3.5 text-sm text-ink-muted">{prefix}</span> : null}
-        <input
+        <NumericInput
           id={id}
-          type="number"
-          inputMode="decimal"
           value={value}
           min={min}
           max={max}
           step={step}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={onChange}
           className={cn(controlCls, prefix && 'pl-8', suffix && 'pr-12')}
         />
         {suffix ? <span className="pointer-events-none absolute right-3.5 text-sm text-ink-muted">{suffix}</span> : null}

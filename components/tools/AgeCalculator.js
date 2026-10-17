@@ -5,6 +5,7 @@ import AffiliateRecommendations from '../AffiliateRecommendations';
 import { CalcLayout } from '../calculator/CalcLayout';
 import Card from '../ui/Card';
 import { cn } from '../ui/cn';
+import { NumericInput } from '../ui/Field';
 
 const fieldLabel = 'mb-1.5 flex items-center gap-1.5 text-sm font-medium text-ink-soft dark:text-slate-300';
 const fieldInput =
@@ -1019,10 +1020,9 @@ const AgeCalculator = () => {
                       <Target size={16} className="text-brand-600 dark:text-brand-300" />
                       Retirement Age
                     </label>
-                    <input
-                      type="number"
+                    <NumericInput
                       value={lifeEventsParams.retirementAge}
-                      onChange={(e) => setLifeEventsParams(prev => ({...prev, retirementAge: parseInt(e.target.value) || 60}))}
+                      onChange={(v) => setLifeEventsParams(prev => ({...prev, retirementAge: parseInt(v, 10) || 60}))}
                       className={fieldInput}
                       min="50"
                       max="80"
@@ -1034,10 +1034,9 @@ const AgeCalculator = () => {
                       <Heart size={16} className="text-brand-600 dark:text-brand-300" />
                       Life Expectancy
                     </label>
-                    <input
-                      type="number"
+                    <NumericInput
                       value={lifeEventsParams.lifeExpectancy}
-                      onChange={(e) => setLifeEventsParams(prev => ({...prev, lifeExpectancy: parseInt(e.target.value) || 75}))}
+                      onChange={(v) => setLifeEventsParams(prev => ({...prev, lifeExpectancy: parseInt(v, 10) || 75}))}
                       className={fieldInput}
                       min="60"
                       max="100"

@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import HomeButton from '../HomeButton';
 import { buildFaqSchema } from '../../utils/faqSchema';
+import { NumericInput } from '../ui/Field';
 
 const FAQ = [
   { question: 'Is my expense data private?', answer: 'Yes. This tracker runs entirely in your browser — expenses, budgets and category settings stay on your device and are not sent to a server. Clearing your browser data or switching devices will not carry the entries over, so export a copy if you want a permanent record.' },
@@ -909,12 +910,11 @@ const CreditCardAnalyzer = () => {
                       <label className="block font-medium text-gray-900 mb-1">{category.name}</label>
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-600">{currencies[selectedCurrency]?.symbol}</span>
-                        <input
-                          type="number"
+                        <NumericInput
                           value={budgets[category.name]}
-                          onChange={(e) => setBudgets({
+                          onChange={(v) => setBudgets({
                             ...budgets,
-                            [category.name]: parseFloat(e.target.value) || 0
+                            [category.name]: parseFloat(v) || 0
                           })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           placeholder="0.00"
