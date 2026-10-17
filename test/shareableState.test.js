@@ -9,7 +9,8 @@ const {
   toNumber,
   toNumericString,
   toOption,
-  toBoolean
+  toBoolean,
+  coerceSharedValue
 } = require('../utils/shareableState');
 
 const DEFAULTS = { price: 450000, rate: 6.75, term: 30 };
@@ -175,4 +176,25 @@ test('toBoolean reads both the 1/0 and true/false forms', () => {
   assert.equal(toBoolean('0', true), false);
   assert.equal(toBoolean('false', true), false);
   assert.equal(toBoolean('maybe', true), true);
+});
+
+test('coerceSharedValue keeps numeric-string fields as strings', () => {
+  assert.equal(coerceSharedValue('185', '160'), '185');
+  assert.equal(coerceSharedValue('abc', '160'), '160');
+});
+
+test('coerceSharedValue constrains selects and tabs to the allowed list', () => {
+  assert.equal(coerceSharedValue('metric', 'imperial', ['imperial', 'metric']), 'metric');
+  assert.equal(coerceSharedValue('<script>', 'imperial', ['imperial', 'metric']), 'imperial');
+});
+
+test('coerceSharedValue accepts only ISO dates for empty-by-default date fields', () => {
+  assert.equal(coerceSharedValue('2026-09-01', ''), '2026-09-01');
+  assert.equal(coerceSharedValue('yesterday', ''), '');
+});
+
+test('coerceSharedValue restores numbers and booleans from their defaults', () => {
+  assert.equal(coerceSharedValue('12000000', 10000000), 12000000);
+  assert.equal(coerceSharedValue('junk', 10000000), 10000000);
+  assert.equal(coerceSharedValue('1', false), true);
 });

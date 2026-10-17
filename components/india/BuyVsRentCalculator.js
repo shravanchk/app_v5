@@ -1,10 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
 import HomeButton from '../HomeButton';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import SearchLandingSections from '../calculator/SearchLandingSections';
 import { PieBreakdownChart, ComparisonBars } from '../calculator/ResultVisualizations';
 import { useT } from '../../utils/i18n/LanguageProvider';
 import LanguageToggle from '../i18n/LanguageToggle';
+import { NumericInput } from '../ui/Field';
 
 const monthlyEmi = (principal, annualRate, years) => {
   const n = years * 12;
@@ -14,6 +17,8 @@ const monthlyEmi = (principal, annualRate, years) => {
   const f = Math.pow(1 + r, n);
   return (principal * r * f) / (f - 1);
 };
+
+const SHARE_DEFAULTS = { homePrice: 10000000, downPaymentPct: 20, loanRate: 8.5, loanYears: 20, monthlyRent: 35000, rentIncrease: 6, homeAppreciation: 5, analysisYears: 20 };
 
 const BuyVsRentCalculator = () => {
   const t = useT();
@@ -25,6 +30,8 @@ const BuyVsRentCalculator = () => {
   const [rentIncrease, setRentIncrease] = useState(6);
   const [homeAppreciation, setHomeAppreciation] = useState(5);
   const [analysisYears, setAnalysisYears] = useState(20);
+
+  useShareableFields(SHARE_DEFAULTS, { homePrice: [homePrice, setHomePrice], downPaymentPct: [downPaymentPct, setDownPaymentPct], loanRate: [loanRate, setLoanRate], loanYears: [loanYears, setLoanYears], monthlyRent: [monthlyRent, setMonthlyRent], rentIncrease: [rentIncrease, setRentIncrease], homeAppreciation: [homeAppreciation, setHomeAppreciation], analysisYears: [analysisYears, setAnalysisYears] });
 
   const formatCurrency = (value) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
@@ -81,6 +88,13 @@ const BuyVsRentCalculator = () => {
 
   const maxBar = Math.max(result.cumulativeBuyOutflow, result.cumulativeRentOutflow, 1);
   const effectiveBuyCost = Math.max(0, result.buyEffectiveCostFinal);
+  const summaryLines = [
+    `Verdict over ${analysisYears} years: ${result.winner} works out cheaper`,
+    `Monthly EMI: ${formatCurrency(result.emi)} (loan ${formatCurrency(result.loanPrincipal)}, down payment ${formatCurrency(result.downPayment)})`,
+    `Buy effective cost after equity: ${formatCurrency(effectiveBuyCost)}`,
+    `Rent total outflow: ${formatCurrency(result.cumulativeRentOutflow)}`,
+    `Break-even: ${result.breakEvenYear ? `year ${result.breakEvenYear}` : 'not within the analysis period'}`
+  ];
 
   return (
     <div className="calculator-container" style={{ background: 'linear-gradient(135deg, #f6f4ef 0%, #e7edf4 100%)' }}>
@@ -119,35 +133,35 @@ const BuyVsRentCalculator = () => {
             <div className="responsive-grid">
               <div>
                 <label className="input-label">{t('buyVsRent.homePrice')}</label>
-                <input className="calculator-input mobile-input" type="number" value={homePrice} onChange={(e) => setHomePrice(Number(e.target.value) || 0)} />
+                <NumericInput className="calculator-input mobile-input" value={homePrice} onChange={(v) => setHomePrice(Number(v) || 0)} />
               </div>
               <div>
                 <label className="input-label">{t('buyVsRent.downPayment')}</label>
-                <input className="calculator-input mobile-input" type="number" value={downPaymentPct} onChange={(e) => setDownPaymentPct(Number(e.target.value) || 0)} />
+                <NumericInput className="calculator-input mobile-input" value={downPaymentPct} onChange={(v) => setDownPaymentPct(Number(v) || 0)} />
               </div>
               <div>
                 <label className="input-label">{t('buyVsRent.loanInterestRate')}</label>
-                <input className="calculator-input mobile-input" type="number" step="0.1" value={loanRate} onChange={(e) => setLoanRate(Number(e.target.value) || 0)} />
+                <NumericInput className="calculator-input mobile-input" step="0.1" value={loanRate} onChange={(v) => setLoanRate(Number(v) || 0)} />
               </div>
               <div>
                 <label className="input-label">{t('buyVsRent.loanTenureYears')}</label>
-                <input className="calculator-input mobile-input" type="number" value={loanYears} onChange={(e) => setLoanYears(Number(e.target.value) || 0)} />
+                <NumericInput className="calculator-input mobile-input" value={loanYears} onChange={(v) => setLoanYears(Number(v) || 0)} />
               </div>
               <div>
                 <label className="input-label">{t('buyVsRent.monthlyRent')}</label>
-                <input className="calculator-input mobile-input" type="number" value={monthlyRent} onChange={(e) => setMonthlyRent(Number(e.target.value) || 0)} />
+                <NumericInput className="calculator-input mobile-input" value={monthlyRent} onChange={(v) => setMonthlyRent(Number(v) || 0)} />
               </div>
               <div>
                 <label className="input-label">{t('buyVsRent.annualRentIncrease')}</label>
-                <input className="calculator-input mobile-input" type="number" value={rentIncrease} onChange={(e) => setRentIncrease(Number(e.target.value) || 0)} />
+                <NumericInput className="calculator-input mobile-input" value={rentIncrease} onChange={(v) => setRentIncrease(Number(v) || 0)} />
               </div>
               <div>
                 <label className="input-label">{t('buyVsRent.homeAppreciation')}</label>
-                <input className="calculator-input mobile-input" type="number" value={homeAppreciation} onChange={(e) => setHomeAppreciation(Number(e.target.value) || 0)} />
+                <NumericInput className="calculator-input mobile-input" value={homeAppreciation} onChange={(v) => setHomeAppreciation(Number(v) || 0)} />
               </div>
               <div>
                 <label className="input-label">{t('buyVsRent.analysisPeriod')}</label>
-                <input className="calculator-input mobile-input" type="number" value={analysisYears} onChange={(e) => setAnalysisYears(Number(e.target.value) || 0)} />
+                <NumericInput className="calculator-input mobile-input" value={analysisYears} onChange={(v) => setAnalysisYears(Number(v) || 0)} />
               </div>
             </div>
           </section>
@@ -205,6 +219,8 @@ const BuyVsRentCalculator = () => {
             ]}
             formatter={formatCurrency}
           />
+
+          <ResultActions title="Buy vs rent summary" summaryLines={summaryLines} fileName="upaman-buy-vs-rent-summary.txt" />
 
           <SearchLandingSections
             intro={(

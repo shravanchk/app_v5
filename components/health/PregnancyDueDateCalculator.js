@@ -6,6 +6,8 @@ import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import { TrimesterTrack, HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
 import { dueDateFromLMP, dueDateFromConception, gestationalAge, addDays } from '../../utils/healthCalculations';
 import { buildFaqSchema } from '../../utils/faqSchema';
@@ -28,10 +30,14 @@ const FAQ = [
 const fmt = (d) => d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 const fmtShort = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
+const SHARE_DEFAULTS = { method: 'lmp', dateStr: '', cycleLen: '28' };
+
 const PregnancyDueDateCalculator = () => {
   const [method, setMethod] = useState('lmp');
   const [dateStr, setDateStr] = useState('');
   const [cycleLen, setCycleLen] = useState('28');
+
+  useShareableFields(SHARE_DEFAULTS, { method: [method, setMethod], dateStr: [dateStr, setDateStr], cycleLen: [cycleLen, setCycleLen] }, { method: ['lmp', 'conception'] });
 
   const cycleLength = parseInt(cycleLen, 10) || 28;
 
@@ -58,6 +64,8 @@ const PregnancyDueDateCalculator = () => {
       ]
     };
   }, [dateStr, method, cycleLength]);
+
+  const summaryLines = result ? [`Estimated due date: ${fmt(result.dueDate)}`, `Gestational age today: ${result.age.weeks} weeks ${result.age.days} days (trimester ${result.trimester})`, ...result.milestones.map((m) => `${m.label}: ${fmtShort(m.date)}`)] : [];
 
   const softwareSchema = buildSoftwareApplicationSchema({
     name: 'Pregnancy Due Date Calculator',
@@ -258,6 +266,7 @@ const PregnancyDueDateCalculator = () => {
           />
         </div>
 
+        <ResultActions title="Pregnancy due date summary" summaryLines={summaryLines} fileName="upaman-due-date-summary.txt" />
         <RelatedHealthLinks current="/pregnancy-due-date-calculator" />
 
         <HealthDisclaimer>

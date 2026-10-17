@@ -6,6 +6,8 @@ import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import { HealthDisclaimer, RelatedHealthLinks, toneText } from '../health/HealthKit';
 import { cn } from '../ui/cn';
 import {
@@ -42,6 +44,8 @@ const MacroBar = ({ label, grams, pct, tone }) => (
   </div>
 );
 
+const SHARE_DEFAULTS = { units: 'imperial', sex: 'male', age: '30', feet: '5', inches: '8', lbs: '160', cm: '173', kg: '72', activity: 'light', goal: 'maintain', preset: 'balanced' };
+
 const MacroCalculator = () => {
   const [units, setUnits] = useState('imperial');
   const [sex, setSex] = useState('male');
@@ -54,6 +58,8 @@ const MacroCalculator = () => {
   const [activity, setActivity] = useState('light');
   const [goal, setGoal] = useState('maintain');
   const [preset, setPreset] = useState('balanced');
+
+  useShareableFields(SHARE_DEFAULTS, { units: [units, setUnits], sex: [sex, setSex], age: [age, setAge], feet: [feet, setFeet], inches: [inches, setInches], lbs: [lbs, setLbs], cm: [cm, setCm], kg: [kg, setKg], activity: [activity, setActivity], goal: [goal, setGoal], preset: [preset, setPreset] }, { units: ['imperial', 'metric'], sex: ['male', 'female'], activity: ACTIVITY_LEVELS.map((l) => l.value), goal: CALORIE_GOALS.map((g) => g.id), preset: MACRO_PRESETS.map((p) => p.id) });
 
   const { heightCm, weightKg } = useMemo(() => (
     units === 'imperial'
@@ -71,6 +77,8 @@ const MacroCalculator = () => {
   const target = tdee ? Math.max(1200, tdee + goalDef.delta) : null;
   const grams = target ? macroGrams(target, presetDef) : null;
   const proteinPerKg = grams && weightKg ? grams.protein / weightKg : null;
+
+  const summaryLines = grams && target ? [`Daily calorie target: ${Math.round(target).toLocaleString()} kcal (${goalDef.label})`, `Maintenance (TDEE): ${Math.round(tdee).toLocaleString()} kcal`, `Protein: ${Math.round(grams.protein)} g`, `Carbs: ${Math.round(grams.carbs)} g`, `Fat: ${Math.round(grams.fat)} g`, `Split: ${presetDef.label} (${presetDef.protein}P / ${presetDef.carbs}C / ${presetDef.fat}F)`] : [];
 
   const softwareSchema = buildSoftwareApplicationSchema({
     name: 'Macro Calculator',
@@ -275,6 +283,7 @@ const MacroCalculator = () => {
           />
         </div>
 
+        <ResultActions title="Macro plan summary" summaryLines={summaryLines} fileName="upaman-macro-summary.txt" />
         <RelatedHealthLinks current="/macro-calculator" />
 
         <HealthDisclaimer />

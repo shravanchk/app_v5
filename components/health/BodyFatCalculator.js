@@ -6,6 +6,8 @@ import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import { BandScale, HealthDisclaimer, toneText, RelatedHealthLinks } from '../health/HealthKit';
 import {
   bodyFatNavy, bodyFatCategory, BODY_FAT_BANDS,
@@ -24,6 +26,8 @@ const FAQ = [
   { question: 'Why did my percentage change so much from a small waist difference?', answer: 'The formula is deliberately waist-sensitive: for a typical man, adding two inches at the waist with nothing else changed raises the estimate by 3–4 percentage points. That sensitivity is a feature — abdominal circumference tracks the visceral fat most associated with health risk.' }
 ];
 
+const SHARE_DEFAULTS = { units: 'imperial', sex: 'male', feet: '5', inches: '8', neckIn: '15', waistIn: '34', hipIn: '38', lbs: '160', cm: '173', neckCmIn: '38', waistCmIn: '86', hipCmIn: '97', kg: '72' };
+
 const BodyFatCalculator = () => {
   const [units, setUnits] = useState('imperial');
   const [sex, setSex] = useState('male');
@@ -40,6 +44,8 @@ const BodyFatCalculator = () => {
   const [waistCmIn, setWaistCmIn] = useState('86');
   const [hipCmIn, setHipCmIn] = useState('97');
   const [kg, setKg] = useState('72');
+
+  useShareableFields(SHARE_DEFAULTS, { units: [units, setUnits], sex: [sex, setSex], feet: [feet, setFeet], inches: [inches, setInches], neckIn: [neckIn, setNeckIn], waistIn: [waistIn, setWaistIn], hipIn: [hipIn, setHipIn], lbs: [lbs, setLbs], cm: [cm, setCm], neckCmIn: [neckCmIn, setNeckCmIn], waistCmIn: [waistCmIn, setWaistCmIn], hipCmIn: [hipCmIn, setHipCmIn], kg: [kg, setKg] }, { units: ['imperial', 'metric'], sex: ['male', 'female'] });
 
   const m = useMemo(() => {
     if (units === 'imperial') {
@@ -66,6 +72,8 @@ const BodyFatCalculator = () => {
   const fatMassKg = percent && m.weightKg ? (percent / 100) * m.weightKg : null;
   const leanMassKg = fatMassKg !== null ? m.weightKg - fatMassKg : null;
   const fmtMass = (valueKg) => (units === 'imperial' ? `${(valueKg * 2.2046226218).toFixed(1)} lb` : `${valueKg.toFixed(1)} kg`);
+
+  const summaryLines = percent && category ? [`Body fat (US Navy method): ${percent.toFixed(1)}%`, `Category: ${category.label}`, ...(fatMassKg !== null ? [`Fat mass: ${fmtMass(fatMassKg)}`, `Lean mass: ${fmtMass(leanMassKg)}`] : [])] : [];
 
   const softwareSchema = buildSoftwareApplicationSchema({
     name: 'Body Fat Calculator (US Navy Method)',
@@ -270,6 +278,7 @@ const BodyFatCalculator = () => {
           />
         </div>
 
+        <ResultActions title="Body fat summary" summaryLines={summaryLines} fileName="upaman-body-fat-summary.txt" />
         <RelatedHealthLinks current="/body-fat-calculator" />
 
         <HealthDisclaimer />

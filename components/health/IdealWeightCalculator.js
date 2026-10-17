@@ -6,6 +6,8 @@ import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import { HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
 import {
   idealWeightsKg, healthyWeightRangeKg, lbFromKg, cmFromFtIn
@@ -23,12 +25,16 @@ const FAQ = [
   { question: 'Should I diet down to my ideal weight number?', answer: 'Not on the strength of a height formula alone. If you are inside the healthy BMI range, composition (body-fat percentage, waist) says more than another kilogram either way; if you are outside it, pick a sustainable rate of change and a target zone rather than a single number.' }
 ];
 
+const SHARE_DEFAULTS = { units: 'imperial', sex: 'male', feet: '5', inches: '10', cm: '178' };
+
 const IdealWeightCalculator = () => {
   const [units, setUnits] = useState('imperial');
   const [sex, setSex] = useState('male');
   const [feet, setFeet] = useState('5');
   const [inches, setInches] = useState('10');
   const [cm, setCm] = useState('178');
+
+  useShareableFields(SHARE_DEFAULTS, { units: [units, setUnits], sex: [sex, setSex], feet: [feet, setFeet], inches: [inches, setInches], cm: [cm, setCm] }, { units: ['imperial', 'metric'], sex: ['male', 'female'] });
 
   const heightCm = useMemo(() => (
     units === 'imperial' ? cmFromFtIn(parseFloat(feet) || 0, parseFloat(inches) || 0) : parseFloat(cm) || 0
@@ -42,6 +48,8 @@ const IdealWeightCalculator = () => {
   const fmt = (kgVal) => (units === 'imperial'
     ? `${Math.round(lbFromKg(kgVal))} lb`
     : `${Math.round(kgVal)} kg`);
+
+  const summaryLines = formulas && range ? [`Average of formulas: ${fmt(avgKg)}`, ...formulas.map((f) => `${f.label}: ${fmt(f.kg)}`), `Healthy BMI weight range: ${fmt(range.min)} – ${fmt(range.max)}`] : [];
 
   const softwareSchema = buildSoftwareApplicationSchema({
     name: 'Ideal Weight Calculator',
@@ -233,6 +241,7 @@ const IdealWeightCalculator = () => {
           />
         </div>
 
+        <ResultActions title="Ideal weight summary" summaryLines={summaryLines} fileName="upaman-ideal-weight-summary.txt" />
         <RelatedHealthLinks current="/ideal-weight-calculator" />
 
         <HealthDisclaimer />

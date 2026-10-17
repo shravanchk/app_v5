@@ -180,6 +180,40 @@ const useShareableState = ({ values, defaults, onRestore }) => {
   }, [serialized]);
 };
 
+// Picks the coercion for one shared value from the shape of its default:
+// an allowed-list for selects/tabs, numbers, booleans, numeric strings (kept
+// as strings so a cleared field stays clearable), ISO dates for date inputs.
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+const coerceSharedValue = (raw, fallback, allowed) => {
+  if (allowed) return toOption(raw, allowed, fallback);
+  if (typeof fallback === 'number') return toNumber(raw, fallback);
+  if (typeof fallback === 'boolean') return toBoolean(raw, fallback);
+  if (fallback !== '' && Number.isFinite(Number(fallback))) return toNumericString(raw, fallback);
+  if (fallback === '' || ISO_DATE.test(fallback)) return ISO_DATE.test(raw) ? raw : fallback;
+  return String(raw).slice(0, 64);
+};
+
+// Calculators that keep each input in its own useState (the health set, buy-vs-rent)
+// pass `{ key: [value, setter] }` pairs instead of assembling a state object.
+const useShareableFields = (defaults, fields, options = {}) => {
+  const values = {};
+  Object.keys(defaults).forEach((key) => {
+    values[key] = fields[key][0];
+  });
+
+  useShareableState({
+    values,
+    defaults,
+    onRestore: (shared) => {
+      Object.entries(shared).forEach(([key, raw]) => {
+        if (!(key in defaults)) return;
+        fields[key][1](coerceSharedValue(raw, defaults[key], options[key]));
+      });
+    }
+  });
+};
+
 module.exports = {
   collectSharedValues,
   buildShareQuery,
@@ -190,5 +224,7 @@ module.exports = {
   toNumericString,
   toOption,
   toBoolean,
-  useShareableState
+  useShareableState,
+  coerceSharedValue,
+  useShareableFields
 };

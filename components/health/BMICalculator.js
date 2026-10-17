@@ -6,6 +6,8 @@ import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import { BandScale, HealthDisclaimer, toneText, RelatedHealthLinks } from '../health/HealthKit';
 import {
   calculateBMI, bmiCategory, BMI_BANDS, healthyWeightRangeKg,
@@ -24,6 +26,8 @@ const FAQ = [
   { question: 'Is BMI useful while building muscle?', answer: 'Not on its own. Resistance training can raise BMI while body fat falls, which BMI reads as movement toward "overweight". Track waist measurement and body-fat percentage alongside weight during a recomposition phase — direction matters more than the single number.' }
 ];
 
+const SHARE_DEFAULTS = { units: 'imperial', feet: '5', inches: '8', lbs: '160', cm: '173', kg: '72' };
+
 const BMICalculator = () => {
   const [units, setUnits] = useState('imperial');
   const [feet, setFeet] = useState('5');
@@ -31,6 +35,8 @@ const BMICalculator = () => {
   const [lbs, setLbs] = useState('160');
   const [cm, setCm] = useState('173');
   const [kg, setKg] = useState('72');
+
+  useShareableFields(SHARE_DEFAULTS, { units: [units, setUnits], feet: [feet, setFeet], inches: [inches, setInches], lbs: [lbs, setLbs], cm: [cm, setCm], kg: [kg, setKg] }, { units: ['imperial', 'metric'] });
 
   const { heightCm, weightKg } = useMemo(() => (
     units === 'imperial'
@@ -44,6 +50,8 @@ const BMICalculator = () => {
 
   const fmtWeight = (valueKg) =>
     units === 'imperial' ? `${Math.round(lbFromKg(valueKg))} lb` : `${valueKg.toFixed(1)} kg`;
+
+  const summaryLines = bmi && category && range ? [`BMI: ${bmi.toFixed(1)}`, `Category: ${category.label}`, `Healthy weight range for your height: ${fmtWeight(range.min)} – ${fmtWeight(range.max)}`] : [];
 
   const softwareSchema = buildSoftwareApplicationSchema({
     name: 'BMI Calculator',
@@ -277,6 +285,7 @@ const BMICalculator = () => {
           />
         </div>
 
+        <ResultActions title="BMI summary" summaryLines={summaryLines} fileName="upaman-bmi-summary.txt" />
         <RelatedHealthLinks current="/bmi-calculator" />
 
         <HealthDisclaimer />

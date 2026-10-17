@@ -6,6 +6,8 @@ import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import { GoalBars, HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
 import {
   bmrMifflin, tdeeFromBmr, ACTIVITY_LEVELS, CALORIE_GOALS,
@@ -24,6 +26,8 @@ const FAQ = [
   { question: 'Do I need to hit the target exactly every day?', answer: 'No — energy balance plays out over weeks, not days. A weekly average within about 100 kcal of target produces the same result as daily precision, and allows normal life (dinners out, weekends) without derailing the plan.' }
 ];
 
+const SHARE_DEFAULTS = { units: 'imperial', sex: 'male', age: '30', feet: '5', inches: '8', lbs: '160', cm: '173', kg: '72', activity: 'light' };
+
 const CalorieCalculator = () => {
   const [units, setUnits] = useState('imperial');
   const [sex, setSex] = useState('male');
@@ -34,6 +38,8 @@ const CalorieCalculator = () => {
   const [cm, setCm] = useState('173');
   const [kg, setKg] = useState('72');
   const [activity, setActivity] = useState('light');
+
+  useShareableFields(SHARE_DEFAULTS, { units: [units, setUnits], sex: [sex, setSex], age: [age, setAge], feet: [feet, setFeet], inches: [inches, setInches], lbs: [lbs, setLbs], cm: [cm, setCm], kg: [kg, setKg], activity: [activity, setActivity] }, { units: ['imperial', 'metric'], sex: ['male', 'female'], activity: ACTIVITY_LEVELS.map((l) => l.value) });
 
   const { heightCm, weightKg } = useMemo(() => (
     units === 'imperial'
@@ -54,6 +60,8 @@ const CalorieCalculator = () => {
         emphasis: g.id === 'maintain'
       }))
     : [];
+
+  const summaryLines = tdee && bmr ? [`Maintenance calories (TDEE): ${Math.round(tdee).toLocaleString()} kcal/day`, `Resting metabolism (BMR): ${Math.round(bmr).toLocaleString()} kcal/day`, ...goalItems.map((g) => `${g.label}: ${Math.round(g.value).toLocaleString()} kcal/day`)] : [];
 
   const softwareSchema = buildSoftwareApplicationSchema({
     name: 'Calorie Calculator (TDEE)',
@@ -257,6 +265,7 @@ const CalorieCalculator = () => {
           />
         </div>
 
+        <ResultActions title="Calorie needs summary" summaryLines={summaryLines} fileName="upaman-calorie-summary.txt" />
         <RelatedHealthLinks current="/calorie-calculator" />
 
         <HealthDisclaimer />

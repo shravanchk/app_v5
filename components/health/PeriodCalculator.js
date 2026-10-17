@@ -6,6 +6,8 @@ import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField } from '../ui/Field';
 import Card from '../ui/Card';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import { CycleRing, HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
 import { predictCycles } from '../../utils/healthCalculations';
 import { buildFaqSchema } from '../../utils/faqSchema';
@@ -28,10 +30,14 @@ const FAQ = [
 const fmt = (d) => d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
 const fmtShort = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
+const SHARE_DEFAULTS = { lastStart: '', cycleLen: '28', periodLen: '5' };
+
 const PeriodCalculator = () => {
   const [lastStart, setLastStart] = useState('');
   const [cycleLen, setCycleLen] = useState('28');
   const [periodLen, setPeriodLen] = useState('5');
+
+  useShareableFields(SHARE_DEFAULTS, { lastStart: [lastStart, setLastStart], cycleLen: [cycleLen, setCycleLen], periodLen: [periodLen, setPeriodLen] }, {});
 
   const cycleLength = Math.min(Math.max(parseInt(cycleLen, 10) || 0, 0), 60);
   const periodLength = Math.min(Math.max(parseInt(periodLen, 10) || 0, 0), 12);
@@ -48,6 +54,8 @@ const PeriodCalculator = () => {
   }, [valid, lastStart, cycleLength, periodLength]);
 
   const ovulationDay = cycleLength - 14;
+
+  const summaryLines = cycles ? [`Cycle length: ${cycleLength} days, period ${periodLength} days`, ...cycles.map((c, i) => `Cycle ${i + 1}: period starts ${fmt(c.periodStart)}, ovulation around ${fmtShort(c.ovulation)}`)] : [];
 
   const softwareSchema = buildSoftwareApplicationSchema({
     name: 'Period Calculator',
@@ -239,6 +247,7 @@ const PeriodCalculator = () => {
           />
         </div>
 
+        <ResultActions title="Period prediction summary" summaryLines={summaryLines} fileName="upaman-period-summary.txt" />
         <RelatedHealthLinks current="/period-calculator" />
 
         <HealthDisclaimer>

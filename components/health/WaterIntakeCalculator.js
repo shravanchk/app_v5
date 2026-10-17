@@ -7,6 +7,8 @@ import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import { HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
 import { waterIntakeMl, WATER_CLIMATES, kgFromLb } from '../../utils/healthCalculations';
 import { buildFaqSchema } from '../../utils/faqSchema';
@@ -22,12 +24,16 @@ const FAQ = [
   { question: 'How do I know if I am drinking enough?', answer: 'The two best everyday signals are thirst and urine colour — pale yellow suggests adequate hydration, dark amber suggests you are behind. Persistent headaches, fatigue, and constipation are also common mild-dehydration flags.' }
 ];
 
+const SHARE_DEFAULTS = { units: 'imperial', lbs: '160', kg: '72', exercise: '30', climate: 'temperate' };
+
 const WaterIntakeCalculator = () => {
   const [units, setUnits] = useState('imperial');
   const [lbs, setLbs] = useState('160');
   const [kg, setKg] = useState('72');
   const [exercise, setExercise] = useState('30');
   const [climate, setClimate] = useState('temperate');
+
+  useShareableFields(SHARE_DEFAULTS, { units: [units, setUnits], lbs: [lbs, setLbs], kg: [kg, setKg], exercise: [exercise, setExercise], climate: [climate, setClimate] }, { units: ['imperial', 'metric'], climate: WATER_CLIMATES.map((c) => c.value) });
 
   const weightKg = useMemo(() => (
     units === 'imperial' ? kgFromLb(parseFloat(lbs) || 0) : parseFloat(kg) || 0
@@ -37,6 +43,8 @@ const WaterIntakeCalculator = () => {
   const liters = ml ? ml / 1000 : null;
   const oz = ml ? ml / 29.5735 : null;
   const cups = ml ? ml / 240 : null;
+
+  const summaryLines = liters ? [`Daily water target: ${liters.toFixed(1)} L (${Math.round(oz)} oz, about ${Math.round(cups)} cups)`, `Based on ${Math.round(weightKg)} kg body weight, ${parseFloat(exercise) || 0} min exercise/day, ${climate} climate`] : [];
 
   const softwareSchema = buildSoftwareApplicationSchema({
     name: 'Water Intake Calculator',
@@ -220,6 +228,7 @@ const WaterIntakeCalculator = () => {
           />
         </div>
 
+        <ResultActions title="Water intake summary" summaryLines={summaryLines} fileName="upaman-water-intake-summary.txt" />
         <RelatedHealthLinks current="/water-intake-calculator" />
 
         <HealthDisclaimer />

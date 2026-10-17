@@ -6,6 +6,8 @@ import EEATPanel from '../calculator/EEATPanel';
 import { editorialProfiles } from '../../utils/editorialProfiles';
 import { NumberField, SelectField, Tabs } from '../ui/Field';
 import Card from '../ui/Card';
+import ResultActions from '../ResultActions';
+import { useShareableFields } from '../../utils/shareableState';
 import { PulseBadge, HealthDisclaimer, RelatedHealthLinks } from '../health/HealthKit';
 import {
   bmrMifflin, bmrHarrisBenedict, ACTIVITY_LEVELS, tdeeFromBmr,
@@ -24,6 +26,8 @@ const FAQ = [
   { question: 'Is BMR the same as the "calories burned" my watch shows?', answer: 'No. Watches report total daily burn (BMR plus movement), estimated from sensors with their own error. BMR is only the resting component — compare your watch number with the activity-scaled figures in the table, not with BMR itself.' }
 ];
 
+const SHARE_DEFAULTS = { units: 'imperial', sex: 'male', age: '30', feet: '5', inches: '8', lbs: '160', cm: '173', kg: '72' };
+
 const BMRCalculator = () => {
   const [units, setUnits] = useState('imperial');
   const [sex, setSex] = useState('male');
@@ -33,6 +37,8 @@ const BMRCalculator = () => {
   const [lbs, setLbs] = useState('160');
   const [cm, setCm] = useState('173');
   const [kg, setKg] = useState('72');
+
+  useShareableFields(SHARE_DEFAULTS, { units: [units, setUnits], sex: [sex, setSex], age: [age, setAge], feet: [feet, setFeet], inches: [inches, setInches], lbs: [lbs, setLbs], cm: [cm, setCm], kg: [kg, setKg] }, { units: ['imperial', 'metric'], sex: ['male', 'female'] });
 
   const { heightCm, weightKg } = useMemo(() => (
     units === 'imperial'
@@ -45,6 +51,8 @@ const BMRCalculator = () => {
   const inputs = { sex, weightKg, heightCm, age: ageN };
   const mifflin = valid ? bmrMifflin(inputs) : null;
   const harris = valid ? bmrHarrisBenedict(inputs) : null;
+
+  const summaryLines = mifflin && harris ? [`BMR (Mifflin-St Jeor): ${Math.round(mifflin).toLocaleString()} kcal/day`, `BMR (Revised Harris-Benedict): ${Math.round(harris).toLocaleString()} kcal/day`, `Inputs: ${sex}, age ${ageN}, ${Math.round(weightKg)} kg, ${Math.round(heightCm)} cm`] : [];
 
   const softwareSchema = buildSoftwareApplicationSchema({
     name: 'BMR Calculator',
@@ -257,6 +265,7 @@ const BMRCalculator = () => {
           />
         </div>
 
+        <ResultActions title="BMR summary" summaryLines={summaryLines} fileName="upaman-bmr-summary.txt" />
         <RelatedHealthLinks current="/bmr-calculator" />
 
         <HealthDisclaimer />
