@@ -49,6 +49,32 @@ const isoWeek = (dayNum) => {
   return { year, week: Math.floor((thursday - fromYMD(year, 1, 1)) / 7) + 1 };
 };
 
+// Monday of ISO week 1: the week containing January 4.
+const isoWeekOneMonday = (year) => {
+  const jan4 = fromYMD(year, 1, 4);
+  return jan4 - ((weekday(jan4) + 6) % 7);
+};
+
+// 53 when the year starts on a Thursday, or is a leap year starting on a Wednesday.
+const isoWeeksInYear = (year) => (isoWeekOneMonday(year + 1) - isoWeekOneMonday(year)) / 7;
+
+// Every ISO week of a year, Monday to Sunday.
+const isoWeeksOfYear = (year) => {
+  const first = isoWeekOneMonday(year);
+  return Array.from({ length: isoWeeksInYear(year) }, (_, i) => ({
+    week: i + 1,
+    start: first + i * 7,
+    end: first + i * 7 + 6
+  }));
+};
+
+// US convention (Excel WEEKNUM's default): weeks start Sunday and week 1 is
+// whichever week contains January 1, however short.
+const usWeek = (dayNum) => {
+  const { y } = toYMD(dayNum);
+  return Math.floor((dayOfYear(dayNum) - 1 + weekday(fromYMD(y, 1, 1))) / 7) + 1;
+};
+
 const formatLong = (dayNum) => {
   const { y, m, d } = toYMD(dayNum);
   return `${WEEKDAYS[weekday(dayNum)]}, ${MONTHS[m - 1]} ${d}, ${y}`;
@@ -281,6 +307,10 @@ module.exports = {
   daysInMonth,
   dayOfYear,
   isoWeek,
+  isoWeekOneMonday,
+  isoWeeksInYear,
+  isoWeeksOfYear,
+  usWeek,
   formatLong,
   addMonths,
   addToDate,

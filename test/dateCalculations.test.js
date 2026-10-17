@@ -135,3 +135,25 @@ test('monthly business-day table sums to the yearly count', () => {
   assert.equal(months.length, 12);
   assert.equal(months.reduce((s, m) => s + m.businessDays, 0), 253);
 });
+
+test('ISO weeks per year and week-1 Mondays', () => {
+  assert.equal(D.isoWeeksInYear(2026), 53); // starts on a Thursday
+  assert.equal(D.isoWeeksInYear(2027), 52);
+  assert.equal(D.isoWeeksInYear(2020), 53); // leap year starting Wednesday
+  assert.equal(D.toISO(D.isoWeekOneMonday(2026)), '2025-12-29');
+  assert.equal(D.toISO(D.isoWeekOneMonday(2027)), '2027-01-04');
+  const weeks = D.isoWeeksOfYear(2026);
+  assert.equal(weeks.length, 53);
+  assert.equal(D.toISO(weeks[52].end), '2027-01-03');
+  // Every day of a week maps back to that week number.
+  for (const w of weeks) assert.equal(D.isoWeek(w.start + 3).week, w.week);
+});
+
+test('US week numbers start on Sunday with January 1 in week 1', () => {
+  // 2026-01-01 is a Thursday; Sunday Jan 4 begins week 2.
+  assert.equal(D.usWeek(iso('2026-01-03')), 1);
+  assert.equal(D.usWeek(iso('2026-01-04')), 2);
+  assert.equal(D.usWeek(iso('2026-12-31')), 53);
+  assert.equal(D.usWeek(iso('2026-10-17')), 42);
+  assert.equal(D.isoWeek(iso('2026-10-17')).week, 42);
+});

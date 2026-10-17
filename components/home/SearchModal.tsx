@@ -66,6 +66,8 @@ const INDEX: Item[] = [
   { label: 'Days Between Dates', href: '/days-between-dates', group: 'Tool', k: 'day counter how many days until countdown christmas weeks months duration' },
   { label: 'Date Calculator', href: '/date-calculator', group: 'Tool', k: 'add subtract days to date 30 60 90 days from today weeks months years' },
   { label: 'Business Days Calculator', href: '/business-days-calculator', group: 'Tool', k: 'working days weekdays holidays deadline bank federal' },
+  { label: 'Week Number', href: '/week-number', group: 'Tool', k: 'what week is it current week iso calendar week number today' },
+  { label: 'Time Card Calculator', href: '/time-card-calculator', group: 'Tool', k: 'timesheet hours worked clock in out overtime decimal hours work hours' },
   { label: 'Percentage Calculator', href: '/percentage-calculator', group: 'Tool', k: 'percent change increase decrease discount of a number' },
   { label: 'Tip Calculator', href: '/tip-calculator', group: 'Tool', k: 'restaurant split bill service gratuity' },
   { label: 'Unit Converter', href: '/unit-converter', group: 'Tool', k: 'length weight temperature metric imperial km miles kg pounds' },

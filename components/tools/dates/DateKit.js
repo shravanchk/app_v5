@@ -44,6 +44,7 @@ const TOOLS = [
   { href: '/days-between-dates', label: 'Days between dates', blurb: 'Count days, weeks and months between two dates' },
   { href: '/date-calculator', label: 'Date calculator', blurb: 'Add or subtract days, weeks, months or years' },
   { href: '/business-days-calculator', label: 'Business days calculator', blurb: 'Working days with US or UK holidays' },
+  { href: '/week-number', label: 'Week number', blurb: 'What week is it, and every week of the year' },
   { href: '/age-calculator', label: 'Age calculator', blurb: 'Exact age in years, months and days' }
 ];
 
@@ -51,7 +52,7 @@ export function RelatedDateTools({ current }) {
   return (
     <div className="mt-10">
       <h2 className={h2Cls}>More date tools</h2>
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {TOOLS.filter((t) => t.href !== current).map((t) => (
           <Link
             key={t.href}

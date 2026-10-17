@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  CalendarDays, CalendarRange, CalendarPlus, Briefcase, FlaskConical, BarChart3, Ruler, Braces, Percent, HandCoins,
+  CalendarDays, CalendarRange, CalendarPlus, CalendarClock, Clock, Briefcase, FlaskConical, BarChart3, Ruler, Braces, Percent, HandCoins,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
 
@@ -20,6 +20,8 @@ const cards = [
   { title: 'Days Between Dates', description: 'Count days, weeks, and months between two dates, with or without the end date, plus working days.', icon: CalendarRange, path: '/days-between-dates', tint: T.sky, tags: ['Days until', 'Weeks & months', 'Countdown presets'] },
   { title: 'Date Calculator', description: 'Add or subtract days, weeks, months, years, or business days from any date.', icon: CalendarPlus, path: '/date-calculator', tint: T.violet, tags: ['90 days from today', 'Month-end rules', 'ISO week'] },
   { title: 'Business Days Calculator', description: 'Working days between dates and business-day deadlines, skipping US or UK public holidays.', icon: Briefcase, path: '/business-days-calculator', tint: T.amber, tags: ['US & UK holidays', 'Deadlines', 'Per-month table'] },
+  { title: 'Week Number', description: 'What week is it? The current ISO week, the week of any date, and every week of the year.', icon: CalendarClock, path: '/week-number', tint: T.emerald, tags: ['Week today', 'ISO & US weeks', 'Full-year table'] },
+  { title: 'Time Card Calculator', description: 'Weekly hours from clock-in and clock-out times, with breaks, decimal hours, overtime, and gross pay.', icon: Clock, path: '/time-card-calculator', tint: T.brand, tags: ['Decimal hours', 'Federal & CA overtime', 'Overnight shifts'] },
   { title: 'Scientific Calculator', description: 'Trigonometry, logarithms, powers, and constants for everyday and study use.', icon: FlaskConical, path: '/scientific-calculator', tint: T.violet, tags: ['Trig & log', 'Powers/roots', 'Constants'] },
   { title: 'Statistics Calculator', description: 'Compute mean, median, mode, variance, and standard deviation from a data set.', icon: BarChart3, path: '/statistics-calculator', tint: T.emerald, tags: ['Mean/median/mode', 'Variance', 'Std deviation'] },
   { title: 'Unit Converter', description: 'Convert length, weight, temperature, area, and more across common units.', icon: Ruler, path: '/unit-converter', tint: T.sky, tags: ['Length/weight', 'Temperature', 'Area & volume'] },
@@ -77,6 +79,11 @@ const ToolsHub = () => {
           correctly. The{' '}
           <Link href="/business-days-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">business days calculator</Link>{' '}
           skips weekends and US federal or UK bank holidays for notice periods, refund windows, and shipping estimates.
+          The{' '}
+          <Link href="/week-number" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">week number page</Link>{' '}
+          shows the current ISO week and every week of the year, and the{' '}
+          <Link href="/time-card-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">time card calculator</Link>{' '}
+          turns a week of clock-in and clock-out times into decimal hours, overtime, and pay.
         </p>
         <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
           For study and work there are full{' '}

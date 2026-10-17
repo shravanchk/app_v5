@@ -670,6 +670,18 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://upaman.com/week-number</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/time-card-calculator</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://upaman.com/percentage-calculator</loc>
     <lastmod>2026-07-05</lastmod>
     <changefreq>weekly</changefreq>
