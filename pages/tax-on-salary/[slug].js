@@ -133,6 +133,7 @@ export default function TaxOnSalaryPage(props) {
         <title>{title}</title>
         <meta name="description" content={desc} />
         <link rel="canonical" href={canonical} />
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={desc} />
         <meta property="og:url" content={canonical} />
