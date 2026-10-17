@@ -137,3 +137,28 @@ export function Tabs({ tabs, active, onChange }: TabsProps) {
     </div>
   );
 }
+
+type DateFieldProps = {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (iso: string) => void;
+  hint?: string;
+};
+
+// Native date picker; reads and writes ISO YYYY-MM-DD strings.
+export function DateField({ id, label, value, onChange, hint }: DateFieldProps) {
+  return (
+    <div>
+      <label htmlFor={id} className={labelCls}>{label}</label>
+      <input id={id} type="date" value={value} onChange={(e) => onChange(e.target.value)} className={cn(controlCls, 'min-h-[2.75rem]')} />
+      {hint ? <p className="mt-1 text-xs text-ink-muted dark:text-slate-500">{hint}</p> : null}
+    </div>
+  );
+}
+
+// Today's date in the visitor's own timezone, as YYYY-MM-DD.
+export const localTodayISO = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};

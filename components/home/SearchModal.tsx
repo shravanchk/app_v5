@@ -63,6 +63,9 @@ const INDEX: Item[] = [
   { label: 'Health Calculators Hub', href: '/health-calculators', group: 'Health', k: 'fitness body tools' },
   // Tools
   { label: 'Age Calculator', href: '/age-calculator', group: 'Tool', k: 'date of birth dob birthday how old am i years months days between dates' },
+  { label: 'Days Between Dates', href: '/days-between-dates', group: 'Tool', k: 'day counter how many days until countdown christmas weeks months duration' },
+  { label: 'Date Calculator', href: '/date-calculator', group: 'Tool', k: 'add subtract days to date 30 60 90 days from today weeks months years' },
+  { label: 'Business Days Calculator', href: '/business-days-calculator', group: 'Tool', k: 'working days weekdays holidays deadline bank federal' },
   { label: 'Percentage Calculator', href: '/percentage-calculator', group: 'Tool', k: 'percent change increase decrease discount of a number' },
   { label: 'Tip Calculator', href: '/tip-calculator', group: 'Tool', k: 'restaurant split bill service gratuity' },
   { label: 'Unit Converter', href: '/unit-converter', group: 'Tool', k: 'length weight temperature metric imperial km miles kg pounds' },

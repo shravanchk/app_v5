@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  CalendarDays, FlaskConical, BarChart3, Ruler, Braces, Percent, HandCoins,
+  CalendarDays, CalendarRange, CalendarPlus, Briefcase, FlaskConical, BarChart3, Ruler, Braces, Percent, HandCoins,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
 
@@ -17,6 +17,9 @@ const cards = [
   { title: 'Percentage Calculator', description: 'Percent of a number, share of a whole, percent change, and increase/decrease — with formulas.', icon: Percent, path: '/percentage-calculator', tint: T.brand, tags: ['% of a number', '% change', 'Reverse %'] },
   { title: 'Tip Calculator', description: 'Tip, total, and per-person share with one-tap percents, bill splitting, and round-up.', icon: HandCoins, path: '/tip-calculator', tint: T.emerald, tags: ['Split the bill', '10–25% presets', 'US tipping guide'] },
   { title: 'Age Calculator', description: 'Find exact age in years, months, and days between any two dates.', icon: CalendarDays, path: '/age-calculator', tint: T.brand, tags: ['Years/months/days', 'Any two dates', 'Next birthday'] },
+  { title: 'Days Between Dates', description: 'Count days, weeks, and months between two dates, with or without the end date, plus working days.', icon: CalendarRange, path: '/days-between-dates', tint: T.sky, tags: ['Days until', 'Weeks & months', 'Countdown presets'] },
+  { title: 'Date Calculator', description: 'Add or subtract days, weeks, months, years, or business days from any date.', icon: CalendarPlus, path: '/date-calculator', tint: T.violet, tags: ['90 days from today', 'Month-end rules', 'ISO week'] },
+  { title: 'Business Days Calculator', description: 'Working days between dates and business-day deadlines, skipping US or UK public holidays.', icon: Briefcase, path: '/business-days-calculator', tint: T.amber, tags: ['US & UK holidays', 'Deadlines', 'Per-month table'] },
   { title: 'Scientific Calculator', description: 'Trigonometry, logarithms, powers, and constants for everyday and study use.', icon: FlaskConical, path: '/scientific-calculator', tint: T.violet, tags: ['Trig & log', 'Powers/roots', 'Constants'] },
   { title: 'Statistics Calculator', description: 'Compute mean, median, mode, variance, and standard deviation from a data set.', icon: BarChart3, path: '/statistics-calculator', tint: T.emerald, tags: ['Mean/median/mode', 'Variance', 'Std deviation'] },
   { title: 'Unit Converter', description: 'Convert length, weight, temperature, area, and more across common units.', icon: Ruler, path: '/unit-converter', tint: T.sky, tags: ['Length/weight', 'Temperature', 'Area & volume'] },
@@ -25,7 +28,7 @@ const cards = [
 
 const ToolsHub = () => {
   return (
-    <CalcLayout eyebrow="Everyday Tools" title="Everyday Tools" subtitle="Handy region-agnostic utilities — age, scientific and statistics calculators, unit conversion, and JSON formatting. All free, no sign-up.">
+    <CalcLayout eyebrow="Everyday Tools" title="Everyday Tools" subtitle="Handy region-agnostic utilities — age and date calculators, scientific and statistics calculators, unit conversion, and JSON formatting. All free, no sign-up.">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map(({ title, description, icon: Icon, path, tint, tags }) => (
           <Link
@@ -63,6 +66,17 @@ const ToolsHub = () => {
           <Link href="/age-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">age calculator</Link>{' '}
           returns exact years, months, and days between any two dates — the same arithmetic used for eligibility
           cut-offs and paperwork.
+        </p>
+        <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
+          Three date tools cover the questions that come up at work. The{' '}
+          <Link href="/days-between-dates" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">days between dates calculator</Link>{' '}
+          counts the gap between two dates in days, weeks, and months, and lets you choose whether the end date counts.
+          The{' '}
+          <Link href="/date-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">date calculator</Link>{' '}
+          finds the date 30, 90, or any number of days, months, or years away, and handles the month-end cases
+          correctly. The{' '}
+          <Link href="/business-days-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">business days calculator</Link>{' '}
+          skips weekends and US federal or UK bank holidays for notice periods, refund windows, and shipping estimates.
         </p>
         <p className="mt-3 text-[0.98rem] leading-relaxed text-ink-soft dark:text-slate-300">
           For study and work there are full{' '}

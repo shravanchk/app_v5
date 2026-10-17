@@ -652,6 +652,24 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://upaman.com/days-between-dates</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/date-calculator</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://upaman.com/business-days-calculator</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://upaman.com/percentage-calculator</loc>
     <lastmod>2026-07-05</lastmod>
     <changefreq>weekly</changefreq>
