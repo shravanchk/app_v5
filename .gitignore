@@ -24,3 +24,4 @@ seo-audit/out/
 # it statically, so the pre* hooks regenerate it before any entry point that
 # resolves the module graph.
 generated/buildMeta.json
+data/.*.partial.json

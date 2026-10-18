@@ -78,7 +78,7 @@ export function NumberField({ id, label, value, onChange, min = 0, max, step, pr
           max={max}
           step={step}
           onChange={onChange}
-          className={cn(controlCls, prefix && 'pl-8', suffix && 'pr-12')}
+          className={cn(controlCls, prefix && (prefix.length > 1 ? 'pl-14' : 'pl-8'), suffix && 'pr-12')}
         />
         {suffix ? <span className="pointer-events-none absolute right-3.5 text-sm text-ink-muted">{suffix}</span> : null}
       </div>

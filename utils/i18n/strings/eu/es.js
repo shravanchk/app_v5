@@ -89,6 +89,11 @@ const es = {
       description: 'Estima el salario neto austriaco en 14 pagas, con la 13ª y 14ª gravadas al 6%.',
       tags: ['14 pagas', 'Sonderzahlungen', 'Estimación neta'],
     },
+    switzerlandSalary: {
+      title: 'Calculadora de salario (Suiza)',
+      description: 'Salario neto suizo en los 26 cantones con datos oficiales de la ESTV, con impuestos federal, cantonal y municipal y BVG según la edad.',
+      tags: ['26 cantones', 'Datos ESTV', 'Ranking de cantones'],
+    },
     swedenSalary: {
       title: 'Calculadora de salario (Suecia)',
       description: 'Estima el salario neto sueco tras la deducción básica, el crédito por trabajo y el impuesto municipal.',
@@ -151,6 +156,8 @@ const es = {
     specialPaymentTax: 'Impuesto sobre pagas extra',
     personalAllowance: 'Mínimo personal',
     taxableIncome: 'Base imponible',
+    unemploymentAccident: 'Desempleo y accidentes (ALV/NBU)',
+    occupationalPension: 'Fondo de pensiones (BVG)',
   },
 };
 

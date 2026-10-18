@@ -496,7 +496,7 @@ const EuropeanSalaryCalculator = ({
   const deductionLabels = Object.fromEntries(
     ['incomeTax', 'nationalInsurance', 'socialSecurity', 'solidarityTax', 'federalTax', 'cantonalTax',
       'ahv', 'municipalTax', 'stateTax', 'grossTax', 'taxCredits', 'personalAllowance', 'taxableIncome',
-      'specialPaymentTax']
+      'specialPaymentTax', 'unemploymentAccident', 'occupationalPension']
       .map((key) => [key, t(`deductions.${key}`)])
   );
 
@@ -790,7 +790,9 @@ const EuropeanSalaryCalculator = ({
               than others. France taxes households, not individuals — the <em>quotient familial</em>{' '}splits income
               across family members, so a married earner with children can pay dramatically less than the single
               figure shown. Germany&rsquo;s marital splitting and church tax move numbers both ways; Swiss totals
-              swing by canton and commune. Country-specific pages for{' '}
+              swing by canton and commune, and Switzerland here means Zürich (the{' '}
+              <a href="/switzerland-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Switzerland calculator</a>{' '}
+              covers all 26 cantons). Country-specific pages for{' '}
               <a href="/germany-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Germany</a>,{' '}
               <a href="/france-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">France</a>, and the{' '}
               <a href="/netherlands-salary-calculator" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">Netherlands</a>{' '}
@@ -838,7 +840,7 @@ const EuropeanSalaryCalculator = ({
             assumptions={[
               'Standard single-employee treatment without personal allowances beyond those modelled',
               'Germany uses a linear-progressive approximation in the 14–42% zone; Netherlands applies flat general + labour credits',
-              'Swiss cantonal tax uses an average rate; actual rates vary significantly by canton',
+              'Switzerland uses official ESTV figures for Zürich (city), age 35–44; the Switzerland calculator covers all 26 cantons',
               'Rates reflect 2026 published thresholds; verify with official sources before relying on figures'
             ]}
             sources={[

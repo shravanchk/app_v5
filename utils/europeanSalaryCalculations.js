@@ -3,6 +3,8 @@
 // interactive calculator. Rates are planning estimates for the 2026 tax year;
 // see per-country notes below.
 
+const { computeSwissSalary } = require('./swissSalary');
+
 const SALARY_SYSTEMS = {
   'UK': {
     country: 'United Kingdom',
@@ -108,17 +110,7 @@ const SALARY_SYSTEMS = {
     country: 'Switzerland',
     currency: 'CHF',
     symbol: 'CHF',
-    federalTax: [
-      { min: 0, max: 14500, rate: 0 },
-      { min: 14500, max: 31600, rate: 0.77 },
-      { min: 31600, max: 41400, rate: 0.88 },
-      { min: 41400, max: 55200, rate: 2.64 },
-      { min: 55200, max: 72500, rate: 2.97 },
-      { min: 72500, max: 78100, rate: 5.94 },
-      { min: 78100, max: Infinity, rate: 11.5 }
-    ],
-    cantonalTax: 7.8, // Average rate
-    ahv: 5.3, // Old age and survivors insurance
+    // Cantonal tax varies too much for a formula; see utils/swissSalary.js.
     flag: '🇨🇭'
   },
   'AT': {
@@ -406,37 +398,32 @@ const calculateNetherlandsSalary = (annual, system, results) => {
 };
 
 // Switzerland Tax Calculation
-const calculateSwitzerlandSalary = (annual, system, results) => {
-  let federalTax = 0;
-  let cantonalTax = 0;
-  let ahv = 0;
+// Switzerland Tax Calculation
+//
+// Not a formula: Swiss tax is levied federally, by the canton and by the
+// commune, and the last two vary about threefold, so the old "federal bands +
+// a flat 7.8% average canton" model was wrong nearly everywhere — and it also
+// left out unemployment and accident insurance and the BVG pension fund. This
+// reads the ESTV snapshot in utils/swissSalary.js instead. The comparison
+// calculator has no canton picker, so it shows Zürich (city) for an employee
+// aged 35-44; /switzerland-salary-calculator lets people choose both.
+const calculateSwitzerlandSalary = (annual, system, results, { canton = 'ZH', ageBand = '35-44' } = {}) => {
+  const ch = computeSwissSalary({ gross: annual, canton, ageBand });
 
-  // Federal Tax
-  for (const band of system.federalTax) {
-    if (annual > band.min) {
-      const taxableAmount = Math.min(annual - band.min, band.max - band.min);
-      federalTax += taxableAmount * (band.rate / 100);
-    }
-  }
-
-  // Cantonal Tax (average)
-  cantonalTax = annual * (system.cantonalTax / 100);
-
-  // AHV (Old age insurance)
-  ahv = annual * (system.ahv / 100);
-
-  const totalDeductions = federalTax + cantonalTax + ahv;
-  const netAnnual = annual - totalDeductions;
-
+  const totalDeductions = ch.social.total + ch.taxes.total;
   results.breakdown = {
-    federalTax,
-    cantonalTax,
-    ahv,
+    ahv: ch.social.ahv,
+    unemploymentAccident: ch.social.alv + ch.social.nbu,
+    occupationalPension: ch.social.bvg,
+    federalTax: ch.taxes.federal,
+    cantonalTax: ch.taxes.cantonal,
+    // Communal tax plus the small per-head personal tax some cantons levy.
+    municipalTax: ch.taxes.communal + ch.taxes.personal,
     totalDeductions
   };
 
-  results.netAnnual = netAnnual;
-  results.netMonthly = netAnnual / 12;
+  results.netAnnual = annual - totalDeductions;
+  results.netMonthly = results.netAnnual / 12;
   results.effectiveRate = (totalDeductions / annual) * 100;
 
   return results;

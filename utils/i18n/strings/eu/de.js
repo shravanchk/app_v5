@@ -85,6 +85,11 @@ const de = {
       description: 'Schätzen Sie das österreichische Nettogehalt über 14 Bezüge, mit 13. und 14. zu 6% versteuert.',
       tags: ['14 Bezüge', 'Sonderzahlungen', 'Netto-Schätzung'],
     },
+    switzerlandSalary: {
+      title: 'Brutto-Netto-Rechner Schweiz',
+      description: 'Schweizer Nettolohn in allen 26 Kantonen nach offiziellen ESTV-Daten, mit Bundes-, Kantons- und Gemeindesteuer und BVG nach Alter.',
+      tags: ['26 Kantone', 'ESTV-Daten', 'Kantonsvergleich'],
+    },
     swedenSalary: {
       title: 'Gehaltsrechner Schweden',
       description: 'Schätzen Sie das schwedische Nettogehalt nach Grundabzug, Arbeitsteuergutschrift und Kommunalsteuer.',
@@ -147,6 +152,8 @@ const de = {
     specialPaymentTax: 'Steuer auf Sonderzahlungen',
     personalAllowance: 'Grundfreibetrag',
     taxableIncome: 'Zu versteuerndes Einkommen',
+    unemploymentAccident: 'ALV & Nichtberufsunfall (NBU)',
+    occupationalPension: 'Pensionskasse (BVG)',
   },
 };
 

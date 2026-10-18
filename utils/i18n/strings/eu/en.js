@@ -87,6 +87,11 @@ const en = {
       description: 'Estimate Austrian net salary across 14 payments, with the 13th and 14th taxed at 6%.',
       tags: ['14 payments', 'Sonderzahlungen', 'Net pay estimate'],
     },
+    switzerlandSalary: {
+      title: 'Switzerland Salary Calculator',
+      description: 'Swiss net pay in all 26 cantons from official ESTV figures, with federal, cantonal and communal tax and BVG by age.',
+      tags: ['26 cantons', 'ESTV data', 'Canton ranking'],
+    },
     swedenSalary: {
       title: 'Sweden Salary Calculator',
       description: 'Estimate Swedish net salary after grundavdrag, jobbskatteavdrag and municipal tax.',
@@ -153,6 +158,8 @@ const en = {
     specialPaymentTax: '13th/14th Salary Tax',
     personalAllowance: 'Personal Allowance',
     taxableIncome: 'Taxable Income',
+    unemploymentAccident: 'Unemployment & Accident (ALV/NBU)',
+    occupationalPension: 'Pension Fund (BVG)',
   },
 };
 

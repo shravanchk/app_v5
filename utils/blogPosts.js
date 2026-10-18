@@ -13,7 +13,7 @@ export const BLOG_POSTS = [
   {
     slug: '60000-across-europe-2026',
     title: '€60,000 Across Europe: Where You Keep the Most in 2026',
-    excerpt: 'The same €60,000-equivalent salary keeps 78.5% of itself in the UK and 62% in Belgium — and Sweden, supposedly Europe\'s tax hell, comes third. Seven systems ranked by take-home.',
+    excerpt: 'The same €60,000-equivalent salary keeps 83% of itself in Zürich and 62% in Belgium — and Sweden, supposedly Europe\'s tax hell, beats France and Germany. Eight systems ranked by take-home.',
     category: 'Europe',
     region: 'EU',
     date: '2026-07-06',

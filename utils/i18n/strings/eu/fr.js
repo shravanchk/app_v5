@@ -83,6 +83,11 @@ const fr = {
       description: 'Estimez le salaire net autrichien sur 14 versements, les 13e et 14e étant imposés à 6%.',
       tags: ['14 versements', 'Sonderzahlungen', 'Estimation nette'],
     },
+    switzerlandSalary: {
+      title: 'Calculateur de salaire (Suisse)',
+      description: 'Salaire net suisse dans les 26 cantons selon les données officielles de l’AFC, avec impôts fédéral, cantonal et communal et LPP selon l’âge.',
+      tags: ['26 cantons', 'Données AFC', 'Classement des cantons'],
+    },
     swedenSalary: {
       title: 'Calculateur de salaire (Suède)',
       description: 'Estimez le salaire net suédois après abattement de base, crédit d’activité et impôt communal.',
@@ -145,6 +150,8 @@ const fr = {
     specialPaymentTax: 'Impôt sur 13e/14e mois',
     personalAllowance: 'Abattement personnel',
     taxableIncome: 'Revenu imposable',
+    unemploymentAccident: 'Chômage & accidents (AC/AANP)',
+    occupationalPension: 'Caisse de pension (LPP)',
   },
 };
 

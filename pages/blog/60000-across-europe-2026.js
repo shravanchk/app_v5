@@ -6,11 +6,11 @@ const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
   headline: '€60,000 Across Europe: Where You Keep the Most in 2026',
-  description: 'Seven European tax systems ranked by how much of a €60,000-equivalent salary a single employee keeps in 2026 — from 78.5% in the UK to 62.0% in Belgium, with Sweden a surprising third.',
+  description: 'Eight European tax systems ranked by how much of a €60,000-equivalent salary a single employee keeps in 2026 — from 83.3% in Zürich to 62.0% in Belgium, with Sweden a surprising fourth.',
   author: { '@type': 'Organization', name: 'Upaman Research Team', url: 'https://upaman.com/authors/upaman-research-team' },
   publisher: { '@type': 'Organization', name: 'Upaman' },
   datePublished: '2026-07-06',
-  dateModified: '2026-10-17',
+  dateModified: '2026-10-18',
   mainEntityOfPage: `https://upaman.com${canonicalPath}`
 };
 
@@ -18,26 +18,26 @@ export default function Post() {
   return (
     <BlogPostLayout
       title="€60,000 Across Europe: Where You Keep the Most in 2026"
-      description="The same €60,000-equivalent gross salary keeps 78.5% of itself in the UK and 62% in Belgium — and Sweden, Europe's supposed tax hell, comes third. Seven systems ranked by take-home, with the catch behind each number."
+      description="The same €60,000-equivalent gross salary keeps 83% of itself in Zürich and 62% in Belgium — and Sweden, Europe's supposed tax hell, beats France and Germany. Eight systems ranked by take-home, with the catch behind each number."
       canonicalPath={canonicalPath}
       category="Europe"
       publishedOn="July 6, 2026"
-      updatedOn="October 17, 2026"
+      updatedOn="October 18, 2026"
       articleSchema={articleSchema}
     >
       <p>
         A salary comparison across borders is only fair if you compare the same thing. So we took one gross figure —
-        €60,000, converted to local currency where needed — and ran it through seven European tax systems for a single
+        €60,000, converted to local currency where needed — and ran it through eight European tax systems for a single
         employee. We ranked them not by absolute cash (currencies differ) but by the share of gross you actually keep.
-        The spread is <strong>16.5 percentage points</strong>: the most generous system leaves{' '}
-        <strong>78.5%</strong> in your pocket, the least <strong>62.0%</strong>. On €60,000 that is about €825 a month.
+        The spread is <strong>21.3 percentage points</strong>: the most generous system leaves{' '}
+        <strong>83.3%</strong> in your pocket, the least <strong>62.0%</strong>. On €60,000 that is about €1,065 a month.
       </p>
 
       <Callout>
         <p>
-          <strong>Keep-rate, ranked (higher is better):</strong> UK 78.5% → Netherlands 78.3% → Sweden 76.1% → France
-          68.6% → Austria 68.5% → Germany 62.6% → Belgium 62.0%. The top three are within 2.5 points of each other; so
-          are the bottom four, in two pairs.
+          <strong>Keep-rate, ranked (higher is better):</strong> Switzerland (Zürich) 83.3% → UK 78.5% → Netherlands
+          78.3% → Sweden 76.1% → France 68.6% → Austria 68.5% → Germany 62.6% → Belgium 62.0%. Behind Switzerland, the
+          next three are within 2.5 points of each other; the bottom four come in two pairs.
         </p>
       </Callout>
 
@@ -45,6 +45,7 @@ export default function Post() {
       <table>
         <tbody>
           <tr><th>Country</th><th>Gross (≈ €60,000)</th><th>Net per year</th><th>You keep</th></tr>
+          <tr><td>🇨🇭 Switzerland (Zürich)</td><td>CHF 55,800</td><td>CHF 46,471</td><td>83.3%</td></tr>
           <tr><td>🇬🇧 United Kingdom</td><td>£51,600</td><td>£40,485</td><td>78.5%</td></tr>
           <tr><td>🇳🇱 Netherlands</td><td>€60,000</td><td>€46,987</td><td>78.3%</td></tr>
           <tr><td>🇸🇪 Sweden</td><td>SEK 660,000</td><td>SEK 502,439</td><td>76.1%</td></tr>
@@ -72,6 +73,13 @@ export default function Post() {
 
       <h2>The catch behind the top of the table</h2>
       <ul>
+        <li>
+          <strong>Switzerland (83.3%)</strong> comes first, but two caveats matter more here than anywhere else.
+          Compulsory health insurance is paid privately rather than through payroll. At a typical CHF 400 a month, it
+          takes Zürich&rsquo;s keep-rate down to about 74.7%, close to the Swedish figure. And the canton matters: the same
+          salary keeps 88.0% in Zug, 83.3% in Zürich, 81.6% in Geneva and 77.7% in Neuchâtel. Our{' '}
+          <a href="/switzerland-salary-calculator">Switzerland salary calculator</a> compares all 26 cantons.
+        </li>
         <li>
           <strong>United Kingdom (78.5%)</strong> benefits from converting at today&rsquo;s exchange rate. €60,000 is
           about £51,600, which sits just above the £50,270 higher-rate threshold. A £60,000 salary keeps 75.6%, and
@@ -107,17 +115,6 @@ export default function Post() {
         top-up, plus an earnings-linked state pension.
       </p>
 
-      <h2>Why Switzerland isn&rsquo;t in the table</h2>
-      <p>
-        Our first version of this ranking put Switzerland on top at about 86%. We have taken it out until we can model
-        it properly. Swiss income tax varies roughly threefold between cantons, so a single national figure is
-        misleading. Our engine also does not yet include unemployment insurance (ALV, 1.1%) or the mandatory
-        occupational pension (BVG), and together these take several more points off a mid-level salary. Mandatory
-        health insurance, typically CHF 300–500 a month per adult, is paid separately and never appears on a payslip.
-        Switzerland may well still rank first, but a canton-by-canton figure is the only honest way to say so. That
-        calculator is in progress.
-      </p>
-
       <h2>How to compare an offer properly</h2>
       <p>
         Keep-rate is the right first cut, but a real comparison needs four more lines. The first is currency. The
@@ -127,13 +124,14 @@ export default function Post() {
         <a href="/european-salary-calculator">European salary calculator</a>, or the country-specific pages for{' '}
         <a href="/germany-salary-calculator">Germany</a>, <a href="/france-salary-calculator">France</a>, the{' '}
         <a href="/netherlands-salary-calculator">Netherlands</a>, <a href="/austria-salary-calculator">Austria</a>,{' '}
-        <a href="/belgium-salary-calculator">Belgium</a> and <a href="/sweden-salary-calculator">Sweden</a>. UK earners
+        <a href="/belgium-salary-calculator">Belgium</a>, <a href="/sweden-salary-calculator">Sweden</a> and{' '}
+        <a href="/switzerland-salary-calculator">Switzerland</a>. UK earners
         can break the payslip into exact bands with the <a href="/uk-income-tax-calculator">UK income tax calculator</a>.
       </p>
 
       <h2>What changed in this update</h2>
       <p>
-        We first published this ranking in July 2026. Since then we have rebuilt four of the country models, and the
+        We first published this ranking in July 2026. Since then we have rebuilt five of the country models, and the
         corrections are large enough that you should know about them:
       </p>
       <ul>
@@ -149,12 +147,17 @@ export default function Post() {
           <strong>The UK</strong> was run on £60,000 rather than the sterling equivalent of €60,000. It moves from 75.6%
           to 78.5%.
         </li>
-        <li><strong>Switzerland</strong> is withdrawn until it has canton-level modelling, as explained above.</li>
+        <li>
+          <strong>Switzerland</strong> used a single &ldquo;average canton&rdquo; rate and left out unemployment
+          insurance and the BVG pension fund. It now uses figures from the Swiss Federal Tax Administration&rsquo;s own
+          calculator for each canton, shown here for Zürich. It moves from 85.8% to 83.3%, and stays first.
+        </li>
       </ul>
 
       <p className="text-sm text-ink-muted dark:text-slate-500">
         Figures are 2026 planning estimates for a single employee, computed with Upaman&rsquo;s European salary engine.
-        Euro amounts are converted at £0.86 and SEK 11.00 per euro. Keep-rate is net ÷ gross and does not depend on
+        Euro amounts are converted at £0.86, CHF 0.93 and SEK 11.00 per euro. Swiss figures are for Zürich (city), age
+        35–44, without church tax, from the ESTV tax calculator. Keep-rate is net ÷ gross and does not depend on
         currency, but net figures are in each country&rsquo;s own currency. Not modelled: household taxation (e.g.
         France&rsquo;s quotient familial), church tax, local and regional variation, employer-specific top-ups such as
         French mutuelle and prévoyance, and expat regimes. Not tax advice.

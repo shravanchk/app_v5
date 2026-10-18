@@ -35,6 +35,7 @@ const cards = [
   { id: 'belgiumSalary', icon: Banknote, path: '/belgium-salary-calculator', tint: T.amber },
   { id: 'austriaSalary', icon: Banknote, path: '/austria-salary-calculator', tint: T.sky },
   { id: 'swedenSalary', icon: Banknote, path: '/sweden-salary-calculator', tint: T.teal },
+  { id: 'switzerlandSalary', icon: Banknote, path: '/switzerland-salary-calculator', tint: T.violet },
 ];
 
 // Static comparison table for the hub: net pay on a typical gross salary in each
@@ -46,7 +47,7 @@ const COMPARISON_SALARIES = [
   { code: 'NL', gross: 60000, href: '/netherlands-salary-calculator' },
   { code: 'AT', gross: 60000, href: '/austria-salary-calculator' },
   { code: 'BE', gross: 60000, href: '/belgium-salary-calculator' },
-  { code: 'CH', gross: 90000, href: '/european-salary-calculator' },
+  { code: 'CH', gross: 90000, href: '/switzerland-salary-calculator' },
   { code: 'SE', gross: 600000, href: '/sweden-salary-calculator' },
 ];
 
@@ -145,8 +146,8 @@ const EUCalculatorsHub = () => {
           </table>
         </div>
         <p className="mt-3 text-sm text-ink-muted dark:text-slate-500">
-          Planning estimates only — figures use national averages where rates vary locally (Swiss canton, Swedish
-          municipality, Belgian communal surcharge), exclude church tax and surcharges, and salaries are not
+          Planning estimates only — figures use one representative location where rates vary locally (Zürich for
+          Switzerland, the average Swedish municipality, the average Belgian communal surcharge), exclude church tax and surcharges, and salaries are not
           currency-adjusted between countries. The monthly column is the annual net divided by twelve; Austria
           actually pays fourteen times a year, so a regular Austrian month is smaller and June and November are
           much larger. Cost of living differs; a higher keep-rate is not automatically a higher standard of living.

@@ -29,6 +29,7 @@ const INDEX: Item[] = [
   { label: 'Netherlands Salary Calculator', href: '/netherlands-salary-calculator', group: 'UK & Europe', k: 'dutch box 1 holland net salary' },
   { label: 'Belgium Salary Calculator', href: '/belgium-salary-calculator', group: 'UK & Europe', k: 'belgian rsz onss brussels flanders net salary loonberekening' },
   { label: 'Austria Salary Calculator', href: '/austria-salary-calculator', group: 'UK & Europe', k: 'austrian brutto netto rechner vienna wien 13th 14th salary jahresbrutto' },
+  { label: 'Switzerland Salary Calculator', href: '/switzerland-salary-calculator', group: 'UK & Europe', k: 'swiss brutto netto rechner schweiz canton kanton zurich geneva zug bvg ahv salaire net suisse' },
   { label: 'Sweden Salary Calculator', href: '/sweden-salary-calculator', group: 'UK & Europe', k: 'swedish lon efter skatt stockholm grundavdrag jobbskatteavdrag net salary' },
   { label: 'European Salary Calculator', href: '/european-salary-calculator', group: 'UK & Europe', k: 'net salary europe switzerland sweden austria belgium compare countries' },
   { label: 'European VAT Calculator', href: '/eu-vat-calculator', group: 'UK & Europe', k: 'value added tax reverse inclusive exclusive' },
