@@ -25,3 +25,6 @@ seo-audit/out/
 # resolves the module graph.
 generated/buildMeta.json
 data/.*.partial.json
+
+# pdf.js worker, copied from node_modules by scripts/copy-vendor.mjs
+public/vendor/

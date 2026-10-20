@@ -38,6 +38,7 @@ const INDEX: Item[] = [
   { label: 'EMI / Loan Calculator', href: '/loan-calculator', group: 'India', k: 'home loan car loan monthly installment interest prepayment' },
   { label: 'Income Tax Calculator (India)', href: '/income-tax-calculator', group: 'India', k: 'new regime old regime slab fy 2026-27 in hand' },
   { label: 'Tax Regime Comparison', href: '/tax-regime-comparison', group: 'India', k: 'old vs new regime which is better' },
+  { label: 'Form 16 Reader', href: '/form-16-reader', group: 'India', k: 'form 16 pdf upload read old vs new regime tds part b' },
   { label: 'Tax on Salary (₹5L–₹50L)', href: '/tax-on-salary', group: 'India', k: 'lakh income tax by salary' },
   { label: 'Salary Calculator (CTC to In-Hand)', href: '/salary-calculator', group: 'India', k: 'ctc take home monthly in hand breakup' },
   { label: 'SIP Calculator', href: '/sip-calculator', group: 'India', k: 'mutual fund systematic investment plan step up corpus' },

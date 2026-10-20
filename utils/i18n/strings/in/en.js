@@ -39,6 +39,11 @@ const en = {
       description: 'Check which regime saves more tax using salary and deduction-aware inputs.',
       tags: ['Old vs new', 'Savings view', 'Decision support'],
     },
+    form16: {
+      title: 'Form 16 Reader',
+      description: 'Drop your Form 16 PDF to compare the old and new regimes. Read on your device, never uploaded.',
+      tags: ['Form 16', 'Old vs new', 'On your device'],
+    },
     gst: {
       title: 'GST Calculator',
       description: 'Add/remove/reverse GST with CGST, SGST, and IGST split.',

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { Scale } from 'lucide-react';
 import SearchLandingSections from '../calculator/SearchLandingSections';
 import EEATPanel from '../calculator/EEATPanel';
@@ -142,6 +143,7 @@ const TaxRegimeComparisonCalculator = () => {
     { label: 'Old vs New Regime Breakeven (how much in deductions?)', href: '/guides/old-vs-new-regime-breakeven-fy-2026-27' },
     { label: 'Marginal Relief Explained', href: '/guides/marginal-relief-new-regime-fy-2026-27' },
     { label: 'How to File Your ITR (regime is locked at filing)', href: '/guides/how-to-file-itr' },
+    { label: 'Form 16 Reader (fills this in from your PDF)', href: '/form-16-reader' },
     { label: 'Income Tax Calculator India', href: '/income-tax-calculator' },
     { label: 'Salary Calculator (CTC to In-hand)', href: '/salary-calculator' },
     { label: 'PPF Calculator for 80C planning', href: '/ppf-calculator' }
@@ -175,6 +177,13 @@ const TaxRegimeComparisonCalculator = () => {
         reviewedOn={LAST_REVIEWED}
       >
         <LanguageToggle className="mb-6" />
+        <p className="mb-6 text-sm text-ink-soft dark:text-slate-300">
+          Have your Form 16?{' '}
+          <Link href="/form-16-reader" className="font-medium text-brand-600 underline underline-offset-2 hover:text-brand-700 dark:text-brand-300">
+            Read it here
+          </Link>{' '}
+          and every figure is filled in for you, with the full working — the PDF stays on your device.
+        </p>
 
         <div className="grid gap-5 lg:grid-cols-5">
           <Card className="p-5 lg:col-span-2">

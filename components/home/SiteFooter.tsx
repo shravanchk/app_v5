@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Container from '../ui/Container';
+import InstallApp from '../InstallApp';
 
 type Col = { heading: string; links: { label: string; href: string }[] };
 
@@ -94,6 +95,7 @@ export default function SiteFooter() {
             <Link href="/terms-of-service" className="hover:text-brand-700 dark:hover:text-white">Terms</Link>
             <Link href="/privacy-policy" className="hover:text-brand-700 dark:hover:text-white">Privacy</Link>
             <Link href="/cookie-policy" className="hover:text-brand-700 dark:hover:text-white">Cookies</Link>
+            <InstallApp />
           </div>
         </div>
       </Container>

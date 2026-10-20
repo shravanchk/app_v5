@@ -42,6 +42,12 @@ export default function App({ Component, pageProps }) {
     document.head.appendChild(script);
   }, [router.pathname]);
 
+  // The service worker only receives files shared into the installed app
+  // (public/sw.js); it caches nothing, so it is safe on every page.
+  useEffect(() => {
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }, []);
+
   return (
     <div style={{ minHeight: '100vh' }} className={!isHome && !isEmbed ? 'bg-slate-50 dark:bg-slate-950' : undefined}>
       {/* Site-wide default social preview image (1200×630 PNG). Individual pages
