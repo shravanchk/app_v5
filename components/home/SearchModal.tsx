@@ -69,6 +69,7 @@ const INDEX: Item[] = [
   { label: 'Date Calculator', href: '/date-calculator', group: 'Tool', k: 'add subtract days to date 30 60 90 days from today weeks months years' },
   { label: 'Business Days Calculator', href: '/business-days-calculator', group: 'Tool', k: 'working days weekdays holidays deadline bank federal' },
   { label: 'Week Number', href: '/week-number', group: 'Tool', k: 'what week is it current week iso calendar week number today' },
+  { label: 'India Take-Home Salary Report FY 2026-27', href: '/india-take-home-salary-report', group: 'India', k: 'tax on salary table new regime old regime effective tax rate take home in hand dataset csv 20 lakh 30 lakh' },
   { label: 'Wedding Budget Planner', href: '/wedding-budget-planner', group: 'Tool', k: 'wedding budget calculator expense tracker cost per guest marriage planner venue catering' },
   { label: 'Time Card Calculator', href: '/time-card-calculator', group: 'Tool', k: 'timesheet hours worked clock in out overtime decimal hours work hours' },
   { label: 'Percentage Calculator', href: '/percentage-calculator', group: 'Tool', k: 'percent change increase decrease discount of a number' },

@@ -48,6 +48,13 @@ const WIDGETS = [
     fullTool: '/hourly'
   },
   {
+    name: 'Income Tax Calculator FY 2026-27 (₹)',
+    slug: 'income-tax',
+    height: 470,
+    desc: 'New vs old regime tax for any salary and deduction total, with monthly in-hand pay, for a resident below 60.',
+    fullTool: '/income-tax-calculator'
+  },
+  {
     name: 'SIP Calculator (₹)',
     slug: 'sip',
     height: 400,

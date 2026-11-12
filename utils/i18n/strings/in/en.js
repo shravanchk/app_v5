@@ -44,6 +44,11 @@ const en = {
       description: 'Drop your Form 16 PDF to compare the old and new regimes. Read on your device, never uploaded.',
       tags: ['Form 16', 'Old vs new', 'On your device'],
     },
+    takeHomeReport: {
+      title: 'Take-Home Salary Report FY 2026-27',
+      description: 'Tax, effective rate and monthly in-hand pay for every salary from ₹5 lakh to ₹50 lakh, both regimes, with a free CSV dataset.',
+      tags: ['₹5L to ₹50L', 'Both regimes', 'Download CSV'],
+    },
     gst: {
       title: 'GST Calculator',
       description: 'Add/remove/reverse GST with CGST, SGST, and IGST split.',

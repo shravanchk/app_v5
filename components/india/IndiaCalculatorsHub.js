@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import {
   CalendarClock, Calculator, TrendingUp, PiggyBank, Target, Wallet, Home, Car,
-  Landmark, Repeat, Receipt, Percent, LineChart, ArrowLeftRight, ShieldCheck, CreditCard, Hourglass, FileText,
+  Landmark, Repeat, Receipt, Percent, LineChart, ArrowLeftRight, ShieldCheck, CreditCard, Hourglass, FileText, BarChart3,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
 import { calculateIndianIncomeTax } from '../../utils/taxCalculations';
@@ -33,6 +33,7 @@ const cards = [
   { id: 'incomeTax', icon: Landmark, path: '/income-tax-calculator', tint: T.violet },
   { id: 'taxRegime', icon: Repeat, path: '/tax-regime-comparison', tint: T.violet },
   { id: 'form16', icon: FileText, path: '/form-16-reader', tint: T.violet },
+  { id: 'takeHomeReport', icon: BarChart3, path: '/india-take-home-salary-report', tint: T.violet },
   { id: 'gst', icon: Receipt, path: '/gst-calculator', tint: T.amber },
   { id: 'gstReform', icon: Percent, path: '/gst-reform-calculator', tint: T.amber },
   { id: 'hra', icon: Home, path: '/hra-calculator', tint: T.indigo },
