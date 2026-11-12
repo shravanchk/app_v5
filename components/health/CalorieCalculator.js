@@ -85,6 +85,9 @@ const CalorieCalculator = () => {
         <meta name="description" content="Free calorie calculator: estimate your daily calorie needs (TDEE) with the Mifflin-St Jeor equation, plus calorie targets for losing or gaining weight at a safe pace." />
         <meta name="keywords" content="calorie calculator, TDEE calculator, daily calorie needs, maintenance calories, calories to lose weight, calorie deficit calculator" />
         <link rel="canonical" href="https://upaman.com/calorie-calculator" />
+        {/* Hidden from the index on 2026-11-12: Google refused all nine health pages and the
+            cluster dilutes a finance domain. URLs and hub stay live; remove to reinstate. */}
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="Calorie Calculator | Daily Calorie Needs & TDEE | Upaman" />
         <meta property="og:description" content="Estimate maintenance calories and safe weight-loss or gain targets." />
         <meta property="og:url" content="https://upaman.com/calorie-calculator" />

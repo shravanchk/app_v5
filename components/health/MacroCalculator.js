@@ -102,6 +102,9 @@ const MacroCalculator = () => {
         <meta name="description" content="Free macro calculator: daily protein, carb, and fat gram targets built from your TDEE (Mifflin-St Jeor), your goal, and your preferred split — balanced, low-carb, high-protein, or keto-style." />
         <meta name="keywords" content="macro calculator, macronutrient calculator, protein carbs fat calculator, IIFYM calculator, macro split" />
         <link rel="canonical" href="https://upaman.com/macro-calculator" />
+        {/* Hidden from the index on 2026-11-12: Google refused all nine health pages and the
+            cluster dilutes a finance domain. URLs and hub stay live; remove to reinstate. */}
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="Macro Calculator | Upaman" />
         <meta property="og:description" content="Daily protein, carb, and fat targets from your TDEE and goal." />
         <meta property="og:url" content="https://upaman.com/macro-calculator" />

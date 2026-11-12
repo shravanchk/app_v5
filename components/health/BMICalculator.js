@@ -75,6 +75,9 @@ const BMICalculator = () => {
         <meta name="description" content="Free BMI calculator: enter height and weight in US or metric units to get your body mass index, WHO weight category, and the healthy weight range for your height." />
         <meta name="keywords" content="BMI calculator, body mass index calculator, BMI chart, healthy weight calculator, calculate BMI, BMI for adults" />
         <link rel="canonical" href="https://upaman.com/bmi-calculator" />
+        {/* Hidden from the index on 2026-11-12: Google refused all nine health pages and the
+            cluster dilutes a finance domain. URLs and hub stay live; remove to reinstate. */}
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="BMI Calculator | Body Mass Index for Adults | Upaman" />
         <meta property="og:description" content="Calculate your BMI in US or metric units and see your WHO weight category and healthy weight range." />
         <meta property="og:url" content="https://upaman.com/bmi-calculator" />

@@ -76,6 +76,9 @@ const BMRCalculator = () => {
         <meta name="description" content="Free BMR calculator: your basal metabolic rate with the Mifflin-St Jeor equation, a revised Harris-Benedict comparison, and daily calorie burn at every activity level." />
         <meta name="keywords" content="BMR calculator, basal metabolic rate calculator, Mifflin St Jeor calculator, resting metabolic rate, calories burned at rest" />
         <link rel="canonical" href="https://upaman.com/bmr-calculator" />
+        {/* Hidden from the index on 2026-11-12: Google refused all nine health pages and the
+            cluster dilutes a finance domain. URLs and hub stay live; remove to reinstate. */}
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="BMR Calculator | Basal Metabolic Rate | Upaman" />
         <meta property="og:description" content="Calculate your resting calorie burn with two research equations." />
         <meta property="og:url" content="https://upaman.com/bmr-calculator" />

@@ -73,6 +73,9 @@ const IdealWeightCalculator = () => {
         <meta name="description" content="Free ideal weight calculator: your estimated ideal body weight from the four standard formulas (Devine, Robinson, Miller, Hamwi) plus the healthy BMI range for your height." />
         <meta name="keywords" content="ideal weight calculator, ideal body weight, healthy weight for height, Devine formula, IBW calculator" />
         <link rel="canonical" href="https://upaman.com/ideal-weight-calculator" />
+        {/* Hidden from the index on 2026-11-12: Google refused all nine health pages and the
+            cluster dilutes a finance domain. URLs and hub stay live; remove to reinstate. */}
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="Ideal Weight Calculator | Upaman" />
         <meta property="og:description" content="Ideal body weight from four research formulas plus the healthy BMI range." />
         <meta property="og:url" content="https://upaman.com/ideal-weight-calculator" />

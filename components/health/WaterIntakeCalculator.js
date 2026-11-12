@@ -68,6 +68,9 @@ const WaterIntakeCalculator = () => {
         <meta name="description" content="Free water intake calculator: how much water to drink per day based on your body weight, daily exercise, and climate — in liters, ounces, and cups." />
         <meta name="keywords" content="water intake calculator, how much water should I drink, daily water intake, hydration calculator, water per day" />
         <link rel="canonical" href="https://upaman.com/water-intake-calculator" />
+        {/* Hidden from the index on 2026-11-12: Google refused all nine health pages and the
+            cluster dilutes a finance domain. URLs and hub stay live; remove to reinstate. */}
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="Water Intake Calculator | Upaman" />
         <meta property="og:description" content="Daily water needs from weight, exercise, and climate." />
         <meta property="og:url" content="https://upaman.com/water-intake-calculator" />

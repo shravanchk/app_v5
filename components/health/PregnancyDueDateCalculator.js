@@ -89,6 +89,9 @@ const PregnancyDueDateCalculator = () => {
         <meta name="description" content="Free due date calculator: estimate your baby's due date from your last period or conception date, see gestational age today, trimester progress, and key milestones." />
         <meta name="keywords" content="due date calculator, pregnancy calculator, pregnancy due date, gestational age calculator, trimester calculator, when is my baby due" />
         <link rel="canonical" href="https://upaman.com/pregnancy-due-date-calculator" />
+        {/* Hidden from the index on 2026-11-12: Google refused all nine health pages and the
+            cluster dilutes a finance domain. URLs and hub stay live; remove to reinstate. */}
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="Pregnancy Due Date Calculator | Upaman" />
         <meta property="og:description" content="Estimate your due date, gestational age, and trimester milestones." />
         <meta property="og:url" content="https://upaman.com/pregnancy-due-date-calculator" />

@@ -79,6 +79,9 @@ const PeriodCalculator = () => {
         <meta name="description" content="Free period calculator: predict your next three periods, estimated ovulation day, and fertile window from your last period date and average cycle length." />
         <meta name="keywords" content="period calculator, next period calculator, ovulation calculator, fertile window calculator, menstrual cycle calculator, period tracker" />
         <link rel="canonical" href="https://upaman.com/period-calculator" />
+        {/* Hidden from the index on 2026-11-12: Google refused all nine health pages and the
+            cluster dilutes a finance domain. URLs and hub stay live; remove to reinstate. */}
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="Period Calculator | Next Period & Ovulation | Upaman" />
         <meta property="og:description" content="Predict your next periods, ovulation day, and fertile window." />
         <meta property="og:url" content="https://upaman.com/period-calculator" />

@@ -97,6 +97,9 @@ const BodyFatCalculator = () => {
         <meta name="description" content="Free body fat calculator using the US Navy circumference method: estimate body-fat percentage from neck, waist, and hip measurements, plus fat mass and lean mass." />
         <meta name="keywords" content="body fat calculator, body fat percentage calculator, navy method body fat, tape measure body fat, lean mass calculator" />
         <link rel="canonical" href="https://upaman.com/body-fat-calculator" />
+        {/* Hidden from the index on 2026-11-12: Google refused all nine health pages and the
+            cluster dilutes a finance domain. URLs and hub stay live; remove to reinstate. */}
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="Body Fat Calculator | US Navy Method | Upaman" />
         <meta property="og:description" content="Estimate body-fat percentage from tape measurements — no calipers needed." />
         <meta property="og:url" content="https://upaman.com/body-fat-calculator" />
