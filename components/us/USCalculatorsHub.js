@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Landmark, RefreshCcw, Car, PiggyBank, Wallet, CreditCard, BadgeDollarSign, TrendingUp, Banknote, Table2, Hourglass, Scale,
+  Landmark, RefreshCcw, Car, PiggyBank, Wallet, CreditCard, BadgeDollarSign, TrendingUp, Banknote, Table2, Hourglass, Scale, CalendarHeart,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
 import { computePaycheck } from '../../utils/usPaycheckCalculations';
@@ -26,6 +26,7 @@ const cards = [
   { title: 'Salary After Taxes', description: 'How much you keep from $30k–$250k salaries in 2026, with state-by-state take-home tables for every level.', icon: Table2, path: '/after-taxes', tint: T.sky, tags: ['$30k–$250k', '50-state tables', '2026 tax year'] },
   { title: 'Hourly to Salary Converter', description: 'Turn any hourly rate into yearly, monthly, and weekly pay — with per-rate pages from $15 to $75 including 2026 after-tax estimates.', icon: Hourglass, path: '/hourly', tint: T.amber, tags: ['$15–$75/hour', 'Overtime math', 'After-tax view'] },
   { title: 'Debt Payoff Calculator', description: 'List every debt once and compare the snowball and avalanche methods — debt-free date, payoff order, and total interest side by side.', icon: CreditCard, path: '/debt-payoff-calculator', tint: T.rose, tags: ['Snowball vs avalanche', 'Debt-free date', 'Payoff order'] },
+  { title: 'Wedding Budget Planner', description: 'Split your wedding budget by category, see cost per guest, and track every quote, deposit and due date. Saves on your device.', icon: CalendarHeart, path: '/wedding-budget-planner', tint: T.rose, tags: ['Budget breakdown', 'Expense tracker', 'Payment schedule'] },
   { title: 'US Mortgage Calculator', description: 'Estimate your monthly payment with principal, interest, property tax, insurance, HOA, and PMI.', icon: Landmark, path: '/us-mortgage-calculator', tint: T.brand, tags: ['PITI + PMI', 'Affordability ratio', 'Interest estimate'] },
   { title: 'US Refinance Break-even Calculator', description: 'Compare your current mortgage against a refinance offer and estimate the break-even point.', icon: RefreshCcw, path: '/us-refinance-calculator', tint: T.violet, tags: ['Break-even', 'Cost recovery', 'Savings estimate'] },
   { title: 'US Auto Loan Calculator', description: 'Calculate the monthly car payment using sales tax, trade-in value, fees, APR, and term.', icon: Car, path: '/us-auto-loan-calculator', tint: T.sky, tags: ['Car financing', 'APR impact', 'Total cost'] },

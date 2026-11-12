@@ -68,12 +68,23 @@ module.exports = {
           '15%, 70%': { opacity: '1' },
           '100%': { transform: 'translateY(22px)', opacity: '0' },
         },
+        // Row entry and value-change feedback in the planner tools.
+        'slide-in': {
+          '0%': { opacity: '0', transform: 'translateX(-10px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        'pulse-ring': {
+          '0%': { boxShadow: '0 0 0 0 rgba(50, 108, 174, 0.35)' },
+          '100%': { boxShadow: '0 0 0 10px rgba(50, 108, 174, 0)' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.5s ease-out both',
         'gc-float': 'gc-float 3.4s ease-in-out infinite',
         'gc-grow': 'gc-grow 3s ease-in-out infinite',
         'gc-drop': 'gc-drop 2.8s ease-in infinite',
+        'slide-in': 'slide-in 0.35s ease-out both',
+        'pulse-ring': 'pulse-ring 0.6s ease-out',
       },
     },
   },

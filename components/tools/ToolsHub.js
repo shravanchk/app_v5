@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  CalendarDays, CalendarRange, CalendarPlus, CalendarClock, Clock, Briefcase, FlaskConical, BarChart3, Ruler, Braces, Percent, HandCoins,
+  CalendarDays, CalendarRange, CalendarPlus, CalendarClock, CalendarHeart, Clock, Briefcase, FlaskConical, BarChart3, Ruler, Braces, Percent, HandCoins,
 } from 'lucide-react';
 import { CalcLayout } from '../calculator/CalcLayout';
 
@@ -22,6 +22,7 @@ const cards = [
   { title: 'Business Days Calculator', description: 'Working days between dates and business-day deadlines, skipping US or UK public holidays.', icon: Briefcase, path: '/business-days-calculator', tint: T.amber, tags: ['US & UK holidays', 'Deadlines', 'Per-month table'] },
   { title: 'Week Number', description: 'What week is it? The current ISO week, the week of any date, and every week of the year.', icon: CalendarClock, path: '/week-number', tint: T.emerald, tags: ['Week today', 'ISO & US weeks', 'Full-year table'] },
   { title: 'Time Card Calculator', description: 'Weekly hours from clock-in and clock-out times, with breaks, decimal hours, overtime, and gross pay.', icon: Clock, path: '/time-card-calculator', tint: T.brand, tags: ['Decimal hours', 'Federal & CA overtime', 'Overnight shifts'] },
+  { title: 'Wedding Budget Planner', description: 'Budget split by category, cost per guest, and an expense tracker with deposits and due dates, in your own currency.', icon: CalendarHeart, path: '/wedding-budget-planner', tint: T.violet, tags: ['Budget breakdown', 'Expense tracker', 'Shareable'] },
   { title: 'Scientific Calculator', description: 'Trigonometry, logarithms, powers, and constants for everyday and study use.', icon: FlaskConical, path: '/scientific-calculator', tint: T.violet, tags: ['Trig & log', 'Powers/roots', 'Constants'] },
   { title: 'Statistics Calculator', description: 'Compute mean, median, mode, variance, and standard deviation from a data set.', icon: BarChart3, path: '/statistics-calculator', tint: T.emerald, tags: ['Mean/median/mode', 'Variance', 'Std deviation'] },
   { title: 'Unit Converter', description: 'Convert length, weight, temperature, area, and more across common units.', icon: Ruler, path: '/unit-converter', tint: T.sky, tags: ['Length/weight', 'Temperature', 'Area & volume'] },
