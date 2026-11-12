@@ -12,6 +12,7 @@ const COLUMNS: Col[] = [
       { label: 'US Paycheck', href: '/us-paycheck-calculator' },
       { label: 'US Mortgage', href: '/us-mortgage-calculator' },
       { label: 'Compound Interest', href: '/compound-interest-calculator' },
+      { label: 'Wedding Budget Planner', href: '/wedding-budget-planner' },
       { label: 'European Salary', href: '/european-salary-calculator' },
       { label: 'India Income Tax', href: '/income-tax-calculator' },
       { label: 'EMI / Loan', href: '/loan-calculator' },

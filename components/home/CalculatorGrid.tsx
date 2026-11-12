@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import {
   Calculator, Landmark, TrendingUp, PiggyBank, Receipt, Wallet, LineChart, Home,
-  Percent, Repeat, CreditCard, Ruler, Braces, LayoutGrid, LucideIcon,
+  Percent, Repeat, CreditCard, Ruler, Braces, LayoutGrid, CalendarHeart, LucideIcon,
 } from 'lucide-react';
 import Container from '../ui/Container';
 import SectionHeading from '../ui/SectionHeading';
@@ -34,6 +34,7 @@ const CALCS: Calc[] = [
   { icon: Percent, label: 'GST 2.0 Price', href: '/gst-reform-calculator', tint: T.amber },
   { icon: Repeat, label: 'Tax Regime', href: '/tax-regime-comparison', tint: T.violet },
   { icon: CreditCard, label: 'Credit Card Trap', href: '/credit-card-trap-calculator', tint: T.rose },
+  { icon: CalendarHeart, label: 'Wedding Budget', href: '/wedding-budget-planner', tint: T.rose },
   { icon: Ruler, label: 'Unit Converter', href: '/unit-converter', tint: T.sky },
   { icon: Braces, label: 'JSON Formatter', href: '/json-tools', tint: T.teal },
   { icon: LayoutGrid, label: 'All Calculators', href: '/india-calculators', tint: T.brand },

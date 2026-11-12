@@ -17,6 +17,7 @@ const CALCULATORS: NavLink[] = [
   { label: 'Capital Gains Calculator', href: '/capital-gains-calculator' },
   { label: 'HRA Exemption Calculator', href: '/hra-calculator' },
   { label: 'Gratuity Calculator', href: '/gratuity-calculator' },
+  { label: 'Wedding Budget Planner', href: '/wedding-budget-planner' },
 ];
 
 const REGIONS: NavLink[] = [
